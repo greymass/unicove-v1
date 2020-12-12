@@ -1,0 +1,20 @@
+@use "node_modules/inter-ui/default" with (
+    $inter-font-display: swap,
+    $inter-font-path: '/fonts/inter'
+);
+@use "node_modules/inter-ui/variable" with (
+    $inter-font-display: swap,
+    $inter-font-path: '/fonts/inter'
+);
+@include default.all;
+@include variable.all;
+
+html {
+    font-family: 'Inter', 'system-ui', sans-serif;
+}
+
+@supports (font-variation-settings: normal) {
+    html {
+        font-family: 'Inter var', 'system-ui', sans-serif;
+    }
+}
