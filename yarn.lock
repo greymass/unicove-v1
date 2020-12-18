@@ -1386,9 +1386,9 @@ alphanum-sort@^1.0.0:
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
 anchor-link-browser-transport@^3.0.0-rc:
-  version "3.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.0.0-rc.4.tgz#4953e450694608610de67428608886574d7335ea"
-  integrity sha512-qM/5+nJlnfTOsYR8gAFBeENpAI/J2k9SYX5n4+TkhUMRjDFXSg+yICXSD+E+KkFPuQj4TAwtRW3o11yfNyWqrQ==
+  version "3.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.0.0-rc.5.tgz#cefe8de2d072ab0f8dd40b60364ae0a742cf70fa"
+  integrity sha512-Wmq21qgyhlxt6+08a5TXJgtkg7yoXVEFqA/zzZoZl99NqFIMP6HFaV0wdUrMPeYFsJZ8FAuyP45hMvvnC4Th0Q==
   dependencies:
     tslib "^2.0.3"
 
