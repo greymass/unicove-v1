@@ -2,7 +2,7 @@
     "private": true,
     "scripts": {
         "dev": "snowpack dev",
-        "build": "snowpack build"
+        "build": "make build"
     },
     "browser": {
         "crypto": false,

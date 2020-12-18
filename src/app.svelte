@@ -1,6 +1,7 @@
 <script lang="ts">
     import {Route} from 'tinro'
     import {activeSession, appReady} from './store'
+    import {version} from './config'
 
     import Page from './components/page.svelte'
     import Dashboard from './pages/dashboard.svelte'
@@ -10,6 +11,14 @@
 
 <style lang="scss" global>
     @import 'style/global.scss';
+    #greymass-wallet-version {
+        font-size: 0.2em;
+        opacity: 0.2;
+        position: fixed;
+        bottom: 1em;
+        right: 1em;
+        pointer-events: none;
+    }
 </style>
 
 <main>
@@ -34,3 +43,5 @@
         </Route>
     {/if}
 </main>
+
+<div id="greymass-wallet-version">Version {version}</div>
