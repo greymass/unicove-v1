@@ -31,7 +31,7 @@ export async function init() {
 
 /** Create a new session. */
 export async function login() {
-    const result = await link.login('wallet.gm')
+    const result = await link.login(appId)
     const list = await link.listSessions(appId)
     activeSession.set(result.session)
     availableSessions.set(list)

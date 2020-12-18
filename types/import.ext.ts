@@ -3,4 +3,5 @@
 // extend import meta for hot module loading
 interface ImportMeta {
     hot: any
+    env: Record<string, string>
 }

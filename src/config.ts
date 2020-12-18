@@ -1,5 +1,10 @@
-/** App identifier, used for anchor link. */
-export const appId = 'wallet.gm'
+const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
+const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
+
+/** App identifier, used for anchor link (session persistence). */
+export const appId = branch !== 'deploy' ? `w.${branch}.gm` : 'wallet.gm'
+
+export const version = `${branch}-${rev}`
 
 interface ChainConfig {
     /** Short identifier. */
