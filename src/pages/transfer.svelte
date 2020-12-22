@@ -1,6 +1,7 @@
 <script lang="ts">
     import {Asset, LinkSession, Name, UInt64} from 'anchor-link'
 
+    import {_} from '../i18n'
     import {activeSession} from '../store'
     import {Transfer} from '../abi-types'
 
@@ -65,17 +66,17 @@
 
 <Page title="Transfer">
     {#await loading}
-        <p>Hang on, fetching balances and stuff...</p>
-    {:then _}
+        <p>{$_('transfer.loading')}</p>
+    {:then}
         <p>You have <i on:click={() => (quantity = String(balance))}> {balance} </i></p>
         <p>
-            Send
+            {$_('transfer.send')}
             <input type="text" bind:value={quantity} />
-            to
+            {$_('transfer.to')}
             <input type="text" bind:value={to} />
-            with memo
+            {$_('transfer.memo')}
             <input type="text" bind:value={memo} />
-            <button on:click={transfer}>go</button>
+            <button on:click={transfer}>{$_('transfer.submit')}</button>
         </p>
     {/await}
 </Page>

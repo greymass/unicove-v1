@@ -1,5 +1,6 @@
 <script lang="ts">
     import type {ChainId} from 'anchor-link'
+    import {_} from '../i18n'
     import type {SessionLike} from '../auth'
     import {sessionEquals, activate, login, logout} from '../auth'
     import {chains} from '../config'
@@ -53,7 +54,7 @@
 </style>
 
 <div>
-    Accounts
+    {$_('accounts.title')}
     <ul>
         {#each sortedSessions as session}
             <li>
@@ -62,12 +63,12 @@
                     href="#select-account"
                     on:click|preventDefault={() => activate(session)}>
                     <b>{session.auth.actor}@{session.auth.permission}</b>
-                    on
+                    {$_('accounts.on')}
                     {chainName(session.chainId)}
                 </a>
                 <button on:click={() => logout(session)}>X</button>
             </li>
         {/each}
-        <li><a on:click|preventDefault={handleAdd} href="#add-account">Add account</a></li>
+        <li><a on:click|preventDefault={handleAdd} href="#add-account">{$_('accounts.add')}</a></li>
     </ul>
 </div>

@@ -2,11 +2,19 @@
     import {Route} from 'tinro'
     import {activeSession, appReady} from './store'
     import {version} from './config'
+    import {setupI18n, isLocaleLoaded, locale, dir} from './i18n'
 
     import Page from './components/page.svelte'
     import Dashboard from './pages/dashboard.svelte'
     import Login from './pages/login.svelte'
     import Transfer from './pages/transfer.svelte'
+    import LocaleSwitcher from './components/locale-switcher.svelte'
+
+    $: if (!$isLocaleLoaded) {
+        setupI18n({ withLocale: 'en' })
+    }
+
+    $: { document.dir = $dir }
 </script>
 
 <style lang="scss" global>
@@ -22,7 +30,7 @@
 </style>
 
 <main>
-    {#if !$appReady}
+    {#if !$appReady || !$isLocaleLoaded}
         Loading...
     {:else if !$activeSession}
         <Login />
@@ -42,6 +50,13 @@
             </Route>
         </Route>
     {/if}
+    {#if $isLocaleLoaded}
+        <LocaleSwitcher
+            value={$locale}
+            on:locale-changed={e => setupI18n({ withLocale: e.detail }) }
+        />
+    {/if}
+
 </main>
 
 <div id="greymass-wallet-version">Version {version}</div>

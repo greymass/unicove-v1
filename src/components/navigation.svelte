@@ -1,5 +1,6 @@
 <script lang="ts">
     import {active} from 'tinro'
+    import {_} from '../i18n'
 </script>
 
 <style>
@@ -12,7 +13,7 @@
 <nav>
     Navigation
     <ul>
-        <li><a href="/" use:active exact>Dashboard</a></li>
-        <li><a href="/transfer" use:active>Transfer</a></li>
+        <li><a href="/" use:active exact>{$_('navigation.dashboard')}</a></li>
+        <li><a href="/transfer" use:active>{$_('navigation.transfer')}</a></li>
     </ul>
 </nav>

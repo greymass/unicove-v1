@@ -1,0 +1,25 @@
+{
+    "navigation": {
+        "dashboard": "Dashboard",
+        "transfer": "Transfer"
+    },
+    "accounts": {
+        "title": "Accounts",
+        "on": "on",
+        "add": "Add account"
+    },
+    "login": {
+        "welcome": "Welcome to Greymass Wallet",
+        "instruction": "Please login to continue",
+        "button": "Login with Anchor",
+        "error": "That didn't go well...",
+        "working": "Working really hard here..."
+    },
+    "transfer": {
+        "loading": "Hang on, fetching balances and stuff...",
+        "send": "Send",
+        "to": "to",
+        "memo": "with memo",
+        "submit": "Go"
+    }
+}

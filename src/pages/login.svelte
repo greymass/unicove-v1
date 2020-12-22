@@ -1,6 +1,7 @@
 <script lang="ts">
     import {login} from '../auth'
-
+    import {_} from '../i18n'
+    
     let working = false
     let error: Error | undefined
 
@@ -20,12 +21,12 @@
 </script>
 
 {#if !working}
-    <p>Welcome to Greymass Wallet</p>
-    <p>Please login to continue</p>
-    <button on:click={loginHandler}>Login with Anchor</button>
+    <p>{$_('login.welcome')}</p>
+    <p>{$_('login.instruction')}</p>
+    <button on:click={loginHandler}>{$_('login.button')}</button>
     {#if error}
-        <p>That didn't go well... {error.message}</p>
+        <p>{$_('login.error')} {error.message}</p>
     {/if}
 {:else}
-    <p>Working really hard here...</p>
+    <p>{$_('login.working')}</p>
 {/if}
