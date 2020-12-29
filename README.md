@@ -1,7 +1,5 @@
 # Greymass Wallet
 
-The android version of the Anchor EOSIO wallet and authenticator.
-
 ## Getting Started
 
 #### 1. Clone and Install
@@ -30,7 +28,7 @@ npm run dev
 
 ## Contributing
 
-If you find any problems, please [open an issue](https://github.com/greymass/anchor-mobile-android/issues/new) or submit a fix as a pull request.
+If you find any problems, please [open an issue](https://github.com/greymass/wallet/issues/new) or submit a fix as a pull request.
 
 ## License
 

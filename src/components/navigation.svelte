@@ -1,5 +1,9 @@
 <script lang="ts">
     import {active} from 'tinro'
+    import Navbar from './navigation/navbar.svelte'
+    import Sidebar from './navigation/sidebar.svelte'
+
+    let open = false
 </script>
 
 <style>
@@ -7,13 +11,12 @@
         content: ' ⬅ you are here';
         font-size: 0.65em;
     }
-</style>
 
+    :global(body) {
+        padding: 0;
+    }
+</style>
 <nav>
-    Navigation
-    <ul>
-        <li><a href="/" use:active exact>Dashboard</a></li>
-        <li><a href="/transfer" use:active>Transfer</a></li>
-        <li><a href="/resources" use:active>Resources</a></li>
-    </ul>
+    <Sidebar bind:open/>
+    <Navbar bind:sidebar={open}/>
 </nav>
