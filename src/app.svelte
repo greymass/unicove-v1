@@ -28,6 +28,10 @@
         right: 1em;
         pointer-events: none;
     }
+
+    :global(:root){
+       --main-blue: #2D8EFF;
+    }
 </style>
 
 <main>
