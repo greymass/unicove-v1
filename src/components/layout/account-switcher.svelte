@@ -1,10 +1,10 @@
 <script lang="ts">
     import type {ChainId} from 'anchor-link'
-    import type {SessionLike} from '../auth'
-    import {sessionEquals, activate, login, logout} from '../auth'
-    import {chains} from '../config'
+    import type {SessionLike} from '../../auth'
+    import {sessionEquals, activate, login, logout} from '../../auth'
+    import {chains} from '../../config'
 
-    import {activeSession, availableSessions} from '../store'
+    import {activeSession, availableSessions} from '../../store'
 
     $: isActive = (session: SessionLike) => sessionEquals(session, $activeSession!)
 
@@ -26,6 +26,9 @@
 </script>
 
 <style>
+    .account-switcher {
+      margin: 30px;
+    }
     .active::after {
         content: ' ⬅ this is you';
         font-size: 0.65em;
@@ -52,7 +55,7 @@
     }
 </style>
 
-<div>
+<div class="account-switcher">
     Accounts
     <ul>
         {#each sortedSessions as session}

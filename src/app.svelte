@@ -3,7 +3,7 @@
     import {activeBlockchain, activeSession, appReady} from './store'
     import {version} from './config'
 
-    import Page from './components/page.svelte'
+    import Page from './components/layout.svelte'
     import Dashboard from './pages/dashboard.svelte'
     import Login from './pages/login.svelte'
     import Transfer from './pages/transfer.svelte'
