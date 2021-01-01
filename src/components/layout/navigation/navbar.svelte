@@ -5,11 +5,14 @@
 	export let sidebar = false
 </script>
 
-<header class="flex justify-between bg-gray-200 p-2 items-center text-gray-600 border-b-2">
-	<nav class="flex">
-		<Hamburger bind:open={sidebar}/>
-		Greymass Wallet
-	</nav>
+<div class="header h-full w-2/3 p-2 items-center text-gray-600 border-r-2">
+    <Hamburger bind:open={sidebar}/>
+</div>
 
-	<Menu/>
-</header>
+<style>
+  .header {
+    background-color: var(--main-grey);
+    padding: 15px;
+    padding-top: 10px;
+  }
+</style>

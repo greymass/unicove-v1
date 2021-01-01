@@ -31,10 +31,11 @@
 
     :global(:root){
        --main-blue: #2D8EFF;
+       --main-grey: #F7F7FC;
     }
 </style>
 
-<main>
+<main class="h-full">
     {#if !$appReady}
         Loading...
     {:else if !$activeSession || !$activeBlockchain}

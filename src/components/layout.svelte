@@ -10,14 +10,20 @@
 </script>
 
 <section>
-    <header>
+  <div class="flex h-full">
+    <div class="w-1/8">
         <Navigation />
-        <AccountSwitcher />
-        <hr />
-    </header>
-    <div class="content">
-        <h1>{title}</h1>
-        <slot />
+    </div>
+    <div>
+        <header>
+            <AccountSwitcher />
+            <hr />
+        </header>
+        <div class="content">
+            <h1>{title}</h1>
+            <slot />
+        </div>
+    </div>
     </div>
 
     <Footer />
@@ -26,6 +32,7 @@
 <style>
  .content {
    margin: 30px;
+   min-height: 90vh;
  }
 
  .content h1 {

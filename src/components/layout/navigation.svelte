@@ -16,7 +16,7 @@
         padding: 0;
     }
 </style>
-<nav>
+<div class="h-full w-full">
     <Sidebar bind:open/>
     <Navbar bind:sidebar={open}/>
-</nav>
+</div>
