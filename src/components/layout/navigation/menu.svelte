@@ -1,4 +1,4 @@
-<nav class="hidden text-gray-500 uppercase text-bold sm:block">
-  <a href="/" class="hover:text-gray-700 hover:no-underline">Dashboard</a>
-  <a href="/transfer" class="hover:text-gray-700 hover:no-underline">Transfer</a>
+<nav class="px-10 py-20 text-xl">
+    <a class="block" href="/">Dashboard</a>
+    <a class="block" href="/transfer">Transfer</a>
 </nav>

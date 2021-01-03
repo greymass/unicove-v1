@@ -2,6 +2,7 @@
 	import Hamburger from './navbar/hamburger.svelte'
 
 	import expandIcon from '../../../../public/images/expand.svg'
+	import arrowRight from '../../../../public/images/arrow-right.svg'
 
 	export let sidebar = false
 
@@ -12,8 +13,14 @@
     <div class="hamburger-container">
         <Hamburger bind:open={sidebar}/>
     </div>
-    <a class="expand-icon" on:click={() => expand = !expand}>
+    <hr />
+    <div class="expand-icon" on:click={() => expand = !expand}>
         <img src={expandIcon} />
+    </div>
+    <a class="arrow-button" on:click={() => expand = !expand}>
+        <div class="arrow-icon-container">
+             <img src={arrowRight} />
+        </div>
     </a>
 </div>
 
@@ -26,16 +33,29 @@
 
   .header .hamburger-container {
     margin: auto;
+    margin-bottom: 30px;
     width: 25px;
   }
 
-  .header a.expand-icon {
-    cursor: pointer;
-  }
-
-  .header a.expand-icon img {
+  .header .expand-icon img {
     width: 40px;
     margin: auto;
     margin-top: 40px;
+  }
+
+  .header a.arrow-button .arrow-icon-container {
+    cursor: pointer;
+    background-color: white;
+    width: 60px;
+    height: 50px;
+    margin: auto;
+    margin-top: 40px;
+    padding: 15px;
+    padding-top: 10px;
+    border-radius: 3px;
+  }
+
+  .header a.arrow-button img {
+    width: 30px;
   }
 </style>
