@@ -1,14 +1,18 @@
 <script>
 
-	import LargeNavbar from './navbar/large.svelte';
-	import SmallNavbar from './navbar/small.svelte'
+	import LargeNavbar from './navbar/desktop/large.svelte';
+	import SmallNavbar from './navbar/desktop/small.svelte';
+	import MobileNavbar from './navbar/mobile.svelte';
 
 	export let sidebar = false;
 
 	let expand = false;
-</script>
 
-{#if expand}
+	const isMobile = window.innerWidth < 1000;
+</script>
+{#if isMobile}
+  <MobileNavbar bind:sidebar={sidebar} />
+{:else if expand}
   <LargeNavbar />
 {:else}
   <SmallNavbar
