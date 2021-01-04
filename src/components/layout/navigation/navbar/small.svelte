@@ -5,10 +5,10 @@
 	import arrowRight from '../../../../../public/images/arrow-right.svg'
 
 	export let sidebar = false;
-	export let onExpand;
+	export let expand;
 </script>
 
-<div class="header h-full w-1/2 p-2 items-center text-gray-600 border-r-2">
+<div class="header h-full p-2 items-center text-gray-600 border-r-2">
     <div class="hamburger-container">
         <Hamburger bind:open={sidebar}/>
     </div>
@@ -16,7 +16,7 @@
     <div class="expand-icon">
         <img src={expandIcon} />
     </div>
-    <a class="arrow-button" on:click={onExpand}>
+    <a class="arrow-button" on:click={() => expand = true}>
         <div class="arrow-icon-container">
              <img src={arrowRight} />
         </div>
@@ -28,6 +28,7 @@
     background-color: var(--main-grey);
     padding: 25px;
     padding-top: 30px;
+    width: 100px;
   }
 
   .header .hamburger-container {
@@ -45,8 +46,8 @@
   .header a.arrow-button .arrow-icon-container {
     cursor: pointer;
     background-color: white;
-    width: 60px;
-    height: 50px;
+    width: 45px;
+    height: 40px;
     margin: auto;
     margin-top: 40px;
     padding: 15px;

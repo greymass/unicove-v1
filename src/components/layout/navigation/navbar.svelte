@@ -11,7 +11,10 @@
 {#if expand}
   <LargeNavbar />
 {:else}
-  <SmallNavbar sidebar={sidebar} onExpand={() => expand = true}/>
+  <SmallNavbar
+    bind:sidebar={sidebar}
+    bind:expand={expand}
+  />
 {/if}
 
 <style>
