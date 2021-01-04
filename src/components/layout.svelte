@@ -11,11 +11,11 @@
 
 <section>
   <div class="flex h-full">
-    <div class="w-1/6">
+    <div class="w-1/5">
         <Navigation />
     </div>
     <div>
-        <header>
+        <header class="header">
             <AccountSwitcher />
             <hr />
         </header>
@@ -24,14 +24,18 @@
             <slot />
         </div>
     </div>
-    </div>
+  </div>
 
-    <Footer />
+  <Footer />
 </section>
 
 <style>
+ .header {
+    margin: 15px;
+ }
+
  .content {
-   margin: 30px;
+   margin: 45px;
    min-height: 90vh;
  }
 

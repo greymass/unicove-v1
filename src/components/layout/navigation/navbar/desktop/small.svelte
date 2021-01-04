@@ -8,7 +8,7 @@
 	export let expand;
 </script>
 
-<div class="header h-full p-2 items-center text-gray-600 border-r-2">
+<div class="navbar h-full p-2 items-center text-gray-600 border-r-2">
     <div class="hamburger-container">
         <Hamburger bind:open={sidebar}/>
     </div>
@@ -24,26 +24,26 @@
 </div>
 
 <style>
-  .header {
+  .navbar {
     background-color: var(--main-grey);
     padding: 25px;
     padding-top: 30px;
     width: 100px;
   }
 
-  .header .hamburger-container {
+  .navbar .hamburger-container {
     margin: auto;
     margin-bottom: 30px;
     width: 25px;
   }
 
-  .header .expand-icon img {
+  .navbar .expand-icon img {
     width: 40px;
     margin: auto;
     margin-top: 40px;
   }
 
-  .header a.arrow-button .arrow-icon-container {
+  .navbar a.arrow-button .arrow-icon-container {
     cursor: pointer;
     background-color: white;
     width: 45px;
@@ -55,7 +55,7 @@
     border-radius: 3px;
   }
 
-  .header a.arrow-button img {
+  .navbar a.arrow-button img {
     width: 30px;
   }
 </style>

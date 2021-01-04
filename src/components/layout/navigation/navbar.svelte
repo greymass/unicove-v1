@@ -1,4 +1,5 @@
 <script>
+    import MediaQuery from '../../utils/media-query.svelte'
 
 	import LargeNavbar from './navbar/desktop/large.svelte';
 	import SmallNavbar from './navbar/desktop/small.svelte';
@@ -7,19 +8,16 @@
 	export let sidebar = false;
 
 	let expand = false;
-
-	const isMobile = window.innerWidth < 1000;
 </script>
-{#if isMobile}
-  <MobileNavbar bind:sidebar={sidebar} />
-{:else if expand}
-  <LargeNavbar />
-{:else}
-  <SmallNavbar
-    bind:sidebar={sidebar}
-    bind:expand={expand}
-  />
-{/if}
-
-<style>
-</style>
+<MediaQuery query="(max-width: 999px)" let:matches>
+    {#if matches}
+      <MobileNavbar bind:sidebar={sidebar} />
+    {:else if expand}
+      <LargeNavbar />
+    {:else}
+      <SmallNavbar
+        bind:sidebar={sidebar}
+        bind:expand={expand}
+      />
+    {/if}
+ </MediaQuery>
