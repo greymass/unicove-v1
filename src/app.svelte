@@ -7,6 +7,11 @@
     import Dashboard from './pages/dashboard.svelte'
     import Login from './pages/login.svelte'
     import Transfer from './pages/transfer.svelte'
+    import Resources from './pages/resources.svelte'
+    import ResourcesFuel from './pages/resources/fuel.svelte'
+    import ResourcesPowerUp from './pages/resources/powerup.svelte'
+    import ResourcesRex from './pages/resources/rex.svelte'
+    import ResourcesStaked from './pages/resources/staked.svelte'
 </script>
 
 <style lang="scss" global>
@@ -33,6 +38,23 @@
             </Route>
             <Route path="/transfer">
                 <Transfer />
+            </Route>
+            <Route path="/resources/*" firstmatch>
+                <Route path="/">
+                    <Resources />
+                </Route>
+                <Route path="/fuel">
+                    <ResourcesFuel />
+                </Route>    
+                <Route path="/powerup">
+                    <ResourcesPowerUp />
+                </Route>    
+                <Route path="/rex">
+                    <ResourcesRex />
+                </Route>    
+                <Route path="/staked">
+                    <ResourcesStaked />
+                </Route>    
             </Route>
             <Route fallback>
                 <Page title="Page not found">
