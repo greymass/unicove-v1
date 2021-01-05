@@ -1,10 +1,14 @@
 <script>
-	import expandIcon from '../../../../../../public/images/dashboard-blue.svg'
-	import arrowRight from '../../../../../../public/images/arrow-right-grey.svg'
+	import dashboardBlueIcon from '../../../../../../public/images/dashboard-blue.svg'
+	import dashboardGreyIcon from '../../../../../../public/images/dashboard-grey.svg'
+	import arrowRightBlueIcon from '../../../../../../public/images/arrow-right-blue.svg'
+	import arrowRightGreyIcon from '../../../../../../public/images/arrow-right-grey.svg'
 	import xBlueIcon from '../../../../../../public/images/x-blue.svg'
 
 	export let sidebar = false;
 	export let expand;
+
+	const currentPath = window.location.pathname;
 </script>
 
 <div class="navbar h-full p-2 items-center text-gray-600 border-r-2">
@@ -14,14 +18,21 @@
         <img src={xBlueIcon} />
     </div>
     <hr />
-    <a href='/' class="expand-icon">
-        <img src={expandIcon} />
+    <br/>
+    <a href='/' class="menu-item-link">
+       <div class="menu-item {currentPath === '/' ? 'active' : ''}">
+          <img src={currentPath === '/' ? dashboardGreyIcon : dashboardBlueIcon} />
+          &nbsp;
+          Dashboard
+       </div>
     </a>
-    <a class="arrow-button" on:click={() => expand = true}>
-        <div class="arrow-icon-container">
-             <img src={arrowRight} />
+     <a href='/transfer' class="menu-item-link">
+        <div class="menu-item {currentPath === '/transfer' ? 'active' : ''}">
+            <img src={currentPath === '/transfer' ? arrowRightGreyIcon : arrowRightBlueIcon} />
+            &nbsp;
+            Transfer
         </div>
-    </a>
+     </a>
 </div>
 
 <style>
@@ -45,25 +56,24 @@
     margin-bottom: 3px;
   }
 
-  .navbar .expand-icon img {
-    width: 40px;
-    margin: auto;
-    margin-top: 40px;
-  }
+   .navbar a.menu-item-link .menu-item {
+      border-radius: 4px;
+      color: var(--main-blue);
+      display: inline-block;
+      height: 40px;
+      margin: 5px;
+      padding: 10px;
+      width: 160px;
+   }
 
-  .navbar a.arrow-button .arrow-icon-container {
-    cursor: pointer;
-    background-color: white;
-    width: 45px;
-    height: 40px;
-    margin: auto;
-    margin-top: 40px;
-    padding: 15px;
-    padding-top: 10px;
-    border-radius: 3px;
-  }
+   .navbar a.menu-item-link .active.menu-item {
+      background-color: white;
+      color: var(--main-black)
+   }
 
-  .navbar a.arrow-button img {
-    width: 30px;
-  }
+   .navbar a.menu-item-link .menu-item img {
+      display: inline-block;
+      margin-bottom: 2px;
+   }
+
 </style>

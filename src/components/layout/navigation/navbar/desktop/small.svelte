@@ -1,7 +1,7 @@
 <script>
 	import Hamburger from '../shared/hamburger.svelte'
 
-	import expandIcon from '../../../../../../public/images/dashboard-blue.svg'
+	import dashboardIcon from '../../../../../../public/images/dashboard-blue.svg'
 	import arrowRight from '../../../../../../public/images/arrow-right-grey.svg'
 
 	export let sidebar = false;
@@ -13,8 +13,8 @@
         <Hamburger bind:open={sidebar}/>
     </div>
     <hr />
-    <a href='/' class="expand-icon">
-        <img src={expandIcon} />
+    <a href='/' class="dashboard-icon">
+        <img src={dashboardIcon} />
     </a>
     <a class="arrow-button" on:click={() => expand = true}>
         <div class="arrow-icon-container">
@@ -37,7 +37,7 @@
     width: 25px;
   }
 
-  .navbar .expand-icon img {
+  .navbar .dashboard-icon img {
     width: 40px;
     margin: auto;
     margin-top: 40px;

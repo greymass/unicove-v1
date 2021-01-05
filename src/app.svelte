@@ -32,6 +32,7 @@
     :global(:root){
        --main-blue: #2D8EFF;
        --main-grey: #F7F7FC;
+       --main-black: #585D6E;
     }
 </style>
 
