@@ -14,8 +14,9 @@
 <div class="navbar h-full p-2 items-center text-gray-600 border-r-2">
     <div class="title">
         Greymass Wallet - Alpha 0.1
-
-        <img src={xBlueIcon} />
+        <a on:click={() => expand = false}>
+            <img src={xBlueIcon} />
+        </a>
     </div>
     <hr />
     <br/>
@@ -33,6 +34,21 @@
             Transfer
         </div>
      </a>
+
+     <div class="bottom-container">
+        <h1>
+            Support
+        </h1>
+
+        <a href='#'>
+            <img src={speechBubbleIcon} />
+            Feedback
+        </a>
+        <a href='#'>
+            <img src={infoIcon} />
+            About
+        </a>
+     </div>
 </div>
 
 <style>
@@ -48,6 +64,10 @@
     display: inline-block;
     text-align: center;
   }
+
+   .navbar .title a {
+      cursor: pointer;
+   }
 
   .navbar .title img {
     display: inline-block;
@@ -76,4 +96,20 @@
       margin-bottom: 2px;
    }
 
+   .navbar .bottom-container {
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     width: 100%;
+     height: 200px;
+   }
+
+   .navbar .bottom-container h1 {
+      color: var(--main-grey)
+   }
+
+   .navbar .bottom-container a {
+      color: var(--main-blue);
+      cursor: pointer;
+   }
 </style>

@@ -13,7 +13,7 @@
     {#if matches}
       <MobileNavbar bind:sidebar={sidebar} />
     {:else if expand}
-      <LargeNavbar />
+      <LargeNavbar bind:expand={expand} />
     {:else}
       <SmallNavbar
         bind:sidebar={sidebar}
