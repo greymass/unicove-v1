@@ -19,10 +19,10 @@
 </script>
 
 <Page title="Resources">
+    <ResourcesNavigation />
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
-        <ResourcesNavigation />
         Available Resources
         <ul>
             <li>
