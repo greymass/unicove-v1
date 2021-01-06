@@ -6,6 +6,7 @@
 
 	export let sidebar = false;
 	export let expand;
+	export let onExpand;
 </script>
 
 <div class="navbar h-full p-2 items-center text-gray-600 border-r-2">
@@ -16,7 +17,7 @@
     <a href='/' class="dashboard-icon">
         <img src={dashboardIcon} />
     </a>
-    <a class="arrow-button" on:click={() => expand = true}>
+    <a class="arrow-button" on:click={onExpand}>
         <div class="arrow-icon-container">
              <img src={arrowRight} />
         </div>

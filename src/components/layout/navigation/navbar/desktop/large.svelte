@@ -9,6 +9,7 @@
 
 	export let sidebar = false;
 	export let expand;
+	export let onClose;
 
 	const currentPath = window.location.pathname;
 </script>
@@ -16,7 +17,7 @@
 <div class="navbar h-full p-2 items-center text-gray-600 border-r-2">
     <div class="title">
         Greymass Wallet - Alpha 0.1
-        <a on:click={() => expand = false}>
+        <a on:click={onClose}>
             <img src={xBlueIcon} />
         </a>
     </div>
@@ -31,9 +32,9 @@
     </a>
      <a href='/transfer' class="menu-item-link">
         <div class="menu-item {currentPath === '/transfer' ? 'active' : ''}">
-            <img src={currentPath === '/transfer' ? arrowRightGreyIcon : arrowRightBlueIcon} />
+           <img src={currentPath === '/transfer' ? arrowRightGreyIcon : arrowRightBlueIcon} />
             &nbsp;
-            Transfer
+           Transfer
         </div>
      </a>
 

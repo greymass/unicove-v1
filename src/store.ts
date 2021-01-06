@@ -16,3 +16,12 @@ export const activeSession = writable<LinkSession | null>(null)
 /** List of all available anchor link sessions. */
 export const availableSessions = writable<SessionLike[]>([])
 
+/** Preferences object. */
+export interface Preferences {
+    expandNavbar: Boolean
+}
+
+/** List of preferences. */
+export const preferences = writable<Preferences>({
+    expandNavbar: false,
+});
