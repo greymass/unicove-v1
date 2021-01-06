@@ -4,6 +4,8 @@
 	import arrowRightBlueIcon from '../../../../../../public/images/arrow-right-blue.svg'
 	import arrowRightGreyIcon from '../../../../../../public/images/arrow-right-grey.svg'
 	import xBlueIcon from '../../../../../../public/images/x-blue.svg'
+	import messageCircleBlueIcon from '../../../../../../public/images/message-circle-blue.svg'
+    import infoBlueIcon from '../../../../../../public/images/info-blue.svg'
 
 	export let sidebar = false;
 	export let expand;
@@ -41,11 +43,12 @@
         </h1>
 
         <a href='#'>
-            <img src={speechBubbleIcon} />
+            <img src={messageCircleBlueIcon} />
             Feedback
         </a>
+        <br />
         <a href='#'>
-            <img src={infoIcon} />
+            <img class="info-icon" src={infoBlueIcon} />
             About
         </a>
      </div>
@@ -102,14 +105,27 @@
      left: 0;
      width: 100%;
      height: 200px;
+     padding: 20px;
    }
 
    .navbar .bottom-container h1 {
-      color: var(--main-grey)
+      color: grey;
+      font-size: 11px;
+      margin-bottom: 15px;
+      margin-top: 20px;
    }
 
    .navbar .bottom-container a {
       color: var(--main-blue);
       cursor: pointer;
+   }
+
+   .navbar .bottom-container a img {
+      display: inline-block;
+      margin: 5px
+   }
+
+   .navbar .bottom-container a img.info-icon {
+      margin-right: 12px
    }
 </style>
