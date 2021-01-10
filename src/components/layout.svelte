@@ -14,7 +14,7 @@
     <div class="navigation">
         <Navigation />
     </div>
-    <div>
+    <div class="main">
         <header class="header">
             <AccountSwitcher />
             <hr />
@@ -23,10 +23,9 @@
             <h1>{title}</h1>
             <slot />
         </div>
+        <Footer />
     </div>
   </div>
-
-  <Footer />
 </section>
 
 <style>
@@ -36,7 +35,12 @@
  }
 
  .navigation {
-   width: 20%;
+   width: 15%;
+ }
+
+ .main {
+   width: 80%;
+   margin-right: 5%
  }
 
  .header {
