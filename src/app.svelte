@@ -19,6 +19,10 @@
 
 <style lang="scss" global>
     @import 'style/global.scss';
+
+    main {
+      height: 100%
+    }
     #greymass-wallet-version {
         font-size: 0.2em;
         opacity: 0.2;
@@ -35,7 +39,7 @@
     }
 </style>
 
-<main class="h-full">
+<main>
     {#if !$appReady}
         Loading...
     {:else if !$activeSession || !$activeBlockchain}

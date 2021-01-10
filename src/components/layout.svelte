@@ -10,8 +10,8 @@
 </script>
 
 <section>
-  <div class="flex h-full">
-    <div class="w-1/5">
+  <div class="layout">
+    <div class="navigation">
         <Navigation />
     </div>
     <div>
@@ -30,6 +30,15 @@
 </section>
 
 <style>
+ .layout {
+   display: flex;
+   height: 100%;
+ }
+
+ .navigation {
+   width: 20%;
+ }
+
  .header {
     margin: 15px;
  }

@@ -6,17 +6,18 @@
     let open = false
 </script>
 
-<style>
-    nav :global(a.active)::after {
-        content: ' ⬅ you are here';
-        font-size: 0.65em;
-    }
-
-    :global(body) {
-        padding: 0;
-    }
-</style>
-<div class="h-full w-full">
+<div class="navigation">
     <Sidebar bind:open/>
     <Navbar bind:sidebar={open}/>
 </div>
+
+<style>
+   .navigation {
+     height: 100%;
+     width: 100%;
+   }
+
+   :global(body) {
+       padding: 0;
+   }
+</style>

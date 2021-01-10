@@ -14,7 +14,7 @@
 	const currentPath = window.location.pathname;
 </script>
 
-<div class="navbar h-full p-2 items-center text-gray-600 border-r-2">
+<div class="navbar">
     <div class="title">
         Greymass Wallet - Alpha 0.1
         <a on:click={onClose}>
@@ -60,6 +60,9 @@
     background-color: var(--main-grey);
     padding: 13px;
     width: 210px;
+    height: 100%;
+    border-right-width: 2px;
+    align-items: center;
   }
 
   .navbar .title {

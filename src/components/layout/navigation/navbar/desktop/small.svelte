@@ -9,7 +9,7 @@
 	export let onExpand;
 </script>
 
-<div class="navbar h-full p-2 items-center text-gray-600 border-r-2">
+<div class="navbar">
     <div class="hamburger-container">
         <Hamburger bind:open={sidebar}/>
     </div>
@@ -30,6 +30,9 @@
     padding: 25px;
     padding-top: 30px;
     width: 100px;
+    height: 100%;
+    border-right: 2px;
+    align-items: center;
   }
 
   .navbar .hamburger-container {
