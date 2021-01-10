@@ -35,6 +35,7 @@
  .main {
    flex-grow: 1;
    padding: 20px;
+   min-height: 90vh;
  }
 
  .header {
@@ -42,11 +43,11 @@
  }
 
  .content {
-   margin: 45px;
-   min-height: 90vh;
+    margin: 45px;
+    min-height: 60vh;
  }
 
  .content h1 {
-   margin-bottom: 20px;
+    margin-bottom: 20px;
  }
 </style>
