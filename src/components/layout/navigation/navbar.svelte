@@ -18,17 +18,37 @@
 
 <MediaQuery query="(max-width: 999px)" let:matches>
     {#if matches}
-      <MobileNavbar bind:sidebar={sidebar} />
+    <div class="mobile">
+       <MobileNavbar bind:sidebar={sidebar} />
+    </div>
     {:else if expand}
-      <LargeNavbar
-        expand={expand}
-        onClose={() => preferences.set({ expandNavbar: false }) }
-      />
+      <div class="large">
+          <LargeNavbar
+            expand={expand}
+            onClose={() => preferences.set({ expandNavbar: false }) }
+          />
+      </div>
     {:else}
+    <div class="small">
       <SmallNavbar
         bind:sidebar={sidebar}
         expand={expand}
         onExpand={() => preferences.set({ expandNavbar: true }) }
       />
+    </div>
     {/if}
  </MediaQuery>
+
+<style>
+  .mobile {
+    width: 5%;
+  }
+
+  .small {
+    width: 15%;
+  }
+
+  .large {
+    width: 20%;
+  }
+</style>

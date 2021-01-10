@@ -11,9 +11,7 @@
 
 <section>
   <div class="layout">
-    <div class="navigation">
-        <Navigation />
-    </div>
+    <Navigation />
     <div class="main">
         <header class="header">
             <AccountSwitcher />
@@ -34,13 +32,9 @@
    height: 100%;
  }
 
- .navigation {
-   width: 15%;
- }
-
  .main {
-   width: 80%;
-   margin-right: 5%
+   flex-grow: 1;
+   padding: 20px;
  }
 
  .header {

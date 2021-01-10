@@ -15,7 +15,9 @@
     </div>
     <hr />
     <a href='/' class="dashboard-icon">
-        <img src={dashboardIcon} />
+        <div class="dashboard-icon-container">
+             <img src={dashboardIcon} />
+        </div>
     </a>
     <a class="arrow-button" on:click={onExpand}>
         <div class="arrow-icon-container">
@@ -26,40 +28,47 @@
 
 <style>
   .navbar {
-    background-color: var(--main-grey);
-    padding: 25px;
-    padding-top: 30px;
-    width: 100px;
-    height: 100%;
-    border-right: 2px;
     align-items: center;
+    background-color: var(--main-grey);
+    border-right: 2px;
+    height: 100%;
+    margin: 0;
+    padding-top: 30px;
+    padding: 25px;
+    width: 100px;
   }
 
   .navbar .hamburger-container {
     margin: auto;
     margin-bottom: 30px;
-    width: 25px;
+    width: 35px;
   }
 
-  .navbar .dashboard-icon img {
+  .navbar .dashboard-icon .dashboard-icon-container  {
+    display: flex;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+
+  .navbar .dashboard-icon .dashboard-icon-container img {
     width: 40px;
     margin: auto;
-    margin-top: 40px;
   }
 
   .navbar a.arrow-button .arrow-icon-container {
-    cursor: pointer;
     background-color: white;
-    width: 45px;
-    height: 40px;
-    margin: auto;
-    margin-top: 40px;
-    padding: 15px;
-    padding-top: 10px;
     border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    height: 40px;
+    margin-top: 60px;
+    margin: auto;
+    width: 70px;
+    height: 50px;
   }
 
-  .navbar a.arrow-button img {
+  .navbar a.arrow-button .arrow-icon-container img {
     width: 30px;
+    margin: auto;
   }
 </style>
