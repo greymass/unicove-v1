@@ -1,5 +1,5 @@
 <script>
-    import Menu from './menu.svelte'
+    import Menu from './navbar/sidebar/menu.svelte'
 
 	export let open = false
 </script>
@@ -10,16 +10,16 @@
 
 <style>
 	aside {
+	    top: 0;
 		left: -100%;
 		transition: left 0.3s ease-in-out;
 		position: absolute;
 		width: 50%;
+		max-width: 250px;
 		height: 100%;
-		--tw-bg-opacity: 1;
-        background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
+        background-color: rgba(229, 231, 235);
         border-right-width: 2px;
-        --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        border-color: darkgray;
 	}
 
 	.open {
