@@ -23,18 +23,22 @@
     </div>
     <hr />
     <br/>
-    <a href='/' class="menu-item-link">
-       <div class="menu-item {currentPath === '/' ? 'active' : ''}">
-          <img src={currentPath === '/' ? dashboardGreyIcon : dashboardBlueIcon} />
-          &nbsp;
-          Dashboard
-       </div>
+    <a href='/'>
+      <div class="menu-item-container">
+         <div class="menu-item {currentPath === '/' ? 'active' : ''}">
+            <img src={currentPath === '/' ? dashboardGreyIcon : dashboardBlueIcon} />
+              &nbsp;
+            Dashboard
+          </div>
+      </div>
     </a>
-     <a href='/transfer' class="menu-item-link">
-        <div class="menu-item {currentPath === '/transfer' ? 'active' : ''}">
-           <img src={currentPath === '/transfer' ? arrowRightGreyIcon : arrowRightBlueIcon} />
-            &nbsp;
-           Transfer
+     <a href='/transfer'>
+        <div class="menu-item-container">
+            <div class="menu-item {currentPath === '/transfer' ? 'active' : ''}">
+               <img src={currentPath === '/transfer' ? arrowRightGreyIcon : arrowRightBlueIcon} />
+                &nbsp;
+               Transfer
+            </div>
         </div>
      </a>
 
@@ -48,8 +52,8 @@
             Feedback
         </a>
         <br />
-        <a href='#'>
-            <img class="info-icon" src={infoBlueIcon} />
+        <a href='#' class="info-icon">
+            <img src={infoBlueIcon} />
             About
         </a>
      </div>
@@ -67,9 +71,11 @@
 
   .navbar .title {
     font-size: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    margin-left: 8px;
     display: inline-block;
     text-align: center;
+    color: gray;
   }
 
    .navbar .title a {
@@ -79,28 +85,26 @@
   .navbar .title img {
     display: inline-block;
     width: 13px;
-    margin-left: 4px;
-    margin-bottom: 3px;
+    margin: 5px 0 -3px 10px;
   }
 
-   .navbar a.menu-item-link .menu-item {
+   .navbar a .menu-item-container .menu-item {
       border-radius: 4px;
       color: var(--main-blue);
       display: inline-block;
-      height: 40px;
-      margin: 5px;
-      padding: 10px;
-      width: 160px;
+      margin: auto;
+      padding: 15px 40px;
+      min-width: 120px;
    }
 
-   .navbar a.menu-item-link .active.menu-item {
+    .navbar a.menu-item-link .menu-item img {
+       display: inline-block;
+       margin-bottom: 2px;
+    }
+
+   .navbar a .menu-item-container .active.menu-item {
       background-color: white;
       color: var(--main-black)
-   }
-
-   .navbar a.menu-item-link .menu-item img {
-      display: inline-block;
-      margin-bottom: 2px;
    }
 
    .navbar .bottom-container {
@@ -122,14 +126,19 @@
    .navbar .bottom-container a {
       color: var(--main-blue);
       cursor: pointer;
+      text-decoration: none;
    }
 
    .navbar .bottom-container a img {
       display: inline-block;
-      margin: 5px
+      margin-bottom: -7px;
    }
 
-   .navbar .bottom-container a img.info-icon {
-      margin-right: 12px
+   .navbar .bottom-container a.info-icon {
+      margin-top: 20px;
+   }
+
+   .navbar .bottom-container a.info-icon img {
+      margin: 20px 5px -3px 2px;
    }
 </style>

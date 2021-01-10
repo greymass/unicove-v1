@@ -49,6 +49,6 @@
   }
 
   .large {
-    width: 20%;
+    width: 22%;
   }
 </style>
