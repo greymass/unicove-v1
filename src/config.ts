@@ -51,7 +51,8 @@ export const chains: ChainConfig[] = [
     },
 ]
 
-export function featureEnabled(activeSession: SessionLike, feature: ChainFeatures): boolean {
+export function featureEnabled(activeSession: SessionLike | null, feature: ChainFeatures): boolean {
+    if (!activeSession) return false
     const chain = chains.find((c) => c.chainId === String(activeSession.chainId))
     return !chain || chain.chainFeatures.has(feature)
 }
