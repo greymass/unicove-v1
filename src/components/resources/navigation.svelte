@@ -1,14 +1,8 @@
 <script lang="ts">
     import {active} from 'tinro'
 
-    import {chains, ChainFeatures} from '../../config'
+    import {chains, featureEnabled, ChainFeatures} from '../../config'
     import {activeSession} from '../../store'
-
-    $: chain = chains.find((c) => c.chainId === String($activeSession.chainId))
-
-    $: featureEnabled = (feature: ChainFeatures): boolean => {
-        return !chain || chain.chainFeatures.has(feature)
-    }
 </script>
 
 <style>
@@ -24,16 +18,16 @@
         <li>
             Resource Providers
             <ul>
-                {#if featureEnabled(ChainFeatures.Fuel)}
+                {#if featureEnabled($activeSession, ChainFeatures.Fuel)}
                     <li><a href="/resources/fuel" use:active>Fuel</a></li>
                 {/if}
-                {#if featureEnabled(ChainFeatures.PowerUp)}
+                {#if featureEnabled($activeSession, ChainFeatures.PowerUp)}
                     <li><a href="/resources/powerup" use:active>PowerUp</a></li>
                 {/if}
-                {#if featureEnabled(ChainFeatures.REX)}
+                {#if featureEnabled($activeSession, ChainFeatures.REX)}
                     <li><a href="/resources/rex" use:active>REX</a></li>
                 {/if}
-                {#if featureEnabled(ChainFeatures.Staking)}
+                {#if featureEnabled($activeSession, ChainFeatures.Staking)}
                     <li><a href="/resources/staked" use:active>Staking</a></li>
                 {/if}
             </ul>

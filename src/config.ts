@@ -1,3 +1,5 @@
+import { SessionLike } from './auth'
+
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
 
@@ -48,3 +50,8 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://jungle3.greymass.com',
     },
 ]
+
+export function featureEnabled(activeSession: SessionLike, feature: ChainFeatures): boolean {
+    const chain = chains.find((c) => c.chainId === String(activeSession.chainId))
+    return !chain || chain.chainFeatures.has(feature)
+}
