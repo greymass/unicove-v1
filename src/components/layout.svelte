@@ -31,7 +31,7 @@
 
  .main {
    flex-grow: 1;
-   padding: 20px;
+   padding: 30px;
    min-height: 90vh;
  }
 
