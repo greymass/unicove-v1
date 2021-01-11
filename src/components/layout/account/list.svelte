@@ -52,12 +52,14 @@
 
     li {
        padding: 15px;
+       margin-top: 10px;
     }
 
     li a {
         color: var(--main-blue);
         margin-bottom: 10px;
         text-decoration: none;
+        font-weight: normal;
     }
 
     li.active {
@@ -66,17 +68,39 @@
     }
 
     li.active a {
-       color: var(--light-black)
+       color: var(--light-black);
     }
 
-    .dropdown-options {
-      display: none;
-      position: absolute;
-      background-color: #f9f9f9;
-      min-width: 160px;
+    li.add-account {
+      background-color: var(--light-blue);
+      cursor: pointer;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    button:hover, button:active, button:visited, button:focus {
+      border: none;
+      outline: none;
+    }
+
+    button .dropdown-options {
+      background-color: white;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      padding: 12px 16px;
+      display: none;
+      min-width: 100px;
+      padding: 0 16px;
+      position: absolute;
+      right: 0;
       z-index: 1;
+    }
+
+    button .dropdown-options a {
+       color: var(--main-blue);
+       display: block;
+       font-size: 12px;
+       font-weight: normal;
+       margin-top: 10px;
+       margin-bottom: 10px;
     }
 
     button:hover .dropdown-options {
@@ -91,7 +115,7 @@
                 <a
                     href="#select-account"
                     on:click|preventDefault={() => activate(session)}>
-                    <b>{session.auth.actor}@{session.auth.permission}</b>
+                    {session.auth.actor}@{session.auth.permission}
                 </a>
                 <button>
                    ...
@@ -104,12 +128,10 @@
                        </a>
                    </div>
                 </button>
-
             </li>
         {/each}
-        <li>
+        <li class="add-account">
             <a
-                class="add-account"
                 on:click|preventDefault={handleAdd}
                 href="#add-account"
             >

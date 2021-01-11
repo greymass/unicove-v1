@@ -39,6 +39,7 @@
        --light-black: #2C3E50;
        --light-grey: #9898B5;
        --dark-grey: #B7C1CB;
+       --light-blue: #E0EEFF;
     }
 </style>
 
