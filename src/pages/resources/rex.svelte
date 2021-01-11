@@ -30,7 +30,7 @@
     let rentSplitCPUFloor = 0.0001
     
     // User entered payment amount
-    let payment = '0.0001'
+    let payment = '0.0005'
 
     // Asset representation of user entered amount
     let amount = Asset.fromFloat(parseFloat(payment), coreSymbol)
@@ -89,7 +89,7 @@
                     rentNET = true
                     // If true, split the entered amount by the defined split
                     amountCPU = Asset.fromFloat(amount.value * rentSplitCPU, coreSymbol)
-                    amountNET = Asset.fromFloat(amount.value * rentSplitNET, coreSymbol)
+                    amountNET = Asset.fromFloat(amount.value - amountCPU.value, coreSymbol)
                     // If the split is below the floor, readjust to set it to the floor
                     if (amountNET.value < rentSplitNETFloor) {
                         amountCPU = Asset.fromFloat(amount.value - rentSplitNETFloor, coreSymbol)
