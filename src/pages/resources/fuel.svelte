@@ -2,6 +2,7 @@
     import type {API, LinkSession} from 'anchor-link'
 
     import {activeSession} from '../../store'
+    import {featureEnabled, ChainFeatures} from '../../config'
 
     import Page from '../../components/page.svelte'
     import ResourcesNavigation from '../../components/resources/navigation.svelte'
@@ -24,4 +25,10 @@
 
 <Page title="Resources - Fuel">
     <ResourcesNavigation />
+    {#if featureEnabled($activeSession, ChainFeatures.Fuel)}
+        <ul>
+        </ul>
+    {:else}
+        <p>This feature is unavailable on this blockchain.</p>
+    {/if}
 </Page>
