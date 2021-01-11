@@ -1,5 +1,5 @@
 <script>
-  import Hamburger from './shared/Hamburger';
+  import Hamburger from './shared/hamburger.svelte';
 
   export let sidebar = false;
 </script>
