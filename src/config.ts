@@ -1,4 +1,4 @@
-import { SessionLike } from './auth'
+import type {SessionLike} from './auth'
 
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
