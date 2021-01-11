@@ -12,6 +12,11 @@
 <section>
   <div class="layout">
     <Navigation />
+    <AccountSidebar />
+
+    <div class="account-button">
+
+    </div>
     <div class="main">
         <div class="content">
             <h1>{title}</h1>
@@ -19,7 +24,6 @@
         </div>
         <Footer />
     </div>
-    <AccountSidebar />
   </div>
 </section>
 
