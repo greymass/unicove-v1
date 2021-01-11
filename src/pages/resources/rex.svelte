@@ -10,6 +10,7 @@
     import ResourcesNavigation from '../../components/resources/navigation.svelte'
 
     let account:API.v1.AccountObject
+    let sampleAccount:API.v1.AccountObject
 
     // Internal values
     let coreSymbol = Asset.Symbol.from('4,EOS')
@@ -28,9 +29,10 @@
     let rentSplitNETCeiling = 0.0002
     let rentSplitCPU = 0.9
     let rentSplitCPUFloor = 0.0001
+    let estimatedTransfers:string = '0'
     
     // User entered payment amount
-    let payment = '0.0005'
+    let payment = '0.0020'
 
     // Asset representation of user entered amount
     let amount = Asset.fromFloat(parseFloat(payment), coreSymbol)
@@ -48,6 +50,11 @@
             balance = account.core_liquid_balance
         }
         return account
+    }
+
+    async function loadSampleAccount(session: LinkSession) {
+        sampleAccount = await session.client.v1.chain.get_account('teamgreymass')
+        return sampleAccount
     }
 
     async function loadTables(session: LinkSession) {
@@ -68,6 +75,7 @@
     // load account based on active session
     $: loading = (
         loadAccount($activeSession!)
+        && loadSampleAccount($activeSession!)
         && loadTables($activeSession!)
     )
 
@@ -75,7 +83,7 @@
     //       sextant admin ui has the beginnings of one that can handle core types we could build on
     $: {
         let value = parseFloat(payment)
-        if (!account || isNaN(value) || value === 0) {
+        if (!sampleAccount || !account || isNaN(value) || value === 0) {
             amount = Asset.fromUnits(0, coreSymbol)
             amountCPU = Asset.fromUnits(0, coreSymbol)
             amountNET = Asset.fromUnits(0, coreSymbol)
@@ -103,12 +111,16 @@
                     // Calculate the amount of CPU and NET to receive
                     cpuToReceive = Asset.fromFloat(amountCPU.value / price, coreSymbol)
                     netToReceive = Asset.fromFloat(amountNET.value / price, coreSymbol)
+                    // Estimate the number of token transfer this amount would allow
+                    const resourceCost = sampleAccount.cpu_limit.max.value / sampleAccount.total_resources.cpu_weight.value
+                    estimatedTransfers = (resourceCost * cpuToReceive.value / 200).toFixed(1)
                 } else {
                     rentNET = false
                     amountCPU = Asset.fromFloat(amount.value, coreSymbol)
                     amountNET = Asset.fromFloat(0, coreSymbol)
                     cpuToReceive = Asset.fromFloat(amount.value / price, coreSymbol)
                     netToReceive = Asset.fromFloat(0, coreSymbol)
+                    estimatedTransfers = '0'
                 }
             }
         }
@@ -198,6 +210,7 @@
                 <li>{cpuToReceive} as staked CPU</li>
                 <li>{netToReceive} as staked NET</li>
             </ul>
+            <p>Which is an amount capable of performing {estimatedTransfers} token transfers (based on ~200μs per transfer).</p>
         {/await}
     {:else}
         <p>This feature is unavailable on this blockchain.</p>
