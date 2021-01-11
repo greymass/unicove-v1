@@ -37,7 +37,7 @@
           />
         </div>
     {/if}
- </MediaQuery>
+</MediaQuery>
 
 <style>
   .mobile {

@@ -36,6 +36,9 @@
        --main-blue: #2D8EFF;
        --main-grey: #F7F7FC;
        --main-black: #585D6E;
+       --light-black: #2C3E50;
+       --light-grey: #9898B5;
+       --dark-grey: #B7C1CB;
     }
 </style>
 

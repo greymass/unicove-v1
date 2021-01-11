@@ -1,29 +1,61 @@
 <script>
     import List from './list.svelte'
 
+    import xBlueIcon from '../../../../public/images/x-blue.svg'
+
 	export let open = false
+
+	console.log({open})
 </script>
 
 <aside class:open>
+   <div class="header">
+       <a on:click={() => open = false }>
+         <img src={xBlueIcon} />
+       </a>
+       <h2>
+         Accounts
+       </h2>
+       <br />
+       <hr />
+   </div>
+
 	<List />
 </aside>
 
 <style>
 	aside {
-	    top: 0;
+		height: 100%;
+		max-width: 300px;
+		position: absolute;
 		right: -100%;
 		transition: left 0.3s ease-in-out;
-		position: absolute;
 		width: 50%;
-		max-width: 250px;
-		height: 100%;
-        background-color: rgba(229, 231, 235);
-        border-right-width: 2px;
+	    top: 0;
+        background-color: var(--main-grey);
         border-color: darkgray;
+        border-right-width: 2px;
 	}
 
+	.header {
+       margin: 18px;
+	}
+
+	.header a {
+       cursor: pointer;
+       margin-right: 5px;
+       margin-bottom: -10px;
+	}
+
+    .header h2 {
+      color: var(--dark-grey);
+      font-size: 14px;
+      font-weight: normal;
+      display: inline-block;
+    }
+
 	.open {
-	   left: 0
+	   right: 0
 	}
 </style>
 

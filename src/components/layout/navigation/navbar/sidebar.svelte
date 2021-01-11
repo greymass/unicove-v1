@@ -17,12 +17,12 @@
 		width: 50%;
 		max-width: 250px;
 		height: 100%;
-        background-color: rgba(229, 231, 235);
+        background-color: var(--main-grey);
         border-right-width: 2px;
         border-color: darkgray;
 	}
 
 	.open {
-		left: 0
+		left: 0;
 	}
 </style>

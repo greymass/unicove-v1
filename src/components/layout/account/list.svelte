@@ -26,26 +26,22 @@
 </script>
 
 <style>
-    .account-switcher {
-      margin: 30px;
+    .list {
+      margin: 10px;
     }
-    .active::after {
-        content: ' ⬅ this is you';
-        font-size: 0.65em;
+
+    ul {
+       list-style-type: none;
+       padding: 10px;
     }
+
     button {
-        background: black;
-        color: white;
-        font-size: 0.6rem;
-        border: 0;
-        border-radius: 50%;
-        width: 1.5em;
-        height: 1.5em;
-        text-align: center;
-        padding: 0;
-        margin: 0;
-        opacity: 0.15;
-        cursor: pointer;
+        background-color: transparent;
+        border: none;
+        color: var(--main-blue);
+        font-size: 20px;
+        font-weight: bold;
+        margin-left: 10px;
     }
     li:hover button {
         opacity: 0.5;
@@ -53,24 +49,72 @@
     li button:hover {
         opacity: 1;
     }
+
+    li {
+       padding: 15px;
+    }
+
+    li a {
+        color: var(--main-blue);
+        margin-bottom: 10px;
+        text-decoration: none;
+    }
+
+    li.active {
+       background-color: white;
+       border-radius: 3px;
+    }
+
+    li.active a {
+       color: var(--light-black)
+    }
+
+    .dropdown-options {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      padding: 12px 16px;
+      z-index: 1;
+    }
+
+    button:hover .dropdown-options {
+      display: block;
+    }
 </style>
 
-<div class="account-switcher">
-    Accounts
+<div class="list">
     <ul>
         {#each sortedSessions as session}
-            <li>
+            <li class:active={isActive(session)}>
                 <a
-                    class:active={isActive(session)}
                     href="#select-account"
                     on:click|preventDefault={() => activate(session)}>
                     <b>{session.auth.actor}@{session.auth.permission}</b>
-                    on
-                    {chainName(session.chainId)}
                 </a>
-                <button on:click={() => logout(session)}>X</button>
+                <button>
+                   ...
+                   <div class="dropdown-options">
+                       <a on:click={() => activate(session)}>
+                           Select
+                       </a>
+                       <a on:click={() => logout(session)}>
+                           Remove
+                       </a>
+                   </div>
+                </button>
+
             </li>
         {/each}
-        <li><a on:click|preventDefault={handleAdd} href="#add-account">Add account</a></li>
+        <li>
+            <a
+                class="add-account"
+                on:click|preventDefault={handleAdd}
+                href="#add-account"
+            >
+                Add account
+            </a>
+        </li>
     </ul>
 </div>
