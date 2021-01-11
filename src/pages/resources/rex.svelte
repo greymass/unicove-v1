@@ -75,7 +75,7 @@
     //       sextant admin ui has the beginnings of one that can handle core types we could build on
     $: {
         let value = parseFloat(payment)
-        if (isNaN(value) || value === 0) {
+        if (!account || isNaN(value) || value === 0) {
             amount = Asset.fromUnits(0, coreSymbol)
             amountCPU = Asset.fromUnits(0, coreSymbol)
             amountNET = Asset.fromUnits(0, coreSymbol)
