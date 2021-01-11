@@ -4,8 +4,6 @@
     import xBlueIcon from '../../../../public/images/x-blue.svg'
 
 	export let open = false
-
-	console.log({open})
 </script>
 
 <aside class:open>
@@ -35,6 +33,7 @@
         background-color: var(--main-grey);
         border-color: darkgray;
         border-right-width: 2px;
+        display: none;
 	}
 
 	.header {
@@ -55,7 +54,8 @@
     }
 
 	.open {
-	   right: 0
+	   display: block;
+	   right: 0;
 	}
 </style>
 
