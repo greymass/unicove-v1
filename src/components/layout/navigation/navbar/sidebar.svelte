@@ -1,5 +1,5 @@
 <script>
-    import Menu from './navbar/sidebar/menu.svelte'
+    import Menu from './sidebar/menu.svelte'
 
 	export let open = false
 </script>

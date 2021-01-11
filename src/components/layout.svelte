@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AccountSwitcher from './layout/account-switcher.svelte'
+    import AccountSidebar from './layout/account/sidebar.svelte'
 
     import Navigation from './layout/navigation.svelte'
 
@@ -13,16 +13,13 @@
   <div class="layout">
     <Navigation />
     <div class="main">
-        <header class="header">
-            <AccountSwitcher />
-            <hr />
-        </header>
         <div class="content">
             <h1>{title}</h1>
             <slot />
         </div>
         <Footer />
     </div>
+    <AccountSidebar />
   </div>
 </section>
 
@@ -36,10 +33,6 @@
    flex-grow: 1;
    padding: 20px;
    min-height: 90vh;
- }
-
- .header {
-    margin: 15px;
  }
 
  .content {
