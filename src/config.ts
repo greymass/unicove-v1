@@ -1,3 +1,4 @@
+import {Asset, Name} from '@greymass/eosio'
 import type {ChainId} from 'anchor-link'
 import type {SessionLike} from './auth'
 
@@ -10,10 +11,22 @@ export const appId = branch !== 'deploy' ? `w.${branch}.gm` : 'wallet.gm'
 export const version = `${branch}-${rev}`
 
 export enum ChainFeatures {
+    /** eosio.namebid https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/name_bidding.cpp */
+    BidName,
+    /** eosio.buyram / eosio.buyrambytes https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/delegate_bandwidth.cpp#L43 */
+    BuyRAM,
+    /** FIO Bundled Transactions https://fio.wiki/knowledge-base/protocol/bundling-and-fees/ */
+    FIOBundledFees,
+    /** Fuel https://greymass.com/fuel */
     Fuel,
+    /** eosio.powerup https://github.com/EOSIO/eosio.contracts/pull/397 */
     PowerUp,
+    /** eosio.rentcpu / eosio.rentnet https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/powerup.cpp */
     REX,
+    /** eosio.delegatebw https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/delegate_bandwidth.cpp#L372 */
     Staking,
+    /** eosio.voteproducer https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/voting.cpp */
+    VoteProducer,
 }
 
 export interface ChainConfig {
@@ -21,33 +34,65 @@ export interface ChainConfig {
     id: string
     /** Display name. */
     name: string
-    /** Chain ID. */
-    chainId: string
-    /** Node URL to use. */
-    nodeUrl: string
     /** Chain Features */
     chainFeatures: Set<ChainFeatures>
+    /** Chain ID. */
+    chainId: string
+    /** System Token Contract Name */
+    coreTokenContract: Name
+    /** System Token Symbol */
+    coreTokenSymbol: Asset.Symbol
+    /** System Token Transfer Action */
+    coreTokenTransfer: Name
+    /** Node URL to use. */
+    nodeUrl: string
 }
 
 /** Supported chains. */
 export const chains: ChainConfig[] = [
     {
         id: 'eos',
-        name: 'EOS',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
         chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
-        chainFeatures: new Set([ChainFeatures.Fuel, ChainFeatures.REX, ChainFeatures.Staking]),
+        coreTokenSymbol: Asset.Symbol.from('4,EOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'EOS',
         nodeUrl: 'https://eos.greymass.com',
     },
     {
+        id: 'fio',
+        chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),
+        chainId: '21dcae42c0182200e93f954a074011f9048a7624c6fe81d3c9541a614a88bd1c',
+        coreTokenSymbol: Asset.Symbol.from('9,FIO'),
+        coreTokenContract: Name.from('fio.token'),
+        coreTokenTransfer: Name.from('trnsfiopubky'),
+        name: 'FIO',
+        nodeUrl: 'https://fio.greymass.com',
+    },
+    {
         id: 'jungle3',
-        name: 'Jungle 3 (Testnet)',
-        chainId: '2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840',
         chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
             ChainFeatures.Fuel,
             ChainFeatures.PowerUp,
             ChainFeatures.REX,
             ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
         ]),
+        chainId: '2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840',
+        coreTokenSymbol: Asset.Symbol.from('4,EOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Jungle 3 (Testnet)',
         nodeUrl: 'https://jungle3.greymass.com',
     },
 ]
