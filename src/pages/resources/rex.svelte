@@ -11,15 +11,14 @@
 
     let account:API.v1.AccountObject
     let sampleAccount:API.v1.AccountObject
-
+    
     // Internal values
-    let coreSymbol = Asset.Symbol.from('4,EOS')
-    let balance: Asset = Asset.fromUnits(0, coreSymbol)
-    let totalRent: Asset = Asset.fromUnits(0, coreSymbol)
-    let totalUnlent: Asset = Asset.fromUnits(0, coreSymbol)
+    let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let totalRent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let totalUnlent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let price: number = 0
-    let cpuToReceive: Asset = Asset.fromUnits(0, coreSymbol)
-    let netToReceive: Asset = Asset.fromUnits(0, coreSymbol)
+    let cpuToReceive: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let netToReceive: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     let rentNET = false
     let rentCPU = true
@@ -32,21 +31,20 @@
     let estimatedTransfers:string = '0'
     
     // User entered payment amount
-    let payment = '0.0020'
+    let payment = '0.0025'
 
     // Asset representation of user entered amount
-    let amount = Asset.fromFloat(parseFloat(payment), coreSymbol)
+    let amount = Asset.fromFloat(parseFloat(payment), $activeBlockchain.coreTokenSymbol)
 
     // Asset representation of the user entered amount to each resource
-    let amountCPU = Asset.fromFloat(parseFloat(payment), coreSymbol)
-    let amountNET = Asset.fromFloat(parseFloat(payment), coreSymbol)
+    let amountCPU = Asset.fromFloat(parseFloat(payment), $activeBlockchain.coreTokenSymbol)
+    let amountNET = Asset.fromFloat(parseFloat(payment), $activeBlockchain.coreTokenSymbol)
     
     // TODO: we need some sort of global account store/cache instead of pulling it every page load
     async function loadAccount(session: LinkSession) {
-        balance = Asset.fromUnits(0, coreSymbol)
+        balance = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
         account = await session.client.v1.chain.get_account(session.auth.actor)
         if (account.core_liquid_balance) {
-            coreSymbol = account.core_liquid_balance.symbol
             balance = account.core_liquid_balance
         }
         return account
@@ -84,42 +82,42 @@
     $: {
         let value = parseFloat(payment)
         if (!sampleAccount || !account || isNaN(value) || value === 0) {
-            amount = Asset.fromUnits(0, coreSymbol)
-            amountCPU = Asset.fromUnits(0, coreSymbol)
-            amountNET = Asset.fromUnits(0, coreSymbol)
-            cpuToReceive = Asset.fromUnits(0, coreSymbol)
-            netToReceive = Asset.fromUnits(0, coreSymbol)
+            amount = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+            amountCPU = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+            amountNET = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+            cpuToReceive = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+            netToReceive = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
         } else {
-            amount = Asset.fromFloat(value, coreSymbol)
+            amount = Asset.fromFloat(value, $activeBlockchain.coreTokenSymbol)
             if (price) {
                 // Determine if the account needs to also rent NET
                 if (account.net_limit.available.value < 1000) {
                     rentNET = true
                     // If true, split the entered amount by the defined split
-                    amountCPU = Asset.fromFloat(amount.value * rentSplitCPU, coreSymbol)
-                    amountNET = Asset.fromFloat(amount.value - amountCPU.value, coreSymbol)
+                    amountCPU = Asset.fromFloat(amount.value * rentSplitCPU, $activeBlockchain.coreTokenSymbol)
+                    amountNET = Asset.fromFloat(amount.value - amountCPU.value, $activeBlockchain.coreTokenSymbol)
                     // If the split is below the floor, readjust to set it to the floor
                     if (amountNET.value < rentSplitNETFloor) {
-                        amountCPU = Asset.fromFloat(amount.value - rentSplitNETFloor, coreSymbol)
-                        amountNET = Asset.fromFloat(rentSplitNETFloor, coreSymbol)
+                        amountCPU = Asset.fromFloat(amount.value - rentSplitNETFloor, $activeBlockchain.coreTokenSymbol)
+                        amountNET = Asset.fromFloat(rentSplitNETFloor, $activeBlockchain.coreTokenSymbol)
                     }
                     // If the split is above the ceiling, readjust to set to the ceiling
                     if (amountNET.value > rentSplitNETCeiling) {
-                        amountCPU = Asset.fromFloat(amount.value - rentSplitNETCeiling, coreSymbol)
-                        amountNET = Asset.fromFloat(rentSplitNETCeiling, coreSymbol)
+                        amountCPU = Asset.fromFloat(amount.value - rentSplitNETCeiling, $activeBlockchain.coreTokenSymbol)
+                        amountNET = Asset.fromFloat(rentSplitNETCeiling, $activeBlockchain.coreTokenSymbol)
                     }
                     // Calculate the amount of CPU and NET to receive
-                    cpuToReceive = Asset.fromFloat(amountCPU.value / price, coreSymbol)
-                    netToReceive = Asset.fromFloat(amountNET.value / price, coreSymbol)
+                    cpuToReceive = Asset.fromFloat(amountCPU.value / price, $activeBlockchain.coreTokenSymbol)
+                    netToReceive = Asset.fromFloat(amountNET.value / price, $activeBlockchain.coreTokenSymbol)
                     // Estimate the number of token transfer this amount would allow
                     const resourceCost = sampleAccount.cpu_limit.max.value / sampleAccount.total_resources.cpu_weight.value
                     estimatedTransfers = (resourceCost * cpuToReceive.value / 200).toFixed(1)
                 } else {
                     rentNET = false
-                    amountCPU = Asset.fromFloat(amount.value, coreSymbol)
-                    amountNET = Asset.fromFloat(0, coreSymbol)
-                    cpuToReceive = Asset.fromFloat(amount.value / price, coreSymbol)
-                    netToReceive = Asset.fromFloat(0, coreSymbol)
+                    amountCPU = Asset.fromFloat(amount.value, $activeBlockchain.coreTokenSymbol)
+                    amountNET = Asset.fromFloat(0, $activeBlockchain.coreTokenSymbol)
+                    cpuToReceive = Asset.fromFloat(amount.value / price, $activeBlockchain.coreTokenSymbol)
+                    netToReceive = Asset.fromFloat(0, $activeBlockchain.coreTokenSymbol)
                     estimatedTransfers = '0'
                 }
             }
@@ -145,8 +143,8 @@
                 data: REXRentCPU.from({
                     from: $activeSession!.auth.actor,
                     receiver: $activeSession!.auth.actor,
-                    loan_payment: amount,
-                    loan_fund: Asset.fromUnits(0, coreSymbol)
+                    loan_payment: amountCPU,
+                    loan_fund: Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
                 }),
             })
         }
@@ -159,8 +157,8 @@
                 data: REXRentNET.from({
                     from: $activeSession!.auth.actor,
                     receiver: $activeSession!.auth.actor,
-                    loan_payment: Asset.fromUnits(0, coreSymbol), //payment,
-                    loan_fund: Asset.fromUnits(0, coreSymbol)
+                    loan_payment: amountNET,
+                    loan_fund: Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
                 }),
             })
         }
