@@ -6,12 +6,12 @@
     import {ChainFeatures} from '../../config'
     import {REXDeposit, REXRentCPU, REXRentNET} from '../../abi-types'
 
-    import Page from '../../components/page.svelte'
+    import Page from '../../components/layout.svelte'
     import ResourcesNavigation from '../../components/resources/navigation.svelte'
 
     let account:API.v1.AccountObject
     let sampleAccount:API.v1.AccountObject
-    
+
     // Internal values
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let totalRent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
@@ -29,7 +29,7 @@
     let rentSplitCPU = 0.9
     let rentSplitCPUFloor = 0.0001
     let estimatedTransfers:string = '0'
-    
+
     // User entered payment amount
     let payment = '0.0025'
 
@@ -39,7 +39,7 @@
     // Asset representation of the user entered amount to each resource
     let amountCPU = Asset.fromFloat(parseFloat(payment), $activeBlockchain.coreTokenSymbol)
     let amountNET = Asset.fromFloat(parseFloat(payment), $activeBlockchain.coreTokenSymbol)
-    
+
     // TODO: we need some sort of global account store/cache instead of pulling it every page load
     async function loadAccount(session: LinkSession) {
         balance = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
