@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Route} from 'tinro'
-    import {activeSession, appReady} from './store'
+    import {activeBlockchain, activeSession, appReady} from './store'
     import {version} from './config'
 
     import Page from './components/page.svelte'
@@ -29,7 +29,7 @@
 <main>
     {#if !$appReady}
         Loading...
-    {:else if !$activeSession}
+    {:else if !$activeSession || !$activeBlockchain}
         <Login />
     {:else}
         <Route>

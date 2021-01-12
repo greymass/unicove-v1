@@ -1,8 +1,8 @@
 <script lang="ts">
     import {active} from 'tinro'
 
-    import {chains, featureEnabled, ChainFeatures} from '../../config'
-    import {activeSession} from '../../store'
+    import {ChainFeatures} from '../../config'
+    import {activeBlockchain} from '../../store'
 </script>
 
 <style>
@@ -18,17 +18,17 @@
         <li>
             Resource Providers
             <ul>
-                {#if featureEnabled($activeSession, ChainFeatures.Fuel)}
+                {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Fuel)}
                     <li><a href="/resources/fuel" use:active>Fuel</a></li>
                 {/if}
-                {#if featureEnabled($activeSession, ChainFeatures.PowerUp)}
+                {#if $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)}
                     <li><a href="/resources/powerup" use:active>PowerUp</a></li>
                 {/if}
-                {#if featureEnabled($activeSession, ChainFeatures.REX)}
+                {#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
                     <li><a href="/resources/rex" use:active>REX</a></li>
                 {/if}
-                {#if featureEnabled($activeSession, ChainFeatures.Staking)}
-                    <li><a href="/resources/staked" use:active>Staking</a></li>
+                {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
+                    <li><a href="/resources/staking" use:active>Staking</a></li>
                 {/if}
             </ul>
         </li>
