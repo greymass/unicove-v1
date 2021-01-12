@@ -14,5 +14,6 @@
     <ul>
         <li><a href="/" use:active exact>Dashboard</a></li>
         <li><a href="/transfer" use:active>Transfer</a></li>
+        <li><a href="/resources" use:active>Resources</a></li>
     </ul>
 </nav>
