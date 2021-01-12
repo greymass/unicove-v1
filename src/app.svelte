@@ -11,7 +11,7 @@
     import ResourcesFuel from './pages/resources/fuel.svelte'
     import ResourcesPowerUp from './pages/resources/powerup.svelte'
     import ResourcesRex from './pages/resources/rex.svelte'
-    import ResourcesStaked from './pages/resources/staked.svelte'
+    import ResourcesStaked from './pages/resources/staking.svelte'
 </script>
 
 <style lang="scss" global>
@@ -52,7 +52,7 @@
                 <Route path="/rex">
                     <ResourcesRex />
                 </Route>    
-                <Route path="/staked">
+                <Route path="/staking">
                     <ResourcesStaked />
                 </Route>    
             </Route>
