@@ -2,8 +2,8 @@
     import type {API, LinkSession} from 'anchor-link'
     import {Asset, UInt64} from '@greymass/eosio'
 
-    import {activeSession} from '../../store'
-    import {featureEnabled, ChainFeatures} from '../../config'
+    import {activeBlockchain, activeSession} from '../../store'
+    import {ChainFeatures} from '../../config'
     import {REXDeposit, REXRentCPU, REXRentNET} from '../../abi-types'
 
     import Page from '../../components/page.svelte'
@@ -178,7 +178,7 @@
 
 <Page title="Resources - REX">
     <ResourcesNavigation />
-    {#if featureEnabled($activeSession, ChainFeatures.REX)}
+    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
         {#await loading}
             <p>Hang on, fetching balances and stuff...</p>
         {:then _}
