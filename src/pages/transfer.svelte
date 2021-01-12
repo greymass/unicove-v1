@@ -71,11 +71,11 @@
         let data
         switch ($activeBlockchain.id) {
             case "fio": {
-                const max_fee = await loadFee()
+                await loadFee()
                 data = FIOTransfer.from({
                     payee_public_key: toAddress,
                     amount: quantity.units,
-                    max_fee,
+                    max_fee: txfee.units,
                     actor: $activeSession!.auth.actor, 
                     tpid: 'tpid@greymass',
                 })
