@@ -1,3 +1,4 @@
+import type {ChainId} from 'anchor-link'
 import type {SessionLike} from './auth'
 
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
@@ -15,7 +16,7 @@ export enum ChainFeatures {
     Staking,
 }
 
-interface ChainConfig {
+export interface ChainConfig {
     /** Short identifier. */
     id: string
     /** Display name. */
@@ -55,4 +56,7 @@ export function featureEnabled(activeSession: SessionLike | null, feature: Chain
     if (!activeSession) return false
     const chain = chains.find((c) => c.chainId === String(activeSession.chainId))
     return !chain || chain.chainFeatures.has(feature)
+}
+export function chainConfig(chainId: ChainId): ChainConfig {
+    return chains.find((c) => c.chainId === String(chainId))!
 }
