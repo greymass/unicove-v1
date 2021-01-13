@@ -1,8 +1,11 @@
 <script lang="ts">
-    import {activeSession} from '../store'
+    import {currentAccount} from '../store'
     import Page from '../components/page.svelte'
 </script>
 
 <Page title="Dashboard">
-    <p>Hello <b>{$activeSession?.auth.actor}</b></p>
+    <p>
+        Hello <b>{$currentAccount?.account_name}</b> looks like you are using
+        <b>{$currentAccount?.ram_usage}</b> of RAM.
+    </p>
 </Page>
