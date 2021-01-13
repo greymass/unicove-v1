@@ -30,8 +30,18 @@
         txfee = Asset.fromUnits(fees.rows[0].suf_amount, $activeBlockchain.coreTokenSymbol)
     }
 
+    async function loadBalance() {
+        [balance] = await $activeSession!.client.v1.chain.get_currency_balance(
+            $activeBlockchain.coreTokenContract, 
+            $activeSession!.auth.actor
+        )
+    }
+
     $: if ($activeBlockchain.id === 'fio') {
         loadFee()
+        loadBalance()
+    } else {
+        txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     }
 
     // TODO: find or build some form builder and validation instead
