@@ -1,8 +1,8 @@
 
 <style>
-  .footer small {
-    margin: 30px;
-  }
+    .footer small {
+        margin: 30px;
+    }
 </style>
 
 <div class="footer">
