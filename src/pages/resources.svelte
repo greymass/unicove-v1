@@ -5,7 +5,7 @@
 
     $: account = $currentAccount!
 
-    import Page from '../components/page.svelte'
+    import Page from '../components/layout.svelte'
     import ResourcesNavigation from '../components/resources/navigation.svelte'
 </script>
 

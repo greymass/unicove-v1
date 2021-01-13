@@ -3,7 +3,7 @@
     import {activeBlockchain, activeSession, appReady} from './store'
     import {version} from './config'
 
-    import Page from './components/page.svelte'
+    import Page from './components/layout.svelte'
     import Dashboard from './pages/dashboard.svelte'
     import Login from './pages/login.svelte'
     import Transfer from './pages/transfer.svelte'
@@ -14,8 +14,15 @@
     import ResourcesStaked from './pages/resources/staking.svelte'
 </script>
 
+<svelte:head>
+</svelte:head>
+
 <style lang="scss" global>
     @import 'style/global.scss';
+
+    main {
+      height: 100%
+    }
     #greymass-wallet-version {
         font-size: 0.2em;
         opacity: 0.2;
@@ -23,6 +30,16 @@
         bottom: 1em;
         right: 1em;
         pointer-events: none;
+    }
+
+    :global(:root){
+       --main-blue: #2D8EFF;
+       --main-grey: #F7F7FC;
+       --main-black: #585D6E;
+       --light-black: #2C3E50;
+       --light-grey: #9898B5;
+       --dark-grey: #B7C1CB;
+       --light-blue: #E0EEFF;
     }
 </style>
 
