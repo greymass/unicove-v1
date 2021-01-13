@@ -1,12 +1,16 @@
 import Link, {ChainId, PermissionLevel} from 'anchor-link'
 import Transport from 'anchor-link-browser-transport'
 import {get} from 'svelte/store'
-
+import {storeAccount} from './account-cache'
+import {getClient} from './api-client'
 import {appId, chains} from './config'
 import {activeSession, availableSessions} from './store'
 
 const transport = new Transport()
-const link = new Link({chains, transport})
+const link = new Link({
+    chains: chains.map((chain) => ({chainId: chain.chainId, nodeUrl: getClient(chain)})),
+    transport,
+})
 
 /** Anchor Link session object or identifier. */
 export interface SessionLike {
@@ -32,6 +36,8 @@ export async function init() {
 /** Create a new session. */
 export async function login() {
     const result = await link.login(appId)
+    // populate account cache with the account returned by login so we don't need to re-fetch it
+    storeAccount(result.account, result.session.chainId)
     const list = await link.listSessions(appId)
     activeSession.set(result.session)
     availableSessions.set(list)

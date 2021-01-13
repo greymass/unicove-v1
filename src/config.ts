@@ -6,7 +6,7 @@ export const appId = branch !== 'deploy' ? `w.${branch}.gm` : 'wallet.gm'
 
 export const version = `${branch}-${rev}`
 
-interface ChainConfig {
+export interface ChainConfig {
     /** Short identifier. */
     id: string
     /** Display name. */

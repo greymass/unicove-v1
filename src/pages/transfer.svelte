@@ -1,30 +1,16 @@
 <script lang="ts">
-    import {Asset, LinkSession, Name, UInt64} from 'anchor-link'
+    import {Asset, Name, UInt64} from 'anchor-link'
 
-    import {activeSession} from '../store'
+    import {activeSession, currentAccount} from '../store'
     import {Transfer} from '../abi-types'
 
     import Page from '../components/page.svelte'
 
-    let coreSymbol = Asset.Symbol.from('4,EOS')
-    let balance = Asset.fromUnits(0, coreSymbol)
+    $: coreSymbol = $currentAccount?.core_liquid_balance?.symbol || Asset.Symbol.from('4,EOS') // TODO: get core symbol from chain config
+    $: balance = $currentAccount?.core_liquid_balance || Asset.fromUnits(0, coreSymbol)
     let to = 'teamgreymass'
     let quantity = '0'
     let memo = '🦄🧠🥌'
-
-    // TODO: we need some sort of global account store/cache instead of pulling it every page load
-    async function loadAccount(session: LinkSession) {
-        balance = Asset.fromUnits(0, coreSymbol)
-        const account = await session.client.v1.chain.get_account(session.auth.actor)
-        if (account.core_liquid_balance) {
-            coreSymbol = account.core_liquid_balance.symbol
-            balance = account.core_liquid_balance
-        }
-        return account
-    }
-
-    // load account based on active session
-    $: loading = loadAccount($activeSession!)
 
     // TODO: find or build some form builder and validation instead
     //       sextant admin ui has the beginnings of one that can handle core types we could build on
@@ -64,18 +50,14 @@
 </script>
 
 <Page title="Transfer">
-    {#await loading}
-        <p>Hang on, fetching balances and stuff...</p>
-    {:then _}
-        <p>You have <i on:click={() => (quantity = String(balance))}> {balance} </i></p>
-        <p>
-            Send
-            <input type="text" bind:value={quantity} />
-            to
-            <input type="text" bind:value={to} />
-            with memo
-            <input type="text" bind:value={memo} />
-            <button on:click={transfer}>go</button>
-        </p>
-    {/await}
+    <p>You have <i on:click={() => (quantity = String(balance))}> {balance} </i></p>
+    <p>
+        Send
+        <input type="text" bind:value={quantity} />
+        to
+        <input type="text" bind:value={to} />
+        with memo
+        <input type="text" bind:value={memo} />
+        <button on:click={transfer}>go</button>
+    </p>
 </Page>
