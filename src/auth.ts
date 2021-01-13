@@ -1,10 +1,11 @@
 import Link, {ChainId, PermissionLevel} from 'anchor-link'
 import Transport from 'anchor-link-browser-transport'
 import {get} from 'svelte/store'
+
 import {storeAccount} from './account-cache'
 import {getClient} from './api-client'
-import {appId, chains} from './config'
-import {activeSession, availableSessions} from './store'
+import {appId, chains, chainConfig} from './config'
+import {activeBlockchain, activeSession, availableSessions} from './store'
 
 const transport = new Transport()
 const link = new Link({
@@ -29,6 +30,7 @@ export async function init() {
     const list = await link.listSessions(appId)
     availableSessions.set(list)
     if (session) {
+        activeBlockchain.set(chainConfig(session.chainId))
         activeSession.set(session)
     }
 }
@@ -39,6 +41,7 @@ export async function login() {
     // populate account cache with the account returned by login so we don't need to re-fetch it
     storeAccount(result.account, result.session.chainId)
     const list = await link.listSessions(appId)
+    activeBlockchain.set(chainConfig(result.session.chainId))
     activeSession.set(result.session)
     availableSessions.set(list)
 }
@@ -68,5 +71,6 @@ export async function activate(id: SessionLike) {
     if (!session) {
         throw new Error('No such session')
     }
+    activeBlockchain.set(chainConfig(session.chainId))
     activeSession.set(session)
 }
