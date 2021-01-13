@@ -19,6 +19,18 @@
     }
 </script>
 
+<style>
+  .login {
+    text-align: center;
+    margin: 50px
+  }
+
+  .login button {
+    font-weight: bold;
+  }
+</style>
+
+<div class="login">
 {#if !working}
     <p>Welcome to Greymass Wallet</p>
     <p>Please login to continue</p>
@@ -29,3 +41,4 @@
 {:else}
     <p>Working really hard here...</p>
 {/if}
+</div>

@@ -6,7 +6,7 @@
     import {ChainFeatures} from '../../config'
     import {REXDeposit, REXRentCPU, REXRentNET} from '../../abi-types'
 
-    import Page from '../../components/page.svelte'
+    import Page from '../../components/layout.svelte'
     import ResourcesNavigation from '../../components/resources/navigation.svelte'
 
     let account: API.v1.AccountObject

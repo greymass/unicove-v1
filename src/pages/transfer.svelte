@@ -4,7 +4,7 @@
     import {activeBlockchain, activeSession, currentAccount} from '../store'
     import {FIOTransfer, Transfer} from '../abi-types'
 
-    import Page from '../components/page.svelte'
+    import Page from '../components/layout.svelte'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||

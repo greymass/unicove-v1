@@ -4,7 +4,7 @@
     import {activeBlockchain, activeSession} from '../../store'
     import {ChainFeatures} from '../../config'
 
-    import Page from '../../components/page.svelte'
+    import Page from '../../components/layout.svelte'
     import ResourcesNavigation from '../../components/resources/navigation.svelte'
 
     let account:API.v1.AccountObject
