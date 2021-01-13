@@ -1,6 +1,7 @@
 <nav>
     <a class="block" href="/">Dashboard</a>
     <a class="block" href="/transfer">Transfer</a>
+    <a class="block" href="/resources">Resources</a>
 </nav>
 
 <style>
