@@ -41,6 +41,15 @@
             </div>
         </div>
      </a>
+     <a href='/resources'>
+      <div class="menu-item-container">
+          <div class="menu-item {currentPath === '/resources' ? 'active' : ''}">
+             <img src={currentPath === '/resources' ? arrowRightGreyIcon : arrowRightBlueIcon} />
+              &nbsp;
+             Resources
+          </div>
+      </div>
+   </a>
 
      <div class="bottom-container">
         <h1>
