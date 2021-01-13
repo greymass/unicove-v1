@@ -2,7 +2,7 @@
     import {active} from 'tinro'
     import Navbar from './navigation/navbar.svelte'
     import Sidebar from './navigation/navbar/sidebar.svelte'
-
+    
     let open = false
 </script>
 
@@ -10,7 +10,7 @@
 <Navbar bind:sidebar={open}/>
 
 <style>
-   :global(body) {
-       padding: 0;
-   }
+    :global(body) {
+        padding: 0;
+    }
 </style>

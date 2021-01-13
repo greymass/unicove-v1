@@ -1,6 +1,6 @@
 <script lang="ts">
     import {active} from 'tinro'
-
+    
     import {ChainFeatures} from '../../config'
     import {activeBlockchain} from '../../store'
 </script>

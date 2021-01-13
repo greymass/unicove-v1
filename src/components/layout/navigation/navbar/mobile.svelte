@@ -1,7 +1,7 @@
 <script>
-  import Hamburger from './shared/hamburger.svelte';
-
-  export let sidebar = false;
+    import Hamburger from './shared/hamburger.svelte';
+    
+    export let sidebar = false;
 </script>
 
 <div class="hamburger-container">
@@ -9,8 +9,8 @@
 </div>
 
 <style>
- .hamburger-container {
-    padding: 30px;
-    width: 25px;
-  }
+    .hamburger-container {
+        padding: 30px;
+        width: 25px;
+    }
 </style>
