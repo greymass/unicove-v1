@@ -19,7 +19,7 @@ export const availableSessions = writable<SessionLike[]>([])
 
 /** Preferences object. */
 export interface Preferences {
-    expandNavbar: Boolean,
+    expandNavbar: Boolean
 }
 
 /** List of preferences. */
