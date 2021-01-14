@@ -4,7 +4,7 @@
     import {activeBlockchain, activeSession, currentAccount} from '../store'
     import {FIOTransfer, Transfer} from '../abi-types'
 
-    import Page from '../components/layout.svelte'
+    import Page from '../components/layout/page.svelte'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
@@ -31,8 +31,8 @@
     }
 
     async function loadBalance() {
-        [balance] = await $activeSession!.client.v1.chain.get_currency_balance(
-            $activeBlockchain.coreTokenContract, 
+        ;[balance] = await $activeSession!.client.v1.chain.get_currency_balance(
+            $activeBlockchain.coreTokenContract,
             $activeSession!.auth.actor
         )
     }
@@ -113,6 +113,9 @@
 </script>
 
 <style>
+    table {
+        border: 1;
+    }
     table td {
         text-align: right;
     }
@@ -138,7 +141,7 @@
             <input type="text" bind:value={memo} />
         {/if}
         {#if txfee.value > 0}
-            <table border="1">
+            <table>
                 <tr>
                     <td>Sending:</td>
                     <td>{quantity}</td>

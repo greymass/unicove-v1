@@ -1,12 +1,8 @@
 <script>
-    import Hamburger from './shared/hamburger.svelte';
-    
-    export let sidebar = false;
-</script>
+    import Hamburger from './shared/hamburger.svelte'
 
-<div class="hamburger-container">
-    <Hamburger bind:open={sidebar}/>
-</div>
+    export let sidebar = false
+</script>
 
 <style>
     .hamburger-container {
@@ -14,3 +10,7 @@
         width: 25px;
     }
 </style>
+
+<div class="hamburger-container">
+    <Hamburger bind:open={sidebar} />
+</div>

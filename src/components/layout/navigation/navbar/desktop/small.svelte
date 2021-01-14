@@ -1,30 +1,15 @@
 <script>
-    import Hamburger from '../shared/hamburger.svelte'
-    
-    import dashboardIcon from '../../../../../../public/images/dashboard-blue.svg'
-    import arrowRight from '../../../../../../public/images/arrow-right-grey.svg'
-    
-    export let sidebar = false;
-    export let expand;
-    export let onExpand;
-</script>
+    import {createEventDispatcher} from 'svelte'
 
-<div class="navbar">
-    <div class="hamburger-container">
-        <Hamburger bind:open={sidebar}/>
-    </div>
-    <hr />
-    <a href='/' class="dashboard-icon">
-        <div class="dashboard-icon-container">
-            <img src={dashboardIcon} />
-        </div>
-    </a>
-    <a class="arrow-button" on:click={onExpand}>
-        <div class="arrow-icon-container">
-            <img src={arrowRight} />
-        </div>
-    </a>
-</div>
+    import Hamburger from '../shared/hamburger.svelte'
+
+    import dashboardIcon from '@/images/dashboard-blue.svg'
+    import arrowRight from '@/images/arrow-right-grey.svg'
+
+    const dispatch = createEventDispatcher<{expand: void}>()
+
+    export let sidebar = false
+</script>
 
 <style>
     .navbar {
@@ -37,24 +22,24 @@
         padding: 25px;
         width: 100px;
     }
-    
+
     .navbar .hamburger-container {
         margin: auto;
         margin-bottom: 30px;
         width: 35px;
     }
-    
-    .navbar .dashboard-icon .dashboard-icon-container  {
+
+    .navbar .dashboard-icon .dashboard-icon-container {
         display: flex;
         margin-top: 40px;
         margin-bottom: 30px;
     }
-    
+
     .navbar .dashboard-icon .dashboard-icon-container img {
         width: 40px;
         margin: auto;
     }
-    
+
     .navbar a.arrow-button .arrow-icon-container {
         background-color: white;
         border-radius: 3px;
@@ -66,9 +51,29 @@
         width: 70px;
         height: 50px;
     }
-    
+
     .navbar a.arrow-button .arrow-icon-container img {
         width: 30px;
         margin: auto;
     }
 </style>
+
+<div class="navbar">
+    <div class="hamburger-container">
+        <Hamburger bind:open={sidebar} />
+    </div>
+    <hr />
+    <a href="/" class="dashboard-icon">
+        <div class="dashboard-icon-container">
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <img src={dashboardIcon} />
+        </div>
+    </a>
+    <!-- svelte-ignore a11y-missing-attribute -->
+    <a class="arrow-button" on:click={() => dispatch('expand')}>
+        <div class="arrow-icon-container">
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <img src={arrowRight} />
+        </div>
+    </a>
+</div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {login} from '../auth'
+    import {login} from '~/auth'
 
     let working = false
     let error: Error | undefined
@@ -20,25 +20,25 @@
 </script>
 
 <style>
-  .login {
-    text-align: center;
-    margin: 50px
-  }
+    .login {
+        text-align: center;
+        margin: 50px;
+    }
 
-  .login button {
-    font-weight: bold;
-  }
+    .login button {
+        font-weight: bold;
+    }
 </style>
 
 <div class="login">
-{#if !working}
-    <p>Welcome to Greymass Wallet</p>
-    <p>Please login to continue</p>
-    <button on:click={loginHandler}>Login with Anchor</button>
-    {#if error}
-        <p>That didn't go well... {error.message}</p>
+    {#if !working}
+        <p>Welcome to Greymass Wallet</p>
+        <p>Please login to continue</p>
+        <button on:click={loginHandler}>Login with Anchor</button>
+        {#if error}
+            <p>That didn't go well... {error.message}</p>
+        {/if}
+    {:else}
+        <p>Working really hard here...</p>
     {/if}
-{:else}
-    <p>Working really hard here...</p>
-{/if}
 </div>

@@ -6,11 +6,12 @@
     "plugins": ["@typescript-eslint"],
     "extends": ["prettier"],
     "overrides": [
-        {
-            "files": ["*.svelte"],
-            "processor": "svelte3/svelte3",
-            "plugins": ["svelte3"]
-        },
+        // https://github.com/sveltejs/eslint-plugin-svelte3/issues/68
+        // {
+        //     "files": ["*.svelte"],
+        //     "processor": "svelte3/svelte3",
+        //     "plugins": ["svelte3"]
+        // },
         {
             "files": ["*.ts"],
             "plugins": ["prettier"],
