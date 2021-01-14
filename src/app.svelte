@@ -1,7 +1,7 @@
 <script lang="ts">
-    import {version} from '~/config'
     import {Route, router} from 'tinro'
     import {activeSession, appReady} from '~/store'
+    import {version, isRelease} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
 
@@ -13,6 +13,7 @@
     import ResourcesPowerUp from '~/pages/resources/powerup.svelte'
     import ResourcesRex from '~/pages/resources/rex.svelte'
     import ResourcesStaked from '~/pages/resources/staking.svelte'
+    import Components from './pages/_components/index.svelte'
 
     $: needLogin = $activeSession === null && !$router.path.startsWith('/_components')
 </script>
@@ -24,6 +25,7 @@
     main {
         height: 100%;
     }
+
     #greymass-wallet-version {
         font-size: 0.2em;
         opacity: 0.2;
@@ -81,8 +83,15 @@
                     <img src="/images/404.jpg" alt="404" />
                 </Page>
             </Route>
+            {#if !isRelease}
+                <Route path="/_components/*">
+                    <Components />
+                </Route>
+            {/if}
         </Route>
     {/if}
 </main>
 
-<div id="greymass-wallet-version">Version {version}</div>
+{#if !isRelease}
+    <div id="greymass-wallet-version">Version {version}</div>
+{/if}
