@@ -34,11 +34,11 @@
         </div>
     {:else if expand}
         <div class="large">
-            <LargeNavbar on:close={() => ($preferences.expandNavbar = false)} />
+            <LargeNavbar on:close={() => (preferences.expandNavbar = false)} />
         </div>
     {:else}
         <div class="small">
-            <SmallNavbar bind:sidebar on:expand={() => preferences.set({expandNavbar: true})} />
+            <SmallNavbar bind:sidebar on:expand={() => (preferences.expandNavbar = true)} />
         </div>
     {/if}
 </MediaQuery>
