@@ -18,6 +18,7 @@
 </script>
 
 <style lang="scss" global>
+    @import './style/reset.scss';
     @import './style/global.scss';
 
     main {
