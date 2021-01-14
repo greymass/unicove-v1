@@ -4,10 +4,10 @@
     import {activeBlockchain, activeSession} from '../../store'
     import {ChainFeatures} from '../../config'
 
-    import Page from '../../components/layout.svelte'
-    import ResourcesNavigation from '../../components/resources/navigation.svelte'
+    import Page from '../../components/layout/page.svelte'
+    import ResourcesNavigation from './components/navigation.svelte'
 
-    let account:API.v1.AccountObject
+    let account: API.v1.AccountObject
 
     // TODO: we need some sort of global account store/cache instead of pulling it every page load
     async function loadAccount(session: LinkSession) {
@@ -20,7 +20,6 @@
 </script>
 
 <style>
-
 </style>
 
 <Page title="Resources - PowerUp">

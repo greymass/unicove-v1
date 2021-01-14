@@ -1,6 +1,10 @@
 {
     "include": ["src", "types"],
     "compilerOptions": {
+        "paths": {
+            "~/*": ["./src/*"],
+            "@/*": ["./public/*"]
+        },
         "module": "esnext",
         "target": "esnext",
         "moduleResolution": "node",

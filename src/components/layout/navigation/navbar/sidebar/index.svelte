@@ -1,12 +1,8 @@
 <script>
-    import Menu from './sidebar/menu.svelte'
-    
+    import Menu from './menu.svelte'
+
     export let open = false
 </script>
-
-<aside class:open>
-    <Menu />
-</aside>
 
 <style>
     aside {
@@ -21,8 +17,12 @@
         border-right-width: 2px;
         border-color: darkgray;
     }
-    
+
     .open {
         left: 0;
     }
 </style>
+
+<aside class:open>
+    <Menu />
+</aside>

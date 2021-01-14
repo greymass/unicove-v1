@@ -1,27 +1,25 @@
 <script lang="ts">
     import {Route} from 'tinro'
-    import {activeBlockchain, activeSession, appReady} from './store'
-    import {version} from './config'
+    import {activeBlockchain, activeSession, appReady} from '~/store'
+    import {version} from '~/config'
 
-    import Page from './components/layout.svelte'
-    import Dashboard from './pages/dashboard.svelte'
-    import Login from './pages/login.svelte'
-    import Transfer from './pages/transfer.svelte'
-    import Resources from './pages/resources.svelte'
-    import ResourcesFuel from './pages/resources/fuel.svelte'
-    import ResourcesPowerUp from './pages/resources/powerup.svelte'
-    import ResourcesRex from './pages/resources/rex.svelte'
-    import ResourcesStaked from './pages/resources/staking.svelte'
+    import Page from '~/components/layout/page.svelte'
+
+    import Dashboard from '~/pages/dashboard.svelte'
+    import Login from '~/pages/login.svelte'
+    import Transfer from '~/pages/transfer.svelte'
+    import Resources from '~/pages/resources/index.svelte'
+    import ResourcesFuel from '~/pages/resources/fuel.svelte'
+    import ResourcesPowerUp from '~/pages/resources/powerup.svelte'
+    import ResourcesRex from '~/pages/resources/rex.svelte'
+    import ResourcesStaked from '~/pages/resources/staking.svelte'
 </script>
 
-<svelte:head>
-</svelte:head>
-
 <style lang="scss" global>
-    @import 'style/global.scss';
+    @import './style/global.scss';
 
     main {
-      height: 100%
+        height: 100%;
     }
     #greymass-wallet-version {
         font-size: 0.2em;
@@ -32,17 +30,18 @@
         pointer-events: none;
     }
 
-    :global(:root){
-       --main-blue: #2D8EFF;
-       --main-grey: #F7F7FC;
-       --main-black: #585D6E;
-       --light-black: #2C3E50;
-       --light-grey: #9898B5;
-       --dark-grey: #B7C1CB;
-       --light-blue: #E0EEFF;
+    :global(:root) {
+        --main-blue: #2d8eff;
+        --main-grey: #f7f7fc;
+        --main-black: #585d6e;
+        --light-black: #2c3e50;
+        --light-grey: #9898b5;
+        --dark-grey: #b7c1cb;
+        --light-blue: #e0eeff;
     }
 </style>
 
+<svelte:head />
 <main>
     {#if !$appReady}
         Loading...
@@ -62,16 +61,16 @@
                 </Route>
                 <Route path="/fuel">
                     <ResourcesFuel />
-                </Route>    
+                </Route>
                 <Route path="/powerup">
                     <ResourcesPowerUp />
-                </Route>    
+                </Route>
                 <Route path="/rex">
                     <ResourcesRex />
-                </Route>    
+                </Route>
                 <Route path="/staking">
                     <ResourcesStaked />
-                </Route>    
+                </Route>
             </Route>
             <Route fallback>
                 <Page title="Page not found">

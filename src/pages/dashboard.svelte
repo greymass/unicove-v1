@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {currentAccount} from '../store'
-    import Page from '../components/layout.svelte'
+    import {currentAccount} from '~/store'
+    import Page from '~/components/layout/page.svelte'
 </script>
 
 <Page title="Dashboard">
