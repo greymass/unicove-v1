@@ -1,6 +1,6 @@
 import {DBSchema, openDB} from 'idb'
 
-const dbVersion = 1
+const dbVersion = 2
 
 interface WalletDB extends DBSchema {
     'account-cache': {
@@ -13,11 +13,20 @@ interface WalletDB extends DBSchema {
             'by-updated': Date
         }
     }
+    preferences: {
+        key: string
+        value: any
+    }
 }
 
 export const dbPromise = openDB<WalletDB>('wallet', dbVersion, {
-    upgrade(db) {
-        const accountCache = db.createObjectStore('account-cache')
-        accountCache.createIndex('by-updated', 'updated', {unique: false})
+    upgrade(db, version) {
+        if (version < 1) {
+            const accountCache = db.createObjectStore('account-cache')
+            accountCache.createIndex('by-updated', 'updated', {unique: false})
+        }
+        if (version < 2) {
+            db.createObjectStore('preferences')
+        }
     },
 })
