@@ -17,7 +17,6 @@ export class Preferences implements Readable<Preferences> {
 
     write(key: string, value: any) {
         this.storage[key] = value
-        console.log(this.storage)
         this.didChange()
         this.save(key, value).catch((error) => {
             console.warn('Unable to save setting', error)
@@ -57,10 +56,8 @@ export class Preferences implements Readable<Preferences> {
 
     subscribe(subscriber: (value: Preferences) => void) {
         this.subscribers.push(subscriber)
-        console.log('sub', subscriber, this.subscribers.length)
         subscriber(this)
         return () => {
-            console.log('unsub', subscriber)
             let idx = this.subscribers.indexOf(subscriber)
             if (idx !== -1) {
                 this.subscribers.splice(idx, 1)
