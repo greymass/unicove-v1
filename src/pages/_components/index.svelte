@@ -1,0 +1,109 @@
+<script lang="ts">
+    import {Route, active} from 'tinro'
+
+    import Buttons from './buttons.svelte'
+
+    const routes = [{name: 'Buttons', path: 'buttons', component: Buttons}]
+</script>
+
+<style type="scss">
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: -0.47px;
+    }
+    header {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        background-color: var(--main-grey);
+    }
+    nav {
+        ul {
+            gap: 8px;
+            display: inline-flex;
+            flex-wrap: wrap;
+        }
+        a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--main-blue);
+            border-radius: 8px;
+            display: block;
+            line-height: 32px;
+            background: white;
+            padding: 0 10px;
+            text-decoration: none;
+            border: 1px solid var(--main-grey);
+            &:hover {
+                border-color: var(--light-blue);
+            }
+            &:active {
+                border-color: var(--main-blue);
+            }
+        }
+        :global(a.active) {
+            background: var(--main-blue);
+            color: white;
+        }
+    }
+    hr {
+        margin: 0;
+        border-style: solid;
+        color: var(--light-blue);
+    }
+    section {
+        margin: 16px;
+        .component {
+            margin-bottom: 32px;
+            h2 {
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: -0.18px;
+                margin-bottom: 8px;
+            }
+            hr {
+                margin: 8px -8px 16px;
+                border: 0;
+                background-color: #e0e6ee;
+                height: 1px;
+            }
+        }
+    }
+</style>
+
+<Route path="/*">
+    <header>
+        <h1>Component library 🦄</h1>
+        <nav>
+            <ul>
+                <li>
+                    <a href={`/_components`} use:active exact>All</a>
+                </li>
+                {#each routes as route}
+                    <li>
+                        <a href={`/_components/${route.path}`} use:active>{route.name}</a>
+                    </li>
+                {/each}
+            </ul>
+        </nav>
+    </header>
+    <hr />
+    <section>
+        {#each routes as route}
+            <Route path={`/${route.path}`}>
+                <svelte:component this={route.component} />
+            </Route>
+        {/each}
+        <Route fallback>
+            {#each routes as route}
+                <div class="component">
+                    <h2>{route.name}</h2>
+                    <hr />
+                    <svelte:component this={route.component} />
+                </div>
+            {/each}
+        </Route>
+    </section>
+</Route>

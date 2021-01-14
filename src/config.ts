@@ -4,8 +4,11 @@ import type {ChainId} from 'anchor-link'
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
 
+/** Only true in a production build. */
+export const isRelease = branch === 'deploy'
+
 /** App identifier, used for anchor link (session persistence). */
-export const appId = branch !== 'deploy' ? `w.${branch}.gm` : 'wallet.gm'
+export const appId = !isRelease ? `w.${branch}.gm` : 'wallet.gm'
 
 export const version = `${branch}-${rev}`
 
