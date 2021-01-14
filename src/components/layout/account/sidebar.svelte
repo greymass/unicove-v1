@@ -1,25 +1,10 @@
 <script>
     import List from './list.svelte'
-    
-    import xBlueIcon from '../../../../public/images/x-blue.svg'
-    
+
+    import xBlueIcon from '@/images/x-blue.svg'
+
     export let open = false
 </script>
-
-<aside class:open>
-    <div class="header">
-        <a on:click={() => open = false }>
-            <img src={xBlueIcon} />
-        </a>
-        <h2>
-            Accounts
-        </h2>
-        <br />
-        <hr />
-    </div>
-    
-    <List />
-</aside>
 
 <style>
     aside {
@@ -35,27 +20,40 @@
         border-right-width: 2px;
         display: none;
     }
-    
+
     .header {
         margin: 18px;
     }
-    
+
     .header a {
         cursor: pointer;
         margin-right: 5px;
         margin-bottom: -10px;
     }
-    
+
     .header h2 {
         color: var(--dark-grey);
         font-size: 14px;
         font-weight: normal;
         display: inline-block;
     }
-    
+
     .open {
         display: block;
         right: 0;
     }
 </style>
 
+<aside class:open>
+    <div class="header">
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <a on:click={() => (open = false)}>
+            <img src={xBlueIcon} />
+        </a>
+        <h2>Accounts</h2>
+        <br />
+        <hr />
+    </div>
+
+    <List />
+</aside>
