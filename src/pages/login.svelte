@@ -1,6 +1,6 @@
 <script lang="ts">
     import {login} from '~/auth'
-    import Button from '~/components/button.svelte'
+    import Button from '~/components/elements/button.svelte'
 
     let working = false
     let error: Error | undefined

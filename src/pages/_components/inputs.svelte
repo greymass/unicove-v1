@@ -1,5 +1,5 @@
 <script>
-    import Input from '~/components/input.svelte'
+    import Input from '~/components/elements/input.svelte'
 
     let exampleOnChange = {
         valid: true,
