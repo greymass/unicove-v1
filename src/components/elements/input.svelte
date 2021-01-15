@@ -1,33 +1,46 @@
 <script lang="ts">
-    import type {inputResponse} from '~/ui-types.ts'
+    import {onMount} from 'svelte'
+    import type {inputResponse} from 'src/ui-types'
+
+    import {createEventDispatcher} from 'svelte'
 
     export let disabled: boolean = false
     export let focus: boolean = false
     export let name: string = ''
     export let placeholder: string = ''
     export let value: string = ''
+    let ref: HTMLInputElement
 
-    export let onChange: any = () => {}
     export let isValid: any = () => true
 
     let timer: number | undefined
     let delay: number = 100
 
-    const debounce = (v: inputResponse) => {
+    onMount(() => {
+        if (focus) {
+            ref.focus()
+        }
+    })
+
+    // Dispatched when button is activated via keyboard or click
+    const dispatch = createEventDispatcher<{changed: inputResponse}>()
+
+    const debounce = (e: Event) => {
         clearTimeout(timer)
-        timer = setTimeout(() => onChange(v), delay)
+        value = (<HTMLInputElement>e.target).value
+        const valid = isValid ? isValid(value) : true
+        timer = setTimeout(
+            () =>
+                dispatch('changed', {
+                    name,
+                    valid,
+                    value,
+                }),
+            delay
+        )
     }
 
-    const handleKeyup = (e: Event): void => {
-        if (onChange) {
-            value = (<HTMLInputElement>e.target).value
-            debounce({
-                name,
-                valid: isValid ? isValid(value) : true,
-                value,
-            })
-        }
-    }
+    const handleKeyup = (e: Event): void => debounce(e)
 </script>
 
 <style type="scss">
@@ -52,6 +65,6 @@
     {name}
     {disabled}
     {placeholder}
+    bind:this={ref}
     bind:value
-    autofocus={focus}
 />

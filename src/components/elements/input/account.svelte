@@ -6,10 +6,9 @@
     export let name: string = ''
     export let value: string = ''
 
-    export let onChange: any = () => {}
-
     const validate = (value: string) => {
         try {
+            if (value.length === 0) return false
             return Name.from(value).toString() === value
         } catch (error) {
             // might be nice to catch errors for form validation errors
@@ -21,4 +20,4 @@
 <style type="scss">
 </style>
 
-<Input {onChange} {name} bind:value isValid={validate} />
+<Input on:changed {name} bind:value isValid={validate} />

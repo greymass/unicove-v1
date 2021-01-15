@@ -84,8 +84,8 @@
         }
     }
 
-    function validate(data: inputResponse) {
-        validFields[data.name] = data.valid
+    function validate(e: CustomEvent<inputResponse>) {
+        validFields[e.detail.name] = e.detail.valid
         validForm = Object.values(validFields).every((v) => v === true)
     }
 
@@ -161,14 +161,14 @@
     </p>
     <p>
         Send
-        <Input onChange={validate} name="amount" bind:value />
+        <Input on:changed={validate} name="amount" bind:value />
         to
         {#if $activeBlockchain.id === 'fio'}
-            <Input onChange={validate} name="to" bind:value={toAddress} />
+            <Input on:changed={validate} name="to" bind:value={toAddress} />
         {:else}
-            <InputAccount onChange={validate} name="to" bind:value={toAccount} />
+            <InputAccount on:changed={validate} name="to" bind:value={toAccount} />
             with memo
-            <Input onChange={validate} name="memo" bind:value={memo} />
+            <Input on:changed={validate} name="memo" bind:value={memo} />
         {/if}
         {#if txfee.value > 0}
             <table>

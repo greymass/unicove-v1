@@ -1,14 +1,21 @@
 <script>
     import Input from '~/components/elements/input.svelte'
 
-    let exampleOnChange = {
-        valid: true,
-        value: '',
+    let examples: any = {
+        'example-on-changed': {
+            valid: true,
+            value: '',
+        },
+        'example-is-valid': {
+            valid: false,
+            value: '0',
+        },
     }
 
-    let exampleIsValid = {
-        valid: false,
-        value: '0',
+    const numberValidityCheck = (v: string): boolean => parseInt(v, 10) > 0
+
+    const handleChange = ({detail}: {detail: any}) => {
+        examples[detail.name] = detail
     }
 </script>
 
@@ -40,16 +47,13 @@
 </div>
 <div>
     <p>onChange Callback</p>
-    <Input onChange={(data) => (exampleOnChange = data)} />
-    <p>Value: {exampleOnChange.value}</p>
-    <p>Is Valid: {exampleOnChange.valid}</p>
+    <Input name="example-on-changed" on:changed={handleChange} />
+    <p>Value: {examples['example-on-changed'].value}</p>
+    <p>Is Valid: {examples['example-on-changed'].valid}</p>
 </div>
 <div>
     <p>Custom isValid Call (number &gt; 0)</p>
-    <Input
-        isValid={(value) => parseInt(value, 10) > 0}
-        onChange={(data) => (exampleIsValid = data)}
-    />
-    <p>Value: {exampleIsValid.value}</p>
-    <p>Is Valid: {exampleIsValid.valid}</p>
+    <Input name="example-is-valid" isValid={numberValidityCheck} on:changed={handleChange} />
+    <p>Value: {examples['example-is-valid'].value}</p>
+    <p>Is Valid: {examples['example-is-valid'].valid}</p>
 </div>
