@@ -8,6 +8,8 @@
     export let primary: boolean = false
     /** Button size. */
     export let size: 'large' | 'regular' = 'regular'
+    /** Disabled state */
+    export let disabled: boolean = false
 
     // Dispatched when button is activated via keyboard or click
     // no need to preventDefault on the event unless the href attribute is set
@@ -122,6 +124,7 @@
     on:mouseenter={handleMouseenter}
     class={`button size-${size}`}
     class:primary
+    {disabled}
     {href}
     role="button"
     tabindex="0">
