@@ -19,11 +19,13 @@
         if (href !== undefined) {
             event.preventDefault()
         }
-        dispatch('action', event)
+        if (!disabled) {
+            dispatch('action', event)
+        }
     }
 
     function handleKeydown(event: KeyboardEvent) {
-        if (event.code === 'Space' || event.code === 'Enter') {
+        if (!disabled && (event.code === 'Space' || event.code === 'Enter')) {
             event.preventDefault()
             dispatch('action', event)
         }
