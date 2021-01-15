@@ -81,7 +81,16 @@
         &:active {
             filter: contrast(150%) brightness(105%);
         }
-
+        &.disabled-true {
+            background-color: var(--light-red);
+            border-color: var(--main-red);
+            color: var(--main-red);
+            pointer-events: none;
+            cursor: default;
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: all !important;
+        }
         :global(*) {
             pointer-events: none;
         }
@@ -124,9 +133,8 @@
     on:keydown={handleKeydown}
     on:mousemove={handleMousemove}
     on:mouseenter={handleMouseenter}
-    class={`button size-${size}`}
+    class={`button size-${size} disabled-${disabled}`}
     class:primary
-    {disabled}
     {href}
     role="button"
     tabindex="0">

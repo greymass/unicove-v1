@@ -35,8 +35,10 @@
         --main-blue: #2d8eff;
         --main-grey: #f7f7fc;
         --main-black: #585d6e;
+        --main-red: #ff931e;
         --light-black: #2c3e50;
         --light-grey: #9898b5;
+        --light-red: rgba(255, 146, 30, 0.1);
         --dark-grey: #b7c1cb;
         --light-blue: #e0eeff;
     }
