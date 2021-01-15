@@ -81,7 +81,7 @@
         &:active {
             filter: contrast(150%) brightness(105%);
         }
-        &.disabled-true {
+        &.disabled {
             background-color: var(--light-red);
             border-color: var(--main-red);
             color: var(--main-red);
@@ -133,8 +133,9 @@
     on:keydown={handleKeydown}
     on:mousemove={handleMousemove}
     on:mouseenter={handleMouseenter}
-    class={`button size-${size} disabled-${disabled}`}
+    class={`button size-${size}`}
     class:primary
+    class:disabled
     {href}
     role="button"
     tabindex="0">
