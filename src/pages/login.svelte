@@ -28,7 +28,6 @@
         align-content: center;
         justify-content: center;
         height: 100vh;
-        gap: 16px;
         align-items: center;
         header {
             text-align: center;

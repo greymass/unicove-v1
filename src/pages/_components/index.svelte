@@ -11,21 +11,24 @@
         font-size: 24px;
         font-weight: bold;
         letter-spacing: -0.47px;
+        margin-bottom: 16px;
     }
     header {
         display: flex;
         flex-direction: column;
-        gap: 16px;
         padding: 16px;
         background-color: var(--main-grey);
     }
     nav {
         ul {
-            gap: 8px;
             display: inline-flex;
             flex-wrap: wrap;
+            margin-left: -8px;
+            margin-top: -8px;
         }
         a {
+            margin-left: 8px;
+            margin-top: 8px;
             font-size: 13px;
             font-weight: 500;
             color: var(--main-blue);

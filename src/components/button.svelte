@@ -32,14 +32,15 @@
         display: inline-flex;
         font-weight: 700;
         letter-spacing: 0.1px;
-        gap: 8px;
         justify-content: center;
         background-color: var(--light-blue);
         border-radius: 8px;
-        padding: 10px 12px;
+        padding: 8px 12px;
         color: var(--main-blue);
         user-select: none;
+        -webkit-user-select: none;
         cursor: pointer;
+        border: 2px solid transparent;
         &.primary {
             background-color: var(--main-blue);
             color: white;
@@ -51,12 +52,8 @@
         &:focus,
         &:hover {
             outline: 0;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.15);
             position: relative;
-            margin-right: -2px;
-            margin-bottom: -2px;
-            left: -1px;
-            top: -1px;
         }
         &:active {
             filter: contrast(150%) brightness(105%);

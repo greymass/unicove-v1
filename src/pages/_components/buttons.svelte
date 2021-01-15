@@ -7,8 +7,12 @@
 <style lang="scss">
     div {
         display: flex;
-        gap: 8px;
         margin: 16px 0;
+        margin-left: -8px;
+        > :global(*) {
+            margin-bottom: 8px;
+            margin-left: 8px;
+        }
     }
     .overunder {
         flex-direction: column;
@@ -57,6 +61,6 @@
                 stroke-linejoin="round"
             />
         </svg>
-        Flexy with icon
+        &nbsp; Flexy with icon
     </Button>
 </div>
