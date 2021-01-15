@@ -2,8 +2,12 @@
     import {Route, active} from 'tinro'
 
     import Buttons from './buttons.svelte'
+    import Inputs from './inputs.svelte'
 
-    const routes = [{name: 'Buttons', path: 'buttons', component: Buttons}]
+    const routes = [
+        {name: 'Buttons', path: 'buttons', component: Buttons},
+        {name: 'Inputs', path: 'inputs', component: Inputs},
+    ]
 </script>
 
 <style type="scss">
