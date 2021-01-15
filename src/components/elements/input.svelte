@@ -1,7 +1,7 @@
 <script lang="ts">
-    import {onMount} from 'svelte'
+    import {getContext, onMount} from 'svelte'
     import type {inputResponse} from 'src/ui-types'
-
+    import type Form from '~/components/elements/form.svelte'
     import {createEventDispatcher} from 'svelte'
 
     export let disabled: boolean = false
@@ -16,6 +16,13 @@
     let timer: number | undefined
     let delay: number = 100
 
+    // Get parent form context (if exists)
+    const form: Form = getContext('form')
+    if (form) {
+        // Specify this input as a field on the parent form
+        form.setInput(name, isValid ? isValid(value) : true)
+    }
+
     onMount(() => {
         if (focus) {
             ref.focus()
@@ -28,15 +35,18 @@
     const debounce = (e: Event) => {
         clearTimeout(timer)
         value = (<HTMLInputElement>e.target).value
-        timer = setTimeout(
-            () =>
-                dispatch('changed', {
-                    name,
-                    valid: isValid ? isValid(value) : true,
-                    value,
-                }),
-            delay
-        )
+        timer = setTimeout(() => {
+            const response = {
+                name,
+                valid: isValid ? isValid(value) : true,
+                value,
+            }
+            // If a form context exists, signal change events
+            if (form) {
+                form.onChange(response)
+            }
+            dispatch('changed', response)
+        }, delay)
     }
 
     const handleKeyup = (e: Event): void => debounce(e)
