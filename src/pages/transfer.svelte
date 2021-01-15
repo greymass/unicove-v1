@@ -3,6 +3,7 @@
 
     import {activeBlockchain, activeSession, currentAccount} from '../store'
     import {FIOTransfer, Transfer} from '../abi-types'
+    import {isRelease} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
 
@@ -17,15 +18,28 @@
     let validFields = {
         to: false,
         amount: false,
-        memo: true,
     }
     let validForm = false
-    let toAccount = 'teamgreymass'
-    let toAddress = 'FIO7hF6waZH6pBvVLrLj5ZLNTcUfcT6nNYiCVtYAmahnmzanqU1aA'
-    let value = '0'
+    let toAccount = ''
+    let toAddress = ''
+    let value = ''
     let quantity = Asset.fromUnits(parseFloat(value), $activeBlockchain.coreTokenSymbol)
-    let memo = '🦄🧠🥌'
+    let memo = ''
     let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+
+    // Set form data to valid data in dev mode
+    if (!isRelease) {
+        validForm = true
+        validFields = {
+            amount: true,
+            to: true,
+        }
+        toAccount = 'teamgreymass'
+        toAddress = 'FIO7hF6waZH6pBvVLrLj5ZLNTcUfcT6nNYiCVtYAmahnmzanqU1aA'
+        value = '1'
+        quantity = Asset.fromUnits(parseFloat(value), $activeBlockchain.coreTokenSymbol)
+        memo = '🦄🧠🥌'
+    }
 
     async function loadFee() {
         const fees = await $activeSession!.client.v1.chain.get_table_rows({
