@@ -22,10 +22,6 @@
     @import './style/reset.scss';
     @import './style/global.scss';
 
-    main {
-        height: 100%;
-    }
-
     #greymass-wallet-version {
         font-size: 0.2em;
         opacity: 0.2;
@@ -35,7 +31,7 @@
         pointer-events: none;
     }
 
-    :global(:root) {
+    :root {
         --main-blue: #2d8eff;
         --main-grey: #f7f7fc;
         --main-black: #585d6e;
