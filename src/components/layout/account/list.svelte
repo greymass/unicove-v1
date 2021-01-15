@@ -1,16 +1,10 @@
 <script lang="ts">
-    import type {ChainId} from 'anchor-link'
     import type {SessionLike} from '../../../auth'
     import {sessionEquals, activate, login, logout} from '../../../auth'
-    import {chains} from '../../../config'
 
     import {activeSession, availableSessions} from '../../../store'
 
     $: isActive = (session: SessionLike) => sessionEquals(session, $activeSession!)
-
-    function chainName(chainId: ChainId) {
-        return chains.find((c) => c.chainId === String(chainId))!.name
-    }
 
     function handleAdd() {
         login().catch((error) => {

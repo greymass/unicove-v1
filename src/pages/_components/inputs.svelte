@@ -16,9 +16,6 @@
     div {
         margin: 16px 0;
     }
-    .overunder {
-        flex-direction: column;
-    }
 </style>
 
 <div>
@@ -48,7 +45,7 @@
     <p>Is Valid: {exampleOnChange.valid}</p>
 </div>
 <div>
-    <p>Custom isValid Call (number > 0)</p>
+    <p>Custom isValid Call (number &gt; 0)</p>
     <Input
         isValid={(value) => parseInt(value, 10) > 0}
         onChange={(data) => (exampleIsValid = data)}

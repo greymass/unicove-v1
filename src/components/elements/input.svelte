@@ -1,9 +1,5 @@
 <script lang="ts">
-    export interface returnType {
-        name: string
-        valid: boolean
-        value: string
-    }
+    import type {inputResponse} from '~/ui-types.ts'
 
     export let disabled: boolean = false
     export let focus: boolean = false
@@ -17,7 +13,7 @@
     let timer: number | undefined
     let delay: number = 100
 
-    const debounce = (v: returnType) => {
+    const debounce = (v: inputResponse) => {
         clearTimeout(timer)
         timer = setTimeout(() => onChange(v), delay)
     }

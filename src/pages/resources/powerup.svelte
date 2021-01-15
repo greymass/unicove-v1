@@ -24,9 +24,13 @@
 
 <Page title="Resources - PowerUp">
     <ResourcesNavigation />
-    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)}
-        <p>Use powerup!</p>
-    {:else}
-        <p>This feature is unavailable on this blockchain.</p>
-    {/if}
+    {#await loading}
+        <p>Hang on, fetching balances and stuff...</p>
+    {:then _}
+        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)}
+            <p>Use powerup!</p>
+        {:else}
+            <p>This feature is unavailable on this blockchain.</p>
+        {/if}
+    {/await}
 </Page>

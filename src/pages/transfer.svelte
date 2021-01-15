@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Asset, LinkSession, Name, UInt64} from 'anchor-link'
+    import {Asset, Name, UInt64} from 'anchor-link'
 
     import {isRelease} from '~/config'
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
@@ -7,7 +7,7 @@
 
     import Page from '~/components/layout/page.svelte'
 
-    import type {returnType} from '~/components/elements/input.svelte'
+    import type {inputResponse} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
     import InputAccount from '~/components/elements/input/account.svelte'
@@ -15,7 +15,7 @@
     $: balance =
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let validFields = {
+    let validFields: any = {
         to: false,
         amount: false,
     }
@@ -84,7 +84,7 @@
         }
     }
 
-    function validate(data: returnType) {
+    function validate(data: inputResponse) {
         validFields[data.name] = data.valid
         validForm = Object.values(validFields).every((v) => v === true)
     }

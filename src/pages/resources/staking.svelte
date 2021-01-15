@@ -24,9 +24,13 @@
 
 <Page title="Resources - Staking">
     <ResourcesNavigation />
-    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
-        <p>Use staking!</p>
-    {:else}
-        <p>This feature is unavailable on this blockchain.</p>
-    {/if}
+    {#await loading}
+        <p>Hang on, fetching balances and stuff...</p>
+    {:then _}
+        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
+            <ul />
+        {:else}
+            <p>This feature is unavailable on this blockchain.</p>
+        {/if}
+    {/await}
 </Page>
