@@ -4,11 +4,22 @@
     import {activeBlockchain, activeSession, currentAccount} from '../store'
     import {FIOTransfer, Transfer} from '../abi-types'
 
-    import Page from '../components/layout/page.svelte'
+    import Page from '~/components/layout/page.svelte'
+
+    import type {returnType} from '~/components/elements/input.svelte'
+    import Button from '~/components/elements/button.svelte'
+    import Input from '~/components/elements/input.svelte'
+    import InputAccount from '~/components/elements/input/account.svelte'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let validFields = {
+        to: false,
+        amount: false,
+        memo: true,
+    }
+    let validForm = false
     let toAccount = 'teamgreymass'
     let toAddress = 'FIO7hF6waZH6pBvVLrLj5ZLNTcUfcT6nNYiCVtYAmahnmzanqU1aA'
     let value = '0'
@@ -57,6 +68,11 @@
         } else {
             quantity = Asset.fromFloat(parsed, $activeBlockchain.coreTokenSymbol)
         }
+    }
+
+    function validate(data: returnType) {
+        validFields[data.name] = data.valid
+        validForm = Object.values(validFields).every((v) => v === true)
     }
 
     async function transfer() {
@@ -131,14 +147,14 @@
     </p>
     <p>
         Send
-        <input type="text" bind:value />
+        <Input onChange={validate} name="amount" bind:value />
         to
         {#if $activeBlockchain.id === 'fio'}
-            <input type="text" bind:value={toAddress} />
+            <Input onChange={validate} name="to" bind:value={toAddress} />
         {:else}
-            <input type="text" bind:value={toAccount} />
+            <InputAccount onChange={validate} name="to" bind:value={toAccount} />
             with memo
-            <input type="text" bind:value={memo} />
+            <Input onChange={validate} name="memo" bind:value={memo} />
         {/if}
         {#if txfee.value > 0}
             <table>
@@ -161,6 +177,6 @@
                 </tr>
             </table>
         {/if}
-        <button on:click={transfer}>go</button>
+        <Button disabled={!validForm} on:click={transfer}>Go</Button>
     </p>
 </Page>
