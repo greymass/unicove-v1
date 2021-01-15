@@ -177,6 +177,6 @@
                 </tr>
             </table>
         {/if}
-        <Button disabled={!validForm} on:click={transfer}>Go</Button>
+        <Button disabled={!validForm} on:action={transfer}>Go</Button>
     </p>
 </Page>
