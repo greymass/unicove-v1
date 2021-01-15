@@ -28,12 +28,11 @@
     const debounce = (e: Event) => {
         clearTimeout(timer)
         value = (<HTMLInputElement>e.target).value
-        const valid = isValid ? isValid(value) : true
         timer = setTimeout(
             () =>
                 dispatch('changed', {
                     name,
-                    valid,
+                    valid: isValid ? isValid(value) : true,
                     value,
                 }),
             delay
