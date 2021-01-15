@@ -1,12 +1,13 @@
 <script lang="ts">
-    import {createEventDispatcher} from 'svelte'
-    interface returnType {
+    export interface returnType {
+        name: string
         valid: boolean
         value: string
     }
 
     export let disabled: boolean = false
     export let focus: boolean = false
+    export let name: string = ''
     export let placeholder: string = ''
     export let value: string = ''
 
@@ -23,8 +24,9 @@
 
     const handleKeyup = (e: Event): void => {
         if (onChange) {
-            const {value}: {value: string} = <HTMLInputElement>e.target
+            value = (<HTMLInputElement>e.target).value
             debounce({
+                name,
                 valid: isValid ? isValid(value) : true,
                 value,
             })
@@ -48,4 +50,12 @@
     }
 </style>
 
-<input on:keyup={handleKeyup} type="text" {disabled} {placeholder} {value} autofocus={focus} />
+<input
+    on:keyup={handleKeyup}
+    type="text"
+    {name}
+    {disabled}
+    {placeholder}
+    bind:value
+    autofocus={focus}
+/>
