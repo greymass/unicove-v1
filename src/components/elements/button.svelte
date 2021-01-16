@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {createEventDispatcher} from 'svelte'
+    import {createEventDispatcher, getContext} from 'svelte'
     import {spring} from 'svelte/motion'
 
     /** If set button will act as a standard <a href=..tag. */
@@ -11,6 +11,9 @@
     /** Disabled state */
     export let disabled: boolean = false
 
+    // Get parent form disabled state (if exists)
+    const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
+
     // Dispatched when button is activated via keyboard or click
     // no need to preventDefault on the event unless the href attribute is set
     const dispatch = createEventDispatcher<{action: Event}>()
@@ -19,13 +22,13 @@
         if (href !== undefined) {
             event.preventDefault()
         }
-        if (!disabled) {
+        if (!$formDisabled && !disabled) {
             dispatch('action', event)
         }
     }
 
     function handleKeydown(event: KeyboardEvent) {
-        if (!disabled && (event.code === 'Space' || event.code === 'Enter')) {
+        if (!$formDisabled && !disabled && (event.code === 'Space' || event.code === 'Enter')) {
             event.preventDefault()
             dispatch('action', event)
         }
@@ -135,7 +138,7 @@
     on:mouseenter={handleMouseenter}
     class={`button size-${size}`}
     class:primary
-    class:disabled
+    class:disabled={$formDisabled || disabled}
     {href}
     role="button"
     tabindex="0">

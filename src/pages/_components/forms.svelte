@@ -9,23 +9,30 @@
 
 <style lang="scss">
     div {
-        display: flex;
         margin: 16px 0;
-        margin-left: -8px;
-        > :global(*) {
-            margin-bottom: 8px;
-            margin-left: 8px;
-        }
     }
 </style>
 
 <div>
+    <h2>Empty Fields</h2>
     <Form>
         <p>Enter a number greater than 0</p>
         <Input name="number" isValid={numberValidityCheck} />
         <p>Enter an account name</p>
         <InputAccount name="account" />
         <p>The button will only enable when the form is all valid:</p>
-        <Button />
+        <Button on:action={() => alert('action!')} />
+    </Form>
+</div>
+
+<div>
+    <h2>Prefilled Fields</h2>
+    <Form>
+        <p>Enter a number greater than 0</p>
+        <Input name="number" isValid={numberValidityCheck} value="1" />
+        <p>Enter an account name</p>
+        <InputAccount name="account" value="teamgreymass" />
+        <p>The button will only enable when the form is all valid:</p>
+        <Button on:action={() => alert('action!')} />
     </Form>
 </div>

@@ -1,52 +1,39 @@
 <script lang="ts">
-    import {setContext} from 'svelte'
+    import {onMount, setContext} from 'svelte'
+    import {writable} from 'svelte/store'
     import type {inputResponse} from '~/ui-types'
 
     interface Form {
         setInput: (name: string, valid: boolean) => void
         onChange: (response: inputResponse) => void
-        valid: boolean
     }
 
-    let fields: any = {}
-    let valid: boolean = false
+    let formFields: any = {}
+    let formDisabled = writable<boolean>(true)
 
     const form: Form = {
         setInput: (name: string, valid: boolean = false) => {
-            fields[name] = valid
+            formFields[name] = valid
         },
         onChange: (response: inputResponse) => {
-            fields[response.name] = response.valid
+            formFields[response.name] = response.valid
             validate()
         },
-        valid,
     }
-    setContext('form', form)
 
-    function submit() {
-        if (valid) {
-            // submit
-        }
-        console.log('submit', fields)
-    }
+    setContext('form', form)
+    setContext('formDisabled', formDisabled)
+
+    onMount(validate)
 
     function validate() {
-        valid = Object.values(fields).every((v) => v === true)
+        $formDisabled = Object.values(formFields).some((v) => v === false)
     }
 </script>
 
 <style type="scss">
 </style>
 
-<form on:submit|preventDefault={submit}>
-    <p>Form field validation status</p>
-    <ul>
-        {#each Object.keys(fields) as field}
-            <li>{field}: {fields[field]}</li>
-        {/each}
-    </ul>
-    <hr />
-    <p>Form overall validation: {valid}</p>
-    <hr />
+<form>
     <slot />
 </form>
