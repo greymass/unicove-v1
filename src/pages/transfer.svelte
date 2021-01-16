@@ -7,19 +7,15 @@
 
     import Page from '~/components/layout/page.svelte'
 
-    import type {InputResponse} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
     import InputAccount from '~/components/elements/input/account.svelte'
+    import InputAsset from '~/components/elements/input/asset.svelte'
+    import Form from '~/components/elements/form.svelte'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let validFields: any = {
-        to: false,
-        amount: false,
-    }
-    let validForm = false
     let toAccount = ''
     let toAddress = ''
     let value = ''
@@ -29,11 +25,6 @@
 
     // Set form data to valid data in dev mode
     if (!isRelease) {
-        validForm = true
-        validFields = {
-            amount: true,
-            to: true,
-        }
         toAccount = 'teamgreymass'
         toAddress = 'FIO7hF6waZH6pBvVLrLj5ZLNTcUfcT6nNYiCVtYAmahnmzanqU1aA'
         value = '1'
@@ -82,11 +73,6 @@
         } else {
             quantity = Asset.fromFloat(parsed, $activeBlockchain.coreTokenSymbol)
         }
-    }
-
-    function validate(e: CustomEvent<InputResponse>) {
-        validFields[e.detail.name] = e.detail.valid
-        validForm = Object.values(validFields).every((v) => v === true)
     }
 
     async function transfer() {
@@ -159,16 +145,16 @@
                 quantity = Asset.fromUnits(value, $activeBlockchain.coreTokenSymbol)
             }}> {balance} </i>
     </p>
-    <p>
+    <Form>
         Send
-        <Input on:changed={validate} name="amount" bind:value />
+        <InputAsset symbol={$activeBlockchain.coreTokenSymbol} name="amount" bind:value />
         to
         {#if $activeBlockchain.id === 'fio'}
-            <Input on:changed={validate} name="to" bind:value={toAddress} />
+            <Input name="to" bind:value={toAddress} />
         {:else}
-            <InputAccount on:changed={validate} name="to" bind:value={toAccount} />
+            <InputAccount name="to" bind:value={toAccount} />
             with memo
-            <Input on:changed={validate} name="memo" bind:value={memo} />
+            <Input name="memo" bind:value={memo} />
         {/if}
         {#if txfee.value > 0}
             <table>
@@ -191,6 +177,6 @@
                 </tr>
             </table>
         {/if}
-        <Button disabled={!validForm} on:action={transfer}>Go</Button>
-    </p>
+        <Button formValidation on:action={transfer}>Go</Button>
+    </Form>
 </Page>
