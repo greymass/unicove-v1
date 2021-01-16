@@ -7,7 +7,7 @@
 
     import Page from '~/components/layout/page.svelte'
 
-    import type {inputResponse} from '~/ui-types'
+    import type {InputResponse} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
     import InputAccount from '~/components/elements/input/account.svelte'
@@ -84,7 +84,7 @@
         }
     }
 
-    function validate(e: CustomEvent<inputResponse>) {
+    function validate(e: CustomEvent<InputResponse>) {
         validFields[e.detail.name] = e.detail.valid
         validForm = Object.values(validFields).every((v) => v === true)
     }

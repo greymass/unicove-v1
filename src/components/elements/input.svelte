@@ -1,6 +1,6 @@
 <script lang="ts">
     import {getContext, onMount} from 'svelte'
-    import type {inputResponse} from 'src/ui-types'
+    import type {InputResponse} from 'src/ui-types'
     import type {Form} from '~/ui-types'
     import {createEventDispatcher} from 'svelte'
 
@@ -30,7 +30,7 @@
     })
 
     // Dispatched when button is activated via keyboard or click
-    const dispatch = createEventDispatcher<{changed: inputResponse}>()
+    const dispatch = createEventDispatcher<{changed: InputResponse}>()
 
     const debounce = (e: Event) => {
         clearTimeout(timer)
