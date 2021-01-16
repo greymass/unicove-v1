@@ -20,8 +20,10 @@
         <Input name="number" isValid={numberValidityCheck} />
         <p>Enter an account name</p>
         <InputAccount name="account" />
+        <p>This button will always work:</p>
+        <Button on:action={() => alert('success!')} />
         <p>The button will only enable when the form is all valid:</p>
-        <Button on:action={() => alert('action!')} />
+        <Button formValidation on:action={() => alert('action!')} />
     </Form>
 </div>
 
@@ -33,6 +35,6 @@
         <p>Enter an account name</p>
         <InputAccount name="account" value="teamgreymass" />
         <p>The button will only enable when the form is all valid:</p>
-        <Button on:action={() => alert('action!')} />
+        <Button formValidation on:action={() => alert('action!')} />
     </Form>
 </div>

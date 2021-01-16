@@ -10,6 +10,8 @@
     export let size: 'large' | 'regular' = 'regular'
     /** Disabled state */
     export let disabled: boolean = false
+    /** Type of button */
+    export let formValidation: boolean = false
 
     // Get parent form disabled state (if exists)
     const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
@@ -22,13 +24,18 @@
         if (href !== undefined) {
             event.preventDefault()
         }
-        if (!$formDisabled && !disabled) {
+        if (!formValidation || (!$formDisabled && !disabled)) {
             dispatch('action', event)
         }
     }
 
     function handleKeydown(event: KeyboardEvent) {
-        if (!$formDisabled && !disabled && (event.code === 'Space' || event.code === 'Enter')) {
+        if (
+            !formValidation &&
+            !$formDisabled &&
+            !disabled &&
+            (event.code === 'Space' || event.code === 'Enter')
+        ) {
             event.preventDefault()
             dispatch('action', event)
         }
@@ -138,7 +145,7 @@
     on:mouseenter={handleMouseenter}
     class={`button size-${size}`}
     class:primary
-    class:disabled={$formDisabled || disabled}
+    class:disabled={(formValidation && $formDisabled) || disabled}
     {href}
     role="button"
     tabindex="0">
