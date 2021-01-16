@@ -1,9 +1,9 @@
 <script lang="ts">
     import {Asset, Name, UInt64} from 'anchor-link'
 
-    import {isRelease} from '~/config'
-    import {activeBlockchain, activeSession, currentAccount} from '~/store'
-    import {FIOTransfer, Transfer} from '~/abi-types'
+    import {isRelease} from '../config'
+    import {activeBlockchain, activeSession, currentAccount} from '../store'
+    import {FIOTransfer, Transfer} from '../abi-types'
 
     import Page from '~/components/layout/page.svelte'
 
