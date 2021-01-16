@@ -1,12 +1,7 @@
 <script lang="ts">
     import {onMount, setContext} from 'svelte'
     import {writable} from 'svelte/store'
-    import type {inputResponse} from '~/ui-types'
-
-    interface Form {
-        setInput: (name: string, valid: boolean) => void
-        onChange: (response: inputResponse) => void
-    }
+    import type {Form, inputResponse} from '~/ui-types'
 
     let formFields: any = {}
     let formDisabled = writable<boolean>(true)

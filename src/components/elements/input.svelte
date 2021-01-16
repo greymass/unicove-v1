@@ -1,7 +1,7 @@
 <script lang="ts">
     import {getContext, onMount} from 'svelte'
     import type {inputResponse} from 'src/ui-types'
-    import type Form from '~/components/elements/form.svelte'
+    import type {Form} from '~/ui-types'
     import {createEventDispatcher} from 'svelte'
 
     export let disabled: boolean = false
