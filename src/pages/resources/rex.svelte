@@ -2,14 +2,14 @@
     import type {AnyAction, API, LinkSession} from 'anchor-link'
     import {Asset, UInt64} from '@greymass/eosio'
 
-    import {activeBlockchain, activeSession} from '~/store'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {ChainFeatures} from '~/config'
     import {REXDeposit, REXRentCPU, REXRentNET} from '~/abi-types'
 
     import Page from '~/components/layout/page.svelte'
     import ResourcesNavigation from './components/navigation.svelte'
 
-    let account: API.v1.AccountObject
+    $: account = $currentAccount
     let sampleAccount: API.v1.AccountObject
 
     // Internal values
