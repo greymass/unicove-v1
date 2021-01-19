@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {createEventDispatcher} from 'svelte'
+    import {createEventDispatcher, getContext} from 'svelte'
     import {spring} from 'svelte/motion'
 
     /** If set button will act as a standard <a href=..tag. */
@@ -8,6 +8,13 @@
     export let primary: boolean = false
     /** Button size. */
     export let size: 'large' | 'regular' = 'regular'
+    /** Disabled state */
+    export let disabled: boolean = false
+    /** Type of button */
+    export let formValidation: boolean = false
+
+    // Get parent form disabled state (if exists)
+    const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
 
     // Dispatched when button is activated via keyboard or click
     // no need to preventDefault on the event unless the href attribute is set
@@ -17,11 +24,18 @@
         if (href !== undefined) {
             event.preventDefault()
         }
-        dispatch('action', event)
+        if (!formValidation || (!$formDisabled && !disabled)) {
+            dispatch('action', event)
+        }
     }
 
     function handleKeydown(event: KeyboardEvent) {
-        if (event.code === 'Space' || event.code === 'Enter') {
+        if (
+            !formValidation &&
+            !$formDisabled &&
+            !disabled &&
+            (event.code === 'Space' || event.code === 'Enter')
+        ) {
             event.preventDefault()
             dispatch('action', event)
         }
@@ -77,7 +91,16 @@
         &:active {
             filter: contrast(150%) brightness(105%);
         }
-
+        &.disabled {
+            background-color: var(--light-red);
+            border-color: var(--main-red);
+            color: var(--main-red);
+            pointer-events: none;
+            cursor: default;
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: all !important;
+        }
         :global(*) {
             pointer-events: none;
         }
@@ -122,6 +145,7 @@
     on:mouseenter={handleMouseenter}
     class={`button size-${size}`}
     class:primary
+    class:disabled={(formValidation && $formDisabled) || disabled}
     {href}
     role="button"
     tabindex="0">

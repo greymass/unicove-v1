@@ -1,20 +1,36 @@
 <script lang="ts">
-    import {Asset, LinkSession, Name, UInt64} from 'anchor-link'
+    import {Asset, Name, UInt64} from 'anchor-link'
 
+    import {isRelease} from '../config'
     import {activeBlockchain, activeSession, currentAccount} from '../store'
     import {FIOTransfer, Transfer} from '../abi-types'
 
-    import Page from '../components/layout/page.svelte'
+    import Page from '~/components/layout/page.svelte'
+
+    import Button from '~/components/elements/button.svelte'
+    import Input from '~/components/elements/input.svelte'
+    import InputAccount from '~/components/elements/input/account.svelte'
+    import InputAsset from '~/components/elements/input/asset.svelte'
+    import Form from '~/components/elements/form.svelte'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let toAccount = 'teamgreymass'
-    let toAddress = 'FIO7hF6waZH6pBvVLrLj5ZLNTcUfcT6nNYiCVtYAmahnmzanqU1aA'
-    let value = '0'
+    let toAccount = ''
+    let toAddress = ''
+    let value = ''
     let quantity = Asset.fromUnits(parseFloat(value), $activeBlockchain.coreTokenSymbol)
-    let memo = '🦄🧠🥌'
+    let memo = ''
     let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+
+    // Set form data to valid data in dev mode
+    if (!isRelease) {
+        toAccount = 'teamgreymass'
+        toAddress = 'FIO7hF6waZH6pBvVLrLj5ZLNTcUfcT6nNYiCVtYAmahnmzanqU1aA'
+        value = '1'
+        quantity = Asset.fromUnits(parseFloat(value), $activeBlockchain.coreTokenSymbol)
+        memo = '🦄🧠🥌'
+    }
 
     async function loadFee() {
         const fees = await $activeSession!.client.v1.chain.get_table_rows({
@@ -129,16 +145,16 @@
                 quantity = Asset.fromUnits(value, $activeBlockchain.coreTokenSymbol)
             }}> {balance} </i>
     </p>
-    <p>
+    <Form>
         Send
-        <input type="text" bind:value />
+        <InputAsset symbol={$activeBlockchain.coreTokenSymbol} name="amount" bind:value />
         to
         {#if $activeBlockchain.id === 'fio'}
-            <input type="text" bind:value={toAddress} />
+            <Input name="to" bind:value={toAddress} />
         {:else}
-            <input type="text" bind:value={toAccount} />
+            <InputAccount name="to" bind:value={toAccount} />
             with memo
-            <input type="text" bind:value={memo} />
+            <Input name="memo" bind:value={memo} />
         {/if}
         {#if txfee.value > 0}
             <table>
@@ -161,6 +177,6 @@
                 </tr>
             </table>
         {/if}
-        <button on:click={transfer}>go</button>
-    </p>
+        <Button formValidation on:action={transfer}>Go</Button>
+    </Form>
 </Page>

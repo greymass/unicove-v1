@@ -23,11 +23,9 @@
     let rentNET = false
     let rentCPU = true
 
-    let rentSplitNET = 0.1
     let rentSplitNETFloor = 0.0001
     let rentSplitNETCeiling = 0.0002
     let rentSplitCPU = 0.9
-    let rentSplitCPUFloor = 0.0001
     let estimatedTransfers: string = '0'
 
     // User entered payment amount
