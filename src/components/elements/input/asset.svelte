@@ -1,9 +1,10 @@
 <script lang="ts">
     import {Asset} from '@greymass/eosio'
 
+    import {activeBlockchain} from '~/store'
     import Input from '~/components/elements/input.svelte'
 
-    export let symbol: Asset.Symbol
+    export let symbol: Asset.Symbol = $activeBlockchain.coreTokenSymbol
     export let name: string = ''
     export let value: string = ''
 
