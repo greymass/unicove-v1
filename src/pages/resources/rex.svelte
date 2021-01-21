@@ -17,7 +17,9 @@
     let sampleAccount: API.v1.AccountObject
 
     // Internal values
-    let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    $: balance =
+        $currentAccount?.core_liquid_balance ||
+        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let totalRent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let totalUnlent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let price: number = 0
@@ -183,7 +185,7 @@
         }
         await $activeSession!.transact({actions})
         // adjust balance to reflect transfer
-        balance.units = UInt64.from(balance.units.toNumber() - Asset.from(payment).units.toNumber())
+        balance.units = UInt64.from(balance.units.toNumber() - Asset.from(amount).units.toNumber())
     }
 </script>
 
