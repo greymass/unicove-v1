@@ -8,9 +8,57 @@
     import Page from '~/components/layout/page.svelte'
     import Progress from '~/components/elements/progress.svelte'
     import ResourcesNavigation from './components/navigation.svelte'
+    import type {Checksum256Type} from 'anchor-link'
 
-    let usage: any[] = []
-    let quotas: any[] = []
+    interface ResourceProviderQuota {
+        /** The name of the quota, as defined by the resource provider */
+        name: string
+        /** CPU resource availability, mimicking EOSIO, specified in microseconds*/
+        cpu: {
+            available: number
+            max: number
+            used: number
+        }
+        /** NET resource availability, mimicking EOSIO, specified in bytes */
+        net: {
+            available: number
+            max: number
+            used: number
+        }
+    }
+
+    interface ResourceProviderUsage {
+        /** Optional: The cost of the transaction */
+        cost?: {
+            /** Optional: The amount of cost associated to this transaction */
+            amount?: string
+            /** The source of how this cost was paid */
+            source: string
+        }
+        /** The datatime the transaction took place */
+        datetime: string
+        /** Optional: The name of the quota that was utilized for this transaction */
+        quota?: string
+        /** Usage  */
+        usage: {
+            /** The estimated usage for the transaction */
+            estimated: ResourceProviderUsageInstance
+            /** Optional: The actual usage for the transaction, not set if actual usage has not been determined */
+            actual?: ResourceProviderUsageInstance
+        }
+        /** The transaction ID of the transaction */
+        transaction_id: Checksum256Type
+    }
+
+    interface ResourceProviderUsageInstance {
+        /** Microseconds of CPU */
+        cpu: number
+        /** Bytes of NET */
+        net: number
+    }
+
+    let usage: ResourceProviderUsage[] = []
+    let quotas: ResourceProviderQuota[] = []
 
     async function loadUsage() {
         // const response = await $activeSession.client.provider.fetch(
