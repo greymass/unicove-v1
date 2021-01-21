@@ -48,3 +48,12 @@ export class REXRentNET extends Struct {
     @Struct.field('asset') loan_payment!: Asset
     @Struct.field('asset') loan_fund!: Asset
 }
+
+@Struct.type('stake')
+export class Stake extends Struct {
+    @Struct.field('name') from!: Name
+    @Struct.field('name') receiver!: Name
+    @Struct.field('asset') stake_net_quantity!: Asset
+    @Struct.field('asset') stake_cpu_quantity!: Asset
+    @Struct.field('bool') transfer!: boolean
+}
