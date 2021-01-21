@@ -18,7 +18,6 @@
     // re-sort accounts since link keeps them in last used order
     $: sessions = $availableSessions
         .sort((a: SessionLike, b: SessionLike) => {
-            console.log(a, b)
             return String(a.auth.actor).localeCompare(String(b.auth.actor))
         })
         .map((session: any) => {
