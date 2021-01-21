@@ -3,45 +3,43 @@
     import Navigation from './navigation/index.svelte'
     import Footer from './footer.svelte'
 
-    import {activeSession} from '~/store'
-
-    import blueUserIcon from '@/images/user-blue.svg'
-    import greyUserIcon from '@/images/user-grey.svg'
-
     /** Title of the page. */
     export let title: string
 
     let accountSidebar = false
+    let navigationSidebar = false
 </script>
 
-<style>
+<style type="scss">
     .layout {
         display: flex;
-        height: 100%;
+        flex: 1;
+        height: 100vh;
     }
 
-    .account-button {
+    .dimmer {
+        display: none;
         position: absolute;
-        right: 0;
+        height: 100vh;
+        width: 100vw;
+        left: 0;
         top: 0;
-        padding: 30px;
-    }
-
-    .account-button a {
-        color: var(--light-grey);
-        font-size: 12px;
-        cursor: pointer;
+        z-index: 1000 !important;
+        background-color: rgba(0, 0, 0, 0.25);
+        &.active {
+            display: block;
+        }
     }
 
     .main {
         flex-grow: 1;
         padding: 30px;
-        min-height: 90vh;
+        height: 100vh;
     }
 
     .content {
         margin: 45px;
-        min-height: 60vh;
+        min-height: 100vh;
     }
 
     .content h1 {
@@ -49,26 +47,23 @@
     }
 </style>
 
-<section>
-    <div class="layout">
-        <Navigation />
-        <AccountSidebar bind:open={accountSidebar} />
+<div class="layout">
+    <Navigation bind:open={navigationSidebar} />
+    <AccountSidebar bind:open={accountSidebar} />
+    <div
+        class="dimmer"
+        class:active={accountSidebar || navigationSidebar}
+        on:click={() => {
+            accountSidebar = false
+            navigationSidebar = false
+        }}
+    />
 
-        <div class="account-button">
-            <!-- FIXME: this should be a button component -->
-            <!-- svelte-ignore a11y-missing-attribute -->
-            <a on:click={() => (accountSidebar = true)}>
-                <img src={accountSidebar ? greyUserIcon : blueUserIcon} />
-                &nbsp;
-                {$activeSession?.auth.actor}
-            </a>
+    <div class="main">
+        <div class="content">
+            <h1>{title}</h1>
+            <slot />
         </div>
-        <div class="main">
-            <div class="content">
-                <h1>{title}</h1>
-                <slot />
-            </div>
-            <Footer />
-        </div>
+        <Footer />
     </div>
-</section>
+</div>

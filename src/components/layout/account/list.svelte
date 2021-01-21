@@ -1,130 +1,150 @@
 <script lang="ts">
-    import type {SessionLike} from '../../../auth'
-    import {sessionEquals, activate, login, logout} from '../../../auth'
-
-    import {activeSession, availableSessions} from '../../../store'
+    import type {SessionLike} from '~/auth'
+    import {sessionEquals, login, logout} from '~/auth'
+    import {chainConfig} from '~/config'
+    import {activeSession, availableSessions} from '~/store'
 
     $: isActive = (session: SessionLike) => sessionEquals(session, $activeSession!)
 
+    export let onSelect: (session: SessionLike) => void
+
     function handleAdd() {
-        login().catch((error) => {
+        login().catch((error: any) => {
             // TODO: some sort of modal or toast for error messages like these
             console.warn('unable to add account', error)
         })
     }
 
     // re-sort accounts since link keeps them in last used order
-    $: sortedSessions = $availableSessions.sort((a, b) => {
-        return String(a.auth.actor).localeCompare(String(b.auth.actor))
-    })
+    $: sessions = $availableSessions
+        .sort((a: SessionLike, b: SessionLike) => {
+            console.log(a, b)
+            return String(a.auth.actor).localeCompare(String(b.auth.actor))
+        })
+        .map((session: any) => {
+            return {
+                ...session,
+                chain: chainConfig(session.chainId),
+            }
+        })
 </script>
 
-<style>
+<style type="scss">
+    $borderRadius: 8px;
     .list {
         margin: 10px;
-    }
+        ul {
+            list-style-type: none;
+            padding: 10px;
+            li {
+                cursor: pointer;
+                color: var(--main-blue);
+                display: flex;
+                font-size: 13px;
+                font-weight: 600;
+                line-height: 33px;
+                margin: 10px 0;
+                padding: 0 15px;
+                user-select: none;
+                text-decoration: none;
+                &.active {
+                    background-color: white;
+                    border-radius: $borderRadius;
+                    color: var(--light-black);
+                }
+                &.add-account {
+                    background-color: var(--light-blue);
+                    cursor: pointer;
+                    display: block;
+                    font-size: 10px;
+                    font-weight: 700;
+                    margin-top: 20px;
+                    text-align: center;
+                }
+                > div {
+                    order: 0;
+                    flex: 0 1 auto;
+                    &.icon {
+                        height: 32px;
+                        max-height: 32px;
+                        max-width: 32px;
+                        overflow: hidden;
+                        width: 32px;
+                    }
+                    &.account {
+                        flex: 1 1 auto;
+                        padding: 0 12px;
+                    }
+                    &.control {
+                        text-align: center;
+                        vertical-align: middle;
+                        > button div.dropdown-options {
+                            background-color: white;
+                            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+                            display: none;
+                            min-width: 100px;
+                            padding: 0 16px;
+                            position: absolute;
+                            right: 0;
+                            z-index: 1;
+                            > span {
+                                color: var(--main-blue);
+                                display: block;
+                                font-size: 12px;
+                                font-weight: normal;
+                                margin-top: 10px;
+                                margin-bottom: 10px;
+                            }
+                        }
+                        &:hover button div.dropdown-options {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
 
-    ul {
-        list-style-type: none;
-        padding: 10px;
-    }
-
-    button {
-        background-color: transparent;
-        border: none;
-        color: var(--main-blue);
-        font-size: 20px;
-        font-weight: bold;
-        margin-left: 10px;
-    }
-    li:hover button {
-        opacity: 0.5;
-    }
-    li button:hover {
-        opacity: 1;
-    }
-
-    li {
-        padding: 15px;
-        margin-top: 10px;
-    }
-
-    li a {
-        color: var(--main-blue);
-        margin-bottom: 10px;
-        text-decoration: none;
-        font-weight: normal;
-    }
-
-    li.active {
-        background-color: white;
-        border-radius: 3px;
-    }
-
-    li.active a {
-        color: var(--light-black);
-    }
-
-    li.add-account {
-        background-color: var(--light-blue);
-        cursor: pointer;
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    button:hover,
-    button:active,
-    button:visited,
-    button:focus {
-        border: none;
-        outline: none;
-    }
-
-    button .dropdown-options {
-        background-color: white;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        display: none;
-        min-width: 100px;
-        padding: 0 16px;
-        position: absolute;
-        right: 0;
-        z-index: 1;
-    }
-
-    button .dropdown-options a {
-        color: var(--main-blue);
-        display: block;
-        font-size: 12px;
-        font-weight: normal;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    button:hover .dropdown-options {
-        display: block;
+        button {
+            background-color: transparent;
+            border: none;
+            color: var(--main-blue);
+            font-size: 20px;
+            line-height: 20px;
+            vertical-align: top;
+            &:hover,
+            &:active,
+            &:visited,
+            &:focus {
+                border: none;
+                outline: none;
+            }
+        }
     }
 </style>
 
 <div class="list">
     <ul>
-        {#each sortedSessions as session}
+        {#each sessions as session}
             <li class:active={isActive(session)}>
-                <a href="#select-account" on:click|preventDefault={() => activate(session)}>
-                    {session.auth.actor}@{session.auth.permission}
-                </a>
-                <button>
-                    ...
-                    <div class="dropdown-options">
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <a on:click={() => activate(session)}> Select </a>
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <a on:click={() => logout(session)}> Remove </a>
-                    </div>
-                </button>
+                <div class="icon" on:click={() => onSelect(session)}>
+                    {session.chain.name}
+                </div>
+                <div class="account" on:click={() => onSelect(session)}>
+                    {session.auth.actor}
+                </div>
+                <div class="control">
+                    <button>
+                        ...
+                        <div class="dropdown-options">
+                            <span on:click={() => onSelect(session)}> Select </span>
+                            <span on:click={() => logout(session)}> Remove </span>
+                        </div>
+                    </button>
+                </div>
             </li>
         {/each}
-        <li class="add-account">
-            <a on:click|preventDefault={handleAdd} href="#add-account"> Add account </a>
+        <li class="add-account" on:click|preventDefault={handleAdd} href="#add-account">
+            Add account
         </li>
     </ul>
 </div>
