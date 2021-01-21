@@ -4,11 +4,14 @@
 
 <style>
     button {
-        z-index: 20;
+        position: absolute;
+        top: 24px;
+        left: 24px;
         color: gray;
         cursor: pointer;
         border: none;
         background-color: transparent;
+        z-index: 2000;
     }
 
     button:focus {

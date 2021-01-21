@@ -147,7 +147,7 @@
     </p>
     <Form>
         Send
-        <InputAsset symbol={$activeBlockchain.coreTokenSymbol} name="amount" bind:value />
+        <InputAsset name="amount" bind:value />
         to
         {#if $activeBlockchain.id === 'fio'}
             <Input name="to" bind:value={toAddress} />

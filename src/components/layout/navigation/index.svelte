@@ -1,9 +1,41 @@
 <script lang="ts">
-    import Navbar from './navbar/index.svelte'
-    import Sidebar from './navbar/sidebar/index.svelte'
+    import type {NavigationItem} from '~/ui-types'
+    import MediaQuery from '~/components/utils/media-query.svelte'
 
-    let open = false
+    import NavigationDesktop from './desktop/index.svelte'
+    import NavigationMobile from './mobile/index.svelte'
+    import NavigationMobileIcon from './mobile/icon.svelte'
+
+    export let open = false
+
+    const primaryNavigation: NavigationItem[] = [
+        {
+            exactPath: true,
+            icon: 'dashboard',
+            name: 'Dashboard',
+            path: '/',
+        },
+        {
+            icon: 'transfer',
+            name: 'Transfer',
+            path: '/transfer',
+        },
+        {
+            icon: 'resources',
+            name: 'Resources',
+            path: '/resources',
+        },
+    ]
 </script>
 
-<Sidebar bind:open />
-<Navbar bind:sidebar={open} />
+<style>
+</style>
+
+<MediaQuery query="(max-width: 999px)" let:matches>
+    <NavigationMobile items={primaryNavigation} bind:open />
+    {#if matches}
+        <NavigationMobileIcon bind:open />
+    {:else}
+        <NavigationDesktop items={primaryNavigation} />
+    {/if}
+</MediaQuery>

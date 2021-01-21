@@ -2,18 +2,24 @@
     import type {AnyAction, API, LinkSession} from 'anchor-link'
     import {Asset, UInt64} from '@greymass/eosio'
 
-    import {activeBlockchain, activeSession} from '~/store'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {ChainFeatures} from '~/config'
     import {REXDeposit, REXRentCPU, REXRentNET} from '~/abi-types'
 
     import Page from '~/components/layout/page.svelte'
     import ResourcesNavigation from './components/navigation.svelte'
 
-    let account: API.v1.AccountObject
+    import Button from '~/components/elements/button.svelte'
+    import Form from '~/components/elements/form.svelte'
+    import InputAsset from '~/components/elements/input/asset.svelte'
+
+    $: account = $currentAccount
     let sampleAccount: API.v1.AccountObject
 
     // Internal values
-    let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    $: balance =
+        $currentAccount?.core_liquid_balance ||
+        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let totalRent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let totalUnlent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let price: number = 0
@@ -29,14 +35,14 @@
     let estimatedTransfers: string = '0'
 
     // User entered payment amount
-    let payment = '0.0025'
+    let value = '0.0025'
 
     // Asset representation of user entered amount
-    let amount = Asset.fromFloat(parseFloat(payment), $activeBlockchain.coreTokenSymbol)
+    let amount = Asset.fromFloat(parseFloat(value), $activeBlockchain.coreTokenSymbol)
 
     // Asset representation of the user entered amount to each resource
-    let amountCPU = Asset.fromFloat(parseFloat(payment), $activeBlockchain.coreTokenSymbol)
-    let amountNET = Asset.fromFloat(parseFloat(payment), $activeBlockchain.coreTokenSymbol)
+    let amountCPU = Asset.fromFloat(parseFloat(value), $activeBlockchain.coreTokenSymbol)
+    let amountNET = Asset.fromFloat(parseFloat(value), $activeBlockchain.coreTokenSymbol)
 
     async function loadSampleAccount(session: LinkSession) {
         sampleAccount = await session.client.v1.chain.get_account('teamgreymass')
@@ -64,15 +70,15 @@
     // TODO: find or build some form builder and validation instead
     //       sextant admin ui has the beginnings of one that can handle core types we could build on
     $: {
-        let value = parseFloat(payment)
-        if (!sampleAccount || !account || isNaN(value) || value === 0) {
+        let parsed = parseFloat(value)
+        if (!sampleAccount || !account || isNaN(parsed) || parsed === 0) {
             amount = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
             amountCPU = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
             amountNET = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
             cpuToReceive = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
             netToReceive = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
         } else {
-            amount = Asset.fromFloat(value, $activeBlockchain.coreTokenSymbol)
+            amount = Asset.fromFloat(parsed, $activeBlockchain.coreTokenSymbol)
             if (price) {
                 // Determine if the account needs to also rent NET
                 if (account.net_limit.available.value < 1000) {
@@ -179,7 +185,7 @@
         }
         await $activeSession!.transact({actions})
         // adjust balance to reflect transfer
-        balance.units = UInt64.from(balance.units.toNumber() - Asset.from(payment).units.toNumber())
+        balance.units = UInt64.from(balance.units.toNumber() - Asset.from(amount).units.toNumber())
     }
 </script>
 
@@ -192,32 +198,26 @@
         {#await loading}
             <p>Hang on, fetching balances and stuff...</p>
         {:then _}
-            <p>You have <i on:click={() => (payment = String(balance))}> {balance} </i></p>
-            <p>Rent Resources by paying</p>
-            <p>
-                <input type="text" bind:value={payment} />
-                <button on:click={rent}>go</button>
-            </p>
-            <p>
-                Form value interpretted: {String(amount)}
-            </p>
-            <p>
-                Current Price: {price}
-            </p>
-            <p>You will pay the following for each resource:</p>
-            <ul>
-                <li>{amountCPU} towards CPU</li>
-                <li>{amountNET} towards NET</li>
-            </ul>
-            <p>You will receive approximately:</p>
-            <ul>
-                <li>{cpuToReceive} as staked CPU</li>
-                <li>{netToReceive} as staked NET</li>
-            </ul>
-            <p>
-                Which is an amount capable of performing {estimatedTransfers} token transfers (based
-                on ~200μs per transfer).
-            </p>
+            <Form>
+                <p>You have <i on:click={() => (value = String(balance))}> {balance} </i></p>
+                <p>Rent Resources by paying...</p>
+                <InputAsset name="amount" bind:value />
+                <p>You will pay the following for each resource:</p>
+                <ul>
+                    <li>{amountCPU} towards CPU</li>
+                    <li>{amountNET} towards NET</li>
+                </ul>
+                <p>You will receive approximately:</p>
+                <ul>
+                    <li>{cpuToReceive} as staked CPU</li>
+                    <li>{netToReceive} as staked NET</li>
+                </ul>
+                <p>
+                    Which is an amount capable of performing {estimatedTransfers} token transfers (based
+                    on ~200μs per transfer).
+                </p>
+                <Button formValidation on:action={rent}>Pay</Button>
+            </Form>
         {/await}
     {:else}
         <p>This feature is unavailable on this blockchain.</p>

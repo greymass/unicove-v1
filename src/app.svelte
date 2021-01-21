@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Route, router} from 'tinro'
     import {activeSession, appReady} from '~/store'
-    import {version, isRelease} from '~/config'
+    import {isRelease} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
 
@@ -39,8 +39,13 @@
         --light-black: #2c3e50;
         --light-grey: #9898b5;
         --light-red: rgba(255, 146, 30, 0.1);
-        --dark-grey: #b7c1cb;
         --light-blue: #e0eeff;
+        --dark-grey: #b7c1cb;
+        --divider-grey: #e0e6ee;
+    }
+
+    main {
+        height: 100vh;
     }
 </style>
 
@@ -89,7 +94,3 @@
         </Route>
     {/if}
 </main>
-
-{#if !isRelease}
-    <div id="greymass-wallet-version">Version {version}</div>
-{/if}

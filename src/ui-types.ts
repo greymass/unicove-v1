@@ -8,3 +8,10 @@ export interface InputResponse {
     valid: boolean
     value: string
 }
+
+export interface NavigationItem {
+    exactPath?: boolean
+    icon: string
+    name: string
+    path: string
+}
