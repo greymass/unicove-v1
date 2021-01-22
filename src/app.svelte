@@ -9,10 +9,6 @@
     import Login from '~/pages/login.svelte'
     import Transfer from '~/pages/transfer.svelte'
     import Resources from '~/pages/resources/index.svelte'
-    import ResourcesFuel from '~/pages/resources/fuel.svelte'
-    import ResourcesPowerUp from '~/pages/resources/powerup.svelte'
-    import ResourcesRex from '~/pages/resources/rex.svelte'
-    import ResourcesStaked from '~/pages/resources/staking.svelte'
     import Components from './pages/_components/index.svelte'
 
     $: needLogin = $activeSession === null && !$router.path.startsWith('/_components')
@@ -63,22 +59,8 @@
             <Route path="/transfer">
                 <Transfer />
             </Route>
-            <Route path="/resources/*" firstmatch>
-                <Route path="/">
-                    <Resources />
-                </Route>
-                <Route path="/fuel">
-                    <ResourcesFuel />
-                </Route>
-                <Route path="/powerup">
-                    <ResourcesPowerUp />
-                </Route>
-                <Route path="/rex">
-                    <ResourcesRex />
-                </Route>
-                <Route path="/staking">
-                    <ResourcesStaked />
-                </Route>
+            <Route path="/resources/*">
+                <Resources />
             </Route>
             <Route fallback>
                 <Page title="Page not found">

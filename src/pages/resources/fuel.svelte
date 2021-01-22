@@ -1,14 +1,12 @@
 <script lang="ts">
+    import type {Checksum256Type} from 'anchor-link'
     import {
         activeBlockchain,
         // activeSession
     } from '~/store'
     import {ChainFeatures} from '~/config'
 
-    import Page from '~/components/layout/page.svelte'
     import Progress from '~/components/elements/progress.svelte'
-    import ResourcesNavigation from './components/navigation.svelte'
-    import type {Checksum256Type} from 'anchor-link'
 
     interface ResourceProviderQuota {
         /** The name of the quota, as defined by the resource provider */
@@ -208,80 +206,77 @@
     }
 </style>
 
-<Page title="Resources - Fuel">
-    <ResourcesNavigation />
-    {#await loading}
-        <p>Hang on, fetching balances and stuff...</p>
-    {:then _}
-        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Fuel)}
-            {#each quotas as quota}
-                <div class="quota">
-                    <p class="name">
-                        {quota.name}
-                    </p>
-                    <Progress percent={(quota.cpu.available / quota.cpu.max) * 100} />
-                    {(quota.cpu.available / quota.cpu.max) * 100}% available ({quota.cpu.used}μs of {quota
-                        .cpu.max}μs used)
-                </div>
-            {/each}
-            <div class="usage">
-                <div class="title">Usage History</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="4" />
-                            <th colspan="2">Usage</th>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <th>Date/Time</th>
-                            <th>Type</th>
-                            <th>Cost</th>
-                            <th>CPU</th>
-                            <th>NET</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {#each usage as transaction}
-                            <tr>
-                                <td>
-                                    <a
-                                        href={`https://bloks.io/transaction/${transaction.transaction_id}`}>
-                                        {transaction.usage.actual ? 'Completed' : 'Pending'}
-                                    </a>
-                                </td>
-                                <td>{transaction.datetime}</td>
-                                <td>
-                                    {#if transaction.cost && transaction.cost.source === 'fee'}
-                                        Transaction Fee
-                                    {:else if transaction.cost && transaction.cost.source === 'balance'}
-                                        Prepaid
-                                    {:else}
-                                        Free Transaction
-                                    {/if}
-                                </td>
-                                <td>
-                                    {transaction.cost && transaction.cost.source === 'fee'
-                                        ? transaction.cost.amount
-                                        : '-'}
-                                </td>
-                                <td>
-                                    {transaction.usage.actual
-                                        ? `${transaction.usage.actual.cpu}μs CPU`
-                                        : `${transaction.usage.estimated.cpu}μs CPU`}
-                                </td>
-                                <td>
-                                    {transaction.usage.actual
-                                        ? `${transaction.usage.actual.net} NET`
-                                        : `${transaction.usage.estimated.net} NET`}
-                                </td>
-                            </tr>
-                        {/each}
-                    </tbody>
-                </table>
+{#await loading}
+    <p>Hang on, fetching balances and stuff...</p>
+{:then _}
+    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Fuel)}
+        {#each quotas as quota}
+            <div class="quota">
+                <p class="name">
+                    {quota.name}
+                </p>
+                <Progress percent={(quota.cpu.available / quota.cpu.max) * 100} />
+                {(quota.cpu.available / quota.cpu.max) * 100}% available ({quota.cpu.used}μs of {quota
+                    .cpu.max}μs used)
             </div>
-        {:else}
-            <p>This feature is unavailable on this blockchain.</p>
-        {/if}
-    {/await}
-</Page>
+        {/each}
+        <div class="usage">
+            <div class="title">Usage History</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="4" />
+                        <th colspan="2">Usage</th>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <th>Date/Time</th>
+                        <th>Type</th>
+                        <th>Cost</th>
+                        <th>CPU</th>
+                        <th>NET</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each usage as transaction}
+                        <tr>
+                            <td>
+                                <a
+                                    href={`https://bloks.io/transaction/${transaction.transaction_id}`}>
+                                    {transaction.usage.actual ? 'Completed' : 'Pending'}
+                                </a>
+                            </td>
+                            <td>{transaction.datetime}</td>
+                            <td>
+                                {#if transaction.cost && transaction.cost.source === 'fee'}
+                                    Transaction Fee
+                                {:else if transaction.cost && transaction.cost.source === 'balance'}
+                                    Prepaid
+                                {:else}
+                                    Free Transaction
+                                {/if}
+                            </td>
+                            <td>
+                                {transaction.cost && transaction.cost.source === 'fee'
+                                    ? transaction.cost.amount
+                                    : '-'}
+                            </td>
+                            <td>
+                                {transaction.usage.actual
+                                    ? `${transaction.usage.actual.cpu}μs CPU`
+                                    : `${transaction.usage.estimated.cpu}μs CPU`}
+                            </td>
+                            <td>
+                                {transaction.usage.actual
+                                    ? `${transaction.usage.actual.net} NET`
+                                    : `${transaction.usage.estimated.net} NET`}
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
+    {:else}
+        <p>This feature is unavailable on this blockchain.</p>
+    {/if}
+{/await}

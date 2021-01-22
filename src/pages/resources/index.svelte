@@ -1,30 +1,31 @@
 <script lang="ts">
-    import {currentAccount} from '~/store'
+    import {Route} from 'tinro'
 
     import Page from '~/components/layout/page.svelte'
-    import ResourcesNavigation from './components/navigation.svelte'
+    import Nav from '~/components/elements/nav.svelte'
 
-    // force type to be unwrapped since we cannot use typescript inside svelte templates
-    $: account = $currentAccount!
+    import ResourcesOverview from '~/pages/resources/overview.svelte'
+    import ResourcesFuel from '~/pages/resources/fuel.svelte'
+    import ResourcesPowerUp from '~/pages/resources/powerup.svelte'
+    import ResourcesRex from '~/pages/resources/rex.svelte'
+    import ResourcesStaked from '~/pages/resources/staking.svelte'
+
+    const routes = [
+        {name: 'Fuel', path: 'fuel', component: ResourcesFuel},
+        {name: 'PowerUp', path: 'powerup', component: ResourcesPowerUp},
+        {name: 'REX', path: 'rex', component: ResourcesRex},
+        {name: 'Staking', path: 'staking', component: ResourcesStaked},
+    ]
 </script>
 
 <Page title="Resources">
-    <ResourcesNavigation />
-    {#if account}
-        Available Resources
-        <ul>
-            <li>
-                CPU: {(1 - account.cpu_limit.used.toNumber() / account.cpu_limit.max.toNumber()) *
-                    100}% ({account.cpu_limit.used} of {account.cpu_limit.max})
-            </li>
-            <li>
-                NET: {(1 - account.net_limit.used.toNumber() / account.net_limit.max.toNumber()) *
-                    100}% ({account.net_limit.used} of {account.net_limit.max})
-            </li>
-            <li>
-                RAM: {(1 - account.ram_usage.toNumber() / account.ram_quota.toNumber()) * 100}% ({account.ram_usage}
-                of {account.ram_quota})
-            </li>
-        </ul>
-    {/if}
+    <Nav {routes} home="Overview" />
+    <Route path="/">
+        <ResourcesOverview />
+    </Route>
+    {#each routes as route}
+        <Route path={`/${route.path}`}>
+            <svelte:component this={route.component} />
+        </Route>
+    {/each}
 </Page>
