@@ -3,11 +3,8 @@
     import {activate} from '~/auth'
 
     import type {SessionLike} from '~/auth'
-    import blueUserIcon from '@/images/user-blue.svg'
-
     import List from './list.svelte'
-
-    import xBlueIcon from '@/images/x-blue.svg'
+    import Icon from '~/components/elements/icon.svelte'
 
     export let open = false
 
@@ -19,12 +16,18 @@
 
 <style type="scss">
     .account-button {
-        color: var(--light-grey);
+        color: var(--main-black);
         cursor: pointer;
+        font-size: 14px;
         position: absolute;
         right: 0;
         top: 0;
         padding: 30px;
+        .icon {
+            color: var(--main-blue);
+            line-height: 14px;
+            margin-right: 10px;
+        }
     }
 
     aside {
@@ -60,16 +63,19 @@
 </style>
 
 <div class="account-button" on:click={() => (open = true)}>
-    <img alt="user icon" src={blueUserIcon} />
-    &nbsp;
-    {$activeSession?.auth.actor}
+    <span class="icon">
+        <Icon name="user" />
+    </span>
+    <span class="text">
+        {$activeSession?.auth.actor}
+    </span>
 </div>
 
 <aside class:open>
     <div class="header">
         <!-- svelte-ignore a11y-missing-attribute -->
         <a on:click={() => (open = false)}>
-            <img src={xBlueIcon} />
+            <Icon name="x" />
         </a>
         Accounts
     </div>

@@ -5,8 +5,7 @@
     import {preferences} from '~/store'
     import type {NavigationItem} from '~/ui-types'
 
-    import xBlueIcon from '@/images/x-blue.svg'
-    import infoBlueIcon from '@/images/info-blue.svg'
+    import Icon from '~/components/elements/icon.svelte'
 
     $: currentPath = $router.path
     $: expand = $preferences.expandNavbar
@@ -64,11 +63,9 @@
             margin-bottom: 24px;
             text-align: center;
             border-bottom: 1px solid gray;
-            img {
+            span {
+                padding: 12px;
                 cursor: pointer;
-                display: inline-block;
-                width: 13px;
-                margin: 5px 0 -3px 10px;
             }
         }
         .items {
@@ -92,10 +89,6 @@
                 }
                 .icon {
                     flex-grow: 1;
-                    width: 32px;
-                    height: 32px;
-                    max-height: 32px;
-                    background-color: var(--main-black);
                     text-align: center;
                 }
             }
@@ -110,15 +103,21 @@
             {#if !isRelease}
                 - {version}
             {/if}
-            <img alt="close" src={xBlueIcon} on:click={() => (preferences.expandNavbar = false)} />
+            <span on:click={() => (preferences.expandNavbar = false)}>
+                <Icon name="x" />
+            </span>
         {:else}
-            <img alt="open" src={infoBlueIcon} on:click={() => (preferences.expandNavbar = true)} />
+            <span on:click={() => (preferences.expandNavbar = true)}>
+                <Icon name="menu" />
+            </span>
         {/if}
     </div>
     <div class="items">
         {#each items as item}
             <a href={item.path} class="item" class:active={pathMatches(item)}>
-                <span class="icon" />
+                <span class="icon">
+                    <Icon name={item.icon} />
+                </span>
                 <span class="name">{item.name}</span>
             </a>
         {/each}

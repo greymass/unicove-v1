@@ -11,17 +11,17 @@
     const primaryNavigation: NavigationItem[] = [
         {
             exactPath: true,
-            icon: 'dashboard',
+            icon: 'layout',
             name: 'Dashboard',
             path: '/',
         },
         {
-            icon: 'transfer',
+            icon: 'arrow-right',
             name: 'Transfer',
             path: '/transfer',
         },
         {
-            icon: 'resources',
+            icon: 'battery-charging',
             name: 'Resources',
             path: '/resources',
         },
