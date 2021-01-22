@@ -30,10 +30,6 @@
     <Input />
 </div>
 <div>
-    <p>Autofocused</p>
-    <Input focus />
-</div>
-<div>
     <p>Disabled</p>
     <Input disabled />
 </div>
