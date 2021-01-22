@@ -5,9 +5,6 @@
     import {ChainFeatures} from '~/config'
     import {Stake} from '~/abi-types'
 
-    import Page from '~/components/layout/page.svelte'
-    import ResourcesNavigation from './components/navigation.svelte'
-
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
@@ -60,28 +57,25 @@
 <style>
 </style>
 
-<Page title="Resources - Staking">
-    <ResourcesNavigation />
-    {#await loading}
-        <p>Hang on, fetching balances and stuff...</p>
-    {:then _}
-        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
-            <Form>
-                <p>You have {balance}</p>
-                <p>Amount of CPU:</p>
-                <InputAsset allowZero name="cpu" bind:value={cpu} />
-                <p>Amount of NET:</p>
-                <InputAsset allowZero name="net" bind:value={net} />
-                <p>The following amounts will be staked:</p>
-                <ul>
-                    <li>to CPU: {amountCPU}</li>
-                    <li>to NET: {amountNET}</li>
-                </ul>
-                <Button formValidation on:action={stake}>Stake</Button>
-            </Form>
-            <ul />
-        {:else}
-            <p>This feature is unavailable on this blockchain.</p>
-        {/if}
-    {/await}
-</Page>
+{#await loading}
+    <p>Hang on, fetching balances and stuff...</p>
+{:then _}
+    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
+        <Form>
+            <p>You have {balance}</p>
+            <p>Amount of CPU:</p>
+            <InputAsset allowZero name="cpu" bind:value={cpu} />
+            <p>Amount of NET:</p>
+            <InputAsset allowZero name="net" bind:value={net} />
+            <p>The following amounts will be staked:</p>
+            <ul>
+                <li>to CPU: {amountCPU}</li>
+                <li>to NET: {amountNET}</li>
+            </ul>
+            <Button formValidation on:action={stake}>Stake</Button>
+        </Form>
+        <ul />
+    {:else}
+        <p>This feature is unavailable on this blockchain.</p>
+    {/if}
+{/await}

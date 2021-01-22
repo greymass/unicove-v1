@@ -1,7 +1,6 @@
 <script lang="ts">
     import AccountSidebar from './account/sidebar.svelte'
     import Navigation from './navigation/index.svelte'
-    import Footer from './footer.svelte'
 
     /** Title of the page. */
     export let title: string
@@ -35,11 +34,11 @@
         flex-grow: 1;
         padding: 30px;
         height: 100vh;
+        min-height: 100vh;
     }
 
     .content {
         margin: 45px;
-        min-height: 100vh;
     }
 
     .content h1 {
@@ -64,6 +63,5 @@
             <h1>{title}</h1>
             <slot />
         </div>
-        <Footer />
     </div>
 </div>

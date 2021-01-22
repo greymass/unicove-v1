@@ -6,9 +6,6 @@
     import {ChainFeatures} from '~/config'
     import {REXDeposit, REXRentCPU, REXRentNET} from '~/abi-types'
 
-    import Page from '~/components/layout/page.svelte'
-    import ResourcesNavigation from './components/navigation.svelte'
-
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
@@ -192,34 +189,31 @@
 <style>
 </style>
 
-<Page title="Resources - REX">
-    <ResourcesNavigation />
-    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
-        {#await loading}
-            <p>Hang on, fetching balances and stuff...</p>
-        {:then _}
-            <Form>
-                <p>You have <i on:click={() => (value = String(balance))}> {balance} </i></p>
-                <p>Rent Resources by paying...</p>
-                <InputAsset name="amount" bind:value />
-                <p>You will pay the following for each resource:</p>
-                <ul>
-                    <li>{amountCPU} towards CPU</li>
-                    <li>{amountNET} towards NET</li>
-                </ul>
-                <p>You will receive approximately:</p>
-                <ul>
-                    <li>{cpuToReceive} as staked CPU</li>
-                    <li>{netToReceive} as staked NET</li>
-                </ul>
-                <p>
-                    Which is an amount capable of performing {estimatedTransfers} token transfers (based
-                    on ~200μs per transfer).
-                </p>
-                <Button formValidation on:action={rent}>Pay</Button>
-            </Form>
-        {/await}
-    {:else}
-        <p>This feature is unavailable on this blockchain.</p>
-    {/if}
-</Page>
+{#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
+    {#await loading}
+        <p>Hang on, fetching balances and stuff...</p>
+    {:then _}
+        <Form>
+            <p>You have <i on:click={() => (value = String(balance))}> {balance} </i></p>
+            <p>Rent Resources by paying...</p>
+            <InputAsset name="amount" bind:value />
+            <p>You will pay the following for each resource:</p>
+            <ul>
+                <li>{amountCPU} towards CPU</li>
+                <li>{amountNET} towards NET</li>
+            </ul>
+            <p>You will receive approximately:</p>
+            <ul>
+                <li>{cpuToReceive} as staked CPU</li>
+                <li>{netToReceive} as staked NET</li>
+            </ul>
+            <p>
+                Which is an amount capable of performing {estimatedTransfers} token transfers (based
+                on ~200μs per transfer).
+            </p>
+            <Button formValidation on:action={rent}>Pay</Button>
+        </Form>
+    {/await}
+{:else}
+    <p>This feature is unavailable on this blockchain.</p>
+{/if}

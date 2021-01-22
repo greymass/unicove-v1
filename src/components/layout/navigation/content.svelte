@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {createEventDispatcher} from 'svelte'
     import {router} from 'tinro'
 
     import {version, isRelease} from '~/config'
@@ -7,8 +8,12 @@
 
     import Icon from '~/components/elements/icon.svelte'
 
+    // Dispatched when button is activated via keyboard or click
+    const dispatch = createEventDispatcher<{collapse: boolean}>()
+
     $: currentPath = $router.path
-    $: expand = $preferences.expandNavbar
+
+    export let expand = true
 
     export let items: NavigationItem[] = []
 
@@ -103,7 +108,7 @@
             {#if !isRelease}
                 - {version}
             {/if}
-            <span on:click={() => (preferences.expandNavbar = false)}>
+            <span on:click={() => dispatch('collapse', false)}>
                 <Icon name="x" />
             </span>
         {:else}
