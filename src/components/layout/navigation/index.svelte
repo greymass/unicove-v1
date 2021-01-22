@@ -1,12 +1,14 @@
 <script lang="ts">
     import type {NavigationItem} from '~/ui-types'
-    import MediaQuery from '~/components/utils/media-query.svelte'
 
-    import NavigationDesktop from './desktop/index.svelte'
-    import NavigationMobile from './mobile/index.svelte'
-    import NavigationMobileIcon from './mobile/icon.svelte'
+    import {preferences} from '~/store'
+
+    import Icon from '~/components/elements/icon.svelte'
+    import MediaQuery from '~/components/utils/media-query.svelte'
+    import NavigationContent from '~/components/layout/navigation/content.svelte'
 
     export let open = false
+    $: expand = $preferences.expandNavbar
 
     const primaryNavigation: NavigationItem[] = [
         {
@@ -28,14 +30,46 @@
     ]
 </script>
 
-<style>
+<style type="scss">
+    aside {
+        top: 0;
+        transition: left 0.3s ease-in-out;
+        position: absolute;
+        height: 100%;
+        display: none;
+        z-index: 2001;
+        &.open {
+            display: block;
+        }
+    }
+    .icon {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 12px;
+        color: gray;
+        cursor: pointer;
+    }
 </style>
 
 <MediaQuery query="(max-width: 999px)" let:matches>
-    <NavigationMobile items={primaryNavigation} bind:open />
+    <aside class:open>
+        <NavigationContent
+            items={primaryNavigation}
+            expand={true}
+            on:collapse={() => (open = false)}
+        />
+    </aside>
+
     {#if matches}
-        <NavigationMobileIcon bind:open />
+        <span class="icon" on:click={() => (open = !open)}>
+            <Icon name="menu" size="large" />
+        </span>
     {:else}
-        <NavigationDesktop items={primaryNavigation} />
+        <NavigationContent
+            items={primaryNavigation}
+            {expand}
+            on:collapse={() => (preferences.expandNavbar = false)}
+        />
     {/if}
 </MediaQuery>

@@ -36,7 +36,7 @@
         position: absolute;
         right: -100%;
         transition: left 0.3s ease-in-out;
-        width: 50%;
+        width: 268px;
         top: 0;
         background-color: var(--main-grey);
         border-color: darkgray;
