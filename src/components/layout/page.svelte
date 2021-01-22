@@ -34,11 +34,11 @@
         flex-grow: 1;
         padding: 30px;
         height: 100vh;
+        min-height: 100vh;
     }
 
     .content {
         margin: 45px;
-        min-height: 100vh;
     }
 
     .content h1 {
