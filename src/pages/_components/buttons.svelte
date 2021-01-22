@@ -1,7 +1,5 @@
 <script>
     import Button from '~/components/elements/button.svelte'
-    import InfoIcon from '@/images/user-blue.svg'
-    console.log(InfoIcon)
 </script>
 
 <style lang="scss">
