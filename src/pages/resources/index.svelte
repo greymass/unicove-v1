@@ -1,5 +1,8 @@
 <script lang="ts">
     import {Route} from 'tinro'
+    import {activeBlockchain} from '~/store'
+    import type {ChainConfig} from '~/config'
+    import {ChainFeatures} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
     import Nav from '~/components/elements/nav.svelte'
@@ -10,12 +13,36 @@
     import ResourcesRex from '~/pages/resources/rex.svelte'
     import ResourcesStaked from '~/pages/resources/staking.svelte'
 
-    const routes = [
-        {name: 'Fuel', path: 'fuel', component: ResourcesFuel},
-        {name: 'PowerUp', path: 'powerup', component: ResourcesPowerUp},
-        {name: 'REX', path: 'rex', component: ResourcesRex},
-        {name: 'Staking', path: 'staking', component: ResourcesStaked},
+    const potentialRoutes = [
+        {
+            feature: ChainFeatures.Fuel,
+            route: {name: 'Fuel', path: 'fuel', component: ResourcesFuel},
+        },
+        {
+            feature: ChainFeatures.PowerUp,
+            route: {name: 'PowerUp', path: 'powerup', component: ResourcesPowerUp},
+        },
+        {
+            feature: ChainFeatures.REX,
+            route: {name: 'REX', path: 'rex', component: ResourcesRex},
+        },
+        {
+            feature: ChainFeatures.Staking,
+            route: {name: 'Staking', path: 'staking', component: ResourcesStaked},
+        },
     ]
+
+    $: routes = determineRoutes($activeBlockchain)
+
+    function determineRoutes(blockchain: ChainConfig) {
+        const matchingRoutes: any = []
+        potentialRoutes.forEach((route) => {
+            if (blockchain.chainFeatures.has(route.feature)) {
+                matchingRoutes.push(route.route)
+            }
+        })
+        return matchingRoutes
+    }
 </script>
 
 <Page title="Resources">
