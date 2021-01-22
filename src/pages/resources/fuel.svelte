@@ -242,8 +242,12 @@
                         <tr>
                             <td>
                                 <a
+<<<<<<< HEAD
                                     href={`https://bloks.io/transaction/${transaction.transaction_id}`}
                                 >
+=======
+                                    href={`https://bloks.io/transaction/${transaction.transaction_id}`}>
+>>>>>>> Reworked Resources to use new Nav element
                                     {transaction.usage.actual ? 'Completed' : 'Pending'}
                                 </a>
                             </td>
