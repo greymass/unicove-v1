@@ -13,7 +13,18 @@
     import ResourcesRex from '~/pages/resources/rex.svelte'
     import ResourcesStaked from '~/pages/resources/staking.svelte'
 
-    const potentialRoutes = [
+    interface PotentialRoute {
+        feature: ChainFeatures
+        route: NavigationRoute
+    }
+
+    interface NavigationRoute {
+        name: string
+        path: string
+        component: any
+    }
+
+    const potentialRoutes: PotentialRoute[] = [
         {
             feature: ChainFeatures.Fuel,
             route: {name: 'Fuel', path: 'fuel', component: ResourcesFuel},
@@ -34,9 +45,9 @@
 
     $: routes = determineRoutes($activeBlockchain)
 
-    function determineRoutes(blockchain: ChainConfig) {
-        const matchingRoutes: any = []
-        potentialRoutes.forEach((route) => {
+    function determineRoutes(blockchain: ChainConfig): NavigationRoute[] {
+        const matchingRoutes: NavigationRoute[] = []
+        potentialRoutes.forEach((route: PotentialRoute) => {
             if (blockchain.chainFeatures.has(route.feature)) {
                 matchingRoutes.push(route.route)
             }
