@@ -2,6 +2,8 @@
     import {createEventDispatcher, getContext} from 'svelte'
     import {spring} from 'svelte/motion'
 
+    import Icon from '~/components/elements/icon.svelte'
+
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
     /** Whether the button is primary. */
@@ -12,6 +14,10 @@
     export let disabled: boolean = false
     /** Type of button */
     export let formValidation: boolean = false
+    /** Icon within the button */
+    export let icon: string | undefined = undefined
+    /** Icon position, left or right */
+    export let iconPosition: string = 'right'
 
     // Get parent form disabled state (if exists)
     const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
@@ -104,6 +110,7 @@
         :global(*) {
             pointer-events: none;
         }
+
         .hover {
             --gradient-size: 200px;
             position: absolute;
@@ -124,7 +131,19 @@
         }
         overflow: hidden;
         .content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             z-index: 1;
+            &.icon-left {
+                flex-direction: row-reverse;
+                .text {
+                    margin-left: 0.625em;
+                }
+            }
+            .text {
+                margin-right: 0.625em;
+            }
         }
         &.size-large {
             .hover {
@@ -150,7 +169,14 @@
     role="button"
     tabindex="0">
     <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
-    <span class="content">
-        <slot>Click me</slot>
+    <span class={`content icon-${iconPosition}`}>
+        <span class="text">
+            <slot>Click me</slot>
+        </span>
+        {#if icon}
+            <span class="icon">
+                <Icon name={icon} />
+            </span>
+        {/if}
     </span>
 </a>

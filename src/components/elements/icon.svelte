@@ -1,38 +1,41 @@
 <script lang="ts">
-    import feather from 'feather-icons'
+    import {icons} from 'feather-icons'
 
     export let name = 'help-circle'
-    export let color = 'black'
-    export let pixels = 24
+    export let dimensions = '1em'
     export let size = 'default'
+
+    if (!icons[name]) {
+        name = 'help-circle'
+    }
 
     switch (size) {
         case 'tiny': {
-            pixels = 12
+            dimensions = '0.5em'
             break
         }
         case 'small': {
-            pixels = 16
+            dimensions = '0.75em'
             break
         }
         case 'default': {
-            pixels = 24
+            dimensions = '1em'
             break
         }
         case 'medium': {
-            pixels = 32
+            dimensions = '1.25em'
             break
         }
         case 'large': {
-            pixels = 48
+            dimensions = '1.5em'
             break
         }
         case 'huge': {
-            pixels = 64
+            dimensions = '2.5em'
             break
         }
         case 'massive': {
-            pixels = 96
+            dimensions = '4em'
             break
         }
     }
@@ -41,8 +44,7 @@
 <style type="scss">
 </style>
 
-{@html feather.icons[name].toSvg({
-    color,
-    height: pixels,
-    width: pixels,
+{@html icons[name].toSvg({
+    height: dimensions,
+    width: dimensions,
 })}
