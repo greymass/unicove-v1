@@ -11,6 +11,7 @@
         "buffer": false
     },
     "dependencies": {
+        "@types/feather-icons": "^4.7.0",
         "anchor-link": "^3.0.0-rc",
         "anchor-link-browser-transport": "^3.0.0-rc",
         "feather-icons": "^4.28.0",
