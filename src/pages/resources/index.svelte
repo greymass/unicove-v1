@@ -4,7 +4,6 @@
     import type {ChainConfig} from '~/config'
     import {ChainFeatures} from '~/config'
 
-
     import Page from '~/components/layout/page.svelte'
     import Nav from '~/components/elements/nav.svelte'
 
