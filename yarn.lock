@@ -1858,6 +1858,11 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+classnames@^2.2.5:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
+
 clean-css@^4.2.1:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-4.2.3.tgz#507b5de7d97b48ee53d84adb0160ff6216380f78"
@@ -2010,6 +2015,11 @@ core-js-compat@^3.8.0:
   dependencies:
     browserslist "^4.16.0"
     semver "7.0.0"
+
+core-js@^3.1.3:
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.8.3.tgz#c21906e1f14f3689f93abcc6e26883550dd92dd0"
+  integrity sha512-KPYXeVZYemC2TkNEkX/01I+7yd+nX3KddKwZ1Ww7SKWdI2wQprSgLmrTddT8nw92AjEklTsPBoSdQBhbI1bQ6Q==
 
 core-js@^3.5.0:
   version "3.8.2"
@@ -2848,6 +2858,14 @@ fastq@^1.6.0:
   integrity sha512-NL2Qc5L3iQEsyYzweq7qfgy5OtXCmGzGvhElGEd/SoFWEMOEczNh5s5ocaF01HDetxz+p8ecjNPA6cZxxIHmzA==
   dependencies:
     reusify "^1.0.4"
+
+feather-icons@^4.28.0:
+  version "4.28.0"
+  resolved "https://registry.yarnpkg.com/feather-icons/-/feather-icons-4.28.0.tgz#e1892a401fe12c4559291770ff6e68b0168e760f"
+  integrity sha512-gRdqKESXRBUZn6Nl0VBq2wPHKRJgZz7yblrrc2lYsS6odkNFDnA4bqvrlEVRUPjE1tFax+0TdbJKZ31ziJuzjg==
+  dependencies:
+    classnames "^2.2.5"
+    core-js "^3.1.3"
 
 fetch-ponyfill@^7.0.0:
   version "7.0.0"

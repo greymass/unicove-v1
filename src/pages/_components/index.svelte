@@ -3,12 +3,14 @@
 
     import Buttons from './buttons.svelte'
     import Forms from './forms.svelte'
+    import Icons from './icons.svelte'
     import Inputs from './inputs.svelte'
     import Progress from './progress.svelte'
 
     const routes = [
         {name: 'Buttons', path: 'buttons', component: Buttons},
         {name: 'Forms', path: 'forms', component: Forms},
+        {name: 'Icons', path: 'icons', component: Icons},
         {name: 'Inputs', path: 'inputs', component: Inputs},
         {name: 'Progress Bar', path: 'progress', component: Progress},
     ]
