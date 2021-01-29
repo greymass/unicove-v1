@@ -32,20 +32,6 @@
         memo = '🦄🧠🥌'
     }
 
-    async function loadFee() {
-        const fees = await $activeSession!.client.v1.chain.get_table_rows({
-            code: 'fio.fee',
-            table: 'fiofees',
-            scope: 'fio.fee',
-            key_type: 'i64',
-            index_position: 'primary',
-            lower_bound: UInt64.from(5),
-            upper_bound: UInt64.from(5),
-            limit: 1,
-        })
-        txfee = Asset.fromUnits(fees.rows[0].suf_amount, $activeBlockchain.coreTokenSymbol)
-    }
-
     async function loadBalance() {
         ;[balance] = await $activeSession!.client.v1.chain.get_currency_balance(
             $activeBlockchain.coreTokenContract,
@@ -72,58 +58,6 @@
             quantity = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
         } else {
             quantity = Asset.fromFloat(parsed, $activeBlockchain.coreTokenSymbol)
-        }
-    }
-
-    async function transfer() {
-        // TODO: status display && error handling
-        let data
-        switch ($activeBlockchain.id) {
-            case 'fio': {
-                await loadFee()
-                data = FIOTransfer.from({
-                    payee_public_key: toAddress,
-                    amount: quantity.units,
-                    max_fee: txfee.units,
-                    actor: $activeSession!.auth.actor,
-                    tpid: 'tpid@greymass',
-                })
-                break
-            }
-            default: {
-                data = Transfer.from({
-                    from: $activeSession!.auth.actor,
-                    to: toAccount,
-                    quantity,
-                    memo,
-                })
-                break
-            }
-        }
-        await $activeSession!.transact({
-            action: {
-                authorization: [$activeSession!.auth],
-                account: $activeBlockchain.coreTokenContract,
-                name: $activeBlockchain.coreTokenTransfer,
-                data,
-            },
-        })
-        // adjust balance to reflect transfer
-        switch ($activeBlockchain.id) {
-            case 'fio': {
-                balance.units = UInt64.from(
-                    balance.units.toNumber() -
-                        Asset.from(quantity).units.toNumber() -
-                        Asset.from(txfee).units.toNumber()
-                )
-                break
-            }
-            default: {
-                balance.units = UInt64.from(
-                    balance.units.toNumber() - Asset.from(quantity).units.toNumber()
-                )
-                break
-            }
         }
     }
 </script>
