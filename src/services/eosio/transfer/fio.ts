@@ -1,16 +1,11 @@
 import {Asset, Name, UInt64} from 'anchor-link'
 import {FIOTransfer} from "~/abi-types";
 
-export async function transferFio(
+export async function fioTransfer(
     activeBlockchain: Object,
     activeSession: Object,
     properties: Object
 ) {
-    const {
-        toAddress,
-        quantity,
-    } = properties;
-
     const txFee = await loadFee(activeSession, activeBlockchain);
     const data = generateTransfer(activeSession, properties, txFee);
     transact(activeBlockchain, activeSession, data);

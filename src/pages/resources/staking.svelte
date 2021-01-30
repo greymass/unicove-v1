@@ -40,7 +40,7 @@
                         receiver: $activeSession!.auth.actor,
                         stake_net_quantity: amountNET,
                         stake_cpu_quantity: amountCPU,
-                        transfer: false,
+                        methods: false,
                     }),
                 },
             ],
