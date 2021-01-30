@@ -1,50 +1,25 @@
-async function transfer(activeBlockchain: Object) {
-    // TODO: status display && error handling
+import {Asset, Name, UInt64} from 'anchor-link';
+import { fioTransfer } from './transfer/fio';
+import { defaultTransfer } from './transfer/default';
+
+import { FIOTransfer, Transfer } from '../../abi-types'
+
+async function transfer(activeBlockchain: Object, activeSession: Object, properties: Object) {
+    let toAccount = ''
+    let toAddress = ''
+    let value = ''
+    let quantity = Asset.fromUnits(parseFloat(value), $activeBlockchain.coreTokenSymbol)
+    let memo = ''
+    let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+
     let data
     switch (activeBlockchain.id) {
         case 'fio': {
-            await loadFee()
-            data = FIOTransfer.from({
-                payee_public_key: toAddress,
-                amount: quantity.units,
-                max_fee: txfee.units,
-                actor: $activeSession!.auth.actor,
-                tpid: 'tpid@greymass',
-            })
+            data = fioTransfer(activeBlockchain, activeSession, properties);
             break
         }
         default: {
-            data = Transfer.from({
-                from: $activeSession!.auth.actor,
-                to: toAccount,
-                quantity,
-                memo,
-            })
-            break
-        }
-    }
-    await $activeSession!.transact({
-        action: {
-            authorization: [$activeSession!.auth],
-            account: $activeBlockchain.coreTokenContract,
-            name: $activeBlockchain.coreTokenTransfer,
-            data,
-        },
-    })
-    // adjust balance to reflect transfer
-    switch ($activeBlockchain.id) {
-        case 'fio': {
-            balance.units = UInt64.from(
-                balance.units.toNumber() -
-                Asset.from(quantity).units.toNumber() -
-                Asset.from(txfee).units.toNumber()
-            )
-            break
-        }
-        default: {
-            balance.units = UInt64.from(
-                balance.units.toNumber() - Asset.from(quantity).units.toNumber()
-            )
+            data = defaultTransfer(activeBlockchain, activeSession, properties);
             break
         }
     }
