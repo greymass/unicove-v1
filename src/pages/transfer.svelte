@@ -5,13 +5,13 @@
     import {activeBlockchain, activeSession, currentAccount} from '../store'
     import {FIOTransfer, Transfer} from '../abi-types'
 
+    import TransferBalance from './transfer/balance.svelte'
+    import TransferSummary from './transfer/summary.svelte'
+    import TransferForm from './transfer/form.svelte'
+
     import Page from '~/components/layout/page.svelte'
 
-    import Button from '~/components/elements/button.svelte'
-    import Input from '~/components/elements/input.svelte'
-    import InputAccount from '~/components/elements/input/account.svelte'
-    import InputAsset from '~/components/elements/input/asset.svelte'
-    import Form from '~/components/elements/form.svelte'
+    import { transfer } from '../services/eosio/methods'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
@@ -57,48 +57,21 @@
 </style>
 
 <Page title="Transfer">
-    <p>
-        You have <i
-            on:click={() => {
-                value = String(balance.value)
-                quantity = Asset.fromUnits(value, $activeBlockchain.coreTokenSymbol)
-            }}
-        >
-            {balance}
-        </i>
-    </p>
-    <Form>
-        Send
-        <InputAsset name="amount" bind:value />
-        to
-        {#if $activeBlockchain.id === 'fio'}
-            <Input name="to" bind:value={toAddress} />
-        {:else}
-            <InputAccount name="to" bind:value={toAccount} />
-            with memo
-            <Input name="memo" bind:value={memo} />
-        {/if}
-        {#if txfee.value > 0}
-            <table>
-                <tr>
-                    <td>Sending:</td>
-                    <td>{quantity}</td>
-                </tr>
-                <tr>
-                    <td>Fee:</td>
-                    <td>{txfee}</td>
-                </tr>
-                <tr>
-                    <td>Total:</td>
-                    <td
-                        >{Asset.fromUnits(
-                            quantity.units.toNumber() + txfee.units.toNumber(),
-                            $activeBlockchain.coreTokenSymbol
-                        )}</td
-                    >
-                </tr>
-            </table>
-        {/if}
-        <Button formValidation on:action={transfer}>Go</Button>
-    </Form>
+    <TransferBalance
+
+    />
+
+    <TransferForm
+        bind:toAddress={toAddress}
+        bind:toAccount={toAccount}
+        bind:memo={memo}
+    />
+
+    {#if txfee.value > 0}
+        <TransferSummary
+            quantity={quantity}
+            txFee={txFee}
+            activeBlockchain={activeBlockchain}
+        />
+    {/if}
 </Page>
