@@ -13,9 +13,14 @@
 
     import { transfer } from '../services/eosio/methods'
 
+    let toAddress;
+    let toAccount;
+    let memo;
+    let txfee;
+
     $: balance =
         $currentAccount?.core_liquid_balance ||
-        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol;
+        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol);
 
     async function loadBalance() {
         ;[balance] = await $activeSession!.client.v1.chain.get_currency_balance(
@@ -58,7 +63,8 @@
 
 <Page title="Transfer">
     <TransferBalance
-
+        balance={balance}
+        activeBlockchain={activeBlockchain}
     />
 
     <TransferForm
