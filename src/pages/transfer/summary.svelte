@@ -1,7 +1,7 @@
 <script>
-  export let quantity;
-  export let txFee;
-  export let activeBlockchain;
+    export let quantity
+    export let txFee
+    export let activeBlockchain
 </script>
 
 <table>

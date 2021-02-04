@@ -1,8 +1,8 @@
 <script>
-    import { Asset } from 'anchor-link';
+    import {Asset} from 'anchor-link'
 
-    export let balance;
-    export let activeBlockchain;
+    export let balance
+    export let activeBlockchain
 </script>
 
 <p>

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Asset, Name } from 'anchor-link';
-    import { isRelease } from '../config';
+    import {Asset, Name} from 'anchor-link'
+    import {isRelease} from '../config'
 
     import {activeBlockchain, activeSession, currentAccount} from '../store'
     import {FIOTransfer, Transfer} from '../abi-types'
@@ -11,18 +11,18 @@
 
     import Page from '~/components/layout/page.svelte'
 
-    import { transfer } from '../services/eosio/methods'
+    import {transfer} from '../services/eosio/methods'
 
-    let memo = '';
-    let quantity = '';
-    let toAccount = '';
-    let toAddress = '';
-    let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol);
-    let value = '';
+    let memo = ''
+    let quantity = ''
+    let toAccount = ''
+    let toAddress = ''
+    let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let value = ''
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
-        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol);
+        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     async function loadBalance() {
         ;[balance] = await $activeSession!.client.v1.chain.get_currency_balance(
@@ -57,38 +57,25 @@
 </script>
 
 <style>
-    .container{
-      max-width: 400px;
+    .container {
+        max-width: 400px;
     }
 
     hr {
-      margin: 30px 0;
+        margin: 30px 0;
     }
 </style>
 
 <Page title="Transfer">
     <div class="container">
-        <TransferBalance
-            balance={balance}
-            activeBlockchain={$activeBlockchain}
-        />
+        <TransferBalance {balance} activeBlockchain={$activeBlockchain} />
 
-        <hr/>
+        <hr />
 
-        <TransferForm
-            activeBlockchain={activeBlockchain}
-            transfer={transfer}
-            bind:toAddress={toAddress}
-            bind:toAccount={toAccount}
-            bind:memo={memo}
-        />
+        <TransferForm {activeBlockchain} {transfer} bind:toAddress bind:toAccount bind:memo />
 
         {#if txfee.value > 0}
-            <TransferSummary
-                activeBlockchain={activeBlockchain}
-                quantity={quantity}
-                txFee={txFee}
-            />
+            <TransferSummary {activeBlockchain} {quantity} {txFee} />
         {/if}
     </div>
 </Page>
