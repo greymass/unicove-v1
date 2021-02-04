@@ -13,25 +13,42 @@
     export let transfer;
 </script>
 
-<Form>
-    <label>
-      To
-    </label>
-    {#if activeBlockchain.id === 'fio'}
-        <Input name="to" bind:value={toAddress} />
-    {:else}
-        <InputAccount name="to" bind:value={toAccount} />
-    {/if}
-    <label>
-        Amount
-    </label>
-    <InputAsset name="amount" bind:value={amount} />
-    {#if activeBlockchain.id === 'fio'}
-    <label>
-         Memo <i>(Optional)</i>
-    </label>
-    <Input name="memo" bind:value={memo} />
-    {/if}
+<style>
+  label {
+    display: block;
+    margin: 5px 0;
+  }
 
+  .field {
+    margin: 20px 0;
+  }
+</style>
+
+<Form>
+    <div class="field">
+        <label>
+          To
+        </label>
+        {#if activeBlockchain.id === 'fio'}
+            <Input name="to" bind:value={toAddress} />
+        {:else}
+            <InputAccount name="to" bind:value={toAccount} />
+        {/if}
+    </div>
+
+    <div class="field">
+        <label>
+            Amount
+        </label>
+        <InputAsset name="amount" bind:value={amount} />
+    </div>
+    {#if activeBlockchain.id === 'fio'}
+        <div class="field">
+            <label>
+                 Memo <i>(Optional)</i>
+            </label>
+            <Input name="memo" bind:value={memo} />
+        </div>
+    {/if}
     <Button formValidation on:action={transfer}>Go</Button>
 </Form>
