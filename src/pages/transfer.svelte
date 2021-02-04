@@ -57,33 +57,38 @@
 </script>
 
 <style>
-    table {
-        border: 1;
+    .container{
+      max-width: 400px;
     }
-    table td {
-        text-align: right;
+
+    hr {
+      margin: 30px 0;
     }
 </style>
 
 <Page title="Transfer">
-    <TransferBalance
-        balance={balance}
-        activeBlockchain={$activeBlockchain}
-    />
-
-    <TransferForm
-        activeBlockchain={activeBlockchain}
-        transfer={transfer}
-        bind:toAddress={toAddress}
-        bind:toAccount={toAccount}
-        bind:memo={memo}
-    />
-
-    {#if txfee.value > 0}
-        <TransferSummary
-            activeBlockchain={activeBlockchain}
-            quantity={quantity}
-            txFee={txFee}
+    <div class="container">
+        <TransferBalance
+            balance={balance}
+            activeBlockchain={$activeBlockchain}
         />
-    {/if}
+
+        <hr/>
+
+        <TransferForm
+            activeBlockchain={activeBlockchain}
+            transfer={transfer}
+            bind:toAddress={toAddress}
+            bind:toAccount={toAccount}
+            bind:memo={memo}
+        />
+
+        {#if txfee.value > 0}
+            <TransferSummary
+                activeBlockchain={activeBlockchain}
+                quantity={quantity}
+                txFee={txFee}
+            />
+        {/if}
+    </div>
 </Page>
