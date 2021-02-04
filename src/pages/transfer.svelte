@@ -13,10 +13,12 @@
 
     import { transfer } from '../services/eosio/methods'
 
-    let toAddress;
-    let toAccount;
-    let memo;
-    let txfee;
+    let memo = '';
+    let quantity = '';
+    let toAccount = '';
+    let toAddress = '';
+    let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol);
+    let value = '';
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
@@ -39,7 +41,9 @@
     // TODO: find or build some form builder and validation instead
     //       sextant admin ui has the beginnings of one that can handle core types we could build on
     $: {
+        console.log({toAccount})
         let toName = Name.from(toAccount)
+        console.log({toName})
         toAccount = String(toName)
     }
     $: {
@@ -64,10 +68,12 @@
 <Page title="Transfer">
     <TransferBalance
         balance={balance}
-        activeBlockchain={activeBlockchain}
+        activeBlockchain={$activeBlockchain}
     />
 
     <TransferForm
+        activeBlockchain={activeBlockchain}
+        transfer={transfer}
         bind:toAddress={toAddress}
         bind:toAccount={toAccount}
         bind:memo={memo}
@@ -75,9 +81,9 @@
 
     {#if txfee.value > 0}
         <TransferSummary
+            activeBlockchain={activeBlockchain}
             quantity={quantity}
             txFee={txFee}
-            activeBlockchain={activeBlockchain}
         />
     {/if}
 </Page>

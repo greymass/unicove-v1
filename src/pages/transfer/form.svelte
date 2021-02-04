@@ -10,6 +10,7 @@
     export let activeBlockchain;
     export let amount;
     export let memo;
+    export let transfer;
 </script>
 
 <Form>
@@ -25,7 +26,7 @@
         Amount
     </label>
     <InputAsset name="amount" bind:value={amount} />
-    {#if $activeBlockchain.id === 'fio'}
+    {#if activeBlockchain.id === 'fio'}
     <label>
          Memo <i>(Optional)</i>
     </label>
