@@ -1,8 +1,12 @@
+import type {LinkSession} from 'anchor-link';
+
 import { fioTransfer } from './transfer/fio';
 import { defaultTransfer } from './transfer/default';
-import { Transfer, Blockchain, Session } from './interfaces';
 
-export async function transfer(activeBlockchain: Blockchain, activeSession: Session, properties: Transfer) {
+import type {ChainConfig} from '~/config';
+import type {FIOTransfer, Transfer} from '~/abi-types';
+
+export async function transfer(activeBlockchain: ChainConfig, activeSession: LinkSession, properties: FIOTransfer | Transfer) {
     switch (activeBlockchain.id) {
         case 'fio': {
             fioTransfer(activeBlockchain, activeSession, properties);

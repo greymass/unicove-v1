@@ -1,17 +1,22 @@
-import {Asset, Name, UInt64} from 'anchor-link'
-import {FIOTransfer} from "~/abi-types";
+import {Asset, LinkSession, UInt64} from 'anchor-link'
+import {FIOTransfer} from '~/abi-types';
+import {ChainConfig} from '~/config';
+
+interface TransferData {
+
+}
 
 export async function fioTransfer(
-    activeBlockchain: Object,
-    activeSession: Object,
-    properties: Object
+    activeBlockchain: ChainConfig,
+    activeSession: LinkSession,
+    transferProperties: FIOTransfer
 ) {
     const txFee = await loadFee(activeSession, activeBlockchain);
-    const data = generateTransfer(activeSession, properties, txFee);
+    const data = generateTransfer(activeSession, transferProperties, txFee);
     transact(activeBlockchain, activeSession, data);
 }
 
-async function loadFee(activeBlockchain: Object, activeSession: Object) {
+async function loadFee(activeBlockchain: ChainConfig, activeSession: LinkSession) {
     const fees = await activeSession!.client.v1.chain.get_table_rows({
         code: 'fio.fee',
         table: 'fiofees',
@@ -26,12 +31,12 @@ async function loadFee(activeBlockchain: Object, activeSession: Object) {
     return Asset.fromUnits(fees.rows[0].suf_amount, activeBlockchain.coreTokenSymbol)
 }
 
-function generateTransfer(activeSession: Object, properties: Object, txFee: Object) {
-    const { quantity, toAddress } = properties;
+function generateTransfer(activeSession: LinkSession, transferProperties: FIOTransfer, txFee: Object) {
+    const { amount, toAddress } = transferProperties;
 
     return FIOTransfer.from({
         payee_public_key: toAddress,
-        amount: quantity.units,
+        amount: amount.units,
         max_fee: txFee.units,
         actor: activeSession!.auth.actor,
         tpid: 'tpid@greymass',
@@ -39,9 +44,9 @@ function generateTransfer(activeSession: Object, properties: Object, txFee: Obje
 }
 
 async function transact(
-    activeSession: Object,
-    activeBlockchain: Object,
-    data: Object
+    activeSession: LinkSession,
+    activeBlockchain: ChainConfig,
+    data: TransferData
 ) {
     return await activeSession!.transact({
         action: {
