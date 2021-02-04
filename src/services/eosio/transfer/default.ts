@@ -1,17 +1,14 @@
 import type {LinkSession} from 'anchor-link';
-import type {Transfer} from '~/abi-types';
 import type {ChainConfig} from '~/config';
 
-interface TransferData {
-
-}
+import { Transfer } from '~/abi-types';
 
 export async function defaultTransfer(
-    activeSession: LinkSession,
     activeBlockchain: ChainConfig,
+    activeSession: LinkSession,
     transferProperties: Transfer,
 ) {
-    const data = generateTransfer(activeSession, transferProperties);
+    const data: Transfer = generateTransfer(activeSession, transferProperties);
 
     console.log({data})
 
@@ -33,16 +30,16 @@ function generateTransfer(
 }
 
 async function transact(
-    activeSession: LinkSession,
     activeBlockchain: ChainConfig,
-    data: TransferData
+    activeSession: LinkSession,
+    transferData: Transfer
 ) {
     return await activeSession!.transact({
         action: {
             authorization: [activeSession!.auth],
             account: activeBlockchain.coreTokenContract,
             name: activeBlockchain.coreTokenTransfer,
-            data,
+            data: transferData,
         },
     });
 }
