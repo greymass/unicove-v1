@@ -1,7 +1,7 @@
 import {Asset, LinkSession, UInt64} from 'anchor-link'
 import {FIOTransfer} from '~/abi-types'
 import type {ChainConfig} from '~/config'
-import type {TransferData} from '~/services/eosio/methods';
+import type {TransferData} from '~/services/eosio/methods'
 
 export async function fioTransfer(
     activeBlockchain: ChainConfig,

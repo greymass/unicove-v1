@@ -7,12 +7,12 @@ import {defaultTransfer} from './transfer/default'
 import type {ChainConfig} from '~/config'
 
 export interface TransferData {
-    amount: number;
-    id: string;
-    memo: string;
-    payee_public_key: string;
-    quantity: number;
-    toAccount: string;
+    amount: number
+    id: string
+    memo: string
+    payee_public_key: string
+    quantity: number
+    toAccount: string
 }
 
 export function transfer(
