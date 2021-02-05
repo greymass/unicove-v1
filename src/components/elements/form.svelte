@@ -14,7 +14,7 @@
             formFields[response.name] = response.valid
             validate()
         },
-    };
+    }
 
     setContext('form', form)
     setContext('formDisabled', formDisabled)

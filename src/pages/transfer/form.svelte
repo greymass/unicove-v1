@@ -15,25 +15,21 @@
     export let memo
     export let transfer
 
-    let displaySuccessTx;
+    let displaySuccessTx
 
     async function handleTransfer() {
-      const transferData = await transfer(
-        activeBlockchain,
-        activeSession,
-        {
-          toAddress,
-          toAccount,
-          quantity,
-          memo,
-        }
-      )
+        const transferData = await transfer(activeBlockchain, activeSession, {
+            toAddress,
+            toAccount,
+            quantity,
+            memo,
+        })
 
-      amount = ''
-      toAccount = ''
-      toAddress = ''
-      memo = ''
-      displaySuccessTx = transferData?.payload?.tx
+        amount = ''
+        toAccount = ''
+        toAddress = ''
+        memo = ''
+        displaySuccessTx = transferData?.payload?.tx
     }
 </script>
 
@@ -48,7 +44,7 @@
     }
 
     h4 {
-      color: green;
+        color: green;
     }
 </style>
 
@@ -74,16 +70,11 @@
             <Input name="memo" bind:value={memo} />
         </div>
     {/if}
-    <Button
-        formValidation
-        on:action={handleTransfer}
-    >
-        Go
-    </Button>
+    <Button formValidation on:action={handleTransfer}>Go</Button>
     {#if displaySuccessTx}
         <TransactionNotificationSuccess
             tx={displaySuccessTx}
-            activeBlockchain={activeBlockchain}
+            {activeBlockchain}
             onClose={() => (displaySuccessTx = '')}
         />
     {/if}

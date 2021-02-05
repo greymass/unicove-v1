@@ -1,6 +1,6 @@
 import type {LinkSession} from 'anchor-link'
 import type {ChainConfig} from '~/config'
-import type {TransferData} from '~/services/eosio/methods';
+import type {TransferData} from '~/services/eosio/methods'
 
 import {Transfer} from '~/abi-types'
 
@@ -22,7 +22,7 @@ function generateTransfer(activeSession: LinkSession, transferProperties: Transf
         to: toAccount,
         quantity,
         memo,
-    });
+    })
 }
 
 async function transact(

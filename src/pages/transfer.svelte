@@ -67,22 +67,19 @@
 
 <Page title="Transfer">
     <div class="container">
-        <TransferBalance
-          balance={balance}
-          activeBlockchain={$activeBlockchain}
-        />
+        <TransferBalance {balance} activeBlockchain={$activeBlockchain} />
 
         <hr />
 
         <TransferForm
-          activeBlockchain={$activeBlockchain}
-          activeSession={$activeSession}
-          transfer={transfer}
-          quantity={quantity}
-          bind:amount
-          bind:memo
-          bind:toAccount
-          bind:toAddress
+            activeBlockchain={$activeBlockchain}
+            activeSession={$activeSession}
+            {transfer}
+            {quantity}
+            bind:amount
+            bind:memo
+            bind:toAccount
+            bind:toAddress
         />
 
         {#if txfee.value > 0}
