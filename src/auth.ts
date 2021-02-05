@@ -37,8 +37,10 @@ export async function init() {
 /** Create a new session. */
 export async function login() {
     const result = await link.login(appId)
-    // populate account cache with the account returned by login so we don't need to re-fetch it
-    storeAccount(result.account, result.session.chainId)
+    if (result.account) {
+        // populate account cache with the account returned by login so we don't need to re-fetch it
+        storeAccount(result.account, result.session.chainId)
+    }
     const list = await link.listSessions(appId)
     activeSession.set(result.session)
     availableSessions.set(list)

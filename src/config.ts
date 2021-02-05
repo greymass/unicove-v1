@@ -97,6 +97,23 @@ export const chains: ChainConfig[] = [
         name: 'Jungle 3 (Testnet)',
         nodeUrl: 'https://jungle3.greymass.com',
     },
+    {
+        id: 'telos',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11',
+        coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Telos',
+        nodeUrl: 'https://telos.greymass.com',
+    },
 ]
 
 export function chainConfig(chainId: ChainId): ChainConfig {
