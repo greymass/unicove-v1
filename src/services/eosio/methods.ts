@@ -5,17 +5,28 @@ import {fioTransfer} from './transfer/fio'
 import {defaultTransfer} from './transfer/default'
 
 import type {ChainConfig} from '~/config'
-import {FIOTransfer as FIOTransferObject, Transfer as TransferObject} from '~/abi-types'
+
+export interface TransferData {
+    amount: number;
+    id: string;
+    memo: string;
+    payee_public_key: string;
+    quantity: number;
+    toAccount: string;
+}
 
 export async function transfer(
     activeBlockchain: ChainConfig,
     activeSession: LinkSession,
-    properties: FIOTransferObject | TransferObject
+    properties: TransferData
 ) {
+    console.log({activeBlockchain})
+    console.log({activeSession})
     console.log({properties})
-    if (isInstanceOf(properties, FIOTransferObject)) {
+
+    if (properties.id === 'fio') {
         fioTransfer(activeBlockchain, activeSession, properties)
-    } else if (isInstanceOf(properties, TransferObject)) {
+    } else {
         defaultTransfer(activeBlockchain, activeSession, properties)
     }
 }

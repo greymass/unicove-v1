@@ -14,11 +14,14 @@
             formFields[response.name] = response.valid
             validate()
         },
-    }
+    };
+
+    console.log({form})
 
     setContext('form', form)
     setContext('formDisabled', formDisabled)
 
+    console.log({formDisabled})
     onMount(validate)
 
     function validate() {

@@ -1,18 +1,19 @@
 import {Asset, LinkSession, UInt64} from 'anchor-link'
 import {FIOTransfer} from '~/abi-types'
 import type {ChainConfig} from '~/config'
+import type {TransferData} from '~/services/eosio/methods';
 
 export async function fioTransfer(
     activeBlockchain: ChainConfig,
     activeSession: LinkSession,
-    transferProperties: FIOTransfer
+    transferProperties: TransferData
 ) {
     const txFee = await loadFee(activeBlockchain, activeSession)
-    const transferData = generateTransfer(activeSession, transferProperties, txFee)
-    transact(activeBlockchain, activeSession, transferData)
+    const fioTransfer = generateTransfer(activeSession, transferProperties, txFee)
+    transact(activeBlockchain, activeSession, fioTransfer)
 }
 
-async function loadFee(activeBlockchain: ChainConfig, activeSession: LinkSession) {
+export async function loadFee(activeBlockchain: ChainConfig, activeSession: LinkSession) {
     const fees = await activeSession!.client.v1.chain.get_table_rows({
         code: 'fio.fee',
         table: 'fiofees',
@@ -29,7 +30,7 @@ async function loadFee(activeBlockchain: ChainConfig, activeSession: LinkSession
 
 function generateTransfer(
     activeSession: LinkSession,
-    transferProperties: FIOTransfer,
+    transferProperties: TransferData,
     txFee: Asset
 ) {
     const {amount, payee_public_key} = transferProperties
@@ -46,14 +47,15 @@ function generateTransfer(
 async function transact(
     activeBlockchain: ChainConfig,
     activeSession: LinkSession,
-    transferData: FIOTransfer
+    fioTransfer: FIOTransfer
 ) {
+    console.log({fioTransfer})
     return await activeSession!.transact({
         action: {
             authorization: [activeSession!.auth],
             account: activeBlockchain.coreTokenContract,
             name: activeBlockchain.coreTokenTransfer,
-            data: transferData,
+            data: fioTransfer,
         },
     })
 }

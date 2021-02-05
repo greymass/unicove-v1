@@ -12,13 +12,14 @@
     import Page from '~/components/layout/page.svelte'
 
     import {transfer} from '../services/eosio/methods'
+    import {loadFee} from '../services/eosio/transfer/fio'
 
     let memo = ''
     let quantity = ''
     let toAccount = ''
     let toAddress = ''
     let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let value = ''
+    let amount = ''
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
@@ -41,13 +42,11 @@
     // TODO: find or build some form builder and validation instead
     //       sextant admin ui has the beginnings of one that can handle core types we could build on
     $: {
-        console.log({toAccount})
         let toName = Name.from(toAccount)
-        console.log({toName})
         toAccount = String(toName)
     }
     $: {
-        let parsed = parseFloat(value)
+        let parsed = parseFloat(amount)
         if (isNaN(parsed) || parsed === 0) {
             quantity = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
         } else {
@@ -68,11 +67,23 @@
 
 <Page title="Transfer">
     <div class="container">
-        <TransferBalance {balance} activeBlockchain={$activeBlockchain} />
+        <TransferBalance
+          balance={balance}
+          activeBlockchain={$activeBlockchain}
+        />
 
         <hr />
 
-        <TransferForm {activeBlockchain} {transfer} bind:toAddress bind:toAccount bind:memo />
+        <TransferForm
+          activeBlockchain={$activeBlockchain}
+          activeSession={$activeSession}
+          transfer={transfer}
+          quantity={quantity}
+          bind:amount
+          bind:memo
+          bind:toAccount
+          bind:toAddress
+        />
 
         {#if txfee.value > 0}
             <TransferSummary {activeBlockchain} {quantity} {txFee} />

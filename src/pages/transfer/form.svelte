@@ -8,7 +8,9 @@
     export let toAddress
     export let toAccount
     export let activeBlockchain
+    export let activeSession
     export let amount
+    export let quantity
     export let memo
     export let transfer
 </script>
@@ -46,5 +48,19 @@
             <Input name="memo" bind:value={memo} />
         </div>
     {/if}
-    <Button formValidation on:action={transfer}>Go</Button>
+    <Button
+        formValidation
+        on:action={() => transfer(
+          activeBlockchain,
+          activeSession,
+          {
+              toAddress,
+              toAccount,
+              quantity,
+              memo,
+          }
+        )}
+    >
+        Go
+    </Button>
 </Form>
