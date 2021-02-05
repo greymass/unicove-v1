@@ -4,6 +4,7 @@
     import InputAccount from '~/components/elements/input/account.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Form from '~/components/elements/form.svelte'
+    import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
 
     export let toAddress
     export let toAccount
@@ -27,7 +28,7 @@
           memo,
         }
       )
-      console.log({transferData})
+
       amount = ''
       toAccount = ''
       toAddress = ''
@@ -80,9 +81,10 @@
         Go
     </Button>
     {#if displaySuccessTx}
-        <h4>
-            Transaction was successful!
-            {displaySuccessTx}
-        </h4>
+        <TransactionNotificationSuccess
+            tx={displaySuccessTx}
+            activeBlockchain={activeBlockchain}
+            onClose={() => (displaySuccessTx = '')}
+        />
     {/if}
 </Form>

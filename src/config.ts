@@ -48,6 +48,8 @@ export interface ChainConfig {
     coreTokenTransfer: Name
     /** Node URL to use. */
     nodeUrl: string
+    /** Bloks url  */
+    bloksUrl
 }
 
 /** Supported chains. */
@@ -68,6 +70,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'EOS',
         nodeUrl: 'https://eos.greymass.com',
+        bloksUrl: 'https://bloks.io',
     },
     {
         id: 'fio',
@@ -78,6 +81,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('trnsfiopubky'),
         name: 'FIO',
         nodeUrl: 'https://fio.greymass.com',
+        bloksUrl: 'https://fio.bloks.io',
     },
     {
         id: 'jungle3',
@@ -96,6 +100,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Jungle 3 (Testnet)',
         nodeUrl: 'https://jungle3.greymass.com',
+        bloksUrl: 'https://jungle3.bloks.io',
     },
     {
         id: 'telos',
