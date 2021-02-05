@@ -9,18 +9,13 @@ export async function defaultTransfer(
     activeSession: LinkSession,
     transferProperties: TransferData
 ) {
-    console.log({transferProperties})
     const data: Transfer = generateTransfer(activeSession, transferProperties)
-
-    console.log({data})
 
     transact(activeBlockchain, activeSession, data)
 }
 
 function generateTransfer(activeSession: LinkSession, transferProperties: TransferData) {
     const {quantity, toAccount, memo} = transferProperties
-
-    console.log({activeSession});
 
     return Transfer.from({
         from: activeSession!.auth.actor,
@@ -35,7 +30,6 @@ async function transact(
     activeSession: LinkSession,
     transferData: Transfer
 ) {
-    console.log({transferData})
     return await activeSession!.transact({
         action: {
             authorization: [activeSession!.auth],

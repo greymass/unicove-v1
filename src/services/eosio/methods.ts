@@ -20,10 +20,6 @@ export async function transfer(
     activeSession: LinkSession,
     properties: TransferData
 ) {
-    console.log({activeBlockchain})
-    console.log({activeSession})
-    console.log({properties})
-
     if (properties.id === 'fio') {
         fioTransfer(activeBlockchain, activeSession, properties)
     } else {
