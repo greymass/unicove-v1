@@ -15,14 +15,14 @@ export interface TransferData {
     toAccount: string;
 }
 
-export async function transfer(
+export function transfer(
     activeBlockchain: ChainConfig,
     activeSession: LinkSession,
     properties: TransferData
 ) {
     if (properties.id === 'fio') {
-        fioTransfer(activeBlockchain, activeSession, properties)
+        return fioTransfer(activeBlockchain, activeSession, properties)
     } else {
-        defaultTransfer(activeBlockchain, activeSession, properties)
+        return defaultTransfer(activeBlockchain, activeSession, properties)
     }
 }

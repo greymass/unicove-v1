@@ -13,6 +13,27 @@
     export let quantity
     export let memo
     export let transfer
+
+    let displaySuccessMessage;
+
+    async function handleTransfer() {
+      const transferData = await transfer(
+        activeBlockchain,
+        activeSession,
+        {
+          toAddress,
+          toAccount,
+          quantity,
+          memo,
+        }
+      )
+      console.log({transferData})
+      amount = ''
+      toAccount = ''
+      toAddress = ''
+      memo = ''
+      displaySuccessMessage = true;
+    }
 </script>
 
 <style>
@@ -23,6 +44,10 @@
 
     .field {
         margin: 20px 0;
+    }
+
+    h4 {
+      color: green;
     }
 </style>
 
@@ -50,17 +75,13 @@
     {/if}
     <Button
         formValidation
-        on:action={() => transfer(
-          activeBlockchain,
-          activeSession,
-          {
-              toAddress,
-              toAccount,
-              quantity,
-              memo,
-          }
-        )}
+        on:action={handleTransfer}
     >
         Go
     </Button>
+    {#if !displaySuccessMessage}
+        <h4>
+            Transaction was successful!
+        </h4>
+    {/if}
 </Form>
