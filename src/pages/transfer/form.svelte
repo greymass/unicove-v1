@@ -14,7 +14,7 @@
     export let memo
     export let transfer
 
-    let displaySuccessMessage;
+    let displaySuccessTx;
 
     async function handleTransfer() {
       const transferData = await transfer(
@@ -32,7 +32,7 @@
       toAccount = ''
       toAddress = ''
       memo = ''
-      displaySuccessMessage = true;
+      displaySuccessTx = transferData?.payload?.tx
     }
 </script>
 
@@ -79,9 +79,10 @@
     >
         Go
     </Button>
-    {#if !displaySuccessMessage}
+    {#if displaySuccessTx}
         <h4>
             Transaction was successful!
+            {displaySuccessTx}
         </h4>
     {/if}
 </Form>
