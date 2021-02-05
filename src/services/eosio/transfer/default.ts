@@ -4,14 +4,14 @@ import type {TransferData} from '~/services/eosio/methods';
 
 import {Transfer} from '~/abi-types'
 
-export async function defaultTransfer(
+export function defaultTransfer(
     activeBlockchain: ChainConfig,
     activeSession: LinkSession,
     transferProperties: TransferData
 ) {
     const data: Transfer = generateTransfer(activeSession, transferProperties)
 
-    transact(activeBlockchain, activeSession, data)
+    return transact(activeBlockchain, activeSession, data)
 }
 
 function generateTransfer(activeSession: LinkSession, transferProperties: TransferData) {
@@ -30,7 +30,7 @@ async function transact(
     activeSession: LinkSession,
     transferData: Transfer
 ) {
-    return await activeSession!.transact({
+    return activeSession!.transact({
         action: {
             authorization: [activeSession!.auth],
             account: activeBlockchain.coreTokenContract,

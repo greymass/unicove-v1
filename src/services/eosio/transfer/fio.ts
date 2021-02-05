@@ -49,7 +49,6 @@ async function transact(
     activeSession: LinkSession,
     fioTransfer: FIOTransfer
 ) {
-    console.log({fioTransfer})
     return await activeSession!.transact({
         action: {
             authorization: [activeSession!.auth],
