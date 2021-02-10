@@ -49,7 +49,7 @@ export interface ChainConfig {
     /** Node URL to use. */
     nodeUrl: string
     /** Bloks url  */
-    bloksUrl
+    bloksUrl: string
 }
 
 /** Supported chains. */
