@@ -44,7 +44,7 @@
 </style>
 
 <div>
-    <a href='' class="iconContainer" on:click={onClose}>
+    <a href="" class="iconContainer" on:click={onClose}>
         <Icon name="x-square" />
     </a>
     <h4>The transaction was successful!</h4>
