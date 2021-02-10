@@ -81,7 +81,7 @@
 />
 
 {#if !!errorMessage}
-  <h3 color='red'>
-    {errorMessage}
-  </h3>
+    <h3 color="red">
+        {errorMessage}
+    </h3>
 {/if}
