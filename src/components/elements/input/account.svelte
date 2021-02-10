@@ -31,10 +31,7 @@
     }
 
     function validateLength(value: string) {
-       console.log('validateLength check')
        if (value.length > 13) {
-         console.log('validateLength hit')
-         console.log({value})
           throw {
             valid: false,
             message: 'An account name should be 13 characters or less.'
@@ -44,19 +41,11 @@
 
     function validateIsString(value: string) {
        if (Name.from(value).toString() !== value) {
-         console.log('in validateIsString')
-         console.log(Name.from(value).toString())
-         console.log({value})
          throw {
            valid: false,
            message: 'Is not a valid account name.'
          };
        }
-    }
-
-    $: {
-      console.log('input rendering')
-      console.log({errorMessage})
     }
 </script>
 
