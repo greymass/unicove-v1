@@ -53,7 +53,7 @@ export interface ChainConfig {
     /** True if network is a testnet. */
     testnet: boolean
     /** Bloks url  */
-    bloksUrl
+    bloksUrl: string
 }
 
 /** Supported chains. */
