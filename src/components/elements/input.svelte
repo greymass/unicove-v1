@@ -9,6 +9,8 @@
     export let name: string = ''
     export let placeholder: string = ''
     export let value: string = ''
+    export let errorMessage: string | undefined
+
     let ref: HTMLInputElement
 
     export let isValid: any = () => true
@@ -77,3 +79,9 @@
     bind:this={ref}
     bind:value
 />
+
+{#if !!errorMessage}
+  <h3 color='red'>
+    {errorMessage}
+  </h3>
+{/if}
