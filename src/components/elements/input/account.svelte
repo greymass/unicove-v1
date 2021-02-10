@@ -1,11 +1,27 @@
 <script lang="ts">
     import {Name} from '@greymass/eosio'
 
+    import AutoComplete from 'simple-svelte-autocomplete'
+
     import Input from '~/components/elements/input.svelte'
 
-    export let name: string = ''
+    export let fieldAccountName: string = ''
     export let value: string = ''
     export let errorMessage: string | null
+    let searchedString
+    let relevantAccountNames
+
+    const handleInput = (value: string) => {
+      searchedString = value;
+
+      // do eosio account lookup here..s
+
+      relevantAccountNames = ['teamgreymass', 'dafugatester']
+    }
+
+    const selectResult(accountName) {
+        fieldAccountName = accountName
+    }
 
     const validate = (value: string) => {
         try {
@@ -50,6 +66,44 @@
 </script>
 
 <style type="scss">
+  .autocomplete {
+    position: relative;
+  }
+
+  .hide-results {
+    display: none;
+  }
+
+  .autocomplete-results {
+    padding: 0;
+    margin: 0;
+    border: 1px solid #dbdbdb;
+    height: 6rem;
+    overflow: auto;
+    width: 100%;
+
+    background-color: white;
+    box-shadow: 2px 2px 24px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    z-index: 100;
+  }
+
+  .autocomplete-result {
+    color: #7a7a7a;
+    list-style: none;
+    text-align: left;
+    height: 2rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+  }
 </style>
 
-<Input on:changed {name} bind:value isValid={validate} {errorMessage} />
+<Input on:changed on:change={handleInput} {fieldAccountName} bind:value isValid={validate} {errorMessage} />
+
+<ul class="autocomplete-results {relevantAccountNames.length === 0 ? ' hide-results' : ''}" ref:list>
+  {#each relevantAccountNames as accountName}
+    <li on:click="selectResult(accountName)" class="autocomplete-result">
+      {accountName}
+    </li>
+  {/each}
+</ul>
