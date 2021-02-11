@@ -9,6 +9,7 @@
     export let name: string = ''
     export let value: string = ''
     export let allowZero: boolean = false
+    export let availableBalance: number | null
 
     let errorMessage: string | null
 
@@ -17,6 +18,7 @@
             validatePresence(value)
             validateIsNumber(value)
             validateNonZero(value)
+            validateBalance(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
             return false
@@ -55,6 +57,17 @@
         throw {
             valid: false,
             message: 'Should be greater than zero.',
+        }
+      }
+    }
+
+    function validateBalance(value: string) {
+      const units = unitsFromValue(value)
+
+      if (units > availableBalance) {
+        throw {
+          valid: false,
+          message: 'Insufficient funds available.',
         }
       }
     }
