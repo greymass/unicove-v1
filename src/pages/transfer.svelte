@@ -22,22 +22,21 @@
     let amount = ''
     let balance
 
-    $: {
-      balance =
-        $currentAccount?.core_liquid_balance ||
-        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    }
-
     $: if ($activeBlockchain.id === 'fio') {
         loadFee($activeBlockchain, $activeSession).then(fee => {
           console.log({fee})
           txfee = fee
         })
         balance = loadBalance($activeBlockchain, $activeSession).then(amount => {
+          console.log('after loadBalance')
+          console.log({amount})
           balance = amount
         })
     } else {
         txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+         balance =
+            $currentAccount?.core_liquid_balance ||
+            Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     }
 
     // TODO: find or build some form builder and validation instead
