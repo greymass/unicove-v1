@@ -71,7 +71,7 @@
             <Input name="memo" bind:value={memo} />
         </div>
     {/if}
-    <Button formValidation on:action={handleTransfer}>Go</Button>
+    <Button formValidation on:action={handleTransfer}>Create Transaction Request</Button>
     {#if displaySuccessTx}
         <TransactionNotificationSuccess
             tx={displaySuccessTx}
