@@ -9,6 +9,7 @@
     export let name: string = ''
     export let placeholder: string = ''
     export let value: string = ''
+    export let fullWidthOnMobile: boolean = false
 
     let ref: HTMLInputElement
 
@@ -71,11 +72,18 @@
             outline: none;
         }
     }
+
+    @media only screen and (max-width: 600px) {
+        .fullWidth {
+          width: 100%;
+        }
+    }
 </style>
 
 <input
     on:keyup={handleKeyup}
     type="text"
+    class={fullWidthOnMobile ? 'fullWidth' : ''}
     {name}
     {disabled}
     {placeholder}

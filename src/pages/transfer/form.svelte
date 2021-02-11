@@ -53,25 +53,25 @@
     <div class="field">
         <label> To </label>
         {#if activeBlockchain.id === 'fio'}
-            <Input name="to" bind:value={toAddress} />
+            <Input fullWidthOnMobile name="to" bind:value={toAddress} />
         {:else}
-            <InputAccount name="to" {activeSession} bind:value={toAccount} />
+            <InputAccount fullWidthOnMobile name="to" {activeSession} bind:value={toAccount} />
         {/if}
     </div>
 
     <div class="field">
         <label> Amount </label>
-        <InputAsset name="amount" {availableBalance} bind:value={amount} />
+        <InputAsset fullWidthOnMobile name="amount" {availableBalance} bind:value={amount} />
     </div>
     {#if activeBlockchain.id !== 'fio'}
         <div class="field">
             <label>
                 Memo <i>(Optional)</i>
             </label>
-            <Input name="memo" bind:value={memo} />
+            <Input fullWidthOnMobile name="memo" bind:value={memo} />
         </div>
     {/if}
-    <Button formValidation on:action={handleTransfer}>Create Transaction Request</Button>
+    <Button fullWidthOnMobile formValidation on:action={handleTransfer}>Create Transaction Request</Button>
     {#if displaySuccessTx}
         <TransactionNotificationSuccess
             tx={displaySuccessTx}
