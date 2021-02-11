@@ -2,7 +2,7 @@
     import {Asset} from 'anchor-link'
 
     export let quantity
-    export let txfee
+    export let txFee
     export let activeBlockchain
 </script>
 
@@ -29,13 +29,13 @@
     </tr>
     <tr>
         <td>Fee:</td>
-        <td>{txfee}</td>
+        <td>{txFee}</td>
     </tr>
     <tr>
         <td>Total:</td>
         <td
             >{Asset.fromUnits(
-                quantity.units.toNumber() + txfee.units.toNumber(),
+                quantity.units.toNumber() + txFee.units.toNumber(),
                 activeBlockchain.coreTokenSymbol
             )}</td
         >

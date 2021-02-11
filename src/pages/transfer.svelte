@@ -18,19 +18,19 @@
     let quantity = ''
     let toAccount = ''
     let toAddress = ''
-    let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let txFee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let amount = ''
     let balance
 
     $: if ($activeBlockchain.id === 'fio') {
         loadFee($activeBlockchain, $activeSession).then(fee => {
-          txfee = fee
+          txFee = fee
         })
         balance = loadBalance($activeBlockchain, $activeSession).then(amount => {
           balance = amount
         })
     } else {
-        txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+        txFee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
          balance =
             $currentAccount?.core_liquid_balance ||
             Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
@@ -82,11 +82,11 @@
             bind:toAddress
         />
 
-        {#if txfee.value > 0}
+        {#if txFee.value > 0}
             <TransferSummary
                 activeBlockchain={$activeBlockchain}
                 {quantity}
-                {txfee}
+                {txFee}
             />
         {/if}
     </div>
