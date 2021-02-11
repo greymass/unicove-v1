@@ -11,21 +11,6 @@
     export let errorMessage: string | null
     export let activeSession: LinkSession | null
 
-    let searchedString
-    let relevantAccountNames
-
-    const handleInput = (value: string) => {
-      searchedString = value;
-
-      // do eosio account lookup here..s
-
-      relevantAccountNames = ['teamgreymass', 'dafugatester']
-    }
-
-    const selectResult = (accountName: string) => {
-      fieldAccountName = accountName
-    }
-
     const validate = async (value: string) => {
         try {
             validatePresence(value)
@@ -77,6 +62,6 @@
 <style type="scss">
 </style>
 
-<Input on:changed on:change={handleInput} {fieldAccountName} bind:value isValid={validate} {errorMessage} />
+<Input on:changed {name} bind:value isValid={validate} {errorMessage} />
 
 <ErrorMessage {errorMessage} />
