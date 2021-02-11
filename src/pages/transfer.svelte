@@ -62,10 +62,12 @@
 
     hr {
         margin: 30px 0;
+        height: 1px;
+        border-bottom: none;
     }
 </style>
 
-<Page title="Transfer">
+<Page title="Create Transfer">
     <div class="container">
         <TransferBalance {balance} activeBlockchain={$activeBlockchain} />
 

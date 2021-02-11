@@ -27,6 +27,10 @@
         pointer-events: none;
     }
 
+    label, p, h1, h2, h3, h4, h5 {
+      color: var(--main-black);
+    }
+
     :root {
         --dark-grey: #b7c1cb;
         --divider-grey: #e0e6ee;

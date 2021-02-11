@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
     import InputAccount from '~/components/elements/input/account.svelte'
@@ -34,7 +34,7 @@
     }
 </script>
 
-<style>
+<style type="scss">
     label {
         display: block;
         margin: 5px 0;
@@ -63,7 +63,7 @@
         <label> Amount </label>
         <InputAsset name="amount" {availableBalance} bind:value={amount} />
     </div>
-    {#if activeBlockchain.id === 'fio'}
+    {#if activeBlockchain.id !== 'fio'}
         <div class="field">
             <label>
                 Memo <i>(Optional)</i>
