@@ -15,15 +15,18 @@
     export let memo
     export let transfer
     export let availableBalance
+    export let txFee
 
     let displaySuccessTx
 
     async function handleTransfer() {
+        console.log('handling transfer')
         const transferData = await transfer(activeBlockchain, activeSession, {
             toAddress,
             toAccount,
             quantity,
             memo,
+            txFee,
         })
 
         amount = ''
