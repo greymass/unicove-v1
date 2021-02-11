@@ -1,13 +1,16 @@
 <script lang="ts">
     import {Name} from '@greymass/eosio'
+    import type {LinkSession} from 'anchor-link'
 
-    import AutoComplete from 'simple-svelte-autocomplete'
 
     import Input from '~/components/elements/input.svelte'
+    import ErrorMessage from './errorMessage.svelte'
 
     export let fieldAccountName: string = ''
     export let value: string = ''
     export let errorMessage: string | null
+    export let activeSession: LinkSession | null
+
     let searchedString
     let relevantAccountNames
 
@@ -19,20 +22,22 @@
       relevantAccountNames = ['teamgreymass', 'dafugatester']
     }
 
-    const selectResult(accountName) {
-        fieldAccountName = accountName
+    const selectResult = (accountName: string) => {
+      fieldAccountName = accountName
     }
 
-    const validate = (value: string) => {
+    const validate = async (value: string) => {
         try {
             validatePresence(value)
             validateLength(value)
-            validateIsString(value)
+            await validateExistence(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
 
             return false
         }
+
+        errorMessage = null
 
         return true
     }
@@ -55,13 +60,17 @@
         }
     }
 
-    function validateIsString(value: string) {
-        if (Name.from(value).toString() !== value) {
+    async function validateExistence(value: string) {
+        return activeSession.client.v1.chain.get_account(value).catch(error => {
+          const isUnkownAccountError = error.toString().includes('exception: unknown key')
+
+          if (isUnkownAccountError) {
             throw {
-                valid: false,
-                message: 'Is not a valid account name.',
+              valid: false,
+              message: 'Is not a valid account name.',
             }
-        }
+          }
+        })
     }
 </script>
 
@@ -69,3 +78,5 @@
 </style>
 
 <Input on:changed on:change={handleInput} {fieldAccountName} bind:value isValid={validate} {errorMessage} />
+
+<ErrorMessage {errorMessage} />

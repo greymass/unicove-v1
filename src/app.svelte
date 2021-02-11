@@ -39,6 +39,7 @@
         --main-grey: #f7f7fc;
         --main-red: #ff931e;
         --success-green: #4bca81;
+        --error-red: #ff0033;
     }
 
     main {
