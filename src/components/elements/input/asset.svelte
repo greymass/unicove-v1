@@ -18,7 +18,6 @@
             validateIsNumber(value)
             validateNonZero(value)
         } catch (errorObject) {
-            console.log({errorObject})
             errorMessage = errorObject.message
             return false
         }
@@ -36,11 +35,10 @@
         }
     }
 
-    function validateIsNumber(value: number) {
-      console.log({symbol})
-      const units = Math.floor(parseFloat(value) * Math.pow(10, symbol.precision))
-      console.log({units})
+    function validateIsNumber(value: string) {
+      const units = unitsFromValue(value)
       const unitsAreNotNumber = isNaN(units)
+
       if (unitsAreNotNumber) {
         throw {
           valid: false,
@@ -50,13 +48,19 @@
     }
 
     function validateNonZero(value: string) {
-      const isLessThanZero = Asset.fromUnits(value, symbol).value <= 0;
+      const units = unitsFromValue(value)
+      const isLessThanZero = Asset.fromUnits(units, symbol).value <= 0
+
       if (isLessThanZero) {
         throw {
             valid: false,
             message: 'Should be greater than zero.',
         }
       }
+    }
+
+    function unitsFromValue(value: string) {
+      return Math.floor(parseFloat(value) * Math.pow(10, symbol.precision))
     }
 </script>
 
