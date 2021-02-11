@@ -29,6 +29,7 @@ export async function loadFee(activeBlockchain: ChainConfig, activeSession: Link
 }
 
 export async function loadBalance(activeBlockchain: ChainConfig, activeSession: LinkSession) {
+    console.log({activeSession})
     return activeSession!.client.v1.chain.get_currency_balance(
         activeBlockchain.coreTokenContract,
         activeSession!.auth.actor
