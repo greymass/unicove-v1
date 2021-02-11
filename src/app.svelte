@@ -44,6 +44,8 @@
         --main-red: #ff931e;
         --success-green: #4bca81;
         --error-red: #ff0033;
+
+        --mobile-breakpoint: 600px;
     }
 
     main {
