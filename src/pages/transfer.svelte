@@ -33,7 +33,7 @@
     }
 
     $: if ($activeBlockchain.id === 'fio') {
-        loadFee()
+        txfee = loadFee($activeBlockchain, $activeSession)
         loadBalance()
     } else {
         txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
