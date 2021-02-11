@@ -18,12 +18,10 @@
             await validateExistence(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
-
             return false
         }
 
         errorMessage = null
-
         return true
     }
 
@@ -40,7 +38,7 @@
         if (value.length > 13) {
             throw {
                 valid: false,
-                message: 'An account name should be 13 characters or less.',
+                message: 'Should be 13 characters or less.',
             }
         }
     }
