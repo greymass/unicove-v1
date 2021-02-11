@@ -54,7 +54,7 @@
         {#if activeBlockchain.id === 'fio'}
             <Input name="to" bind:value={toAddress} />
         {:else}
-            <InputAccount name="to" bind:value={toAccount} />
+            <InputAccount {activeSession} name="to" bind:value={toAccount} />
         {/if}
     </div>
 
