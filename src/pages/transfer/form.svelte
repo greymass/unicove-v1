@@ -71,7 +71,7 @@
             <Input fullWidthOnMobile name="memo" bind:value={memo} />
         </div>
     {/if}
-    <Button fullWidthOnMobile formValidation on:action={handleTransfer}>Create Transaction Request</Button>
+    <Button fullWidthOnMobile formValidation on:action={handleTransfer}>Create Transfer Request</Button>
     {#if displaySuccessTx}
         <TransactionNotificationSuccess
             tx={displaySuccessTx}
