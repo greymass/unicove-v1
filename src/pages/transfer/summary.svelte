@@ -4,11 +4,6 @@
     export let quantity
     export let txfee
     export let activeBlockchain
-
-    console.log('summary')
-    console.log({quantity})
-    console.log({txfee})
-    console.log({activeBlockchain})
 </script>
 
 <style type="scss">
