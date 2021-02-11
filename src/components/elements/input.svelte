@@ -21,7 +21,7 @@
     const form: Form = getContext('form')
     if (form) {
         // Specify this input as a field on the parent form
-        form.setInput(name, isValid ? isValid(value) : true)
+        form.setInput(name, false)
     }
 
     onMount(() => {
@@ -36,10 +36,10 @@
     const debounce = (e: Event) => {
         clearTimeout(timer)
         value = (<HTMLInputElement>e.target).value
-        timer = setTimeout(() => {
+        timer = setTimeout(async () => {
             const response = {
                 name,
-                valid: isValid ? isValid(value) : true,
+                valid: isValid ? await isValid(value) : true,
                 value,
             }
             // If a form context exists, signal change events

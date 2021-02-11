@@ -14,6 +14,7 @@
     export let quantity
     export let memo
     export let transfer
+    export let availableBalance
 
     let displaySuccessTx
 
@@ -54,13 +55,13 @@
         {#if activeBlockchain.id === 'fio'}
             <Input name="to" bind:value={toAddress} />
         {:else}
-            <InputAccount {activeSession} name="to" bind:value={toAccount} />
+            <InputAccount name="to" {activeSession} bind:value={toAccount} />
         {/if}
     </div>
 
     <div class="field">
         <label> Amount </label>
-        <InputAsset name="amount" bind:value={amount} />
+        <InputAsset name="amount" {availableBalance} bind:value={amount} />
     </div>
     {#if activeBlockchain.id === 'fio'}
         <div class="field">

@@ -6,7 +6,7 @@
     import Input from '~/components/elements/input.svelte'
     import ErrorMessage from './errorMessage.svelte'
 
-    export let fieldAccountName: string = ''
+    export let name: string = ''
     export let value: string = ''
     export let errorMessage: string | null
     export let activeSession: LinkSession | null

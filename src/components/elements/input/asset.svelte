@@ -62,9 +62,13 @@
     }
 
     function validateBalance(value: string) {
+      if (!availableBalance) {
+        return true
+      }
+
       const units = unitsFromValue(value)
 
-      if (units > availableBalance) {
+      if (units > availableBalance.units) {
         throw {
           valid: false,
           message: 'Insufficient funds available.',

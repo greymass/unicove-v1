@@ -74,6 +74,7 @@
         <TransferForm
             activeBlockchain={$activeBlockchain}
             activeSession={$activeSession}
+            availableBalance={balance}
             {transfer}
             {quantity}
             bind:amount
