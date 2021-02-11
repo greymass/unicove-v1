@@ -1,7 +1,5 @@
 <script lang="ts">
     export let errorMessage: string | undefined
-
-    console.log({errorMessage})
 </script>
 
 <style type="scss">
