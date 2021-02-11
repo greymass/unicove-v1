@@ -22,6 +22,8 @@
     onMount(validate)
 
     function validate() {
+        console.log({formFields})
+        console.log({formDisabled: Object.values(formFields).some((v) => v === false)})
         $formDisabled = Object.values(formFields).some((v) => v === false)
     }
 </script>
