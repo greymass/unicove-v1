@@ -28,6 +28,13 @@ export async function loadFee(activeBlockchain: ChainConfig, activeSession: Link
     return Asset.fromUnits(fees.rows[0].suf_amount, activeBlockchain.coreTokenSymbol)
 }
 
+export async function loadBalance(activeBlockchain: ChainConfig, activeSession: LinkSession) {
+    return activeSession!.client.v1.chain.get_currency_balance(
+        activeBlockchain.coreTokenContract,
+        activeSession!.auth.actor
+    )
+}
+
 function generateTransfer(
     activeSession: LinkSession,
     transferProperties: TransferData,

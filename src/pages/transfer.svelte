@@ -12,7 +12,7 @@
     import Page from '~/components/layout/page.svelte'
 
     import {transfer} from '../services/eosio/methods'
-    import {loadFee} from '../services/eosio/transfer/fio'
+    import {loadFee, loadBalance} from '../services/eosio/transfer/fio'
 
     let memo = ''
     let quantity = ''
@@ -20,21 +20,22 @@
     let toAddress = ''
     let txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let amount = ''
+    let balance
 
-    $: balance =
+    $: {
+      balance =
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-
-    async function loadBalance() {
-        ;[balance] = await $activeSession!.client.v1.chain.get_currency_balance(
-            $activeBlockchain.coreTokenContract,
-            $activeSession!.auth.actor
-        )
     }
 
     $: if ($activeBlockchain.id === 'fio') {
-        txfee = loadFee($activeBlockchain, $activeSession)
-        loadBalance()
+        loadFee($activeBlockchain, $activeSession).then(fee => {
+          console.log({fee})
+          txfee = fee
+        })
+        balance = loadBalance($activeBlockchain, $activeSession).then(amount => {
+          balance = amount
+        })
     } else {
         txfee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     }
@@ -86,7 +87,11 @@
         />
 
         {#if txfee.value > 0}
-            <TransferSummary {activeBlockchain} {quantity} {txFee} />
+            <TransferSummary
+                activeBlockchain={$activeBlockchain}
+                {quantity}
+                {txfee}
+            />
         {/if}
     </div>
 </Page>
