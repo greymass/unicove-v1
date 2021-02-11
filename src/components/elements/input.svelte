@@ -19,13 +19,14 @@
 
     // Get parent form context (if exists)
     const form: Form = getContext('form')
-    if (form) {
-        setInitialFormValidation()
-    }
 
-    function setInitialFormValidation = async () => {
+    const setInitialFormValidation = async () => {
       form.setInput(name, isValid ? await isValid(value) : true)
     }
+
+     if (form) {
+        setInitialFormValidation()
+     }
 
     onMount(() => {
         if (focus) {
