@@ -29,7 +29,6 @@ export async function loadFee(activeBlockchain: ChainConfig, activeSession: Link
 }
 
 export async function loadBalance(activeBlockchain: ChainConfig, activeSession: LinkSession) {
-    console.log({activeSession})
     return activeSession!.client.v1.chain.get_currency_balance(
         activeBlockchain.coreTokenContract,
         activeSession!.auth.actor
@@ -41,11 +40,11 @@ function generateTransfer(
     transferProperties: TransferData,
     txFee: Asset
 ) {
-    const {amount, payee_public_key} = transferProperties
+    const {quantity, toAddress} = transferProperties
 
     return FIOTransfer.from({
-        payee_public_key: payee_public_key,
-        amount: amount,
+        payee_public_key: toAddress,
+        amount: quantity.units,
         max_fee: txFee,
         actor: activeSession!.auth.actor,
         tpid: 'tpid@greymass',
