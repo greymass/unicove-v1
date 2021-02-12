@@ -1,17 +1,16 @@
 <script lang="ts">
-    import Icon from './icon.svelte'
     import Button from './button.svelte'
 
     export let opened: boolean = false
-    export let header: string | null
-    export let size: string | null
+    export let header: string | null = null
+    export let size: string = 'small'
     export let hideCloseButton: boolean = false
 
     const handleClose = function () {
         opened = false
     }
 
-    const preventClose = function (event) {
+    const preventClose = function (event: any) {
         event.stopPropagation()
     }
 </script>

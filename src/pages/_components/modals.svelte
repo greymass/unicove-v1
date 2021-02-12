@@ -1,6 +1,6 @@
 <script lang="ts">
     import Modal from '~/components/elements/modal.svelte'
-    import Button from '~/components/elements/Button.svelte'
+    import Button from '~/components/elements/button.svelte'
 
     let smallModalOpened: boolean = false
     let largeModalOpened: boolean = false
@@ -16,7 +16,7 @@
 <div>
     <Button on:action={() => (smallModalOpened = true)}>Open Small Modal</Button>
 
-    <Modal header="Test Header" size="small" bind:opened={smallModalOpened}>
+    <Modal header="Test Header" bind:opened={smallModalOpened}>
         <p>This is where your modal body goes.</p>
     </Modal>
 
@@ -30,7 +30,7 @@
         Open Modal without close button
     </Button>
 
-    <Modal hideCloseButton size="large" bind:opened={buttonlessModalOpened}>
+    <Modal hideCloseButton bind:opened={buttonlessModalOpened}>
         <p>This is where your modal body goes.</p>
     </Modal>
 </div>
