@@ -39,50 +39,50 @@
     }
 
     function validateIsNumber(value: string) {
-      const units = unitsFromValue(value)
-      const unitsAreNotNumber = isNaN(units)
+        const units = unitsFromValue(value)
+        const unitsAreNotNumber = isNaN(units)
 
-      if (unitsAreNotNumber) {
-        throw {
-          valid: false,
-          message: 'Should be a number.',
+        if (unitsAreNotNumber) {
+            throw {
+                valid: false,
+                message: 'Should be a number.',
+            }
         }
-      }
     }
 
     function validateNonZero(value: string) {
-      if (allowZero) {
-        return;
-      }
-
-      const units = unitsFromValue(value)
-      const isLessThanZero = Asset.fromUnits(units, symbol).value <= 0
-
-      if (isLessThanZero) {
-        throw {
-            valid: false,
-            message: 'Should be greater than zero.',
+        if (allowZero) {
+            return
         }
-      }
+
+        const units = unitsFromValue(value)
+        const isLessThanZero = Asset.fromUnits(units, symbol).value <= 0
+
+        if (isLessThanZero) {
+            throw {
+                valid: false,
+                message: 'Should be greater than zero.',
+            }
+        }
     }
 
     function validateBalance(value: string) {
-      if (!availableBalance) {
-        return true
-      }
-
-      const units = unitsFromValue(value)
-
-      if (units > availableBalance.units) {
-        throw {
-          valid: false,
-          message: 'Insufficient funds available.',
+        if (!availableBalance) {
+            return true
         }
-      }
+
+        const units = unitsFromValue(value)
+
+        if (units > availableBalance.units) {
+            throw {
+                valid: false,
+                message: 'Insufficient funds available.',
+            }
+        }
     }
 
     function unitsFromValue(value: string) {
-      return Math.floor(parseFloat(value) * Math.pow(10, symbol.precision))
+        return Math.floor(parseFloat(value) * Math.pow(10, symbol.precision))
     }
 </script>
 
@@ -92,4 +92,3 @@
 <Input on:changed {fullWidthOnMobile} {name} bind:value isValid={validate} />
 
 <ErrorMessage {errorMessage} />
-

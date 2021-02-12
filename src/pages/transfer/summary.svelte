@@ -8,16 +8,16 @@
 
 <style type="scss">
     table {
-      margin: 20px 0;
+        margin: 20px 0;
 
-      td {
-        padding: 5px;
-      }
+        td {
+            padding: 5px;
+        }
     }
 
     @media only screen and (max-width: 600px) {
         table {
-          margin: 20px auto;
+            margin: 20px auto;
         }
     }
 </style>

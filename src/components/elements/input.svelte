@@ -22,12 +22,12 @@
     const form: Form = getContext('form')
 
     const setInitialFormValidation = async () => {
-      form.setInput(name, isValid ? await isValid(value) : true)
+        form.setInput(name, isValid ? await isValid(value) : true)
     }
 
-     if (form) {
+    if (form) {
         setInitialFormValidation()
-     }
+    }
 
     onMount(() => {
         if (focus) {
@@ -75,7 +75,7 @@
 
     @media only screen and (max-width: 600px) {
         .fullWidth {
-          width: 100%;
+            width: 100%;
         }
     }
 </style>

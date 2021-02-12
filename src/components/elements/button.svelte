@@ -156,12 +156,12 @@
             padding: 16px 32px;
         }
 
-         @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 600px) {
             &.fullWidth {
-              width: 100%;
-              padding: 15px;
+                width: 100%;
+                padding: 15px;
             }
-         }
+        }
     }
 </style>
 
