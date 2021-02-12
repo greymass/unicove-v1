@@ -5,6 +5,10 @@
     export let secondLabel: string | null = null
     export let value: string | null = null
     export let placeholder: string
+    export let valid: boolean = false
+
+    console.log('fieldContainer')
+    console.log({valid})
 
     let editing: string = false
 </script>
@@ -19,16 +23,24 @@
             margin: 5px 0;
         }
 
-        a.edit-button {
-            color: var(--main-blue);
-        }
+        .value-container {
+            margin-left: auto;
 
-        a span.green {
-            color: var(--success-green);
-        }
+            a.edit-button {
+                color: var(--main-blue);
+            }
 
-        a span.green {
-            color: var(--main-grey);
+             a.edit-button {
+                color: var(--main-black);
+             }
+
+            span.green {
+                color: var(--success-green);
+            }
+
+            a span.red {
+                color: var(--error-red);
+            }
         }
     }
 </style>
@@ -41,10 +53,13 @@
     <div class="value-container">
         {#if editing}
             <slot />
-            <a on:click={() => (editing = false)}>
-                <span class={valid ? 'green' : 'grey'} on:click={() => (open = !open)}>
+            {#if valid}
+                <span class="green" on:click={() => (editing = !open)}>
                     <Icon name="check" />
                 </span>
+            {/if}
+            <a class="close-button" on:click={() => (editing = false)}>
+                <Icon name="minus-square" />
             </a>
         {:else}
             <a class="edit-button" on:click={() => (editing = true)}>
@@ -52,5 +67,6 @@
             </a>
         {/if}
     </div>
-    <hr />
 </div>
+
+<hr />

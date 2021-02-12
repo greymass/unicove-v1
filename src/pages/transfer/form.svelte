@@ -18,6 +18,9 @@
     export let availableBalance
     export let txFee
 
+    let toAccountValid: boolean = false
+    let amountValid: boolean = false
+
     let displaySuccessTx
 
     async function handleTransfer() {
@@ -44,20 +47,22 @@
 </style>
 
 <Form>
-    <FieldContainer label="To" placeholder="select" value={toAccount || toAddress}>
         {#if activeBlockchain.id === 'fio'}
-            <Input name="to" bind:value={toAddress} />
+            <FieldContainer label="To" placeholder="select" valid={true} value={toAddress}>
+                <Input name="to" bind:value={toAddress} />
+            </FieldContainer>
         {:else}
-            <InputAccount name="to" {activeSession} bind:value={toAccount} />
+            <FieldContainer label="To" placeholder="select" valid={toAccountValid} value={toAccount}>
+                <InputAccount name="to" {activeSession} bind:value={toAccount} bind:valid={toAccountValid} />
+            </FieldContainer>
         {/if}
-    </FieldContainer>
 
-    <FieldContainer label="Amount" secondLabel="Value" placeholder="0.0" value={amount}>
-        <InputAsset name="amount" {availableBalance} bind:value={amount} />
+    <FieldContainer label="Amount" secondLabel="Value" placeholder="0.0" value={amount} valid={amountValid}>
+        <InputAsset name="amount" {availableBalance} bind:value={amount} bind:valid={amountValid} />
     </FieldContainer>
 
     {#if activeBlockchain.id !== 'fio'}
-        <FieldContainer label="Memo (Optional)" placeholder="Add" value={memo}>
+        <FieldContainer label="Memo (Optional)" placeholder="Add" value={memo} valid={true}>
             <Input name="memo" bind:value={memo} />
         </FieldContainer>
     {/if}

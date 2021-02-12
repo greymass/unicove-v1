@@ -10,6 +10,7 @@
     export let value: string = ''
     export let allowZero: boolean = false
     export let availableBalance: number | null
+    export let valid: boolean = false
 
     let errorMessage: string | null
 
@@ -21,10 +22,12 @@
             validateBalance(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
+            valid = false
             return false
         }
 
         errorMessage = null
+        valid = true
         return true
     }
 

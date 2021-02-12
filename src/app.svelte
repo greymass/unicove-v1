@@ -39,6 +39,10 @@
         color: var(--main-black);
     }
 
+    a {
+       cursor: pointer;
+    }
+
     :root {
         --dark-grey: #b7c1cb;
         --divider-grey: #e0e6ee;
