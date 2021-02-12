@@ -4,11 +4,10 @@
 
     export let opened: boolean = false
     export let header: string | null
-
-    console.log({opened})
+    export let size: string | null
 
     const handleClose = function() {
-      open = false
+      opened = false
     }
 </script>
 
@@ -32,16 +31,29 @@
         max-width: 300px;
         border-radius: 20px;
 
-        &.large {
-          max-width: 600px;
-        }
+         &.large {
+            max-width: 500px;
+         }
+
+         .modal-header {
+           padding: 10px;
+         }
+
+          .modal-content {
+            padding: 20px 10px;
+          }
+
+         .button-container {
+            display: flex;
+            flex-direction: column;
+         }
       }
   }
 </style>
 
 {#if opened}
 <div class="container">
-  <div class="modal">
+  <div class={`modal ${size}`}>
     {#if header}
         <div class="modal-header">
             <h2>
@@ -53,8 +65,8 @@
     <div class="modal-content">
         <slot />
     </div>
-    <div class="overunder">
-        <Button maxWidth class="closeButton" on:click={handleClose}>
+    <div class="button-container">
+        <Button size="large" on:action={handleClose}>
            Close
         </Button>
     </div>
