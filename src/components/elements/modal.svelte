@@ -40,7 +40,7 @@
             }
 
             .modal-header {
-                padding: 20px 40px;
+                padding: 20px;
             }
 
             hr {
