@@ -5,6 +5,7 @@
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Form from '~/components/elements/form.svelte'
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
+    import FieldContainer from './form/fieldContainer.svelte'
 
     export let toAddress
     export let toAccount
@@ -37,42 +38,30 @@
 </script>
 
 <style type="scss">
-    label {
-        display: block;
-        margin: 5px 0;
-    }
-
-    .field {
-        margin: 20px 0;
-    }
-
     h4 {
         color: green;
     }
 </style>
 
 <Form>
-    <div class="field">
-        <label> To </label>
+    <FieldContainer label="To" placeholder="select" value={toAccount || toAddress}>
         {#if activeBlockchain.id === 'fio'}
             <Input fullWidthOnMobile name="to" bind:value={toAddress} />
         {:else}
             <InputAccount fullWidthOnMobile name="to" {activeSession} bind:value={toAccount} />
         {/if}
-    </div>
+    </FieldContainer>
 
-    <div class="field">
-        <label> Amount </label>
+    <FieldContainer label="Amount" secondLabel="Value" placeholder="0.0" value={amount}>
         <InputAsset fullWidthOnMobile name="amount" {availableBalance} bind:value={amount} />
-    </div>
+    </FieldContainer>
+
     {#if activeBlockchain.id !== 'fio'}
-        <div class="field">
-            <label>
-                Memo <i>(Optional)</i>
-            </label>
+        <FieldContainer label="Memo (Optional)" placeholder="Add" value={memo}>
             <Input fullWidthOnMobile name="memo" bind:value={memo} />
-        </div>
+        </FieldContainer>
     {/if}
+
     <Button fullWidthOnMobile formValidation on:action={handleTransfer}
         >Create Transfer Request</Button
     >
