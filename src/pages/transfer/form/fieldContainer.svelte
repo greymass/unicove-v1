@@ -3,6 +3,8 @@
 
     export let label: string
     export let secondLabel: string | null = null
+    export let value: string | null = null
+    export let placeholder: string
 
     let editing: string = false
 </script>
