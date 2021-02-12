@@ -74,8 +74,9 @@
             activeBlockchain={$activeBlockchain}
             activeSession={$activeSession}
             availableBalance={balance}
-            {transfer}
             {quantity}
+            {transfer}
+            {txFee}
             bind:amount
             bind:memo
             bind:toAccount

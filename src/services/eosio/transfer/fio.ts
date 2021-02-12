@@ -45,7 +45,7 @@ function generateTransfer(
     return FIOTransfer.from({
         payee_public_key: toAddress,
         amount: quantity.units,
-        max_fee: txFee,
+        max_fee: txFee.units,
         actor: activeSession!.auth.actor,
         tpid: 'tpid@greymass',
     })
