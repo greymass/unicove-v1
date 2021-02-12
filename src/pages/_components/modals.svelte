@@ -4,6 +4,7 @@
 
     let smallModalOpened: boolean = false;
     let largeModalOpened: boolean = false;
+    let buttonlessModalOpened: boolean = false
 </script>
 
 <style lang="scss">
@@ -34,6 +35,20 @@
     <Modal
         size="large"
         bind:opened={largeModalOpened}
+    >
+        <p>
+            This is where your modal body goes.
+        </p>
+    </Modal>
+
+    <Button on:action={() => buttonlessModalOpened = true}>
+      Open Modal without close button
+    </Button>
+
+    <Modal
+        hideCloseButton
+        size="large"
+        bind:opened={buttonlessModalOpened}
     >
         <p>
             This is where your modal body goes.
