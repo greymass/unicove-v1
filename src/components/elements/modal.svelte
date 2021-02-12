@@ -17,21 +17,21 @@
 
 <style type="scss">
     .container {
-        position: fixed; /* Stay in place */
+        position: fixed;
         left: 0;
         top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
+        width: 100%;
+        height: 100%;
         overflow: auto; /* Enable scroll if needed */
-        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        background-color: rgba(0, 0, 0, 0.4);
         z-index: 999;
 
         .modal {
             background-color: white;
             position: relative;
-            margin: 15% auto; /* 15% from the top and centered */
+            margin: 15% auto;
             border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
+            width: 80%;
             max-width: 300px;
             border-radius: 20px;
 
