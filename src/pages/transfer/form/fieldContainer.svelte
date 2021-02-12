@@ -8,27 +8,27 @@
 </script>
 
 <style type="scss">
-  div {
-      margin: 20px 0;
-      display: flex;
+    div {
+        margin: 20px 0;
+        display: flex;
 
-      label {
-         display: block;
-         margin: 5px 0;
-      }
+        label {
+            display: block;
+            margin: 5px 0;
+        }
 
-      a.edit-button {
-        color: var(--main-blue)
-      }
+        a.edit-button {
+            color: var(--main-blue);
+        }
 
-      a span.green {
-        color: var(--success-green);
-      }
+        a span.green {
+            color: var(--success-green);
+        }
 
-       a span.green {
-         color: var(--main-grey);
-       }
-  }
+        a span.green {
+            color: var(--main-grey);
+        }
+    }
 </style>
 
 <div>
@@ -36,16 +36,16 @@
         <label> {label} </label>
     </div>
 
-    <span class="value-container">
+    <div class="value-container">
         {#if editing}
             <slot />
-            <a on:click={() => editing = false}>
+            <a on:click={() => (editing = false)}>
                 <span class={valid ? 'green' : 'grey'} on:click={() => (open = !open)}>
-                    <Icon name="check"/>
+                    <Icon name="check" />
                 </span>
             </a>
-        {#else}
-            <a class="edit-button" on:click={() => editing = true}>
+        {:else}
+            <a class="edit-button" on:click={() => (editing = true)}>
                 {value || placeholder}
             </a>
         {/if}
