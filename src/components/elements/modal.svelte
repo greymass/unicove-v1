@@ -1,6 +1,5 @@
 <script lang="ts">
     import {writable} from 'svelte/store'
-
     import Button from '~/components/elements/button.svelte'
 
     export let display = writable<boolean>(false)
