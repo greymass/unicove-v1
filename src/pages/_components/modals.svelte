@@ -14,23 +14,28 @@
 </style>
 
 <div>
-    <Button on:action={() => (smallModalOpened = true)}>Open Small Modal</Button>
-
     <Modal header="Test Header" bind:opened={smallModalOpened}>
+        <span slot="trigger">
+            <Button on:action={() => (smallModalOpened = true)}>Open Small Modal</Button>
+        </span>
         <p>This is where your modal body goes.</p>
     </Modal>
-
-    <Button on:action={() => (largeModalOpened = true)}>Open Large Modal without header</Button>
 
     <Modal size="large" bind:opened={largeModalOpened}>
+        <span slot="trigger">
+            <Button on:action={() => (largeModalOpened = true)}
+                >Open Large Modal without header</Button
+            >
+        </span>
         <p>This is where your modal body goes.</p>
     </Modal>
 
-    <Button on:action={() => (buttonlessModalOpened = true)}>
-        Open Modal without close button
-    </Button>
-
     <Modal hideCloseButton bind:opened={buttonlessModalOpened}>
+        <span slot="trigger">
+            <Button on:action={() => (buttonlessModalOpened = true)}>
+                Open Modal without close button
+            </Button>
+        </span>
         <p>This is where your modal body goes.</p>
     </Modal>
 </div>

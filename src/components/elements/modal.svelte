@@ -71,6 +71,8 @@
     }
 </style>
 
+<slot name="trigger" />
+
 {#if opened}
     <div on:click={handleClose} class="container">
         <div on:click={preventClose} class={`modal ${size}`}>
