@@ -9,7 +9,6 @@
     export let value: string = ''
     export let errorMessage: string | null
     export let activeSession: LinkSession | null
-    export let fullWidthOnMobile: boolean = false
 
     const validate = async (value: string) => {
         try {
@@ -60,6 +59,6 @@
 <style type="scss">
 </style>
 
-<Input on:changed {fullWidthOnMobile} {name} bind:value isValid={validate} {errorMessage} />
+<Input on:changed {name} bind:value isValid={validate} {errorMessage} />
 
 <ErrorMessage {errorMessage} />

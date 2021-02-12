@@ -46,23 +46,23 @@
 <Form>
     <FieldContainer label="To" placeholder="select" value={toAccount || toAddress}>
         {#if activeBlockchain.id === 'fio'}
-            <Input fullWidthOnMobile name="to" bind:value={toAddress} />
+            <Input name="to" bind:value={toAddress} />
         {:else}
-            <InputAccount fullWidthOnMobile name="to" {activeSession} bind:value={toAccount} />
+            <InputAccount name="to" {activeSession} bind:value={toAccount} />
         {/if}
     </FieldContainer>
 
     <FieldContainer label="Amount" secondLabel="Value" placeholder="0.0" value={amount}>
-        <InputAsset fullWidthOnMobile name="amount" {availableBalance} bind:value={amount} />
+        <InputAsset name="amount" {availableBalance} bind:value={amount} />
     </FieldContainer>
 
     {#if activeBlockchain.id !== 'fio'}
         <FieldContainer label="Memo (Optional)" placeholder="Add" value={memo}>
-            <Input fullWidthOnMobile name="memo" bind:value={memo} />
+            <Input name="memo" bind:value={memo} />
         </FieldContainer>
     {/if}
 
-    <Button fullWidthOnMobile formValidation on:action={handleTransfer}
+    <Button formValidation on:action={handleTransfer}
         >Create Transfer Request</Button
     >
     {#if displaySuccessTx}

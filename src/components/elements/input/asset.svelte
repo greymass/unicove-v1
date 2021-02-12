@@ -10,7 +10,6 @@
     export let value: string = ''
     export let allowZero: boolean = false
     export let availableBalance: number | null
-    export let fullWidthOnMobile: boolean = false
 
     let errorMessage: string | null
 
@@ -89,6 +88,6 @@
 <style type="scss">
 </style>
 
-<Input on:changed {fullWidthOnMobile} {name} bind:value isValid={validate} />
+<Input on:changed {name} bind:value isValid={validate} />
 
 <ErrorMessage {errorMessage} />
