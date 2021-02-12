@@ -2,11 +2,6 @@
     import Modal from '~/components/elements/modal.svelte'
     import Button from '~/components/elements/button.svelte'
 
-    let smallModalOpened: boolean = false
-    let largeModalOpened: boolean = false
-    let buttonlessModalOpened: boolean = false
-    let callbackModalOpened: boolean = false
-
     const callbackAction = () => {
         callbackModalOpened = false
         alert('Callback Triggered!')
@@ -20,36 +15,30 @@
 </style>
 
 <div>
-    <Modal header="Test Header" bind:opened={smallModalOpened}>
+    <Modal header="Test Header">
         <span slot="trigger">
-            <Button on:action={() => (smallModalOpened = true)}>Open Small Modal</Button>
+            <Button>Open Small Modal</Button>
         </span>
         <p>This is where your modal body goes.</p>
     </Modal>
 
-    <Modal size="large" bind:opened={largeModalOpened}>
+    <Modal size="large">
         <span slot="trigger">
-            <Button on:action={() => (largeModalOpened = true)}
-                >Open Large Modal without header</Button
-            >
+            <Button>Open Large Modal without header</Button>
         </span>
         <p>This is where your modal body goes.</p>
     </Modal>
 
-    <Modal hideCloseButton bind:opened={buttonlessModalOpened}>
+    <Modal hideCloseButton>
         <span slot="trigger">
-            <Button on:action={() => (buttonlessModalOpened = true)}>
-                Open Modal without close button
-            </Button>
+            <Button>Open Modal without close button</Button>
         </span>
         <p>This is where your modal body goes.</p>
     </Modal>
 
-    <Modal hideCloseButton bind:opened={callbackModalOpened}>
+    <Modal hideCloseButton>
         <span slot="trigger">
-            <Button on:action={() => (callbackModalOpened = true)}>
-                Open Modal with custom action
-            </Button>
+            <Button>Open Modal with custom action</Button>
         </span>
         <p>This is where your modal body goes.</p>
         <Button on:action={callbackAction}>Click me!</Button>
