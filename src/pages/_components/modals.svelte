@@ -5,6 +5,12 @@
     let smallModalOpened: boolean = false
     let largeModalOpened: boolean = false
     let buttonlessModalOpened: boolean = false
+    let callbackModalOpened: boolean = false
+
+    const callbackAction = () => {
+        callbackModalOpened = false
+        alert('Callback Triggered!')
+    }
 </script>
 
 <style lang="scss">
@@ -37,5 +43,15 @@
             </Button>
         </span>
         <p>This is where your modal body goes.</p>
+    </Modal>
+
+    <Modal hideCloseButton bind:opened={callbackModalOpened}>
+        <span slot="trigger">
+            <Button on:action={() => (callbackModalOpened = true)}>
+                Open Modal with custom action
+            </Button>
+        </span>
+        <p>This is where your modal body goes.</p>
+        <Button on:action={callbackAction}>Click me!</Button>
     </Modal>
 </div>
