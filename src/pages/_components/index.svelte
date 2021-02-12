@@ -16,7 +16,7 @@
         {name: 'Icons', path: 'icons', component: Icons},
         {name: 'Inputs', path: 'inputs', component: Inputs},
         {name: 'Progress Bar', path: 'progress', component: Progress},
-        {name: 'Modal', path: 'modal', component: Modal},
+        {name: 'Modals', path: 'modals', component: Modal},
     ]
 </script>
 
