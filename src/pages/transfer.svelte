@@ -23,15 +23,15 @@
     let balance
 
     $: if ($activeBlockchain.id === 'fio') {
-        loadFee($activeBlockchain, $activeSession).then(fee => {
-          txFee = fee
+        loadFee($activeBlockchain, $activeSession).then((fee) => {
+            txFee = fee
         })
-        balance = loadBalance($activeBlockchain, $activeSession).then(amount => {
-          balance = amount
+        balance = loadBalance($activeBlockchain, $activeSession).then((amount) => {
+            balance = amount
         })
     } else {
         txFee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-         balance =
+        balance =
             $currentAccount?.core_liquid_balance ||
             Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     }
@@ -83,11 +83,7 @@
         />
 
         {#if txFee.value > 0}
-            <TransferSummary
-                activeBlockchain={$activeBlockchain}
-                {quantity}
-                {txFee}
-            />
+            <TransferSummary activeBlockchain={$activeBlockchain} {quantity} {txFee} />
         {/if}
     </div>
 </Page>

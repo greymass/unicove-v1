@@ -27,8 +27,16 @@
         pointer-events: none;
     }
 
-    label, p, h1, h2, h3, h4, h5, tr, td {
-      color: var(--main-black);
+    label,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    tr,
+    td {
+        color: var(--main-black);
     }
 
     :root {

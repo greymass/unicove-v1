@@ -2,7 +2,6 @@
     import {Name} from '@greymass/eosio'
     import type {LinkSession} from 'anchor-link'
 
-
     import Input from '~/components/elements/input.svelte'
     import ErrorMessage from './errorMessage.svelte'
 
@@ -45,15 +44,15 @@
     }
 
     async function validateExistence(value: string) {
-        return activeSession.client.v1.chain.get_account(value).catch(error => {
-          const isUnkownAccountError = error.toString().includes('exception: unknown key')
+        return activeSession.client.v1.chain.get_account(value).catch((error) => {
+            const isUnkownAccountError = error.toString().includes('exception: unknown key')
 
-          if (isUnkownAccountError) {
-            throw {
-              valid: false,
-              message: 'Is not a valid account name.',
+            if (isUnkownAccountError) {
+                throw {
+                    valid: false,
+                    message: 'Is not a valid account name.',
+                }
             }
-          }
         })
     }
 </script>

@@ -46,9 +46,9 @@
     }
 
     @media only screen and (max-width: 600px) {
-       .content {
-          margin: 55px 8px;
-       }
+        .content {
+            margin: 55px 8px;
+        }
     }
 </style>
 
