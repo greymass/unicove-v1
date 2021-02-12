@@ -17,9 +17,17 @@
          margin: 5px 0;
       }
 
-      a {
+      a.edit-button {
         color: var(--main-blue)
       }
+
+      a span.green {
+        color: var(--success-green);
+      }
+
+       a span.green {
+         color: var(--main-grey);
+       }
   }
 </style>
 
@@ -28,14 +36,16 @@
         <label> {label} </label>
     </div>
 
-    <div class="value-container">
+    <span class="value-container">
         {#if editing}
             <slot />
             <a on:click={() => editing = false}>
-                <Icon color={valid ? 'green' : 'grey'} name="check"/>
+                <span class={valid ? 'green' : 'grey'} on:click={() => (open = !open)}>
+                    <Icon name="check"/>
+                </span>
             </a>
         {#else}
-            <a on:click={() => editing = true}>
+            <a class="edit-button" on:click={() => editing = true}>
                 {value || placeholder}
             </a>
         {/if}
