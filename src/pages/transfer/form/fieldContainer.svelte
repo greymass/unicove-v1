@@ -10,14 +10,20 @@
 
     console.log('fieldContainer')
     console.log({valid})
+    console.log({value})
 
     let editing: string = false
+    let valueToDisplay: string | null = null
+
+    $: {
+       valueToDisplay  = value && `${value.substring(0, 15)}${value.length > 16 ? '...' : ''}`
+    }
 </script>
 
 <style type="scss">
     .container {
         display: flex;
-        height: 60px;
+        min-height: 60px;
         border-bottom: 1px solid var(--divider-grey);
 
         .label-container {
@@ -65,6 +71,7 @@
     <div class="value-container">
         {#if editing}
             <slot />
+
             <div class="icons-container">
                 <StatusIcon {valid} />
                 <a class="close icon" on:click={() => (editing = false)}>
@@ -73,7 +80,7 @@
             </div>
         {:else}
             <a class="edit-button" on:click={() => (editing = true)}>
-                {value || placeholder}
+                {valueToDisplay || placeholder}
             </a>
         {/if}
     </div>

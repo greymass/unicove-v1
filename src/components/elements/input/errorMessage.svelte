@@ -8,6 +8,7 @@
 
         h3 {
             color: var(--error-red);
+            text-align: center;
         }
     }
 </style>
