@@ -48,6 +48,10 @@
                 &.success {
                     color: var(--success-green);
                 }
+
+                &.error {
+                    color: var(--error-red);
+                }
               }
             }
 
@@ -73,7 +77,9 @@
                         <Icon name="check" size="large" />
                     </span>
                 {:else}
-                  <span class="icon" />
+                  <span class="error icon" on:click={() => (editing = !open)}>
+                      <Icon name="alert-circle" size="large" />
+                  </span>
                 {/if}
                 <a class="close icon" on:click={() => (editing = false)}>
                     <Icon size="large" name="x-circle" />
