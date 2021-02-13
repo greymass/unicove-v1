@@ -15,7 +15,7 @@
 </script>
 
 <style type="scss">
-    div {
+    .container {
         display: flex;
         height: 60px;
         border-bottom: 1px solid var(--divider-grey);
@@ -32,10 +32,11 @@
         .value-container {
             margin-left: auto;
             padding: 10px;
+            display: flex;
 
             .icons-container {
               min-width: 60px;
-              border: none;
+              display: flex;
 
               a.icon {
                 padding: 8px;
@@ -56,7 +57,7 @@
     }
 </style>
 
-<div>
+<div class="container">
     <div class="label-container">
         <label> {label} </label>
     </div>
@@ -65,9 +66,7 @@
         {#if editing}
             <slot />
             <div class="icons-container">
-                <div class="icon">
-                    <StatusIcon {valid} />
-                </div>
+                <StatusIcon {valid} />
                 <a class="close icon" on:click={() => (editing = false)}>
                     <Icon size="large" name="x-circle" />
                 </a>

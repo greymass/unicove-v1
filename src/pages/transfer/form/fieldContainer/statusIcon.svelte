@@ -6,6 +6,9 @@
 
 <style type="scss">
   span.icon {
+    border: none;
+    padding: 8px;
+
     &.success {
       color: var(--success-green);
     }
