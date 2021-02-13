@@ -8,16 +8,22 @@
     export let name: string = ''
     export let value: string = ''
     export let errorMessage: string | null
+    export let valid: boolean = false
 
     const validate = async (value: string) => {
         try {
             validatePresence(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
+            valid = false
             return false
         }
 
+        console.log('validate')
+        console.log('valid')
+
         errorMessage = null
+        valid = true
         return true
     }
 

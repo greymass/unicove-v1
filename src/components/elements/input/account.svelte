@@ -9,6 +9,7 @@
     export let value: string = ''
     export let errorMessage: string | null
     export let activeSession: LinkSession | null
+    export let valid: boolean = false
 
     const validate = async (value: string) => {
         try {
@@ -17,10 +18,12 @@
             await validateExistence(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
+            valid = false
             return false
         }
 
         errorMessage = null
+        valid = true
         return true
     }
 
