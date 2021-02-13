@@ -25,17 +25,7 @@
     onMount(validate)
 
     function validate() {
-        console.log({requiredFields})
-        const currentFields = Object.keys(formFields)
-        const missingRequiredFields = requiredFields &&
-            !requiredFields.every(requiredField => currentFields.includes(requiredField));
-        console.log({missingRequiredFields})
-
-        if (missingRequiredFields) {
-           $formDisabled  = true
-        } else {
-           $formDisabled = Object.values(formFields).some((v) => v === false)
-        }
+       $formDisabled = Object.values(formFields).some((v) => v === false)
     }
 </script>
 
