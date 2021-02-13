@@ -2,6 +2,7 @@
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
     import InputAccount from '~/components/elements/input/account.svelte'
+    import InputAddress from '~/components/elements/input/address.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Form from '~/components/elements/form.svelte'
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
@@ -19,6 +20,7 @@
     export let txFee
 
     let toAccountValid: boolean = false
+    let toAddressVald: boolean = false
     let amountValid: boolean = false
 
     let displaySuccessTx
@@ -38,6 +40,9 @@
         memo = ''
         displaySuccessTx = transferData?.payload?.tx
     }
+    console.log('form')
+    console.log({quantity})
+    console.log({value: quantity.toString()})
 </script>
 
 <style type="scss">
@@ -55,7 +60,7 @@
 <Form>
         {#if activeBlockchain.id === 'fio'}
             <FieldContainer label="To" placeholder="select" valid={true} value={toAddress}>
-                <Input name="to" bind:value={toAddress} />
+                <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressVald} />
             </FieldContainer>
         {:else}
             <FieldContainer label="To" placeholder="select" valid={toAccountValid} value={toAccount}>
@@ -63,7 +68,7 @@
             </FieldContainer>
         {/if}
 
-    <FieldContainer label="Amount" secondLabel="Value" placeholder="0.0" value={amount} valid={amountValid}>
+    <FieldContainer label="Amount" secondLabel="Value" placeholder="0.0" value={quantity && quantity.toString()} valid={amountValid}>
         <InputAsset name="amount" {availableBalance} bind:value={amount} bind:valid={amountValid} />
     </FieldContainer>
 

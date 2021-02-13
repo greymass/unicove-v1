@@ -59,6 +59,8 @@
 <style type="scss">
 </style>
 
-<Input on:changed {name} bind:value isValid={validate} {errorMessage} />
+<div>
+    <Input on:changed {name} bind:value isValid={validate} {errorMessage} />
+    <ErrorMessage {errorMessage} />
+</div>
 
-<ErrorMessage {errorMessage} />
