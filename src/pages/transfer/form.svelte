@@ -44,6 +44,12 @@
     h4 {
         color: green;
     }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      margin: 20px 0;
+    }
 </style>
 
 <Form>
@@ -66,10 +72,12 @@
             <Input name="memo" bind:value={memo} />
         </FieldContainer>
     {/if}
+    <div class="button-container">
+      <Button size="large" formValidation on:action={handleTransfer}>
+        Create Transfer Request
+      </Button>
+    </div>
 
-    <Button formValidation on:action={handleTransfer}
-        >Create Transfer Request</Button
-    >
     {#if displaySuccessTx}
         <TransactionNotificationSuccess
             tx={displaySuccessTx}
