@@ -20,7 +20,7 @@
     export let txFee
 
     let toAccountValid: boolean = false
-    let toAddressVald: boolean = false
+    let toAddressValid: boolean = false
     let amountValid: boolean = false
 
     let displaySuccessTx
@@ -59,8 +59,8 @@
 
 <Form>
         {#if activeBlockchain.id === 'fio'}
-            <FieldContainer label="To" placeholder="select" valid={true} value={toAddress}>
-                <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressVald} />
+            <FieldContainer label="To" placeholder="select" valid={toAddressValid} value={toAddress}>
+                <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressValid} />
             </FieldContainer>
         {:else}
             <FieldContainer label="To" placeholder="select" valid={toAccountValid} value={toAccount}>
