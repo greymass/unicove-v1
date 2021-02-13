@@ -19,9 +19,6 @@
             return false
         }
 
-        console.log('validate')
-        console.log('valid')
-
         errorMessage = null
         valid = true
         return true

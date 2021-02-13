@@ -40,9 +40,6 @@
         memo = ''
         displaySuccessTx = transferData?.payload?.tx
     }
-    console.log('form')
-    console.log({quantity})
-    console.log({value: quantity.toString()})
 </script>
 
 <style type="scss">
