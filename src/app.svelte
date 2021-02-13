@@ -40,7 +40,7 @@
     }
 
     a {
-       cursor: pointer;
+        cursor: pointer;
     }
 
     :root {

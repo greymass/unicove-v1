@@ -12,7 +12,7 @@
     let valueToDisplay: string | null = null
 
     $: {
-       valueToDisplay  = value && `${value.substring(0, 15)}${value.length > 16 ? '...' : ''}`
+        valueToDisplay = value && `${value.substring(0, 15)}${value.length > 16 ? '...' : ''}`
     }
 </script>
 
@@ -23,13 +23,13 @@
         border-bottom: 1px solid var(--divider-grey);
 
         .label-container {
-          padding: 10px 3px;
+            padding: 10px 3px;
 
-          label {
-              display: block;
-              margin: 5px 0;
-              font-weight: bold;
-          }
+            label {
+                display: block;
+                margin: 5px 0;
+                font-weight: bold;
+            }
         }
 
         .value-container {
@@ -38,18 +38,18 @@
             display: flex;
 
             .icons-container {
-              min-width: 60px;
-              display: flex;
+                min-width: 60px;
+                display: flex;
 
-              a.icon {
-                padding: 8px;
-                width: 30px;
+                a.icon {
+                    padding: 8px;
+                    width: 30px;
 
-                &.close {
-                    color: var(--main-blue);
-                    float: right;
+                    &.close {
+                        color: var(--main-blue);
+                        float: right;
+                    }
                 }
-              }
             }
 
             a.edit-button {
@@ -58,10 +58,10 @@
             }
         }
         .hidden {
-          display: none;
+            display: none;
         }
         .visible {
-          display: flex;
+            display: flex;
         }
     }
 </style>
