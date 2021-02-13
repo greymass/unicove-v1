@@ -56,19 +56,13 @@
     .container {
         max-width: 400px;
     }
-
-    hr {
-        margin: 30px 0 10px 0;
-        height: 1px;
-        border-bottom: none;
-    }
 </style>
 
 <Page title="Create Transfer">
     <div class="container">
         <TransferBalance {balance} activeBlockchain={$activeBlockchain} />
 
-        <hr />
+        <br />
 
         <TransferForm
             activeBlockchain={$activeBlockchain}

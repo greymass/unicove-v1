@@ -15,31 +15,45 @@
 
 <style type="scss">
     div {
-        margin: 10px 5px;
         display: flex;
+        height: 60px;
+        border-bottom: 1px solid var(--divider-grey);
 
-        label {
-            display: block;
-            margin: 5px 0;
+        .label-container {
+          padding: 10px;
+
+          label {
+              display: block;
+              margin: 5px 0;
+          }
         }
 
         .value-container {
             margin-left: auto;
+            padding: 10px;
+
+            .icons-container {
+              min-width: 60px;
+              border: none;
+
+              a.icon, span.icon {
+                padding: 8px;
+                width: 30px;
+
+                &.close {
+                    color: var(--main-blue);
+                    float: right;
+                }
+
+                &.success {
+                    color: var(--success-green);
+                }
+              }
+            }
 
             a.edit-button {
+                margin: 12px;
                 color: var(--main-blue);
-            }
-
-             a.edit-button {
-                color: var(--main-black);
-             }
-
-            span.green {
-                color: var(--success-green);
-            }
-
-            a span.red {
-                color: var(--error-red);
             }
         }
     }
@@ -53,14 +67,18 @@
     <div class="value-container">
         {#if editing}
             <slot />
-            {#if valid}
-                <span class="green" on:click={() => (editing = !open)}>
-                    <Icon name="check" />
-                </span>
-            {/if}
-            <a class="close-button" on:click={() => (editing = false)}>
-                <Icon name="minus-square" />
-            </a>
+            <div class="icons-container">
+                {#if valid}
+                    <span class="success icon" on:click={() => (editing = !open)}>
+                        <Icon name="check" size="large" />
+                    </span>
+                {:else}
+                  <span class="icon" />
+                {/if}
+                <a class="close icon" on:click={() => (editing = false)}>
+                    <Icon size="large" name="x-circle" />
+                </a>
+            </div>
         {:else}
             <a class="edit-button" on:click={() => (editing = true)}>
                 {value || placeholder}
@@ -68,5 +86,3 @@
         {/if}
     </div>
 </div>
-
-<hr />
