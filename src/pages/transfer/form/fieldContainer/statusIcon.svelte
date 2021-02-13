@@ -9,6 +9,7 @@
   span.icon {
     border: none;
     padding: 8px;
+    width: 30px;
 
     &.success {
       color: var(--success-green);
@@ -28,4 +29,7 @@
   <span class="error icon">
       <Icon name="alert-circle" size="large" />
   </span>
+
+{:else}
+    <span class="icon" />
 {/if}

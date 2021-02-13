@@ -81,10 +81,10 @@
                 </a>
             </div>
         {:else}
-            <StatusIcon noError {valid} />
             <a class="edit-button" on:click={() => (editing = true)}>
                 {valueToDisplay || placeholder}
             </a>
+            <StatusIcon noError {valid} />
         {/if}
     </div>
 </div>
