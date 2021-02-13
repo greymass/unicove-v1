@@ -28,6 +28,7 @@
             </span>
             <p>This is where your modal body goes.</p>
         </Modal>
+
         <Modal size="large">
             <span slot="trigger">
                 <Button>Open Large Modal without header</Button>
@@ -38,6 +39,13 @@
         <Modal hideCloseButton>
             <span slot="trigger">
                 <Button>Open Modal without close button</Button>
+            </span>
+            <p>This is where your modal body goes.</p>
+        </Modal>
+
+        <Modal disableDimmerClose>
+            <span slot="trigger">
+                <Button>Open Modal with disabled dimmer close</Button>
             </span>
             <p>This is where your modal body goes.</p>
         </Modal>

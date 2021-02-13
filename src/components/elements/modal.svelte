@@ -5,6 +5,7 @@
     export let header: string | null = null
     export let size: string = 'small'
     export let hideCloseButton: boolean = false
+    export let disableDimmerClose: boolean = false
 
     const close = () => (display = false)
     const open = () => (display = true)
@@ -76,7 +77,7 @@
 </span>
 
 {#if display}
-    <div on:click={close} class="dimmer" />
+    <div on:click={disableDimmerClose ? undefined : close} class="dimmer" />
     <div class={`modal ${size}`}>
         {#if header}
             <div class="modal-header">
