@@ -57,6 +57,12 @@
                 color: var(--main-blue);
             }
         }
+        .hidden {
+          display: none;
+        }
+        .visible {
+          display: flex;
+        }
     }
 </style>
 
@@ -67,7 +73,7 @@
     </div>
 
     <div class="value-container">
-        {#if editing}
+        <div class={editing ? 'visible' : 'hidden'}>
             <slot />
 
             <div class="icons-container">
@@ -76,11 +82,12 @@
                     <Icon size="large" name="x-circle" />
                 </a>
             </div>
-        {:else}
+        </div>
+        <div class={editing ? 'hidden' : 'visible'}>
             <a class="edit-button" on:click={() => (editing = true)}>
                 {valueToDisplay || placeholder}
             </a>
             <StatusIcon noError {valid} />
-        {/if}
+        </div>
     </div>
 </div>
