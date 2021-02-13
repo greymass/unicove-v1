@@ -8,10 +8,6 @@
     export let placeholder: string
     export let valid: boolean = false
 
-    console.log('fieldContainer')
-    console.log({valid})
-    console.log({value})
-
     let editing: string = false
     let valueToDisplay: string | null = null
 
