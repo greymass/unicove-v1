@@ -58,7 +58,7 @@
     }
 
     hr {
-        margin: 30px 0;
+        margin: 30px 0 10px 0;
         height: 1px;
         border-bottom: none;
     }
