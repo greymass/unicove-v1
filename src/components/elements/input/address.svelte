@@ -41,4 +41,3 @@
     <Input on:changed {name} bind:value isValid={validate} {errorMessage} />
     <ErrorMessage {errorMessage} />
 </div>
-
