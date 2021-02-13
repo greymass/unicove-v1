@@ -2,6 +2,7 @@
   import Icon from '~/components/elements/icon.svelte'
 
   export let valid: boolean
+  export let noError: boolean = false
 </script>
 
 <style type="scss">
@@ -23,7 +24,7 @@
     <span class="success icon">
         <Icon name="check" size="large" />
     </span>
-{:else}
+{:else if !noError}
   <span class="error icon">
       <Icon name="alert-circle" size="large" />
   </span>
