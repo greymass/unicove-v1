@@ -32,12 +32,13 @@
           label {
               display: block;
               margin: 5px 0;
+              font-weight: bold;
           }
         }
 
         .value-container {
             margin-left: auto;
-            padding: 10px;
+            padding: 13px;
             display: flex;
 
             .icons-container {
@@ -66,6 +67,7 @@
 <div class="container">
     <div class="label-container">
         <label> {label} </label>
+        <p>{secondLabel || ''}</p>
     </div>
 
     <div class="value-container">
