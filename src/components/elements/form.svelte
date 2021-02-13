@@ -3,6 +3,8 @@
     import {writable} from 'svelte/store'
     import type {Form, InputResponse} from '~/ui-types'
 
+    export let requiredFields: string = [] | null
+
     let formFields: any = {}
     let formDisabled = writable<boolean>(true)
 
@@ -23,7 +25,17 @@
     onMount(validate)
 
     function validate() {
-        $formDisabled = Object.values(formFields).some((v) => v === false)
+        console.log({requiredFields})
+        const currentFields = Object.keys(formFields)
+        const missingRequiredFields = requiredFields &&
+            !requiredFields.every(requiredField => currentFields.includes(requiredField));
+        console.log({missingRequiredFields})
+
+        if (missingRequiredFields) {
+           $formDisabled  = true
+        } else {
+           $formDisabled = Object.values(formFields).some((v) => v === false)
+        }
     }
 </script>
 

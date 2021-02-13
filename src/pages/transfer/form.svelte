@@ -54,16 +54,16 @@
     }
 </style>
 
-<Form>
-        {#if activeBlockchain.id === 'fio'}
-            <FieldContainer label="To" placeholder="select" valid={toAddressValid} value={toAddress}>
-                <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressValid} />
-            </FieldContainer>
-        {:else}
-            <FieldContainer label="To" placeholder="select" valid={toAccountValid} value={toAccount}>
-                <InputAccount name="to" {activeSession} bind:value={toAccount} bind:valid={toAccountValid} />
-            </FieldContainer>
-        {/if}
+<Form requiredFields={["to", "amount"]}>
+    {#if activeBlockchain.id === 'fio'}
+        <FieldContainer label="To" placeholder="select" valid={toAddressValid} value={toAddress}>
+            <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressValid} />
+        </FieldContainer>
+    {:else}
+        <FieldContainer label="To" placeholder="select" valid={toAccountValid} value={toAccount}>
+            <InputAccount name="to" {activeSession} bind:value={toAccount} bind:valid={toAccountValid} />
+        </FieldContainer>
+    {/if}
 
     <FieldContainer label="Amount" secondLabel="Value" placeholder="0.0" value={quantity && quantity.toString()} valid={amountValid}>
         <InputAsset name="amount" {availableBalance} bind:value={amount} bind:valid={amountValid} />
