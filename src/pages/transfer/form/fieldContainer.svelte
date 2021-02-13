@@ -1,5 +1,6 @@
 <script lang="ts">
     import Icon from '~/components/elements/icon.svelte'
+    import StatusIcon from './fieldContainer/statusIcon.svelte'
 
     export let label: string
     export let secondLabel: string | null = null
@@ -20,7 +21,7 @@
         border-bottom: 1px solid var(--divider-grey);
 
         .label-container {
-          padding: 10px;
+          padding: 10px 3px;
 
           label {
               display: block;
@@ -36,21 +37,13 @@
               min-width: 60px;
               border: none;
 
-              a.icon, span.icon {
+              a.icon {
                 padding: 8px;
                 width: 30px;
 
                 &.close {
                     color: var(--main-blue);
                     float: right;
-                }
-
-                &.success {
-                    color: var(--success-green);
-                }
-
-                &.error {
-                    color: var(--error-red);
                 }
               }
             }
@@ -72,15 +65,9 @@
         {#if editing}
             <slot />
             <div class="icons-container">
-                {#if valid}
-                    <span class="success icon" on:click={() => (editing = !open)}>
-                        <Icon name="check" size="large" />
-                    </span>
-                {:else}
-                  <span class="error icon" on:click={() => (editing = !open)}>
-                      <Icon name="alert-circle" size="large" />
-                  </span>
-                {/if}
+                <div class="icon">
+                    <StatusIcon {valid} />
+                </div>
                 <a class="close icon" on:click={() => (editing = false)}>
                     <Icon size="large" name="x-circle" />
                 </a>
