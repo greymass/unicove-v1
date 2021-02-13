@@ -15,7 +15,7 @@
 
 <style type="scss">
     div {
-        margin: 20px 0;
+        margin: 10px 5px;
         display: flex;
 
         label {
