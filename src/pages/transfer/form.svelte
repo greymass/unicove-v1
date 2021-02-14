@@ -31,7 +31,7 @@
     let displaySuccessTx: string | undefined = undefined
 
     async function handleTransfer() {
-        const transferData = await transfer(activeBlockchain, activeSession, {
+        const transferData: any = await transfer(activeBlockchain, activeSession, {
             toAddress,
             toAccount,
             quantity,
