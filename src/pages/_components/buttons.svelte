@@ -1,5 +1,7 @@
 <script>
     import Button from '~/components/elements/button.svelte'
+    import Icon from '~/components/elements/icon.svelte'
+    import Text from '~/components/elements/text.svelte'
 </script>
 
 <style lang="scss">
@@ -20,20 +22,50 @@
 <div>
     <Button>Standard</Button>
     <Button primary>Primary</Button>
-    <Button icon="external-link">Icon</Button>
-    <Button icon="external-link" iconPosition="left">Icon left</Button>
+    <Button>
+        <Text>Icon</Text>
+        <Icon name="external-link" />
+    </Button>
+    <Button>
+        <Icon name="external-link" />
+        <Text>Icon left</Text>
+    </Button>
 </div>
 
 <div>
     <Button size="large">Large</Button>
     <Button size="large" primary>Large Primary</Button>
-    <Button size="large" icon="external-link">Large with icon</Button>
-    <Button size="large" icon="external-link" iconPosition="left">Large with icon left</Button>
+    <Button size="large">
+        <Icon name="unlock" />
+        <Text>Icon here</Text>
+    </Button>
+    <Button size="large">
+        <Text>Icon there</Text>
+        <Icon name="external-link" />
+    </Button>
+    <Button size="large">
+        <Icon name="bell" />
+        <Text>Icon</Text>
+        <Icon name="activity" />
+        <Text>everywhere</Text>
+        <Icon name="octagon" />
+    </Button>
 </div>
 
 <div class="overunder">
     <Button size="large">Flexy</Button>
     <Button size="large" primary>Flexy Primary</Button>
-    <Button size="large" primary icon="layout">Flexy with icon</Button>
-    <Button size="large" primary icon="layout" iconPosition="left">Flexy with icon left</Button>
+    <Button size="large" primary>
+        <Icon name="layout" />
+        <Text>Flexy with icon</Text>
+    </Button>
+    <Button size="large" primary>
+        <Icon name="tool" />
+        <Text>Flexing</Text>
+        <Icon name="trash" />
+        <Text>my</Text>
+        <Icon name="layout" />
+        <Text>icons</Text>
+        <Icon name="twitter" />
+    </Button>
 </div>
