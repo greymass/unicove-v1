@@ -1,5 +1,4 @@
 import type {Asset, LinkSession} from 'anchor-link'
-import {isInstanceOf} from '@greymass/eosio'
 
 import {fioTransfer} from './transfer/fio'
 import {defaultTransfer} from './transfer/default'
