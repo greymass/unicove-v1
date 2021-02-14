@@ -82,7 +82,7 @@
     </FieldContainer>
 
     {#if activeBlockchain.id !== 'fio'}
-        <FieldContainer label="Memo (Optional)" placeholder="Add" value={memo} valid={true}>
+        <FieldContainer label="Memo (Optional)" placeholder="Add" value={memo} valid optional>
             <Input name="memo" bind:value={memo} />
         </FieldContainer>
     {/if}
@@ -92,12 +92,11 @@
         </Button>
     </div>
 
-      <Modal opened={!!displaySuccessTx} >
+    <Modal opened={!!displaySuccessTx} >
         <TransactionNotificationSuccess
           tx={displaySuccessTx}
           {activeBlockchain}
-          onClose={() => (displaySuccessTx = '')}
         />
-      </Modal>
+    </Modal>
 
 </Form>

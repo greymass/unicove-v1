@@ -7,12 +7,15 @@
     export let value: string | null = null
     export let placeholder: string
     export let valid: boolean = false
+    export let optional: boolean = false
 
     let editing: string = false
     let valueToDisplay: string | null = null
+    let displayOutsideCheck: boolean = false
 
     $: {
         valueToDisplay = value && `${value.substring(0, 15)}${value.length > 16 ? '...' : ''}`
+        displayOutsideCheck = (value || !optional) && valid
     }
 </script>
 
@@ -87,7 +90,7 @@
             <a class="edit-button" on:click={() => (editing = true)}>
                 {valueToDisplay || placeholder}
             </a>
-            <StatusIcon noError {valid} />
+            <StatusIcon noError valid={displayOutsideCheck} />
         </div>
     </div>
 </div>
