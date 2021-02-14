@@ -46,7 +46,7 @@
 
     async function validateExistence(value: string) {
         if (!activeSession) {
-          return
+            return
         }
         return activeSession.client.v1.chain.get_account(value).catch((error) => {
             const isUnkownAccountError = error.toString().includes('exception: unknown key')
