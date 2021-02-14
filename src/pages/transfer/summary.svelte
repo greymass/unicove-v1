@@ -1,9 +1,10 @@
 <script lang="ts">
     import {Asset} from 'anchor-link'
+    import type {ChainConfig} from '~/config'
 
-    export let quantity
-    export let txFee
-    export let activeBlockchain
+    export let quantity: Asset
+    export let txFee: Asset
+    export let activeBlockchain: ChainConfig
 </script>
 
 <style type="scss">

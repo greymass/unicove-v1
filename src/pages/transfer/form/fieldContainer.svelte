@@ -3,19 +3,19 @@
     import StatusIcon from './fieldContainer/statusIcon.svelte'
 
     export let label: string
-    export let secondLabel: string | null = null
-    export let value: string | null = null
+    export let secondLabel: string | undefined = undefined
+    export let value: string | undefined = undefined
     export let placeholder: string
     export let valid: boolean = false
     export let optional: boolean = false
 
-    let editing: string = false
-    let valueToDisplay: string | null = null
+    let editing: boolean = false
+    let valueToDisplay: string | undefined = undefined
     let displayOutsideCheck: boolean = false
 
     $: {
         valueToDisplay = value && `${value.substring(0, 15)}${value.length > 16 ? '...' : ''}`
-        displayOutsideCheck = (value || !optional) && valid
+        displayOutsideCheck = (!!value || !optional) && valid
     }
 </script>
 
@@ -28,7 +28,7 @@
         .label-container {
             padding: 10px 3px;
 
-            label {
+            h3 {
                 display: block;
                 margin: 5px 0;
                 font-weight: bold;
@@ -44,20 +44,22 @@
                 min-width: 60px;
                 display: flex;
 
-                a.icon {
+                .icon {
                     padding: 8px;
                     width: 30px;
 
                     &.close {
                         color: var(--main-blue);
                         float: right;
+                        cursor: pointer;
                     }
                 }
             }
 
-            a.edit-button {
+            .edit-button {
                 margin: 12px;
                 color: var(--main-blue);
+                cursor: pointer;
             }
         }
         .hidden {
@@ -71,7 +73,7 @@
 
 <div class="container">
     <div class="label-container">
-        <label> {label} </label>
+        <h3> {label} </h3>
         <p>{secondLabel || ''}</p>
     </div>
 
@@ -81,15 +83,15 @@
 
             <div class="icons-container">
                 <StatusIcon {valid} />
-                <a class="close icon" on:click={() => (editing = false)}>
+                <div class="close icon" on:click={() => (editing = false)}>
                     <Icon size="large" name="x-circle" />
-                </a>
+                </div>
             </div>
         </div>
         <div class={editing ? 'hidden' : 'visible'}>
-            <a class="edit-button" on:click={() => (editing = true)}>
+            <div class="edit-button" on:click={() => (editing = true)}>
                 {valueToDisplay || placeholder}
-            </a>
+            </div>
             <StatusIcon noError valid={displayOutsideCheck} />
         </div>
     </div>

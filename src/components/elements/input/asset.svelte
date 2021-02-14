@@ -9,10 +9,10 @@
     export let name: string = ''
     export let value: string = ''
     export let allowZero: boolean = false
-    export let availableBalance: number | null
+    export let availableBalance: number | undefined
     export let valid: boolean = false
 
-    let errorMessage: string | null
+    let errorMessage: string | undefined
 
     const validate = async (value: string) => {
         try {
@@ -26,7 +26,7 @@
             return false
         }
 
-        errorMessage = null
+        errorMessage = undefined
         valid = true
         return true
     }
@@ -35,7 +35,7 @@
         if (value.length === 0) {
             throw {
                 valid: false,
-                message: null,
+                message: undefined,
             }
         }
     }
