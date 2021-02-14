@@ -1,70 +1,98 @@
 <script lang="ts">
+    import {writable} from 'svelte/store'
+
     import Modal from '~/components/elements/modal.svelte'
+    import ModalTrigger from '~/components/elements/modal/trigger.svelte'
     import Button from '~/components/elements/button.svelte'
 
-    let callbackModalDisplayed = false
-    const callbackAction = () => {
+    const customAction = (callback: any) => {
         alert('Callback Triggered!')
-        callbackModalDisplayed = false
+        callback()
     }
 
-    let displayExternallyControlled = false
+    let displayExternallyControlled = writable<boolean>(false)
     const showExternallyControlled = () => {
-        displayExternallyControlled = true
+        $displayExternallyControlled = true
     }
+
+    let displaySmallModal = writable<boolean>(false)
 </script>
 
 <style lang="scss">
-    div {
+    div,
+    h2 {
         padding-bottom: 20px;
     }
 </style>
 
 <div>
     <div>
-        <Modal header="Test Header">
-            <span slot="trigger">
-                <Button>Open Small Modal</Button>
-            </span>
-            <p>This is where your modal body goes.</p>
-        </Modal>
+        <div>
+            <h2>Independent Modals</h2>
+            <div>
+                <Button on:action={() => ($displaySmallModal = true)}>Open Small Modal</Button>
 
-        <Modal size="large">
-            <span slot="trigger">
-                <Button>Open Large Modal without header</Button>
-            </span>
-            <p>This is where your modal body goes.</p>
-        </Modal>
+                <Modal size="small" display={displaySmallModal}>
+                    <p>This is where your modal body goes.</p>
+                </Modal>
+            </div>
+            <div>
+                <Button on:action={showExternallyControlled}
+                    >Open Externally Controlled Modal</Button
+                >
+                Opened: {$displayExternallyControlled}
 
-        <Modal hideCloseButton>
-            <span slot="trigger">
-                <Button>Open Modal without close button</Button>
-            </span>
-            <p>This is where your modal body goes.</p>
-        </Modal>
+                <Modal header="Test Header" bind:display={displayExternallyControlled}>
+                    <p>This is where your modal body goes.</p>
+                </Modal>
+            </div>
+        </div>
 
-        <Modal disableDimmerClose>
-            <span slot="trigger">
-                <Button>Open Modal with disabled dimmer close</Button>
-            </span>
-            <p>This is where your modal body goes.</p>
-        </Modal>
+        <div>
+            <h2>Modals wrapped in Triggers</h2>
 
-        <Modal hideCloseButton bind:display={callbackModalDisplayed}>
-            <span slot="trigger">
-                <Button>Open Modal with custom action</Button>
-            </span>
-            <p>This is where your modal body goes.</p>
-            <Button on:action={callbackAction}>Click me!</Button>
-        </Modal>
-    </div>
+            <ModalTrigger let:display content="Basic">
+                <Modal {display}>
+                    <p>This was from a ModalTrigger.</p>
+                </Modal>
+            </ModalTrigger>
 
-    <div>
-        <Button on:action={showExternallyControlled}>Open Externally Controlled Modal</Button>
-        Opened: {displayExternallyControlled}
+            <ModalTrigger let:display content="With a header">
+                <Modal header="A different test header" {display}>
+                    <p>This is where your modal body goes.</p>
+                </Modal>
+            </ModalTrigger>
 
-        <Modal header="Test Header" bind:display={displayExternallyControlled}>
-            <p>This is where your modal body goes.</p>
-        </Modal>
+            <ModalTrigger let:display content="Large!">
+                <Modal size="large" {display}>
+                    <p>This is where your modal body goes.</p>
+                </Modal>
+            </ModalTrigger>
+
+            <ModalTrigger let:display content="No close button">
+                <Modal hideCloseButton {display}>
+                    <p>This is where your modal body goes.</p>
+                </Modal>
+            </ModalTrigger>
+
+            <ModalTrigger let:display content="No dimmer close">
+                <Modal disableDimmerClose {display}>
+                    <p>This is where your modal body goes.</p>
+                </Modal>
+            </ModalTrigger>
+
+            <ModalTrigger let:display content="Disabled" disabled>
+                <Modal disableDimmerClose {display}>
+                    <p>This is where your modal body goes.</p>
+                </Modal>
+            </ModalTrigger>
+
+            <ModalTrigger let:display let:close content="Close when performing custom action">
+                <Modal disableDimmerClose hideCloseButton {display}>
+                    <p>This is where your modal body goes.</p>
+                    <Button on:action={() => customAction(close)}>Callback & Close!</Button>
+                </Modal>
+            </ModalTrigger>
+        </div>
     </div>
 </div>

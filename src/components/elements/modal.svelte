@@ -1,14 +1,15 @@
 <script lang="ts">
-    import Button from './button.svelte'
+    import {writable} from 'svelte/store'
 
-    export let display: boolean = false
+    import Button from '~/components/elements/button.svelte'
+
+    export let display = writable<boolean>(false)
     export let header: string | null = null
     export let size: string = 'small'
     export let hideCloseButton: boolean = false
     export let disableDimmerClose: boolean = false
 
-    const close = () => (display = false)
-    const open = () => (display = true)
+    export let close = () => ($display = false)
 </script>
 
 <style type="scss">
@@ -72,13 +73,7 @@
     }
 </style>
 
-{#if $$slots.trigger}
-    <span on:click={open}>
-        <slot name="trigger" />
-    </span>
-{/if}
-
-{#if display}
+{#if $display}
     <div on:click={disableDimmerClose ? undefined : close} class="dimmer" />
     <div class={`modal ${size}`}>
         {#if header}
