@@ -1,9 +1,9 @@
 <script lang="ts">
+    import type {LinkSession} from 'anchor-link'
+
     import {Asset, Name} from 'anchor-link'
-    import {isRelease} from '../config'
 
     import {activeBlockchain, activeSession, currentAccount} from '../store'
-    import {FIOTransfer, Transfer} from '../abi-types'
 
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
@@ -11,23 +11,25 @@
 
     import Page from '~/components/layout/page.svelte'
 
-    import {transfer} from '../services/eosio/methods'
     import {loadFee, loadBalance} from '../services/eosio/transfer/fio'
 
-    let memo = ''
-    let quantity = ''
-    let toAccount = ''
-    let toAddress = ''
-    let txFee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let amount = ''
-    let balance
+    let memo: string = ''
+    let quantity: Asset | undefined = undefined
+    let toAccount: string = ''
+    let toAddress: string  = ''
+    let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let amount: string = ''
+    let balance: Asset | undefined = undefined
+    let balanceValue: number = 0
+
+    let activeSessionObject: LinkSession = $activeSession!;
 
     $: if ($activeBlockchain.id === 'fio') {
-        loadFee($activeBlockchain, $activeSession).then((fee) => {
+        loadFee($activeBlockchain, activeSessionObject).then((fee) => {
             txFee = fee
         })
-        balance = loadBalance($activeBlockchain, $activeSession).then((amount) => {
-            balance = amount
+        loadBalance($activeBlockchain, activeSessionObject).then((assets) => {
+            balance = assets[0]
         })
     } else {
         txFee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
@@ -50,6 +52,9 @@
             quantity = Asset.fromFloat(parsed, $activeBlockchain.coreTokenSymbol)
         }
     }
+    $: {
+      balanceValue = (balance && balance.units.toNumber())!
+    }
 </script>
 
 <style>
@@ -60,16 +65,15 @@
 
 <Page title="Create Transfer">
     <div class="container">
-        <TransferBalance {balance} activeBlockchain={$activeBlockchain} />
+        <TransferBalance {balanceValue} />
 
         <br />
 
         <TransferForm
             activeBlockchain={$activeBlockchain}
-            activeSession={$activeSession}
-            availableBalance={balance}
+            activeSession={activeSessionObject}
+            availableBalance={balanceValue}
             {quantity}
-            {transfer}
             {txFee}
             bind:amount
             bind:memo
@@ -77,7 +81,7 @@
             bind:toAddress
         />
 
-        {#if txFee.value > 0}
+        {#if quantity && txFee.value > 0}
             <TransferSummary activeBlockchain={$activeBlockchain} {quantity} {txFee} />
         {/if}
     </div>

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import {Name} from '@greymass/eosio'
     import type {LinkSession} from 'anchor-link'
 
     import Input from '~/components/elements/input.svelte'
@@ -7,8 +6,8 @@
 
     export let name: string = ''
     export let value: string = ''
-    export let errorMessage: string | undefined
-    export let activeSession: LinkSession | undefined
+    export let errorMessage: string | undefined = undefined
+    export let activeSession: LinkSession | undefined = undefined
     export let valid: boolean = false
 
     const validate = async (value: string) => {
@@ -46,6 +45,9 @@
     }
 
     async function validateExistence(value: string) {
+        if (!activeSession) {
+          return
+        }
         return activeSession.client.v1.chain.get_account(value).catch((error) => {
             const isUnkownAccountError = error.toString().includes('exception: unknown key')
 
@@ -63,6 +65,6 @@
 </style>
 
 <div>
-    <Input on:changed {name} bind:value isValid={validate} {errorMessage} />
+    <Input on:changed {name} bind:value isValid={validate} />
     <ErrorMessage {errorMessage} />
 </div>

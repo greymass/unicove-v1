@@ -9,7 +9,7 @@
     export let name: string = ''
     export let value: string = ''
     export let allowZero: boolean = false
-    export let availableBalance: number | undefined
+    export let availableBalance: number | undefined = undefined
     export let valid: boolean = false
 
     let errorMessage: string | undefined
@@ -75,7 +75,7 @@
 
         const units = unitsFromValue(value)
 
-        if (units > availableBalance.units) {
+        if (units > availableBalance) {
             throw {
                 valid: false,
                 message: 'Insufficient funds available.',

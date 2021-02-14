@@ -118,6 +118,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
+        bloksUrl: 'https://telos.bloks.io',
     },
 ]
 

@@ -1,6 +1,8 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
-    import type {Asset, SessionLink} from 'anchor-link'
+    import type {Asset, LinkSession} from 'anchor-link'
+
+    import {transfer} from '../../services/eosio/methods'
 
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
@@ -13,13 +15,12 @@
     import FieldContainer from './form/fieldContainer.svelte'
 
     export let activeBlockchain: ChainConfig
-    export let activeSession: SessionLink
+    export let activeSession: LinkSession
     export let toAddress: string | undefined = undefined
     export let toAccount: string | undefined = undefined
     export let amount: string | undefined = undefined
     export let quantity: Asset | undefined = undefined
     export let memo: string | undefined = undefined
-    export let transfer: () => void | undefined = undefined
     export let availableBalance: number | undefined = undefined
     export let txFee: Asset | undefined = undefined
 
@@ -47,10 +48,6 @@
 </script>
 
 <style type="scss">
-    h4 {
-        color: green;
-    }
-
     .button-container {
         display: flex;
         flex-direction: column;
@@ -58,7 +55,7 @@
     }
 </style>
 
-<Form requiredFields={['to', 'amount']}>
+<Form>
     {#if activeBlockchain.id === 'fio'}
         <FieldContainer label="To" placeholder="select" valid={toAddressValid} value={toAddress}>
             <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressValid} />
@@ -67,7 +64,7 @@
         <FieldContainer label="To" placeholder="select" valid={toAccountValid} value={toAccount}>
             <InputAccount
                 name="to"
-                {activeSession}
+                activeSession={activeSession}
                 bind:value={toAccount}
                 bind:valid={toAccountValid}
             />
