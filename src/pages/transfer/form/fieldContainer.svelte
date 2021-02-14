@@ -73,7 +73,7 @@
 
 <div class="container">
     <div class="label-container">
-        <h3> {label} </h3>
+        <h3>{label}</h3>
         <p>{secondLabel || ''}</p>
     </div>
 

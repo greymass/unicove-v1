@@ -64,7 +64,7 @@
         <FieldContainer label="To" placeholder="select" valid={toAccountValid} value={toAccount}>
             <InputAccount
                 name="to"
-                activeSession={activeSession}
+                {activeSession}
                 bind:value={toAccount}
                 bind:valid={toAccountValid}
             />
@@ -92,11 +92,7 @@
         </Button>
     </div>
 
-    <Modal opened={!!displaySuccessTx} >
-        <TransactionNotificationSuccess
-          tx={displaySuccessTx}
-          {activeBlockchain}
-        />
+    <Modal opened={!!displaySuccessTx}>
+        <TransactionNotificationSuccess tx={displaySuccessTx} {activeBlockchain} />
     </Modal>
-
 </Form>

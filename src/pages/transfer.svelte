@@ -16,13 +16,13 @@
     let memo: string = ''
     let quantity: Asset | undefined = undefined
     let toAccount: string = ''
-    let toAddress: string  = ''
+    let toAddress: string = ''
     let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let amount: string = ''
     let balance: Asset | undefined = undefined
     let balanceValue: number = 0
 
-    let activeSessionObject: LinkSession = $activeSession!;
+    let activeSessionObject: LinkSession = $activeSession!
 
     $: if ($activeBlockchain.id === 'fio') {
         loadFee($activeBlockchain, activeSessionObject).then((fee) => {
@@ -53,7 +53,7 @@
         }
     }
     $: {
-      balanceValue = (balance && balance.units.toNumber())!
+        balanceValue = (balance && balance.units.toNumber())!
     }
 </script>
 
