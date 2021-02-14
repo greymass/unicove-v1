@@ -12,8 +12,8 @@
     },
     "dependencies": {
         "@types/feather-icons": "^4.7.0",
-        "anchor-link": "^3.0.0-rc",
-        "anchor-link-browser-transport": "^3.0.0-rc",
+        "anchor-link": "^3.0.0",
+        "anchor-link-browser-transport": "^3.0.0",
         "feather-icons": "^4.28.0",
         "idb": "^6.0.0",
         "inter-ui": "^3.15.0",
@@ -37,7 +37,7 @@
         "sass": "^1.30.0",
         "snowpack": "^3.0.5",
         "svelte": "^3.31.0",
-        "svelte-check": "^1.1.27",
+        "svelte-check": "^1.1.33",
         "svelte-preprocess": "^4.6.1",
         "typescript": "^4.1.3"
     }
