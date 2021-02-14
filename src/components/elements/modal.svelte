@@ -72,9 +72,11 @@
     }
 </style>
 
-<span on:click={open}>
-    <slot name="trigger" />
-</span>
+{#if $$slots.trigger}
+    <span on:click={open}>
+        <slot name="trigger" />
+    </span>
+{/if}
 
 {#if display}
     <div on:click={disableDimmerClose ? undefined : close} class="dimmer" />
