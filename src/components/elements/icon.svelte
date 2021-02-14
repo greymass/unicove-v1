@@ -1,50 +1,53 @@
+<script context="module" lang="ts">
+    export type IconSize = 'tiny' | 'small' | 'regular' | 'medium' | 'large' | 'huge' | 'massive'
+</script>
+
 <script lang="ts">
     import {icons} from 'feather-icons'
 
     export let name = 'help-circle'
-    export let dimensions = '1em'
-    export let size = 'default'
+    export let size: IconSize = 'regular'
 
     if (!icons[name]) {
         name = 'help-circle'
     }
-
-    switch (size) {
-        case 'tiny': {
-            dimensions = '0.5em'
-            break
-        }
-        case 'small': {
-            dimensions = '0.75em'
-            break
-        }
-        case 'default': {
-            dimensions = '1em'
-            break
-        }
-        case 'medium': {
-            dimensions = '1.25em'
-            break
-        }
-        case 'large': {
-            dimensions = '1.5em'
-            break
-        }
-        case 'huge': {
-            dimensions = '2.5em'
-            break
-        }
-        case 'massive': {
-            dimensions = '4em'
-            break
-        }
-    }
 </script>
 
 <style type="scss">
+    .icon {
+        --size: 1em;
+
+        display: inline-flex;
+        width: var(--size);
+        height: var(--size);
+
+        :global(svg) {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        &.tiny {
+            --size: 0.5em;
+        }
+        &.small {
+            --size: 0.75em;
+        }
+        &.medium {
+            --size: 1.25em;
+        }
+        &.large {
+            --size: 1.5em;
+        }
+        &.huge {
+            --size: 2.5em;
+        }
+        &.massive {
+            --size: 4em;
+        }
+    }
 </style>
 
-{@html icons[name].toSvg({
-    height: dimensions,
-    width: dimensions,
-})}
+<span class={`icon ${size}`}>
+    {@html icons[name].toSvg()}
+</span>

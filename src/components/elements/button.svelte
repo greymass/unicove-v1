@@ -2,8 +2,6 @@
     import {createEventDispatcher, getContext} from 'svelte'
     import {spring} from 'svelte/motion'
 
-    import Icon from '~/components/elements/icon.svelte'
-
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
     /** Whether the button is primary. */
@@ -14,10 +12,6 @@
     export let disabled: boolean = false
     /** Type of button */
     export let formValidation: boolean = false
-    /** Icon within the button */
-    export let icon: string | undefined = undefined
-    /** Icon position, left or right */
-    export let iconPosition: string = 'right'
 
     // Get parent form disabled state (if exists)
     const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
@@ -65,8 +59,11 @@
 </script>
 
 <style type="scss">
-    $radius: 8px;
     .button {
+        --spacing: 4px; // between items in button
+        --radius: 8px; // corner radius of button
+        --gradient-size: 200px; // size of hover effect
+
         position: relative;
         font-size: 10px;
         display: inline-flex;
@@ -74,12 +71,15 @@
         letter-spacing: 0.1px;
         justify-content: center;
         background-color: var(--light-blue);
-        border-radius: $radius;
+        border-radius: var(--radius);
         padding: 10px 12px;
         color: var(--main-blue);
         user-select: none;
         -webkit-user-select: none;
         cursor: pointer;
+        overflow: hidden;
+        white-space: nowrap;
+
         &.primary {
             background-color: var(--main-blue);
             color: white;
@@ -110,15 +110,13 @@
         :global(*) {
             pointer-events: none;
         }
-
         .hover {
-            --gradient-size: 200px;
             position: absolute;
             transition: 140ms ease-in-out;
             transition-property: width, left, opacity;
             top: calc(var(--gradient-size) / -2);
             left: 0px;
-            border-radius: $radius;
+            border-radius: var(--radius);
             background: radial-gradient(circle closest-side, white, transparent);
             width: 0px;
             height: var(--gradient-size);
@@ -129,23 +127,20 @@
             width: var(--gradient-size);
             left: calc(var(--gradient-size) / -2);
         }
-        overflow: hidden;
         .content {
+            z-index: 1;
             display: flex;
             flex-direction: row;
             align-items: center;
-            z-index: 1;
-            &.icon-left {
-                flex-direction: row-reverse;
-                .text {
-                    margin-left: 0.625em;
-                }
-            }
-            .text {
-                margin-right: 0.625em;
-            }
+        }
+        :global(.content > *) {
+            margin-right: var(--spacing);
+        }
+        :global(.content > *:last-child) {
+            margin-right: 0;
         }
         &.size-large {
+            --spacing: 8px;
             .hover {
                 --gradient-size: 500px;
             }
@@ -170,14 +165,7 @@
     tabindex="0"
 >
     <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
-    <span class={`content icon-${iconPosition}`}>
-        <span class="text">
-            <slot>Click me</slot>
-        </span>
-        {#if icon}
-            <span class="icon">
-                <Icon name={icon} />
-            </span>
-        {/if}
+    <span class="content">
+        <slot>Click me</slot>
     </span>
 </a>
