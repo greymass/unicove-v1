@@ -5,6 +5,7 @@
     import InputAddress from '~/components/elements/input/address.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Form from '~/components/elements/form.svelte'
+    import Modal from '~/components/elements/modal.svelte'
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
     import FieldContainer from './form/fieldContainer.svelte'
 
@@ -91,11 +92,12 @@
         </Button>
     </div>
 
-    {#if displaySuccessTx}
+      <Modal opened={!!displaySuccessTx} >
         <TransactionNotificationSuccess
-            tx={displaySuccessTx}
-            {activeBlockchain}
-            onClose={() => (displaySuccessTx = '')}
+          tx={displaySuccessTx}
+          {activeBlockchain}
+          onClose={() => (displaySuccessTx = '')}
         />
-    {/if}
+      </Modal>
+
 </Form>
