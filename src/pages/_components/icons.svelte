@@ -11,7 +11,7 @@
     <p>small</p>
     <Icon name="anchor" size="small" />
     <p>default</p>
-    <Icon name="anchor" size="default" />
+    <Icon name="anchor" />
     <p>medium</p>
     <Icon name="anchor" size="medium" />
     <p>large</p>

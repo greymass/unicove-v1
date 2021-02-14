@@ -242,7 +242,8 @@
                         <tr>
                             <td>
                                 <a
-                                    href={`https://bloks.io/transaction/${transaction.transaction_id}`}>
+                                    href={`https://bloks.io/transaction/${transaction.transaction_id}`}
+                                >
                                     {transaction.usage.actual ? 'Completed' : 'Pending'}
                                 </a>
                             </td>
