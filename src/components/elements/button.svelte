@@ -167,7 +167,8 @@
     class:disabled={(formValidation && $formDisabled) || disabled}
     {href}
     role="button"
-    tabindex="0">
+    tabindex="0"
+>
     <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
     <span class={`content icon-${iconPosition}`}>
         <span class="text">
