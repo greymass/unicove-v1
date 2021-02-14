@@ -2,7 +2,7 @@
     import Button from './button.svelte'
 
     export let opened: boolean = false
-    export let header: string | null = null
+    export let header: string | undefined = undefined
     export let size: string = 'small'
     export let hideCloseButton: boolean = false
 

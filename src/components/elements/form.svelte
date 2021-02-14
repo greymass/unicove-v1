@@ -3,7 +3,7 @@
     import {writable} from 'svelte/store'
     import type {Form, InputResponse} from '~/ui-types'
 
-    export let requiredFields: string = [] | null
+    export let requiredFields: string = [] | undefined
 
     let formFields: any = {}
     let formDisabled = writable<boolean>(true)

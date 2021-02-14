@@ -1,4 +1,7 @@
 <script lang="ts">
+    import type {ChainConfig} from '~/config'
+    import type {Asset, SessionLink} from 'anchor-link'
+
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
     import InputAccount from '~/components/elements/input/account.svelte'
@@ -9,22 +12,22 @@
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
     import FieldContainer from './form/fieldContainer.svelte'
 
-    export let toAddress
-    export let toAccount
-    export let activeBlockchain
-    export let activeSession
-    export let amount
-    export let quantity
-    export let memo
-    export let transfer
-    export let availableBalance
-    export let txFee
+    export let activeBlockchain: ChainConfig
+    export let activeSession: SessionLink
+    export let toAddress: string | undefined = undefined
+    export let toAccount: string | undefined = undefined
+    export let amount: string | undefined = undefined
+    export let quantity: Asset | undefined = undefined
+    export let memo: string | undefined = undefined
+    export let transfer: () => void | undefined = undefined
+    export let availableBalance: number | undefined = undefined
+    export let txFee: Asset | undefined = undefined
 
     let toAccountValid: boolean = false
     let toAddressValid: boolean = false
     let amountValid: boolean = false
 
-    let displaySuccessTx
+    let displaySuccessTx: string | undefined = undefined
 
     async function handleTransfer() {
         const transferData = await transfer(activeBlockchain, activeSession, {

@@ -9,7 +9,7 @@ import {Preferences} from './preferences'
 export const appReady = writable<boolean>(false)
 
 /** Active anchor link session, aka logged in user. */
-export const activeSession = writable<LinkSession | null>(null)
+export const activeSession = writable<LinkSession | undefined>(undefined)
 
 /** Configuration of the currently selected blockchain */
 export const activeBlockchain = derived(activeSession, (session) => {
@@ -27,22 +27,22 @@ export const availableSessions = writable<SessionLike[]>([])
 export const preferences = Preferences.shared
 
 /** Current logged in users account. */
-export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | null>(
+export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
     (session, set) => {
         if (!session) {
-            set(null)
+            set(undefined)
             return
         }
         let active = true
         loadAccount(session.auth.actor, session.chainId, (v) => {
             if (active) {
-                set(v.account || null)
+                set(v.account || undefined)
             }
         })
         return () => {
             active = false
         }
     },
-    null
+    undefined
 )

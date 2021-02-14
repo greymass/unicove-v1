@@ -1,9 +1,9 @@
 <script>
     import Icon from '~/components/elements/icon.svelte'
 
-    export let tx
-    export let onClose
-    export let activeBlockchain
+    export let tx: string | undefined
+    export let onClose: () => undefined | undefined = undefined
+    export let activeBlockchain: ChainConfig | undefined
 
     let txUrl
 
@@ -44,7 +44,7 @@
 </style>
 
 <div>
-    <a href="" class="iconContainer" on:click={onClose}>
+    <a href="" class="iconContainer" on:click={() => onClose && onClose()}>
         <Icon name="x-square" />
     </a>
     <h4>The transaction was successful!</h4>

@@ -7,7 +7,7 @@
 
     export let name: string = ''
     export let value: string = ''
-    export let errorMessage: string | null
+    export let errorMessage: string | undefined
     export let valid: boolean = false
 
     const validate = async (value: string) => {
@@ -19,7 +19,7 @@
             return false
         }
 
-        errorMessage = null
+        errorMessage = undefined
         valid = true
         return true
     }
@@ -28,7 +28,7 @@
         if (value.length === 0) {
             throw {
                 valid: false,
-                message: null,
+                message: undefined,
             }
         }
     }
