@@ -127,6 +127,7 @@ export const chains: ChainConfig[] = [
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
         testnet: false,
+        bloksUrl: 'https://telos.bloks.io',
     },
 ]
 

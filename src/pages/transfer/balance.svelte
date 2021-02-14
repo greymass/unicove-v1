@@ -1,17 +1,10 @@
 <script lang="ts">
-    import {Asset} from 'anchor-link'
-
-    export let balance
-    export let activeBlockchain
+    export let balanceValue: number
 </script>
 
 <style type="scss">
 </style>
 
 <p>
-    You have <i
-        on:click={() => {
-            value = String(balance.value)
-            quantity = Asset.fromUnits(value, activeBlockchain.coreTokenSymbol)
-        }}> {balance} </i>
+    You have <i> {balanceValue} </i>
 </p>

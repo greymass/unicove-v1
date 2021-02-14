@@ -1,13 +1,10 @@
 <script lang="ts">
-    import {Name} from '@greymass/eosio'
-    import type {LinkSession} from 'anchor-link'
-
     import Input from '~/components/elements/input.svelte'
     import ErrorMessage from './errorMessage.svelte'
 
     export let name: string = ''
     export let value: string = ''
-    export let errorMessage: string | undefined
+    export let errorMessage: string | undefined = undefined
     export let valid: boolean = false
 
     const validate = async (value: string) => {
@@ -38,6 +35,6 @@
 </style>
 
 <div>
-    <Input on:changed {name} bind:value isValid={validate} {errorMessage} />
+    <Input on:changed {name} bind:value isValid={validate} />
     <ErrorMessage {errorMessage} />
 </div>

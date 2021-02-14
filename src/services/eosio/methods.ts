@@ -7,12 +7,11 @@ import {defaultTransfer} from './transfer/default'
 import type {ChainConfig} from '~/config'
 
 export interface TransferData {
-    id: string
-    memo: string
-    quantity: Asset
-    toAccount: string
-    toAddress: string
-    txFee: Asset
+    memo?: string
+    quantity?: Asset
+    toAccount?: string
+    toAddress?: string
+    txFee?: Asset
 }
 
 export function transfer(
