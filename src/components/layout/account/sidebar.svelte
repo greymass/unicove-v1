@@ -31,24 +31,31 @@
     }
 
     aside {
-        height: 100%;
-        max-width: 300px;
+        display: none;
         position: absolute;
-        right: -100%;
-        transition: left 0.3s ease-in-out;
-        width: 268px;
         top: 0;
+        right: -100%;
+        height: 100%;
+        max-height: 100vh;
+        width: 268px;
+        max-width: 300px;
+        overflow-x: hidden;
+        overflow-y: scroll;
         background-color: var(--main-grey);
         border-color: darkgray;
         border-right-width: 2px;
-        display: none;
+        transition: left 0.3s ease-in-out;
         z-index: 1001;
     }
 
     .header {
-        margin: 24px 0 24px 24px;
-        padding-bottom: 21px;
         border-bottom: 1px solid var(--divider-grey);
+        color: var(--dark-grey);
+        margin: 24px;
+        padding-bottom: 21px;
+        .icon {
+            color: var(--main-blue);
+        }
     }
 
     .header a {
@@ -74,7 +81,7 @@
 <aside class:open>
     <div class="header">
         <!-- svelte-ignore a11y-missing-attribute -->
-        <a on:click={() => (open = false)}>
+        <a class="icon" on:click={() => (open = false)}>
             <Icon name="x" />
         </a>
         Accounts

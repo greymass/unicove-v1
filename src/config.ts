@@ -116,6 +116,6 @@ export const chains: ChainConfig[] = [
     },
 ]
 
-export function chainConfig(chainId: ChainId): ChainConfig {
+export function chainConfig(chainId: ChainId | string): ChainConfig {
     return chains.find((c) => c.chainId === String(chainId))!
 }

@@ -18,17 +18,26 @@
         })
     }
 
-    // re-sort accounts since link keeps them in last used order
-    $: sessions = $availableSessions
-        .sort((a: SessionLike, b: SessionLike) => {
-            return String(a.auth.actor).localeCompare(String(b.auth.actor))
-        })
-        .map((session: any) => {
+    const chainIds: string[] = [
+        ...new Set($availableSessions.map((session) => String(session.chainId))),
+    ]
+
+    interface SessionGroup {
+        chainId: string
+        name: string
+        sessions: SessionLike[]
+    }
+
+    const groupings: SessionGroup[] = chainIds
+        .map((chainId) => {
+            const config = chainConfig(chainId)
             return {
-                ...session,
-                chain: chainConfig(session.chainId),
+                chainId,
+                name: config.name,
+                sessions: $availableSessions.filter((s) => String(s.chainId) === chainId),
             }
         })
+        .sort((a: SessionGroup, b: SessionGroup) => a.name.localeCompare(b.name))
 </script>
 
 <style type="scss">
@@ -37,13 +46,13 @@
         margin: 10px;
         ul {
             list-style-type: none;
-            padding: 10px;
+            padding: 0 10px;
             li {
                 cursor: pointer;
                 color: var(--main-blue);
                 display: flex;
                 font-size: 13px;
-                font-weight: 600;
+                font-weight: 500;
                 line-height: 33px;
                 margin: 10px 0;
                 user-select: none;
@@ -52,14 +61,25 @@
                     background-color: white;
                     border-radius: $borderRadius;
                     color: var(--light-black);
-                    > div.icon {
-                        color: var(--light-black);
+                    font-weight: 600;
+                    > .icon,
+                    > .control {
+                        color: var(--main-blue);
+                    }
+                    .control {
+                        display: flex;
                     }
                 }
                 &.add-account {
                     flex-direction: column;
                     line-height: 1em;
                     margin-top: 2em;
+                }
+                &.network {
+                    color: var(--dark-grey);
+                    font-size: 10px;
+                    font-weight: 600;
+                    line-height: 1em;
                 }
                 > div {
                     order: 0;
@@ -73,7 +93,7 @@
                         padding: 0 2px;
                     }
                     &.control {
-                        display: flex;
+                        display: none;
                         align-items: center;
                         justify-content: center;
                         margin: 0 10px;
@@ -86,18 +106,21 @@
 
 <div class="list">
     <ul>
-        {#each sessions as session}
-            <li class:active={isActive(session)}>
-                <div class="icon" on:click={() => onSelect(session)}>
-                    <Icon name={isActive(session) ? 'user-check' : 'user'} />
-                </div>
-                <div class="account" on:click={() => onSelect(session)}>
-                    {session.auth.actor}
-                </div>
-                <div class="control" on:click={() => logout(session)}>
-                    <Icon name="log-out" size="large" />
-                </div>
-            </li>
+        {#each groupings as group}
+            <li class="network">{group.name}</li>
+            {#each group.sessions as session}
+                <li class:active={isActive(session)}>
+                    <div class="icon" on:click={() => onSelect(session)}>
+                        <Icon name={isActive(session) ? 'user-check' : 'user'} />
+                    </div>
+                    <div class="account" on:click={() => onSelect(session)}>
+                        {session.auth.actor}
+                    </div>
+                    <div class="control" on:click={() => logout(session)}>
+                        <Icon name="log-out" size="large" />
+                    </div>
+                </li>
+            {/each}
         {/each}
         <li class="add-account">
             <Button primary on:action={handleAdd}>Add another Account</Button>
