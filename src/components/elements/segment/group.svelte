@@ -4,10 +4,14 @@
 
 <style type="scss">
     .segment-group {
-        display: flex;
-        flex-direction: row;
-        gap: 12px;
-        margin: 0 0 20px;
+        --gap: 12px;
+        display: inline-flex;
+        flex-wrap: wrap;
+        margin: calc(-1 * var(--gap)) 0 0 calc(-1 * var(--gap));
+        width: calc(100% + var(--gap));
+        :global(> *) {
+            margin: var(--gap) 0 0 var(--gap);
+        }
         :global(.segment) {
             flex-grow: 1;
         }
