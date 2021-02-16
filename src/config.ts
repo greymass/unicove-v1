@@ -114,6 +114,22 @@ export const chains: ChainConfig[] = [
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
     },
+    {
+        id: 'wax',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4',
+        coreTokenSymbol: Asset.Symbol.from('8,WAX'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'WAX',
+        nodeUrl: 'https://wax.greymass.com',
+    },
 ]
 
 export function chainConfig(chainId: ChainId | string): ChainConfig {
