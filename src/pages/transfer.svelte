@@ -7,7 +7,9 @@
 
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
-    import TransferForm from './transfer/confirm.svelte'
+    import TransferConfirm from './transfer/confirm.svelte'
+    import TransferRecipient from './transfer/recipient.svelte'
+    import TransferAmount from './transfer/amount.svelte'
 
     import Page from '~/components/layout/page.svelte'
 
@@ -71,17 +73,29 @@
 
         <br />
 
-        <TransferConfirm
-            activeBlockchain={$activeBlockchain}
-            activeSession={activeSessionObject}
-            availableBalance={balanceValue}
-            {quantity}
-            {txFee}
-            bind:amount
-            bind:memo
-            bind:toAccount
-            bind:toAddress
-        />
+        {#if (step === 'recipient')}
+            <TransferRecipient
+                bind:toAddress
+                bind:toAccount
+            />
+        {:else if (step === 'amount')}
+            <TransferAmount
+                availableBalance={balanceValue}
+                bind:amount
+            />
+        {:else if (step === 'confirm')}
+            <TransferConfirm
+                activeBlockchain={$activeBlockchain}
+                activeSession={activeSessionObject}
+                availableBalance={balanceValue}
+                {quantity}
+                {txFee}
+                bind:amount
+                bind:memo
+                bind:toAccount
+                bind:toAddress
+            />
+        {/end}
 
         {#if quantity && txFee.value > 0}
             <TransferSummary activeBlockchain={$activeBlockchain} {quantity} {txFee} />
