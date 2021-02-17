@@ -7,7 +7,7 @@
 
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
-    import TransferForm from './transfer/form.svelte'
+    import TransferForm from './transfer/confirm.svelte'
 
     import Page from '~/components/layout/page.svelte'
 
@@ -23,6 +23,8 @@
     let balanceValue: number = 0
 
     let activeSessionObject: LinkSession = $activeSession!
+
+    let step: string = 'accountName'
 
     $: if ($activeBlockchain.id === 'fio') {
         loadFee($activeBlockchain, activeSessionObject).then((fee) => {
@@ -69,7 +71,7 @@
 
         <br />
 
-        <TransferForm
+        <TransferConfirm
             activeBlockchain={$activeBlockchain}
             activeSession={activeSessionObject}
             availableBalance={balanceValue}

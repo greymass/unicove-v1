@@ -12,7 +12,7 @@
     import Form from '~/components/elements/form.svelte'
     import Modal from '~/components/elements/modal.svelte'
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
-    import FieldContainer from './form/fieldContainer.svelte'
+    import FieldContainer from './confirm/fieldContainer.svelte'
 
     export let activeBlockchain: ChainConfig
     export let activeSession: LinkSession
