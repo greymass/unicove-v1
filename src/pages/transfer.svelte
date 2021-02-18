@@ -7,9 +7,9 @@
 
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
-    import TransferConfirm from './transfer/confirm.svelte'
     import TransferRecipient from './transfer/recipient.svelte'
     import TransferAmount from './transfer/amount.svelte'
+    import TransferConfirm from './transfer/confirm.svelte'
 
     import Page from '~/components/layout/page.svelte'
 
@@ -26,7 +26,7 @@
 
     let activeSessionObject: LinkSession = $activeSession!
 
-    let step: string = 'accountName'
+    let step: string = 'recipient'
 
     $: if ($activeBlockchain.id === 'fio') {
         loadFee($activeBlockchain, activeSessionObject).then((fee) => {
@@ -42,8 +42,6 @@
             Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     }
 
-    // TODO: find or build some form builder and validation instead
-    //       sextant admin ui has the beginnings of one that can handle core types we could build on
     $: {
         let toName = Name.from(toAccount)
         toAccount = String(toName)
@@ -71,19 +69,30 @@
     <div class="container">
         <TransferBalance {balanceValue} />
 
+        {#if quantity && txFee.value > 0}
+            <TransferSummary activeBlockchain={$activeBlockchain} {quantity} {txFee} />
+        {/if}
+
         <br />
 
-        {#if (step === 'recipient')}
+        {#if step === 'recipient'}
             <TransferRecipient
+                activeBlockchain={$activeBlockchain}
+                activeSession={activeSessionObject}
+                availableBalance={balanceValue}
                 bind:toAddress
                 bind:toAccount
             />
-        {:else if (step === 'amount')}
+        {/if}
+
+        {#if step === 'amount'}
             <TransferAmount
                 availableBalance={balanceValue}
                 bind:amount
             />
-        {:else if (step === 'confirm')}
+        {/if}
+
+        {#if step === 'confirm'}
             <TransferConfirm
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
@@ -95,10 +104,6 @@
                 bind:toAccount
                 bind:toAddress
             />
-        {/end}
-
-        {#if quantity && txFee.value > 0}
-            <TransferSummary activeBlockchain={$activeBlockchain} {quantity} {txFee} />
         {/if}
     </div>
 </Page>
