@@ -9,6 +9,7 @@
     export let errorMessage: string | undefined = undefined
     export let activeSession: LinkSession | undefined = undefined
     export let valid: boolean = false
+    export let focus: boolean = false
 
     const validate = async (value: string) => {
         try {
@@ -65,6 +66,6 @@
 </style>
 
 <div>
-    <Input on:changed {name} bind:value isValid={validate} />
+    <Input on:changed {name} {focus} bind:value isValid={validate} />
     <ErrorMessage {errorMessage} />
 </div>

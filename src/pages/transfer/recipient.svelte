@@ -28,6 +28,7 @@
         <InputAddress
           bind:valid={valid}
           bind:value={toAddress}
+          focus
           name="to"
           placeholder="Recipient address or public key"
         />
@@ -35,6 +36,7 @@
         <InputAccount
             bind:valid={valid}
             bind:value={toAccount}
+            focus
             name="to"
             placeholder="Recipient account name"
             {activeSession}
