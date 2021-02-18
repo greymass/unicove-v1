@@ -22,6 +22,7 @@
     <InputAsset
       bind:valid={valid}
       bind:value={amount}
+      focus
       name="amount"
       placeholder="Amount to be transfered"
       {availableBalance}
