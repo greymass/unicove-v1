@@ -16,8 +16,8 @@
     export let icon: string | undefined = undefined
     /** Icon position, left or right */
     export let iconPosition: string = 'right'
-    /** Whether or not the button should go full width on mobile */
-    export let fullWidthOnMobile: boolean = false
+    /** Whether or not the button should go full width */
+    export let fullWidth: boolean = false
 
     // Get parent form disabled state (if exists)
     const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
@@ -156,12 +156,10 @@
             padding: 16px 32px;
         }
 
-        @media only screen and (max-width: 600px) {
-            &.fullWidth {
-                width: 100%;
-                padding: 15px;
-            }
-        }
+         &.fullWidth {
+            width: 100%;
+            padding: 15px;
+         }
     }
 </style>
 
@@ -170,7 +168,7 @@
     on:keydown={handleKeydown}
     on:mousemove={handleMousemove}
     on:mouseenter={handleMouseenter}
-    class={`button size-${size} ${fullWidthOnMobile ? 'fullWidth' : ''}`}
+    class={`button size-${size} ${fullWidth ? 'fullWidth' : ''}`}
     class:primary
     class:disabled={(formValidation && $formDisabled) || disabled}
     {href}
