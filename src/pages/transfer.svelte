@@ -28,14 +28,16 @@
 
     let step: string = 'recipient'
 
-    $: if ($activeBlockchain.id === 'fio') {
+    if ($activeBlockchain.id === 'fio') {
         loadFee($activeBlockchain, activeSessionObject).then((fee) => {
             txFee = fee
         })
         loadBalance($activeBlockchain, activeSessionObject).then((assets) => {
             balance = assets[0]
         })
-    } else {
+    }
+
+    $: if ($activeBlockchain.id !== 'fio') {
         txFee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
         balance =
             $currentAccount?.core_liquid_balance ||
