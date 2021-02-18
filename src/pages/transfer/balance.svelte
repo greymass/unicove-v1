@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {Asset} from 'anchor-link'
 
-    export let balance: Asset | undefined = undefined
+    export let balance: Asset
 </script>
 
 <style type="scss">

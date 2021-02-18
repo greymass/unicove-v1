@@ -23,6 +23,7 @@
     export let memo: string | undefined = undefined
     export let availableBalance: number | undefined = undefined
     export let txFee: Asset | undefined = undefined
+    export let step: string
 
     let toAccountValid: boolean = false
     let toAddressValid: boolean = false
@@ -44,6 +45,8 @@
         toAddress = ''
         memo = ''
         displaySuccessTx = transferData?.payload?.tx
+
+        step = 'amount'
     }
 </script>
 

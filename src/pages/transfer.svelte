@@ -21,7 +21,7 @@
     let toAddress: string = ''
     let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let amount: string = ''
-    let balance: Asset | undefined = undefined
+    let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let balanceValue: number = 0
 
     let activeSessionObject: LinkSession = $activeSession!
@@ -40,13 +40,9 @@
         balance =
             $currentAccount?.core_liquid_balance ||
             Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-
-        console.log('balance non fio')
-        console.log({balance})
     }
 
     $: {
-        console.log({currentAccount: $currentAccount})
         let toName = Name.from(toAccount)
         toAccount = String(toName)
     }
@@ -60,10 +56,7 @@
         }
     }
     $: {
-        console.log('last block')
-        console.log({balance})
         balanceValue = (balance && balance.units.toNumber())!
-        console.log({balance: JSON.stringify(balance)})
     }
 </script>
 
@@ -87,7 +80,6 @@
             <TransferRecipient
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
-                availableBalance={balanceValue}
                 bind:step
                 bind:toAddress
                 bind:toAccount
@@ -95,11 +87,7 @@
         {/if}
 
         {#if step === 'amount'}
-            <TransferAmount
-                availableBalance={balanceValue}
-                bind:amount
-                bind:step
-            />
+            <TransferAmount availableBalance={balanceValue} bind:amount bind:step />
         {/if}
 
         {#if step === 'confirm'}
