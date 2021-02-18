@@ -23,25 +23,29 @@
     }
 </style>
 
-<div>
-    {#if activeBlockchain.id === 'fio'}
-        <InputAddress
-          bind:valid={valid}
-          bind:value={toAddress}
-          focus
-          name="to"
-          placeholder="Recipient address or public key"
-        />
-    {:else}
-        <InputAccount
-            bind:valid={valid}
-            bind:value={toAccount}
-            focus
-            name="to"
-            placeholder="Recipient account name"
-            {activeSession}
-        />
-    {/if}
+<div class="container">
+    <div class="field-container">
+        {#if activeBlockchain.id === 'fio'}
+            <InputAddress
+              bind:valid={valid}
+              bind:value={toAddress}
+              focus
+              fullWidth
+              name="to"
+              placeholder="Recipient address or public key"
+            />
+        {:else}
+            <InputAccount
+                bind:valid={valid}
+                bind:value={toAccount}
+                focus
+                fullWidth
+                name="to"
+                placeholder="Recipient account name"
+                {activeSession}
+            />
+        {/if}
+    </div>
 
     <Button size="large" disabled={!valid} on:action={() => step = 'amount'}>
       Continue
