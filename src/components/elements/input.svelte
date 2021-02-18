@@ -10,6 +10,9 @@
     export let placeholder: string = ''
     export let value: string = ''
 
+    /** Whether or not the button should go full width */
+    export let fullWidth: boolean = false
+
     let ref: HTMLInputElement
 
     export let isValid: any = () => true
@@ -70,11 +73,16 @@
             color: #585d6e;
             outline: none;
         }
+
+         &.fullWidth {
+            width: 100%;
+         }
     }
 </style>
 
 <input
     on:keyup={handleKeyup}
+    class={fullWidth ? 'fullWidth' : ''}
     type="text"
     {name}
     {disabled}

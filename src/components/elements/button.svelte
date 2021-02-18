@@ -16,8 +16,6 @@
     export let icon: string | undefined = undefined
     /** Icon position, left or right */
     export let iconPosition: string = 'right'
-    /** Whether or not the button should go full width */
-    export let fullWidth: boolean = false
 
     // Get parent form disabled state (if exists)
     const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
@@ -156,10 +154,7 @@
             padding: 16px 32px;
         }
 
-         &.fullWidth {
-            width: 100%;
-            padding: 15px;
-         }
+
     }
 </style>
 
