@@ -1,10 +1,12 @@
 <script lang="ts">
-    export let balanceValue: number
+    import type {Asset} from 'anchor-link'
+
+    export let balance: Asset | undefined = undefined
 </script>
 
 <style type="scss">
 </style>
 
 <p>
-    You have <i> {balanceValue} </i>
+    You have <i> {balance.toString()} </i>
 </p>

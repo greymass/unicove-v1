@@ -40,12 +40,17 @@
         balance =
             $currentAccount?.core_liquid_balance ||
             Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+
+        console.log('balance non fio')
+        console.log({balance})
     }
 
     $: {
+        console.log({currentAccount: $currentAccount})
         let toName = Name.from(toAccount)
         toAccount = String(toName)
     }
+
     $: {
         let parsed = parseFloat(amount)
         if (isNaN(parsed) || parsed === 0) {
@@ -55,7 +60,10 @@
         }
     }
     $: {
+        console.log('last block')
+        console.log({balance})
         balanceValue = (balance && balance.units.toNumber())!
+        console.log({balance: JSON.stringify(balance)})
     }
 </script>
 
@@ -67,7 +75,7 @@
 
 <Page title="Create Transfer">
     <div class="container">
-        <TransferBalance {balanceValue} />
+        <TransferBalance {balance} />
 
         {#if quantity && txFee.value > 0}
             <TransferSummary activeBlockchain={$activeBlockchain} {quantity} {txFee} />

@@ -13,12 +13,12 @@
     export let step: string | undefined = undefined
 
     let valid: boolean = false
-    let disabledButton: boolean = true
 
-    $: {
-      disabledButton = !valid
+    function handleKeydown(event) {
+        if (valid && event.key === 'Enter') {
+            step = 'amount'
+        }
     }
-
 </script>
 
 <style type="scss">
@@ -31,6 +31,8 @@
       }
     }
 </style>
+
+<svelte:window on:keydown={handleKeydown}/>
 
 <div class="container">
     <div class="field-container">
@@ -56,7 +58,7 @@
         {/if}
     </div>
 
-    <Button size="large" disabled={disabledButton} on:action={() => step = 'amount'}>
+    <Button size="large" disabled={!valid} on:action={() => step = 'amount'}>
       Continue
     </Button>
 </div>
