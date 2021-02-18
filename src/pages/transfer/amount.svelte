@@ -8,6 +8,14 @@
     export let step: string | undefined = undefined
 
     let valid: boolean = false
+
+    function handleKeydown(event) {
+      console.log('handleKeyDown')
+      console.log({event})
+      if (valid && event.key === 'Enter') {
+        step = 'confirm'
+      }
+    }
 </script>
 
 <style type="scss">
@@ -20,6 +28,8 @@
      }
    }
 </style>
+
+<svelte:window on:keydown={handleKeydown}/>
 
 <div class="container">
     <div class="field-container">

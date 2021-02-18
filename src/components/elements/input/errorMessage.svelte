@@ -4,11 +4,10 @@
 
 <style type="scss">
     div {
-        padding: 10px 0;
+        padding: 10px 5px;
 
         h3 {
             color: var(--error-red);
-            text-align: center;
         }
     }
 </style>
