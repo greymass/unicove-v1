@@ -22,12 +22,20 @@
 <style lang="scss">
     div {
         margin: 16px 0;
+
+        &.fullWidthContainer {
+            width: 500px;
+        }
     }
 </style>
 
 <div>
     <p>Default</p>
     <Input />
+</div>
+<div class="fullWidthContainer">
+    <p>Full Width</p>
+    <Input fullWidth />
 </div>
 <div>
     <p>Disabled</p>
