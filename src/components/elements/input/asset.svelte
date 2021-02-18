@@ -12,6 +12,7 @@
     export let availableBalance: number | undefined = undefined
     export let valid: boolean = false
     export let focus: boolean = false
+    export let fullWidth: boolean = false
 
     let errorMessage: string | undefined
 
@@ -93,6 +94,6 @@
 </style>
 
 <div>
-    <Input on:changed {name} {focus} bind:value isValid={validate} />
+    <Input on:changed {name} {fullWidth} {focus} bind:value isValid={validate} />
     <ErrorMessage {errorMessage} />
 </div>

@@ -23,6 +23,7 @@
       bind:valid={valid}
       bind:value={amount}
       focus
+      fullWidth
       name="amount"
       placeholder="Amount to be transfered"
       {availableBalance}
