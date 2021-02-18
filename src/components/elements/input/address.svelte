@@ -8,6 +8,7 @@
     export let valid: boolean = false
     export let focus: boolean = false
     export let fullWidth: boolean = false
+    export let placeholder: string | undefined = undefined
 
     const validate = async (value: string) => {
         try {
@@ -37,6 +38,6 @@
 </style>
 
 <div>
-    <Input on:changed {name} {fullWidth} {focus} bind:value isValid={validate} />
+    <Input on:changed {name} {fullWidth} {focus} {placeholder} bind:value isValid={validate} />
     <ErrorMessage {errorMessage} />
 </div>
