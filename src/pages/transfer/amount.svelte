@@ -11,25 +11,31 @@
 </script>
 
 <style type="scss">
-    div {
-      display: flex;
-      flex-direction: column;
-      margin: 20px 0;
-    }
+   .container {
+     display: flex;
+     flex-direction: column;
+
+     .field-container {
+        margin: 20px 0;
+     }
+   }
 </style>
 
-<div>
-    <InputAsset
-      bind:valid={valid}
-      bind:value={amount}
-      focus
-      fullWidth
-      name="amount"
-      placeholder="Amount to be transfered"
-      {availableBalance}
-    />
+<div class="container">
+    <div class="field-container">
+        <InputAsset
+          bind:valid={valid}
+          bind:value={amount}
+          focus
+          fullWidth
+          name="amount"
+          placeholder="amount to be transfered.."
+          {availableBalance}
+        />
+    </div>
+    <Button size="large" disabled={!valid} on:action={() => step = 'confirm'}>
+      Continue
+    </Button>
 </div>
 
-<Button size="large" disabled={!valid} on:action={() => step = 'confirm'}>
-  Continue
-</Button>
+

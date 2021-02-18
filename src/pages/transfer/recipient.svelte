@@ -13,13 +13,22 @@
     export let step: string | undefined = undefined
 
     let valid: boolean = false
+    let disabledButton: boolean = true
+
+    $: {
+      disabledButton = !valid
+    }
+
 </script>
 
 <style type="scss">
-    div {
+    .container {
       display: flex;
       flex-direction: column;
-      margin: 20px 0;
+
+      .field-container {
+         margin: 20px 0;
+      }
     }
 </style>
 
@@ -32,7 +41,7 @@
               focus
               fullWidth
               name="to"
-              placeholder="Recipient address or public key"
+              placeholder="recipient address or public key.."
             />
         {:else}
             <InputAccount
@@ -41,13 +50,13 @@
                 focus
                 fullWidth
                 name="to"
-                placeholder="Recipient account name"
+                placeholder="recipient account name.."
                 {activeSession}
             />
         {/if}
     </div>
 
-    <Button size="large" disabled={!valid} on:action={() => step = 'amount'}>
+    <Button size="large" disabled={disabledButton} on:action={() => step = 'amount'}>
       Continue
     </Button>
 </div>

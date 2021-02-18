@@ -80,6 +80,7 @@
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
                 availableBalance={balanceValue}
+                bind:step
                 bind:toAddress
                 bind:toAccount
             />
@@ -89,6 +90,7 @@
             <TransferAmount
                 availableBalance={balanceValue}
                 bind:amount
+                bind:step
             />
         {/if}
 
@@ -101,6 +103,7 @@
                 {txFee}
                 bind:amount
                 bind:memo
+                bind:step
                 bind:toAccount
                 bind:toAddress
             />
