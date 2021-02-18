@@ -14,7 +14,7 @@
 
     let valid: boolean = false
 
-    function handleKeydown(event) {
+    function handleKeydown(event: any) {
         if (valid && event.key === 'Enter') {
             step = 'amount'
         }
@@ -23,31 +23,31 @@
 
 <style type="scss">
     .container {
-      display: flex;
-      flex-direction: column;
+        display: flex;
+        flex-direction: column;
 
-      .field-container {
-         margin: 20px 0;
-      }
+        .field-container {
+            margin: 20px 0;
+        }
     }
 </style>
 
-<svelte:window on:keydown={handleKeydown}/>
+<svelte:window on:keydown={handleKeydown} />
 
 <div class="container">
     <div class="field-container">
         {#if activeBlockchain.id === 'fio'}
             <InputAddress
-              bind:valid={valid}
-              bind:value={toAddress}
-              focus
-              fullWidth
-              name="to"
-              placeholder="recipient address or public key.."
+                bind:valid
+                bind:value={toAddress}
+                focus
+                fullWidth
+                name="to"
+                placeholder="recipient address or public key.."
             />
         {:else}
             <InputAccount
-                bind:valid={valid}
+                bind:valid
                 bind:value={toAccount}
                 focus
                 fullWidth
@@ -58,8 +58,5 @@
         {/if}
     </div>
 
-    <Button size="large" disabled={!valid} on:action={() => step = 'amount'}>
-      Continue
-    </Button>
+    <Button size="large" disabled={!valid} on:action={() => (step = 'amount')}>Continue</Button>
 </div>
-

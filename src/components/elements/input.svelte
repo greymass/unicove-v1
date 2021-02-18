@@ -74,9 +74,9 @@
             outline: none;
         }
 
-         &.fullWidth {
+        &.fullWidth {
             width: 100%;
-         }
+        }
     }
 </style>
 
