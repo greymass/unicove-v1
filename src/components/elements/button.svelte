@@ -153,8 +153,6 @@
             letter-spacing: -0.18px;
             padding: 16px 32px;
         }
-
-
     }
 </style>
 
@@ -163,7 +161,7 @@
     on:keydown={handleKeydown}
     on:mousemove={handleMousemove}
     on:mouseenter={handleMouseenter}
-    class={`button size-${size} ${fullWidth ? 'fullWidth' : ''}`}
+    class={`button size-${size}`}
     class:primary
     class:disabled={(formValidation && $formDisabled) || disabled}
     {href}
