@@ -105,8 +105,8 @@ export async function getPowerupPrice(chainId: ChainId): Promise<number> {
             weight_ratio,
         } = row.cpu
 
-        // Update the store with the amount of resources shifted to PowerUp
-        resourcesShifted.set(target_weight_ratio / weight_ratio)
+        // Update the store with the amount of resources remaining in the legacy system
+        resourcesShifted.set(weight_ratio / target_weight_ratio)
         console.log('shifted', shifted)
 
         // Rent 1ms of the networks CPU
@@ -135,7 +135,7 @@ export async function getPowerupPrice(chainId: ChainId): Promise<number> {
         // mspd = 34560000
         // shifted = 0.010015341213459587
         // mspdAvailable = 346130.1923371633
-        const mspdAvailable = mspd * shifted
+        const mspdAvailable = mspd * (1 - shifted / 100)
         console.log('mspd', mspd)
         console.log('mspdAvailable', mspdAvailable)
 

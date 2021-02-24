@@ -143,12 +143,12 @@
         </thead>
         <tr>
             <td>REX</td>
-            <td>{((1 - $resourcesShifted) * 100).toFixed(4)}%</td>
+            <td>{$resourcesShifted.toFixed(4)}%</td>
             <td>{$rexPrice.toFixed(8)} EOS per millisecond</td>
         </tr>
         <tr>
             <td>PowerUp</td>
-            <td>{($resourcesShifted * 100).toFixed(4)}%</td>
+            <td>{(100 - $resourcesShifted).toFixed(4)}%</td>
             <td>{$powerupPrice.toFixed(8)} EOS per millisecond</td>
         </tr>
     </table>
