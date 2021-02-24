@@ -58,6 +58,7 @@ export const chains: ChainConfig[] = [
             ChainFeatures.BidName,
             ChainFeatures.BuyRAM,
             ChainFeatures.Fuel,
+            ChainFeatures.PowerUp,
             ChainFeatures.REX,
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
