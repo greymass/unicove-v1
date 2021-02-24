@@ -1,4 +1,4 @@
-import {Asset, Int64, Name, Struct, UInt32} from 'anchor-link'
+import {Asset, Float64, Int64, Name, Struct, TimePointSec, UInt8, UInt32} from 'anchor-link'
 
 @Struct.type('transfer')
 export class Transfer extends Struct {
@@ -56,4 +56,32 @@ export class Stake extends Struct {
     @Struct.field('asset') stake_net_quantity!: Asset
     @Struct.field('asset') stake_cpu_quantity!: Asset
     @Struct.field('bool') transfer!: boolean
+}
+
+@Struct.type('powerupstateresource')
+export class PowerUpStateResource extends Struct {
+    @Struct.field('uint8') version!: UInt8
+    @Struct.field('int64') weight!: Int64
+    @Struct.field('int64') weight_ratio!: Int64
+    @Struct.field('int64') assumed_stake_weight!: Int64
+    @Struct.field('int64') initial_weight_ratio!: Int64
+    @Struct.field('int64') target_weight_ratio!: Int64
+    @Struct.field('time_point_sec') initial_timestamp!: TimePointSec
+    @Struct.field('time_point_sec') target_timestamp!: TimePointSec
+    @Struct.field('float64') exponent!: Float64
+    @Struct.field('uint32') decay_secs!: UInt32
+    @Struct.field('asset') min_price!: Asset
+    @Struct.field('asset') max_price!: Asset
+    @Struct.field('int64') utilization!: Int64
+    @Struct.field('int64') adjusted_utilization!: Int64
+    @Struct.field('time_point_sec') utilization_timestamp!: TimePointSec
+}
+
+@Struct.type('powerupstate')
+export class PowerUpState extends Struct {
+    @Struct.field('uint8') version!: UInt8
+    @Struct.field(PowerUpStateResource) net!: PowerUpStateResource
+    @Struct.field(PowerUpStateResource) cpu!: PowerUpStateResource
+    @Struct.field('uint32') powerup_days!: UInt32
+    @Struct.field('asset') min_powerup_fee!: Asset
 }
