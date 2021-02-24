@@ -27,7 +27,7 @@
     if (!isRelease) {
         toAccount = 'teamgreymass'
         toAddress = 'FIO7hF6waZH6pBvVLrLj5ZLNTcUfcT6nNYiCVtYAmahnmzanqU1aA'
-        value = '1'
+        value = '0.0001'
         quantity = Asset.fromUnits(parseFloat(value), $activeBlockchain.coreTokenSymbol)
         memo = '🦄🧠🥌'
     }
@@ -143,8 +143,7 @@
             on:click={() => {
                 value = String(balance.value)
                 quantity = Asset.fromUnits(value, $activeBlockchain.coreTokenSymbol)
-            }}
-        >
+            }}>
             {balance}
         </i>
     </p>
