@@ -8,7 +8,7 @@ import {getClient} from './api-client'
 /** How old a cached account is before we update it */
 const maxAge = 60 * 1000 // ms
 
-interface AccountResponse {
+export interface AccountResponse {
     /** The account object for the requested account. */
     account?: API.v1.AccountObject
     /** Whether the account is being updated in the background.  */
