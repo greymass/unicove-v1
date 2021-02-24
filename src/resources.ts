@@ -170,7 +170,7 @@ export const rexCapacity = derived(stateREX, ($stateREX) => {
     return 0
 })
 
-// The price for 1ms of CPU in the PowerUp system
+// The price for 1ms of CPU in the REX system
 export const rexPrice = derived(
     [sampledCpuCost, stateREX, resourcesShifted],
     ([$sampledCpuCost, $stateREX, $resourcesShifted]) => {
