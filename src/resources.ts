@@ -191,7 +191,7 @@ export async function getPowerupPrice(chainId: ChainId): Promise<number> {
         */
 
         // Divide by 10000 for
-        return Asset.fromUnits(price, '4,EOS').value
+        return price / 10000
     }
     return 0
 }
