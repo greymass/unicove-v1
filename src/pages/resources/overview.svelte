@@ -1,6 +1,7 @@
 <script lang="ts">
     import {
         mspd,
+        sampleAccountResponse,
         sampledCpuCost,
         sampledNetCost,
         powerupPrice,
@@ -144,15 +145,18 @@
         <tr>
             <td>REX</td>
             <td>{$resourcesShifted.toFixed(4)}%</td>
-            <td>{$rexPrice.toFixed(8)} EOS per millisecond</td>
+            <td>{$rexPrice.toFixed(4)} EOS per millisecond</td>
         </tr>
         <tr>
             <td>PowerUp</td>
             <td>{(100 - $resourcesShifted).toFixed(4)}%</td>
-            <td>{$powerupPrice.toFixed(8)} EOS per millisecond</td>
+            <td>{$powerupPrice.toFixed(4)} EOS per millisecond</td>
         </tr>
     </table>
     <p>MS/Day: {mspd}</p>
+    {#if $sampleAccountResponse.account}
+        <p>Sample Account Age: {$sampleAccountResponse.account.head_block_time}</p>
+    {/if}
     <p>Sampled CPU Cost: {$sampledCpuCost}</p>
     <p>Sampled NET Cost: {$sampledNetCost}</p>
     <CPU {account} />

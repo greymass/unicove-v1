@@ -1,5 +1,5 @@
-import {loadAccount} from '~/account-cache'
-import {readable, writable} from 'svelte/store'
+import {AccountResponse, loadAccount} from '~/account-cache'
+import {derived, readable, writable} from 'svelte/store'
 import type {ChainId} from 'anchor-link'
 import {Asset, Name} from '@greymass/eosio'
 
@@ -23,53 +23,45 @@ let shifted: number = 0
 export let resourcesShifted = writable<number>(0)
 resourcesShifted.subscribe((value) => (shifted = value))
 
-export const sampledCpuCost = readable(0, (set) => {
-    // Set value upon initial load
-    getSampledCpuCost(set)
-    // Set interval to reload the price every 10 seconds
-    const interval = setInterval(async () => {
-        getSampledCpuCost(set)
-    }, 5000)
-    // Return the stop function to clear the interval
+// An active account on the network to use for usage sampling purposes
+export const sampleAccountName: Name = Name.from('teamgreymass')
+
+// The AccountResponse representation of the sample account
+export const sampleAccountResponse = readable<AccountResponse>({stale: true}, (set) => {
+    loadAccount(sampleAccountName, chainId, (v) => set(v))
+
+    const interval = setInterval(
+        async () => loadAccount(sampleAccountName, chainId, (v) => set(v)),
+        1000
+    )
+
     return () => {
         clearInterval(interval)
     }
 })
 
-let internalSampledCpuCost = 0
-export async function getSampledCpuCost(set: (v: number) => void) {
-    loadAccount(Name.from('teamgreymass'), chainId, (v) => {
-        if (v.account) {
-            internalSampledCpuCost =
-                v.account.cpu_limit.max.value / v.account.total_resources.cpu_weight.value / 1000
-            console.log(JSON.parse(JSON.stringify(v.account)))
-            console.log('limit ', JSON.stringify(v.account.cpu_limit))
-            console.log('weight', JSON.stringify(v.account.total_resources.cpu_weight))
-            set(internalSampledCpuCost)
-        }
-    })
-}
-
-export const sampledNetCost = readable(0, (set) => {
-    // Set value upon initial load
-    getSampledNetCost(set)
-    // Set interval to reload the price every 10 seconds
-    const interval = setInterval(async () => {
-        getSampledNetCost(set)
-    }, 1000)
-    // Return the stop function to clear the interval
-    return () => {
-        clearInterval(interval)
+// The derived value of CPU Costs (in milliseconds) from the sample account
+export const sampledCpuCost = derived(sampleAccountResponse, ($sampleAccountResponse) => {
+    if ($sampleAccountResponse.account) {
+        return (
+            $sampleAccountResponse.account.cpu_limit.max.value /
+            $sampleAccountResponse.account.total_resources.cpu_weight.value /
+            1000
+        )
     }
+    return 0
 })
 
-export async function getSampledNetCost(set: (v: number) => void) {
-    loadAccount(Name.from('teamgreymass'), chainId, (v) => {
-        if (v.account) {
-            set(v.account.net_limit.max.value / v.account.total_resources.net_weight.value)
-        }
-    })
-}
+// The derived value of NET Costs (in bytes) from the sample account
+export const sampledNetCost = derived(sampleAccountResponse, ($sampleAccountResponse) => {
+    if ($sampleAccountResponse.account) {
+        return (
+            $sampleAccountResponse.account.net_limit.max.value /
+            $sampleAccountResponse.account.total_resources.net_weight.value
+        )
+    }
+    return 0
+})
 
 // The price for 1ms of CPU from the PowerUp system
 export const powerupPrice = readable(0, (set) => {
