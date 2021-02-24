@@ -4,8 +4,11 @@
         sampleAccountResponse,
         sampledCpuCost,
         sampledNetCost,
+        statePowerUp,
+        powerupCapacity,
         powerupPrice,
         resourcesShifted,
+        rexCapacity,
         rexPrice,
     } from '~/resources'
     import {activeBlockchain, currentAccount} from '~/store'
@@ -126,7 +129,8 @@
             border: 1px solid black;
             font-family: Monaco, 'Courier New', Courier, monospace;
             padding: 0.5em 1em;
-            &:nth-child(2) {
+            &:nth-child(2),
+            &:nth-child(3) {
                 text-align: right;
             }
         }
@@ -139,23 +143,41 @@
             <tr>
                 <th>System</th>
                 <th>% of Resources</th>
+                <th>% Reserved</th>
                 <th>Cost</th>
             </tr>
         </thead>
         <tr>
             <td>REX</td>
-            <td>{$resourcesShifted.toFixed(4)}%</td>
-            <td>{$rexPrice.toFixed(4)} EOS per millisecond</td>
+            {#if $resourcesShifted}
+                <td>{$resourcesShifted.toFixed(4)}%</td>
+            {/if}
+            {#if $rexCapacity}
+                <td>{($rexCapacity * 100).toFixed(2)}%</td>
+            {/if}
+            {#if $rexPrice}
+                <td>{$rexPrice.toFixed(4)} EOS for 1ms</td>
+            {/if}
         </tr>
         <tr>
             <td>PowerUp</td>
-            <td>{(100 - $resourcesShifted).toFixed(4)}%</td>
-            <td>{$powerupPrice.toFixed(4)} EOS per millisecond</td>
+            {#if $resourcesShifted}
+                <td>{(100 - $resourcesShifted).toFixed(4)}%</td>
+            {/if}
+            {#if $powerupCapacity}
+                <td>{($powerupCapacity * 100).toFixed(2)}%</td>
+            {/if}
+            {#if $powerupPrice}
+                <td>{$powerupPrice.toFixed(4)} EOS for 1ms</td>
+            {/if}
         </tr>
     </table>
     <p>MS/Day: {mspd}</p>
     {#if $sampleAccountResponse.account}
         <p>Sample Account Age: {$sampleAccountResponse.account.head_block_time}</p>
+    {/if}
+    {#if $statePowerUp}
+        <p>PowerUp State: {JSON.stringify($statePowerUp)}</p>
     {/if}
     <p>Sampled CPU Cost: {$sampledCpuCost}</p>
     <p>Sampled NET Cost: {$sampledNetCost}</p>
