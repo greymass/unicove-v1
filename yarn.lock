@@ -828,9 +828,9 @@
     strip-json-comments "^3.1.1"
 
 "@greymass/eosio@^0.2.3", "@greymass/eosio@^0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@greymass/eosio/-/eosio-0.2.5.tgz#fef071e4eaa09620c959b81dbec372fb1495b1a9"
-  integrity sha512-YbvfinU0sdmHT8vtaI8ddzdqN5D2gBqRB8YPz5OmKXFjXRmdEcSw1PxlWYWxEBaOTt1ij4wG7hghD83NALO28g==
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@greymass/eosio/-/eosio-0.2.7.tgz#a7d58f5fabaf13343b1f62dc8ad50c6fa896c72d"
+  integrity sha512-EbAq05C3YQY5dfgygKEBz6ZGJ9QR2tG3BheN+6HkQJ4aLaCcMuFa8o4KE8Ly6Ckip3AOFteFCe18YhUrDfdOtQ==
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -1243,9 +1243,9 @@ alphanum-sort@^1.0.0:
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
 anchor-link-browser-transport@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.0.0.tgz#f5e5b0c7bc7ef4873b33bc0e6045188cc31097bd"
-  integrity sha512-zwjw8SQMD+nQeN9NYgW4tlRMc9I2ckeI93xG+e6sEPc507KzdK/DQqCW+OClegmpXgP6MpF5t56Kq0PPFCmZlw==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.0.1.tgz#c36ab2ce0cf995aa33113a07341ef35500386360"
+  integrity sha512-YZoP2HV/Uh3CT2wva3EWMJMngcHoSj8S19yblgcHJoyHpqro08smRoPW9iDxifUIEEPsYpmk2F6x8BeRjsU6Ww==
   dependencies:
     tslib "^2.0.3"
 
@@ -2498,9 +2498,9 @@ entities@^2.0.0:
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
 
 eosio-signing-request@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/eosio-signing-request/-/eosio-signing-request-2.0.1.tgz#42cf32f51b79b5a0b495442a6a8f7e82b415a88e"
-  integrity sha512-dzMaQ9Zq16kJs1xI4NDe4zgg8+W+FKi6E3FYBJRBJW+3ypHDaCKCD7z6YN53E8SscP6fIY/M48lVsAA2Rtq6EA==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/eosio-signing-request/-/eosio-signing-request-2.1.0.tgz#9bdb5708ac58056d464e540e9ab6d0a6772a8211"
+  integrity sha512-96pUSg5ZH4ypc1IQTcXr5U773Ne0fxnBl3dLA1l2zikLTfDurhmvOpdUKpcdzrbSTB7pnpUQ/eFVyXFBnfFtew==
   dependencies:
     "@greymass/eosio" "^0.2.3"
     tslib "^2.0.3"
