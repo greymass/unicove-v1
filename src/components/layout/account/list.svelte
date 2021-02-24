@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {ChainId} from 'anchor-link'
     import type {SessionLike} from '~/auth'
     import {sessionEquals, login, logout} from '~/auth'
     import {chainConfig} from '~/config'
@@ -31,7 +32,7 @@
 
     const groupings: SessionGroup[] = chainIds
         .map((chainId) => {
-            const config = chainConfig(chainId)
+            const config = chainConfig(ChainId.from(chainId))
             return {
                 chainId,
                 name: config.name,

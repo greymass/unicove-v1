@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {Route, active, router} from 'tinro'
+    import {Route, active, meta} from 'tinro'
 
     export let home: string | undefined = undefined
     export let routes: any[] = []
 
-    const meta = router.meta()
+    const metadata = meta()
 </script>
 
 <style type="scss">
@@ -47,12 +47,14 @@
         <ul>
             {#if home}
                 <li>
-                    <a href={$meta.pattern} class:active={$meta.url === $meta.pattern}>{home}</a>
+                    <a href={$metadata.pattern} class:active={$metadata.url === $metadata.pattern}
+                        >{home}</a
+                    >
                 </li>
             {/if}
             {#each routes as route}
                 <li>
-                    <a href={`${$meta.pattern}/${route.path || ''}`} use:active>{route.name}</a>
+                    <a href={`${$metadata.pattern}/${route.path || ''}`} use:active>{route.name}</a>
                 </li>
             {/each}
         </ul>
