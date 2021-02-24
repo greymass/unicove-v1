@@ -3,6 +3,7 @@ import {derived, readable, writable} from 'svelte/store'
 import type {ChainId} from 'anchor-link'
 import {Asset, Name} from '@greymass/eosio'
 
+import {PowerUpState} from '~/abi-types'
 import {activeBlockchain} from '~/store'
 
 import {getClient} from './api-client'
@@ -20,8 +21,8 @@ export const bpd = bps * 60 * 60 * 24
 export const mspd = mspb * bpd
 // resources shifted to powerup
 let shifted: number = 0
-export let resourcesShifted = writable<number>(0)
-resourcesShifted.subscribe((value) => (shifted = value))
+// export let resourcesShifted = writable<number>(0)
+// resourcesShifted.subscribe((value) => (shifted = value))
 
 // An active account on the network to use for usage sampling purposes
 export const sampleAccountName: Name = Name.from('teamgreymass')
@@ -63,130 +64,81 @@ export const sampledNetCost = derived(sampleAccountResponse, ($sampleAccountResp
     return 0
 })
 
-// The price for 1ms of CPU from the PowerUp system
-export const powerupPrice = readable(0, (set) => {
-    // Set value upon initial load
-    getPowerupPrice(chainId).then((price) => set(price))
-    // Set interval to reload the price every 15 seconds
-    const interval = setInterval(async () => {
-        set(await getPowerupPrice(chainId))
-    }, 15000)
-    // Return the stop function to clear the interval
+export const getPowerUpState = (set: (v: any) => void) =>
+    getClient(chainId)
+        .v1.chain.get_table_rows({
+            code: 'eosio',
+            scope: '',
+            table: 'powup.state',
+            type: PowerUpState,
+        })
+        .then((results) => {
+            console.log(results)
+            set(results.rows[0])
+        })
+
+// The state of the PowerUp system
+export const statePowerUp = readable<PowerUpState | undefined>(undefined, (set) => {
+    getPowerUpState(set)
+    const interval = setInterval(() => getPowerUpState(set), 15000)
     return () => {
         clearInterval(interval)
     }
 })
 
-export async function getPowerupPrice(chainId: ChainId): Promise<number> {
-    const results = await getClient(chainId).v1.chain.get_table_rows({
-        code: 'eosio',
-        scope: '',
-        table: 'powup.state',
-    })
-    console.log(results.rows[0].cpu)
-    if (results.rows && results.rows.length) {
-        const [row] = results.rows
-        const {
-            adjusted_utilization,
-            exponent,
-            max_price,
-            min_price,
-            target_weight_ratio,
-            utilization,
-            weight,
-            weight_ratio,
-        } = row.cpu
-
-        // Update the store with the amount of resources remaining in the legacy system
-        resourcesShifted.set(weight_ratio / target_weight_ratio)
-        console.log('shifted', shifted)
-
-        // Rent 1ms of the networks CPU
-        const msToRent = 1
-
-        // exp = 2
-        const exp = Number(exponent)
-        console.log('exp', exp)
-
-        // min = 25000000
-        const min = Asset.from(min_price).units.toNumber()
-        console.log('min', min)
-
-        // max = 750000000
-        const max = Asset.from(max_price).units.toNumber()
-        console.log('max', max)
-
-        // coefficient = 362500000
-        const coefficient = (max - min) / exp
-        console.log('coefficient', coefficient)
-
-        console.log('utilization', utilization)
-        console.log('weight', weight)
-
-        // Milliseconds available per day available in PowerUp
-        // mspd = 34560000
-        // shifted = 0.010015341213459587
-        // mspdAvailable = 346130.1923371633
-        const mspdAvailable = mspd * (1 - shifted / 100)
-        console.log('mspd', mspd)
-        console.log('mspdAvailable', mspdAvailable)
-
-        // msToRent = 1
-        // mspdAvailable = 346130.1923371633
-        // toRent = 0.000002889086309540735
-        const toRent = msToRent / mspdAvailable
-        console.log('toRent', toRent)
-
-        // Current network utilization
-        // utilizationBefore = 0.0005025088826527105
-        const utilizationBefore = Math.max(utilization, adjusted_utilization) / Number(weight)
-        console.log('utilizationBefore', utilizationBefore)
-
-        // Utilization after this rental
-        // utilizationAfter = 0.0005053979689622512
-        const utilizationAfter = utilizationBefore + toRent
-        console.log('utilizationAfterr', utilizationAfter)
-
-        // Price of Rental
-        // price = 73.2827323222997
-        const price =
-            min * (utilizationAfter - utilizationBefore) +
-            coefficient *
-                (Math.pow(utilizationAfter, exponent) - Math.pow(utilizationBefore, exponent))
-
-        /**
-         * price = 25000000 * (0.0005053979689622512 - 0.0005025088826527105) + 362500000 * ((0.0005053979689622512 ^ 2) - (0.0005025088826527105 ^ 2))
-         *
-         * ---
-         *
-         *  25000000 * (0.0005053979689622512 - 0.0005025088826527105) +
-         *  362500000 *
-         *      ((0.0005053979689622512 ^ 2) - (0.0005025088826527105 ^ 2))
-         */
-
-        console.log('price', price)
-
-        // Price in Asset format
-        // price = 0.00732827 EOS
-
-        /* 
-            weight / (
-                min_price + (
-                    max_price - min_price
-                ) * (
-                    max(utilization, adjusted_utilization) / weight
-                )
-                ^ (
-                    exponent - 1
-                )
-            )
-        */
-
-        // Divide by 10000 for
-        return price / 10000
+export const resourcesShifted = derived(statePowerUp, ($statePowerUp) => {
+    if ($statePowerUp) {
+        return (
+            $statePowerUp.cpu.weight_ratio.toNumber() /
+            $statePowerUp.cpu.target_weight_ratio.toNumber()
+        )
     }
     return 0
-}
+})
+
+export const powerupPrice = derived(
+    [statePowerUp, resourcesShifted],
+    ([$statePowerUp, $resourcesShifted]) => {
+        if ($statePowerUp && $resourcesShifted) {
+            const {
+                adjusted_utilization,
+                exponent,
+                max_price,
+                min_price,
+                utilization,
+                weight,
+            } = $statePowerUp.cpu
+
+            const exp = Number(exponent)
+            const min = Number(min_price.units)
+            const max = Number(max_price.units)
+            const coefficient = (max - min) / exp
+
+            // Rent 1ms of the networks CPU
+            const msToRent = 1
+
+            // Milliseconds available per day available in PowerUp (factoring in shift)
+            const mspdAvailable = mspd * (1 - $resourcesShifted / 100)
+            const percentToRent = msToRent / mspdAvailable
+
+            // PowerUp System utilization before rental
+            const utilizationBefore =
+                Math.max(Number(utilization), Number(adjusted_utilization)) / Number(weight)
+
+            // PowerUp System utilization after rental
+            const utilizationAfter = utilizationBefore + percentToRent
+
+            // Estimated price of this rental from PowerUp
+            const price =
+                min * (utilizationAfter - utilizationBefore) +
+                coefficient * (Math.pow(utilizationAfter, exp) - Math.pow(utilizationBefore, exp))
+
+            // Divide by 10000 for 4,EOS precision
+            return price / 10000
+        }
+        return 0
+    }
+)
 
 // The price for 1ms of CPU from the REX system
 export const rexPrice = readable(0, (set) => {
