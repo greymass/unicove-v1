@@ -1,9 +1,9 @@
 import {AccountResponse, loadAccount} from '~/account-cache'
-import {derived, readable, writable} from 'svelte/store'
+import {derived, readable} from 'svelte/store'
 import type {ChainId} from 'anchor-link'
-import {Asset, Name} from '@greymass/eosio'
+import {Name} from '@greymass/eosio'
 
-import {PowerUpState} from '~/abi-types'
+import {PowerUpState, REXState} from '~/abi-types'
 import {activeBlockchain} from '~/store'
 
 import {getClient} from './api-client'
@@ -19,11 +19,6 @@ export const bps = 2
 export const bpd = bps * 60 * 60 * 24
 // ms per day
 export const mspd = mspb * bpd
-// resources shifted to powerup
-let shifted: number = 0
-// export let resourcesShifted = writable<number>(0)
-// resourcesShifted.subscribe((value) => (shifted = value))
-
 // An active account on the network to use for usage sampling purposes
 export const sampleAccountName: Name = Name.from('teamgreymass')
 
@@ -72,10 +67,7 @@ export const getPowerUpState = (set: (v: any) => void) =>
             table: 'powup.state',
             type: PowerUpState,
         })
-        .then((results) => {
-            console.log(results)
-            set(results.rows[0])
-        })
+        .then((results) => set(results.rows[0]))
 
 // The state of the PowerUp system
 export const statePowerUp = readable<PowerUpState | undefined>(undefined, (set) => {
@@ -86,6 +78,16 @@ export const statePowerUp = readable<PowerUpState | undefined>(undefined, (set) 
     }
 })
 
+// The currently utilized capacity of PowerUp resources
+export const powerupCapacity = derived(statePowerUp, ($statePowerUp) => {
+    if ($statePowerUp) {
+        const {adjusted_utilization, utilization, weight} = $statePowerUp.cpu
+        return Math.max(Number(utilization), Number(adjusted_utilization)) / Number(weight)
+    }
+    return 0
+})
+
+// The amount of resources shifted away from REX/Staking into PowerUp
 export const resourcesShifted = derived(statePowerUp, ($statePowerUp) => {
     if ($statePowerUp) {
         return (
@@ -96,6 +98,7 @@ export const resourcesShifted = derived(statePowerUp, ($statePowerUp) => {
     return 0
 })
 
+// The price for 1ms of CPU in the PowerUp system
 export const powerupPrice = derived(
     [statePowerUp, resourcesShifted],
     ([$statePowerUp, $resourcesShifted]) => {
@@ -140,33 +143,46 @@ export const powerupPrice = derived(
     }
 )
 
-// The price for 1ms of CPU from the REX system
-export const rexPrice = readable(0, (set) => {
-    // Set value upon initial load
-    getRexPrice(chainId).then((price) => set(price))
-    // Set interval to reload the price every 15 seconds
-    const interval = setInterval(async () => {
-        set(await getRexPrice(chainId))
-    }, 15000)
-    // Return the stop function to clear the interval
+export const getREXState = (set: (v: any) => void) =>
+    getClient(chainId)
+        .v1.chain.get_table_rows({
+            code: 'eosio',
+            scope: 'eosio',
+            table: 'rexpool',
+            type: REXState,
+        })
+        .then((results) => set(results.rows[0]))
+
+// The state of the REX system
+export const stateREX = readable<REXState | undefined>(undefined, (set) => {
+    getREXState(set)
+    const interval = setInterval(() => getREXState(set), 15000)
     return () => {
         clearInterval(interval)
     }
 })
 
-export async function getRexPrice(chainId: ChainId): Promise<number> {
-    const results = await getClient(chainId).v1.chain.get_table_rows({
-        code: 'eosio',
-        scope: 'eosio',
-        table: 'rexpool',
-    })
-    if (results.rows) {
-        const [row] = results.rows
-        const totalRent = Asset.from(row.total_rent)
-        const totalUnlent = Asset.from(row.total_unlent)
-        const tokens = 1
-        const msPerToken = (tokens / (totalRent.value / totalUnlent.value)) * internalSampledCpuCost
-        return tokens / msPerToken
+// The currently utilized capacity of REX resources
+export const rexCapacity = derived(stateREX, ($stateREX) => {
+    if ($stateREX) {
+        return Number($stateREX.total_lent.units) / Number($stateREX.total_lendable.units)
     }
     return 0
-}
+})
+
+// The price for 1ms of CPU in the PowerUp system
+export const rexPrice = derived(
+    [sampledCpuCost, stateREX, resourcesShifted],
+    ([$sampledCpuCost, $stateREX, $resourcesShifted]) => {
+        if ($stateREX && $resourcesShifted) {
+            const totalRent = $stateREX.total_rent
+            const totalUnlent = $stateREX.total_unlent
+            const tokens = 1
+            const msPerToken =
+                (tokens / (totalRent.value / totalUnlent.value)) *
+                $sampledCpuCost *
+                ($resourcesShifted / 100)
+            return tokens / msPerToken
+        }
+    }
+)
