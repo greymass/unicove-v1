@@ -134,7 +134,11 @@
                         $activeBlockchain.coreTokenSymbol
                     )
                     netToReceive = Asset.fromFloat(0, $activeBlockchain.coreTokenSymbol)
-                    estimatedTransfers = '0'
+                    const resourceCost =
+                        sampleAccount.cpu_limit.max.value /
+                        sampleAccount.total_resources.cpu_weight.value
+                    console.log('resourceCost')
+                    estimatedTransfers = ((resourceCost * cpuToReceive.value) / 200).toFixed(1)
                 }
             }
         }

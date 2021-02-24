@@ -1,8 +1,8 @@
 <script lang="ts">
     import type {API, LinkSession} from 'anchor-link'
 
-    import {activeBlockchain, activeSession} from '../../store'
-    import {ChainFeatures} from '../../config'
+    import {activeBlockchain, activeSession} from '~/store'
+    import {ChainFeatures} from '~/config'
 
     let account: API.v1.AccountObject
 
