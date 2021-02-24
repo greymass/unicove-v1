@@ -174,7 +174,7 @@ export const rexCapacity = derived(stateREX, ($stateREX) => {
 export const rexPrice = derived(
     [sampledCpuCost, stateREX, resourcesShifted],
     ([$sampledCpuCost, $stateREX, $resourcesShifted]) => {
-        if ($stateREX && $resourcesShifted) {
+        if ($sampledCpuCost && $stateREX && $resourcesShifted) {
             const totalRent = $stateREX.total_rent
             const totalUnlent = $stateREX.total_unlent
             const tokens = 1
@@ -184,5 +184,6 @@ export const rexPrice = derived(
                 ($resourcesShifted / 100)
             return tokens / msPerToken
         }
+        return 0
     }
 )
