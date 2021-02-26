@@ -61,21 +61,21 @@
 <Form>
     {#if activeBlockchain.id === 'fio'}
         <FieldContainer
-          label="To"
-          secondLabel="Recipient"
-          placeholder="select"
-          valid={toAddressValid}
-          value={toAddress}
+            label="To"
+            secondLabel="Recipient"
+            placeholder="select"
+            valid={toAddressValid}
+            value={toAddress}
         >
             <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressValid} />
         </FieldContainer>
     {:else}
         <FieldContainer
-          label="To"
-          secondLabel="Recipient"
-          placeholder="select"
-          valid={toAccountValid}
-          value={toAccount}
+            label="To"
+            secondLabel="Recipient"
+            placeholder="select"
+            valid={toAccountValid}
+            value={toAccount}
         >
             <InputAccount
                 name="to"
@@ -97,7 +97,14 @@
     </FieldContainer>
 
     {#if activeBlockchain.id !== 'fio'}
-        <FieldContainer label="Memo" secondLabel="(Optional)" placeholder="Add" value={memo} valid optional>
+        <FieldContainer
+            label="Memo"
+            secondLabel="(Optional)"
+            placeholder="Add"
+            value={memo}
+            valid
+            optional
+        >
             <Input name="memo" bind:value={memo} />
         </FieldContainer>
     {/if}

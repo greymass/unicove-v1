@@ -44,21 +44,21 @@
 <div class="container">
     {#if activeBlockchain.id === 'fio'}
         <FieldContainer
-          label="To"
-          secondLabel="Recipient"
-          placeholder="select"
-          valid={toAddressValid}
-          value={toAddress}
+            label="To"
+            secondLabel="Recipient"
+            placeholder="select"
+            valid={toAddressValid}
+            value={toAddress}
         >
             <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressValid} />
         </FieldContainer>
     {:else}
         <FieldContainer
-          label="To"
-          secondLabel="Recipient"
-          placeholder="select"
-          valid={toAccountValid}
-          value={toAccount}
+            label="To"
+            secondLabel="Recipient"
+            placeholder="select"
+            valid={toAccountValid}
+            value={toAccount}
         >
             <InputAccount
                 name="to"
@@ -79,5 +79,7 @@
             {availableBalance}
         />
     </div>
-    <Button size="large" disabled={!amountValid} on:action={() => (step = 'confirm')}>Continue</Button>
+    <Button size="large" disabled={!amountValid} on:action={() => (step = 'confirm')}
+        >Continue</Button
+    >
 </div>

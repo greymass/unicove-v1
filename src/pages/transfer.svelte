@@ -27,7 +27,7 @@
     let activeSessionObject: LinkSession
 
     $: {
-      activeSessionObject = $activeSession!
+        activeSessionObject = $activeSession!
     }
 
     let step: string = 'recipient'
@@ -42,18 +42,18 @@
     }
 
     function resetData() {
-      amount = ''
-      toAccount = ''
-      toAddress = ''
-      memo = ''
-      step = 'recipient'
+        amount = ''
+        toAccount = ''
+        toAddress = ''
+        memo = ''
+        step = 'recipient'
     }
 
     $: if ($activeBlockchain.id === 'fio') {
         // Adding delay to give time for $activeSession to catch up
         setTimeout(() => {
-          fetchFioData()
-          resetData()
+            fetchFioData()
+            resetData()
         }, 200)
     }
 
@@ -112,12 +112,13 @@
 
         {#if step === 'amount'}
             <TransferAmount
-              activeBlockchain={$activeBlockchain}
-              availableBalance={balanceValue}
-              bind:toAddress
-              bind:toAccount
-              bind:amount
-              bind:step
+                activeBlockchain={$activeBlockchain}
+                activeSession={activeSessionObject}
+                availableBalance={balanceValue}
+                bind:toAddress
+                bind:toAccount
+                bind:amount
+                bind:step
             />
         {/if}
 
