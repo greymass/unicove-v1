@@ -24,7 +24,11 @@
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let balanceValue: number = 0
 
-    let activeSessionObject: LinkSession = $activeSession!
+    let activeSessionObject: LinkSession
+
+    $: {
+      activeSessionObject = $activeSession!
+    }
 
     let step: string = 'recipient'
 
