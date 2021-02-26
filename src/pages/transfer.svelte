@@ -93,7 +93,14 @@
         {/if}
 
         {#if step === 'amount'}
-            <TransferAmount availableBalance={balanceValue} bind:amount bind:step />
+            <TransferAmount
+              activeBlockchain={$activeBlockchain}
+              availableBalance={balanceValue}
+              bind:toAddress
+              bind:toAccount
+              bind:amount
+              bind:step
+            />
         {/if}
 
         {#if step === 'confirm'}

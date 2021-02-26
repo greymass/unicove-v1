@@ -25,6 +25,7 @@
     .container {
         display: flex;
         flex-direction: column;
+        border-top: 1px solid var(--divider-grey);
 
         .field-container {
             margin: 20px 0;
