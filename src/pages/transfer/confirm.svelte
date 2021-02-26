@@ -1,8 +1,9 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
-    import type {Asset, LinkSession} from 'anchor-link'
+    import {Asset, UInt64} from 'anchor-link'
+    import type {ABISerializable, LinkSession} from 'anchor-link'
 
-    import {transfer} from '../../services/eosio/methods'
+    import {FIOTransfer, Transfer} from '~/abi-types'
 
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
@@ -22,7 +23,7 @@
     export let quantity: Asset | undefined = undefined
     export let memo: string | undefined = undefined
     export let availableBalance: number | undefined = undefined
-    export let txFee: Asset | undefined = undefined
+    export let txFee: Asset
     export let step: string
 
     let toAccountValid: boolean = false
@@ -31,22 +32,48 @@
 
     let displaySuccessTx: string | undefined = undefined
 
-    async function handleTransfer() {
-        const transferData: any = await transfer(activeBlockchain, activeSession, {
-            toAddress,
-            toAccount,
+    function getActionData() {
+        let data: ABISerializable = Transfer.from({
+            from: activeSession!.auth.actor,
+            to: toAccount,
             quantity,
             memo,
-            txFee,
         })
 
-        amount = ''
-        toAccount = ''
-        toAddress = ''
-        memo = ''
-        displaySuccessTx = transferData?.payload?.tx
+        switch (String(activeBlockchain.coreTokenContract)) {
+            case 'fio.token': {
+                data = FIOTransfer.from({
+                    payee_public_key: toAddress,
+                    amount: quantity && quantity.units,
+                    max_fee: txFee.units,
+                    actor: activeSession!.auth.actor,
+                    tpid: 'tpid@greymass',
+                })
+            }
+        }
+        return data
+    }
 
-        step = 'amount'
+    async function handleTransfer() {
+        activeSession!
+            .transact({
+                action: {
+                    authorization: [activeSession!.auth],
+                    account: activeBlockchain.coreTokenContract,
+                    name: activeBlockchain.coreTokenTransfer,
+                    data: getActionData(),
+                },
+            })
+            .then((result) => {
+                console.log('done!', result)
+                amount = ''
+                toAccount = ''
+                toAddress = ''
+                memo = ''
+                displaySuccessTx = transferData?.payload?.tx
+
+                step = 'amount'
+            })
     }
 </script>
 
