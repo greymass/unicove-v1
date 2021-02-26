@@ -1,12 +1,10 @@
 <script lang="ts">
+    import {Asset} from '@greymass/eosio'
     import {
-        mspd,
-        sampleAccountResponse,
-        sampledCpuCost,
-        sampledNetCost,
-        statePowerUp,
+        msToRent,
         powerupCapacity,
         powerupPrice,
+        powerupPrice2,
         resourcesShifted,
         rexCapacity,
         rexPrice,
@@ -144,43 +142,51 @@
                 <th>System</th>
                 <th>% of Resources</th>
                 <th>% Reserved</th>
-                <th>Cost</th>
+                <th>1-day cost</th>
+                <th>30-day cost</th>
             </tr>
         </thead>
         <tr>
-            <td>REX</td>
+            <td>REX (+Staking)</td>
             {#if $resourcesShifted}
                 <td>{$resourcesShifted.toFixed(4)}%</td>
             {/if}
             {#if $rexCapacity}
-                <td>{($rexCapacity * 100).toFixed(2)}%</td>
+                <td>{($rexCapacity * 100).toFixed(4)}%</td>
             {/if}
             {#if $rexPrice}
-                <td>{$rexPrice.toFixed(4)} EOS for 1ms</td>
+                <td>{$rexPrice.toFixed(4)} EOS/{$msToRent}ms</td>
+                <td>{$rexPrice.toFixed(4)} EOS/{$msToRent}ms</td>
             {/if}
         </tr>
         <tr>
-            <td>PowerUp</td>
+            <td>PowerUp - Old Math</td>
             {#if $resourcesShifted}
                 <td>{(100 - $resourcesShifted).toFixed(4)}%</td>
             {/if}
             {#if $powerupCapacity}
-                <td>{($powerupCapacity * 100).toFixed(2)}%</td>
+                <td>{($powerupCapacity * 100).toFixed(4)}%</td>
             {/if}
             {#if $powerupPrice}
-                <td>{$powerupPrice.toFixed(4)} EOS for 1ms</td>
+                <td>{$powerupPrice}/{$msToRent}ms</td>
+                <td>{Asset.from($powerupPrice.value * 30, $powerupPrice.symbol)}/{$msToRent}ms</td>
+            {/if}
+        </tr>
+        <tr>
+            <td>PowerUp - New Math</td>
+            {#if $resourcesShifted}
+                <td>{(100 - $resourcesShifted).toFixed(4)}%</td>
+            {/if}
+            {#if $powerupCapacity}
+                <td>{($powerupCapacity * 100).toFixed(4)}%</td>
+            {/if}
+            {#if $powerupPrice2}
+                <td>{$powerupPrice2}/{$msToRent}ms</td>
+                <td>{Asset.from($powerupPrice2.value * 30, $powerupPrice2.symbol)}/{$msToRent}ms</td
+                >
             {/if}
         </tr>
     </table>
-    <p>MS/Day: {mspd}</p>
-    {#if $sampleAccountResponse.account}
-        <p>Sample Account Age: {$sampleAccountResponse.account.head_block_time}</p>
-    {/if}
-    {#if $statePowerUp}
-        <p>PowerUp State: {JSON.stringify($statePowerUp)}</p>
-    {/if}
-    <p>Sampled CPU Cost: {$sampledCpuCost}</p>
-    <p>Sampled NET Cost: {$sampledNetCost}</p>
     <CPU {account} />
     <RAM {account} />
     <Segment>

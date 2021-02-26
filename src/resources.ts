@@ -1,7 +1,7 @@
 import {AccountResponse, loadAccount} from '~/account-cache'
-import {derived, readable} from 'svelte/store'
+import {derived, readable, writable} from 'svelte/store'
 import type {ChainId} from 'anchor-link'
-import {Name} from '@greymass/eosio'
+import {Asset, Name} from '@greymass/eosio'
 
 import {PowerUpState, REXState} from '~/abi-types'
 import {activeBlockchain} from '~/store'
@@ -72,7 +72,7 @@ export const getPowerUpState = (set: (v: any) => void) =>
 // The state of the PowerUp system
 export const statePowerUp = readable<PowerUpState | undefined>(undefined, (set) => {
     getPowerUpState(set)
-    const interval = setInterval(() => getPowerUpState(set), 15000)
+    const interval = setInterval(() => getPowerUpState(set), 30000)
     return () => {
         clearInterval(interval)
     }
@@ -81,34 +81,123 @@ export const statePowerUp = readable<PowerUpState | undefined>(undefined, (set) 
 // The currently utilized capacity of PowerUp resources
 export const powerupCapacity = derived(statePowerUp, ($statePowerUp) => {
     if ($statePowerUp) {
-        const {adjusted_utilization, utilization, weight} = $statePowerUp.cpu
-        return Math.max(Number(utilization), Number(adjusted_utilization)) / Number(weight)
+        const {utilization, weight} = $statePowerUp.cpu
+        return Number(utilization) / Number(weight)
     }
     return 0
 })
+
+// The target weight for REX in the end of the transition (10^13 = 1% REX)
+export const resourcesShiftedREXTarget = Math.pow(10, 13)
 
 // The amount of resources shifted away from REX/Staking into PowerUp
 export const resourcesShifted = derived(statePowerUp, ($statePowerUp) => {
     if ($statePowerUp) {
-        return (
-            $statePowerUp.cpu.weight_ratio.toNumber() /
-            $statePowerUp.cpu.target_weight_ratio.toNumber()
-        )
+        return $statePowerUp.cpu.weight_ratio.toNumber() / resourcesShiftedREXTarget
     }
     return 0
 })
 
+// Rent 1ms of the networks CPU
+export const msToRent = writable<number>(1)
+
+export const powerupPrice2 = derived(
+    [msToRent, statePowerUp, resourcesShifted],
+    ([$msToRent, $statePowerUp, $resourcesShifted]) => {
+        if ($msToRent && $statePowerUp && $resourcesShifted) {
+            // Casting EOSIO types to usable formats for JS calculations
+            let adjusted_utilization: number = Number($statePowerUp.cpu.adjusted_utilization)
+            const decay_secs: number = Number($statePowerUp.cpu.decay_secs.value)
+            const exponent: number = Number($statePowerUp.cpu.exponent)
+            const max_price: number = $statePowerUp.cpu.max_price.value
+            const min_price: number = $statePowerUp.cpu.min_price.value
+            const utilization: number = Number($statePowerUp.cpu.utilization)
+            const utilization_timestamp: number = Number(
+                $statePowerUp.cpu.utilization_timestamp.value
+            )
+            const weight: number = Number($statePowerUp.cpu.weight)
+
+            // Milliseconds available per day available in PowerUp (factoring in shift)
+            const mspdAvailable = mspd * (1 - $resourcesShifted / 100)
+
+            // Percentage to rent
+            const percentToRent = $msToRent / mspdAvailable
+            const utilization_increase = weight * percentToRent
+
+            // If utilization is less than adjusted, calculate real time value
+            if (utilization < adjusted_utilization) {
+                // Create now & adjust JS timestamp to match EOSIO timestamp values
+                const now: number = Math.floor(Date.now() / 1000)
+                const diff: number = adjusted_utilization - utilization
+                let delta: number = Math.floor(
+                    diff * Math.exp(-(now - utilization_timestamp) / decay_secs)
+                )
+                delta = Math.min(Math.max(delta, 0), diff) // Clamp the delta
+                adjusted_utilization = utilization + delta
+            }
+
+            const price_integral_delta = (
+                start_utilization: number,
+                end_utilization: number
+            ): number => {
+                const coefficient = (max_price - min_price) / exponent
+                const start_u = start_utilization / weight
+                const end_u = end_utilization / weight
+                return (
+                    min_price * end_u -
+                    min_price * start_u +
+                    coefficient * Math.pow(end_u, exponent) -
+                    coefficient * Math.pow(start_u, exponent)
+                )
+            }
+
+            const price_function = (utilization: number): number => {
+                let price = min_price
+                const new_exponent = exponent - 1.0
+                if (new_exponent <= 0.0) {
+                    return max_price
+                } else {
+                    price += (max_price - min_price) * Math.pow(utilization / weight, new_exponent)
+                }
+                return price
+            }
+
+            let fee: number = 0.0
+            let start_utilization: number = utilization
+            const end_utilization: number = start_utilization + utilization_increase
+
+            if (start_utilization < adjusted_utilization) {
+                fee +=
+                    (price_function(adjusted_utilization) *
+                        Math.min(utilization_increase, adjusted_utilization - start_utilization)) /
+                    weight
+                start_utilization = adjusted_utilization
+            }
+
+            if (start_utilization < end_utilization) {
+                fee += price_integral_delta(start_utilization, end_utilization)
+            }
+
+            // Return the fee as an Asset
+            return Asset.fromUnits(Math.ceil(fee * 10000), '4,EOS')
+        }
+        return Asset.from(0, '4,EOS')
+    }
+)
+
 // The price for 1ms of CPU in the PowerUp system
 export const powerupPrice = derived(
-    [statePowerUp, resourcesShifted],
-    ([$statePowerUp, $resourcesShifted]) => {
+    [msToRent, statePowerUp, resourcesShifted],
+    ([$msToRent, $statePowerUp, $resourcesShifted]) => {
         if ($statePowerUp && $resourcesShifted) {
             const {
                 adjusted_utilization,
+                decay_secs,
                 exponent,
                 max_price,
                 min_price,
                 utilization,
+                utilization_timestamp,
                 weight,
             } = $statePowerUp.cpu
 
@@ -117,16 +206,24 @@ export const powerupPrice = derived(
             const max = Number(max_price.units)
             const coefficient = (max - min) / exp
 
-            // Rent 1ms of the networks CPU
-            const msToRent = 1
-
             // Milliseconds available per day available in PowerUp (factoring in shift)
             const mspdAvailable = mspd * (1 - $resourcesShifted / 100)
-            const percentToRent = msToRent / mspdAvailable
+            const percentToRent = $msToRent / mspdAvailable
 
-            // PowerUp System utilization before rental
-            const utilizationBefore =
+            // PowerUp System utilization before rental executes
+            let utilizationBefore =
                 Math.max(Number(utilization), Number(adjusted_utilization)) / Number(weight)
+
+            // If utilization is less than adjusted, calculate real time value
+            if (Number(utilization) < Number(adjusted_utilization)) {
+                const utilizationDiff = Number(adjusted_utilization) - Number(utilization)
+                const now: number = Date.now() / 1000 // Adjust JS timestamp to match EOSIO timestamp values
+                const then: number = Number(utilization_timestamp.value)
+                const decay: number = Number(decay_secs.value)
+                let utilizationDelta = utilizationDiff * Math.exp(-(now - then) / decay)
+                utilizationDelta = Math.min(Math.max(utilizationDelta, 0), utilizationDiff) // Clamp the delta
+                utilizationBefore = (Number(utilization) + utilizationDelta) / Number(weight)
+            }
 
             // PowerUp System utilization after rental
             const utilizationAfter = utilizationBefore + percentToRent
@@ -136,10 +233,10 @@ export const powerupPrice = derived(
                 min * (utilizationAfter - utilizationBefore) +
                 coefficient * (Math.pow(utilizationAfter, exp) - Math.pow(utilizationBefore, exp))
 
-            // Divide by 10000 for 4,EOS precision
-            return price / 10000
+            // Return the ceil of the price as an asset
+            return Asset.fromUnits(Math.ceil(price), '4,EOS')
         }
-        return 0
+        return Asset.fromUnits(0, '4,EOS')
     }
 )
 
@@ -156,7 +253,7 @@ export const getREXState = (set: (v: any) => void) =>
 // The state of the REX system
 export const stateREX = readable<REXState | undefined>(undefined, (set) => {
     getREXState(set)
-    const interval = setInterval(() => getREXState(set), 15000)
+    const interval = setInterval(() => getREXState(set), 30000)
     return () => {
         clearInterval(interval)
     }
@@ -172,9 +269,9 @@ export const rexCapacity = derived(stateREX, ($stateREX) => {
 
 // The price for 1ms of CPU in the REX system
 export const rexPrice = derived(
-    [sampledCpuCost, stateREX, resourcesShifted],
-    ([$sampledCpuCost, $stateREX, $resourcesShifted]) => {
-        if ($sampledCpuCost && $stateREX && $resourcesShifted) {
+    [msToRent, sampledCpuCost, stateREX, resourcesShifted],
+    ([$msToRent, $sampledCpuCost, $stateREX, $resourcesShifted]) => {
+        if ($msToRent && $sampledCpuCost && $stateREX && $resourcesShifted) {
             const totalRent = $stateREX.total_rent
             const totalUnlent = $stateREX.total_unlent
             const tokens = 1
@@ -182,7 +279,7 @@ export const rexPrice = derived(
                 (tokens / (totalRent.value / totalUnlent.value)) *
                 $sampledCpuCost *
                 ($resourcesShifted / 100)
-            return tokens / msPerToken
+            return (tokens / msPerToken) * $msToRent
         }
         return 0
     }
