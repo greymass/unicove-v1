@@ -29,16 +29,16 @@
     let step: string = 'recipient'
 
     $: if ($activeBlockchain.id === 'fio') {
-      fetchFioData()
+        fetchFioData()
     }
 
     function fetchFioData() {
-      loadFee($activeBlockchain, activeSessionObject).then((fee) => {
-          txFee = fee
-      })
-      loadBalance($activeBlockchain, activeSessionObject).then((assets) => {
-          balance = assets[0]
-      })
+        loadFee($activeBlockchain, activeSessionObject).then((fee) => {
+            txFee = fee
+        })
+        loadBalance($activeBlockchain, activeSessionObject).then((assets) => {
+            balance = assets[0]
+        })
     }
 
     $: if ($activeBlockchain.id !== 'fio') {
