@@ -1,17 +1,27 @@
 <script lang="ts">
+    import type {ChainConfig} from '~/config'
+    import type {LinkSession} from 'anchor-link'
+
     import InputAsset from '~/components/elements/input/asset.svelte'
+    import InputAddress from '~/components/elements/input/address.svelte'
+    import InputAccount from '~/components/elements/input/account.svelte'
     import Button from '~/components/elements/button.svelte'
+    import FieldContainer from './fieldContainer.svelte'
 
     export let amount: string | undefined = undefined
+    export let toAddress: string | undefined = undefined
+    export let toAccount: string | undefined = undefined
     export let availableBalance: number | undefined = undefined
+    export let activeBlockchain: ChainConfig
+    export let activeSession: LinkSession
     export let step: string | undefined = undefined
 
-    let valid: boolean = false
+    let toAccountValid: boolean = false
+    let toAddressValid: boolean = false
+    let amountValid: boolean = false
 
     function handleKeydown(event: any) {
-        console.log('handleKeyDown')
-        console.log({event})
-        if (valid && event.key === 'Enter') {
+        if (amountValid && event.key === 'Enter') {
             step = 'confirm'
         }
     }
@@ -21,6 +31,7 @@
     .container {
         display: flex;
         flex-direction: column;
+        border-top: 1px solid var(--divider-grey);
 
         .field-container {
             margin: 20px 0;
@@ -31,9 +42,35 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="container">
+    {#if activeBlockchain.id === 'fio'}
+        <FieldContainer
+          label="To"
+          secondLabel="Recipient"
+          placeholder="select"
+          valid={toAddressValid}
+          value={toAddress}
+        >
+            <InputAddress name="to" bind:value={toAddress} bind:valid={toAddressValid} />
+        </FieldContainer>
+    {:else}
+        <FieldContainer
+          label="To"
+          secondLabel="Recipient"
+          placeholder="select"
+          valid={toAccountValid}
+          value={toAccount}
+        >
+            <InputAccount
+                name="to"
+                {activeSession}
+                bind:value={toAccount}
+                bind:valid={toAccountValid}
+            />
+        </FieldContainer>
+    {/if}
     <div class="field-container">
         <InputAsset
-            bind:valid
+            bind:valid={amountValid}
             bind:value={amount}
             focus
             fullWidth
@@ -42,5 +79,5 @@
             {availableBalance}
         />
     </div>
-    <Button size="large" disabled={!valid} on:action={() => (step = 'confirm')}>Continue</Button>
+    <Button size="large" disabled={!amountValid} on:action={() => (step = 'confirm')}>Continue</Button>
 </div>
