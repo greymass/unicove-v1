@@ -68,7 +68,7 @@
     }
 </style>
 
-<Page title="Create Transfer">
+<Page title="Transfer">
     <div class="container">
         <TransferBalance {balance} />
 
