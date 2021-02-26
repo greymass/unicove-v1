@@ -28,10 +28,6 @@
 
     let step: string = 'recipient'
 
-    $: if ($activeBlockchain.id === 'fio') {
-        fetchFioData()
-    }
-
     function fetchFioData() {
         loadFee($activeBlockchain, activeSessionObject).then((fee) => {
             txFee = fee
@@ -41,11 +37,29 @@
         })
     }
 
+    function resetData() {
+      amount = ''
+      toAccount = ''
+      toAddress = ''
+      memo = ''
+      step = 'recipient'
+    }
+
+    $: if ($activeBlockchain.id === 'fio') {
+        // Adding delay to give time for $activeSession to catch up
+        setTimeout(() => {
+          fetchFioData()
+          resetData()
+        }, 200)
+    }
+
     $: if ($activeBlockchain.id !== 'fio') {
         txFee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
         balance =
             $currentAccount?.core_liquid_balance ||
             Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+
+        resetData()
     }
 
     $: {
