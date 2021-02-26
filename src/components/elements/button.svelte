@@ -12,10 +12,6 @@
     export let disabled: boolean = false
     /** Type of button */
     export let formValidation: boolean = false
-    /** Icon within the button */
-    export let icon: string | undefined = undefined
-    /** Icon position, left or right */
-    export let iconPosition: string = 'right'
 
     // Get parent form disabled state (if exists)
     const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
