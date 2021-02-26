@@ -13,7 +13,7 @@
 
     import Page from '~/components/layout/page.svelte'
 
-    import {loadFee, loadBalance} from '../services/eosio/transfer/fio'
+    import {loadFee, loadBalance} from '~/services/eosio/transfer/fio'
 
     let memo: string = ''
     let quantity: Asset | undefined = undefined
