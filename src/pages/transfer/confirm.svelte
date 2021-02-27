@@ -3,6 +3,8 @@
     import {Asset, UInt64} from 'anchor-link'
     import type {ABISerializable, LinkSession} from 'anchor-link'
 
+    import {getContext} from 'svelte'
+
     import {FIOTransfer, Transfer} from '~/abi-types'
 
     import Button from '~/components/elements/button.svelte'

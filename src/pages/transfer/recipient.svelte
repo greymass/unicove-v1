@@ -2,6 +2,8 @@
     import type {ChainConfig} from '~/config'
     import type {LinkSession} from 'anchor-link'
 
+    import {getContext} from 'svelte'
+
     import InputAccount from '~/components/elements/input/account.svelte'
     import InputAddress from '~/components/elements/input/address.svelte'
     import Button from '~/components/elements/button.svelte'
