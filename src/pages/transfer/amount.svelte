@@ -1,6 +1,9 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
     import type {LinkSession} from 'anchor-link'
+    import type {TransferData} from '../transfer'
+
+    import {getContext} from 'svelte'
 
     import InputAsset from '~/components/elements/input/asset.svelte'
     import InputAddress from '~/components/elements/input/address.svelte'
@@ -8,13 +11,18 @@
     import Button from '~/components/elements/button.svelte'
     import FieldContainer from './fieldContainer.svelte'
 
-    export let amount: string | undefined = undefined
-    export let toAddress: string | undefined = undefined
-    export let toAccount: string | undefined = undefined
-    export let availableBalance: number | undefined = undefined
+    const transferData: SvelteStore<TransferData> = getContext('transferData')
+
+    const {
+        amount: string | undefined,
+        toAddress: string | undefined,
+        toAccount: string | undefined,
+        availableBalance: number | undefined,
+        step: string | undefined,
+    } = $transferData
+
     export let activeBlockchain: ChainConfig
     export let activeSession: LinkSession
-    export let step: string | undefined = undefined
 
     let toAccountValid: boolean = false
     let toAddressValid: boolean = false

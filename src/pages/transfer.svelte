@@ -3,6 +3,8 @@
 
     import {Asset, Name} from 'anchor-link'
 
+    import {setContext} from 'svelte'
+
     import {activeBlockchain, activeSession} from '../store'
 
     import TransferBalance from './transfer/balance.svelte'
