@@ -18,20 +18,27 @@
 
     export let activeBlockchain: ChainConfig
     export let activeSession: LinkSession
-    export let toAddress: string | undefined = undefined
-    export let toAccount: string | undefined = undefined
-    export let amount: string | undefined = undefined
-    export let quantity: Asset | undefined = undefined
-    export let memo: string | undefined = undefined
     export let availableBalance: number | undefined = undefined
     export let txFee: Asset
-    export let step: string
-    export let displaySuccessTx: string | undefined = undefined
-    export let handleTransfer: () => null
+    export let handleTransfer: (TransferData) => null
 
+    let toAccount: string | undefined = $transferData.toAccount
+    let toAddress: string | undefined = $transferData.toAddress
+    let amount: string | undefined = $transferData.amount
     let toAccountValid: boolean = false
     let toAddressValid: boolean = false
     let amountValid: boolean = false
+
+     async function confirmTransaction() {
+         await transferData.update(data => ({
+           ...data,
+           toAccount,
+           toAddress,
+           amount,
+         }));
+
+         handleTransfer()
+     }
 </script>
 
 <style type="scss">
@@ -93,7 +100,7 @@
         </FieldContainer>
     {/if}
     <div class="button-container">
-        <Button size="large" formValidation on:action={handleTransfer}>
+        <Button size="large" formValidation on:action={confirmTransaction}>
             Create Transfer Request
         </Button>
     </div>
