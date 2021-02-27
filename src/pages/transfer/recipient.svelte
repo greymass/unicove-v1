@@ -1,17 +1,15 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
     import type {LinkSession} from 'anchor-link'
-    import type {Step, TransferData} from '../transfer'
+    import type {TransferData} from './types'
 
-    import {getContext} from 'svelte'
+    import {transferData} from './transferData'
+
+    import {Step} from './types'
 
     import InputAccount from '~/components/elements/input/account.svelte'
     import InputAddress from '~/components/elements/input/address.svelte'
     import Button from '~/components/elements/button.svelte'
-
-    const transferData: SvelteStore<TransferData> = getContext('transferData')
-
-    console.log({inRecipient: $transferData})
 
     let toAddress: string = $transferData.toAddress || ''
     let toAccount: string = $transferData.toAccount || ''

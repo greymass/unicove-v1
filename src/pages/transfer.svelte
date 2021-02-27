@@ -3,10 +3,10 @@
 
     import {Asset, Name} from 'anchor-link'
 
-    import {setContext} from 'svelte'
-    import {writable, derived} from 'svelte/store'
+    import {Step} from './transfer/types'
 
     import {activeBlockchain, activeSession, currentAccount} from '../store'
+    import {transferData} from './transfer/transferData'
 
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
@@ -21,38 +21,12 @@
 
     let activeSessionObject: LinkSession
 
-    export const enum Step {
-      Recipient,
-      Amount,
-      Confirm,
-    }
-
-    export interface TransferData {
-        memo?: string
-        quantity?: Asset
-        toAccount?: string
-        toAddress?: string
-        amount?: string
-        displaySuccessTx?: string
-        step: Step
-    }
-
     let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let quantity: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+
     let balanceValue: number = 0
-
-    let transferData = writable<TransferData>({ step: Step.Recipient })
-
-    setContext('transferData', transferData)
-
-    let toAddress: string = $transferData.toAddress || ''
-    let toAccount: string = $transferData.toAccount || ''
-    let amount: string = $transferData.amount || ''
-    let memo: string = $transferData.memo || ''
-    let quantity: Asset = Asset.fromUnits($transferData.quantity || 0, $activeBlockchain.coreTokenSymbol)
     let displaySuccessTx: string | undefined =  $transferData.displaySuccessTx;
-
-    let step: Step = derived(transferData, ($transferData) => $transferData.step)
 
     function fetchFioData() {
         loadFee($activeBlockchain, activeSessionObject).then((fee) => {
@@ -64,11 +38,13 @@
     }
 
     function resetData() {
-        amount = ''
-        toAccount = ''
-        toAddress = ''
-        memo = ''
-        step = Step.Recipient
+        transferData.set({
+          amount: '',
+          toAccount: '',
+          toAddress: '',
+          memo: '',
+          step: Step.Recipient,
+        })
     }
 
     function getActionData() {
@@ -82,7 +58,7 @@
         switch (String(activeBlockchain.coreTokenContract)) {
             case 'fio.token': {
                 data = FIOTransfer.from({
-                    payee_public_key: toAddress,
+                    payee_public_key: $transferData.toAddress,
                     amount: quantity && quantity.units,
                     max_fee: txFee.units,
                     actor: activeSession!.auth.actor,
@@ -98,20 +74,17 @@
             .transact({
                 action: {
                     authorization: [activeSession!.auth],
-                    account: activeBlockchain.coreTokenContract,
-                    name: activeBlockchain.coreTokenTransfer,
+                    account: $activeBlockchain.coreTokenContract,
+                    name: $activeBlockchain.coreTokenTransfer,
                     data: getActionData(),
                 },
             })
             .then((result) => {
                 console.log('done!', result)
-                amount = ''
-                toAccount = ''
-                toAddress = ''
-                memo = ''
+
                 displaySuccessTx = transferData?.payload?.tx
 
-                step = 'amount'
+                resetData()
             })
     }
 
@@ -170,29 +143,22 @@
 
         <br />
 
-        {#if step === Step.Recipient}
+        {#if $transferData.step === Step.Recipient}
             <TransferRecipient
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
-                bind:step
-                bind:toAddress
-                bind:toAccount
             />
         {/if}
 
-        {#if step === Step.Amount}
+        {#if $transferData.step === Step.Amount}
             <TransferAmount
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
                 availableBalance={balanceValue}
-                bind:toAddress
-                bind:toAccount
-                bind:amount
-                bind:step
             />
         {/if}
 
-        {#if step === Step.Confirm}
+        {#if $transferData.step === Step.Confirm}
             <TransferConfirm
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
@@ -200,11 +166,6 @@
                 {handleTransfer}
                 {quantity}
                 {txFee}
-                bind:amount
-                bind:memo
-                bind:step
-                bind:toAccount
-                bind:toAddress
             />
         {/if}
 
