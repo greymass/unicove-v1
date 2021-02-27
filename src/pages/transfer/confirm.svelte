@@ -25,6 +25,8 @@
     let toAccount: string | undefined = $transferData.toAccount
     let toAddress: string | undefined = $transferData.toAddress
     let amount: string | undefined = $transferData.amount
+    let memo: string | undefined = $transferData.memo
+
     let toAccountValid: boolean = false
     let toAddressValid: boolean = false
     let amountValid: boolean = false

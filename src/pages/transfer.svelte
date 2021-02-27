@@ -6,7 +6,7 @@
     import {Step} from './transfer/types'
 
     import {activeBlockchain, activeSession, currentAccount} from '../store'
-    import {transferData} from './transfer/transferData'
+    import {transferData, quantity} from './transfer/transferData'
 
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
@@ -51,7 +51,7 @@
         let data: ABISerializable = Transfer.from({
             from: activeSession!.auth.actor,
             to: toAccount,
-            quantity,
+            $quantity,
             memo,
         })
 
@@ -59,7 +59,7 @@
             case 'fio.token': {
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
-                    amount: quantity && quantity.units,
+                    amount: $quantity && $quantity.units,
                     max_fee: txFee.units,
                     actor: activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
@@ -110,19 +110,6 @@
     }
 
     $: {
-        let toName = Name.from(toAccount)
-        toAccount = String(toName)
-    }
-
-    $: {
-        let parsed = parseFloat(amount)
-        if (isNaN(parsed) || parsed === 0) {
-            quantity = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-        } else {
-            quantity = Asset.fromFloat(parsed, $activeBlockchain.coreTokenSymbol)
-        }
-    }
-    $: {
         balanceValue = (balance && balance.units.toNumber())!
     }
 </script>
@@ -137,7 +124,7 @@
     <div class="container">
         <TransferBalance {balance} />
 
-        {#if quantity && txFee.value > 0}
+        {#if $quantity && txFee.value > 0}
             <TransferSummary activeBlockchain={$activeBlockchain} {quantity} {txFee} />
         {/if}
 
