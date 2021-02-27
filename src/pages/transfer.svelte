@@ -4,8 +4,9 @@
     import {Asset, Name} from 'anchor-link'
 
     import {setContext} from 'svelte'
+    import {writable, derived} from 'svelte/store'
 
-    import {activeBlockchain, activeSession} from '../store'
+    import {activeBlockchain, activeSession, currentAccount} from '../store'
 
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
@@ -13,6 +14,7 @@
     import TransferAmount from './transfer/amount.svelte'
     import TransferConfirm from './transfer/confirm.svelte'
 
+    import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
 
     import {loadFee, loadBalance} from '~/services/eosio/transfer/fio'
@@ -25,7 +27,7 @@
       Confirm,
     }
 
-    interface TransferData {
+    export interface TransferData {
         memo?: string
         quantity?: Asset
         toAccount?: string
@@ -43,6 +45,13 @@
 
     setContext('transferData', transferData)
 
+    let toAddress: string = $transferData.toAddress || ''
+    let toAccount: string = $transferData.toAccount || ''
+    let amount: string = $transferData.amount || ''
+    let memo: string = $transferData.memo || ''
+    let quantity: Asset = Asset.fromUnits($transferData.quantity || 0, $activeBlockchain.coreTokenSymbol)
+    let displaySuccessTx: string | undefined =  $transferData.displaySuccessTx;
+
     let step: Step = derived(transferData, ($transferData) => $transferData.step)
 
     function fetchFioData() {
@@ -59,7 +68,7 @@
         toAccount = ''
         toAddress = ''
         memo = ''
-        step = 'recipient'
+        step = Step.Recipient
     }
 
     function getActionData() {

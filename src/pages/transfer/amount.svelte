@@ -11,15 +11,22 @@
     import Button from '~/components/elements/button.svelte'
     import FieldContainer from './fieldContainer.svelte'
 
+    export let availableBalance: number | undefined
+
     const transferData: SvelteStore<TransferData> = getContext('transferData')
 
-    const {
-        amount: string | undefined,
-        toAddress: string | undefined,
-        toAccount: string | undefined,
-        availableBalance: number | undefined,
-        step: string | undefined,
-    } = $transferData
+    console.log({inAmount: $transferData})
+
+    // const {
+    //     amount: string | undefined,
+    //     toAddress: string | undefined,
+    //     toAccount: string | undefined,
+    //
+    // } = $transferData
+
+    let toAddress
+    let amount
+    let toAccount
 
     export let activeBlockchain: ChainConfig
     export let activeSession: LinkSession
