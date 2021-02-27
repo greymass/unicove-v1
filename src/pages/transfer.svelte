@@ -26,7 +26,7 @@
     let quantity: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     let balanceValue: number = 0
-    let displaySuccessTx: string | undefined =  $transferData.displaySuccessTx;
+    let displaySuccessTx: string | undefined = $transferData.displaySuccessTx
 
     function fetchFioData() {
         loadFee($activeBlockchain, activeSessionObject).then((fee) => {
@@ -39,11 +39,11 @@
 
     function resetData() {
         transferData.set({
-          amount: '',
-          toAccount: '',
-          toAddress: '',
-          memo: '',
-          step: Step.Recipient,
+            amount: '',
+            toAccount: '',
+            toAddress: '',
+            memo: '',
+            step: Step.Recipient,
         })
     }
 

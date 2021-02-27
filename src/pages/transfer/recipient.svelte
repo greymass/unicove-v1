@@ -26,12 +26,12 @@
     }
 
     function confirmChange() {
-      transferData.update(data => ({
-        ...data,
-        toAccount,
-        toAddress,
-        step: Step.Amount,
-      }));
+        transferData.update((data) => ({
+            ...data,
+            toAccount,
+            toAddress,
+            step: Step.Amount,
+        }))
     }
 </script>
 

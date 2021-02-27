@@ -31,16 +31,16 @@
     let toAddressValid: boolean = false
     let amountValid: boolean = false
 
-     async function confirmTransaction() {
-         await transferData.update(data => ({
-           ...data,
-           toAccount,
-           toAddress,
-           amount,
-         }));
+    async function confirmTransaction() {
+        await transferData.update((data) => ({
+            ...data,
+            toAccount,
+            toAddress,
+            amount,
+        }))
 
-         handleTransfer()
-     }
+        handleTransfer()
+    }
 </script>
 
 <style type="scss">
