@@ -3,7 +3,7 @@
 
     import {Asset, Name} from 'anchor-link'
 
-    import {activeBlockchain, activeSession, currentAccount} from '../store'
+    import {activeBlockchain, activeSession} from '../store'
 
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
@@ -15,23 +15,33 @@
 
     import {loadFee, loadBalance} from '~/services/eosio/transfer/fio'
 
-    let memo: string = ''
-    let quantity: Asset | undefined = undefined
-    let toAccount: string = ''
-    let toAddress: string = ''
-    let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let amount: string = ''
-    let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let balanceValue: number = 0
-    let displaySuccessTx: string | undefined = undefined
-
     let activeSessionObject: LinkSession
 
-    $: {
-        activeSessionObject = $activeSession!
+    export enum Step {
+      Recipient,
+      Amount,
+      Confirm,
     }
 
-    let step: string = 'recipient'
+    interface TransferData {
+        memo?: string
+        quantity?: Asset
+        toAccount?: string
+        toAddress?: string
+        amount?: string
+        displaySuccessTx?: string
+        step: Step
+    }
+
+    let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let balanceValue: number = 0
+
+    let transferData = writable<TransferData>({ step: Step.Recipient })
+
+    setContext('transferData', transferData)
+
+    let step: Step = derived(transferData, ($transferData) => $transferData.step)
 
     function fetchFioData() {
         loadFee($activeBlockchain, activeSessionObject).then((fee) => {
@@ -94,6 +104,10 @@
             })
     }
 
+    $: {
+        activeSessionObject = $activeSession!
+    }
+
     $: if ($activeBlockchain.id === 'fio') {
         // Adding delay to give time for $activeSession to catch up
         setTimeout(() => {
@@ -145,7 +159,7 @@
 
         <br />
 
-        {#if step === 'recipient'}
+        {#if step === Step.Recipient}
             <TransferRecipient
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
@@ -155,7 +169,7 @@
             />
         {/if}
 
-        {#if step === 'amount'}
+        {#if step === Step.Amount}
             <TransferAmount
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
@@ -167,7 +181,7 @@
             />
         {/if}
 
-        {#if step === 'confirm'}
+        {#if step === Step.Confirm}
             <TransferConfirm
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
