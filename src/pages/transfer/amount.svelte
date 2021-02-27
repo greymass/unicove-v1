@@ -12,24 +12,16 @@
     import FieldContainer from './fieldContainer.svelte'
 
     export let availableBalance: number | undefined
+    export let activeBlockchain: ChainConfig
+    export let activeSession: LinkSession
 
     const transferData: SvelteStore<TransferData> = getContext('transferData')
 
     console.log({inAmount: $transferData})
 
-    // const {
-    //     amount: string | undefined,
-    //     toAddress: string | undefined,
-    //     toAccount: string | undefined,
-    //
-    // } = $transferData
-
-    let toAddress
-    let amount
-    let toAccount
-
-    export let activeBlockchain: ChainConfig
-    export let activeSession: LinkSession
+    let toAddress: string = $transferData.toAddress || ''
+    let toAccount: string = $transferData.toAccount || ''
+    let amount: string = $transferData.amount || ''
 
     let toAccountValid: boolean = false
     let toAddressValid: boolean = false
