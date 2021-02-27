@@ -23,6 +23,7 @@
     let amount: string = ''
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let balanceValue: number = 0
+    let displaySuccessTx: string | undefined = undefined
 
     let activeSessionObject: LinkSession
 
@@ -136,5 +137,9 @@
                 bind:toAddress
             />
         {/if}
+
+        <Modal opened={!!displaySuccessTx}>
+            <TransactionNotificationSuccess tx={displaySuccessTx} {activeBlockchain} />
+        </Modal>
     </div>
 </Page>
