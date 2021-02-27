@@ -23,21 +23,21 @@
     let toAddressValid: boolean = false
     let amountValid: boolean = false
 
-   function handleKeydown(event: any) {
-       if (valid && event.key === 'Enter') {
-           confirmChange()
-       }
-   }
+    function handleKeydown(event: any) {
+        if (valid && event.key === 'Enter') {
+            confirmChange()
+        }
+    }
 
-   function confirmChange() {
-     transferData.update(data => ({
-       ...data,
-       toAccount,
-       toAddress,
-       amount,
-       step: Step.Amount,
-     }));
-   }
+    function confirmChange() {
+        transferData.update((data) => ({
+            ...data,
+            toAccount,
+            toAddress,
+            amount,
+            step: Step.Amount,
+        }))
+    }
 </script>
 
 <style type="scss">

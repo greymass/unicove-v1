@@ -6,7 +6,7 @@ import {Step} from './types'
 
 import {activeBlockchain} from '~/store'
 
-export const transferData = writable<TransferData>({ step: Step.Recipient })
+export const transferData = writable<TransferData>({step: Step.Recipient})
 
 export const quantity = derived(transferData, (data) => {
     console.log({data})
