@@ -21,7 +21,7 @@
 
     let activeSessionObject: LinkSession
 
-    export enum Step {
+    export const enum Step {
       Recipient,
       Amount,
       Confirm,

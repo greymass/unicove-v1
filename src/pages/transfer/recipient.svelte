@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
     import type {LinkSession} from 'anchor-link'
+    import type {Step, TransferData} from '../transfer'
 
     import {getContext} from 'svelte'
 
@@ -8,18 +9,31 @@
     import InputAddress from '~/components/elements/input/address.svelte'
     import Button from '~/components/elements/button.svelte'
 
-    export let toAccount: string | undefined = undefined
-    export let toAddress: string | undefined = undefined
+    const transferData: SvelteStore<TransferData> = getContext('transferData')
+
+    console.log({inRecipient: $transferData})
+
+    let toAddress: string = $transferData.toAddress || ''
+    let toAccount: string = $transferData.toAccount || ''
+
     export let activeBlockchain: ChainConfig
     export let activeSession: LinkSession
-    export let step: string | undefined = undefined
 
     let valid: boolean = false
 
     function handleKeydown(event: any) {
         if (valid && event.key === 'Enter') {
-            step = 'amount'
+            confirmChange()
         }
+    }
+
+    function confirmChange() {
+      transferData.update(data => ({
+        ...data,
+        toAccount,
+        toAddress,
+        step: Step.Amount,
+      }));
     }
 </script>
 
@@ -61,5 +75,5 @@
         {/if}
     </div>
 
-    <Button size="large" disabled={!valid} on:action={() => (step = 'amount')}>Continue</Button>
+    <Button size="large" disabled={!valid} on:action={confirmChange}>Continue</Button>
 </div>
