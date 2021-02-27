@@ -50,6 +50,50 @@
         step = 'recipient'
     }
 
+    function getActionData() {
+        let data: ABISerializable = Transfer.from({
+            from: activeSession!.auth.actor,
+            to: toAccount,
+            quantity,
+            memo,
+        })
+
+        switch (String(activeBlockchain.coreTokenContract)) {
+            case 'fio.token': {
+                data = FIOTransfer.from({
+                    payee_public_key: toAddress,
+                    amount: quantity && quantity.units,
+                    max_fee: txFee.units,
+                    actor: activeSession!.auth.actor,
+                    tpid: 'tpid@greymass',
+                })
+            }
+        }
+        return data
+    }
+
+    async function handleTransfer() {
+        activeSession!
+            .transact({
+                action: {
+                    authorization: [activeSession!.auth],
+                    account: activeBlockchain.coreTokenContract,
+                    name: activeBlockchain.coreTokenTransfer,
+                    data: getActionData(),
+                },
+            })
+            .then((result) => {
+                console.log('done!', result)
+                amount = ''
+                toAccount = ''
+                toAddress = ''
+                memo = ''
+                displaySuccessTx = transferData?.payload?.tx
+
+                step = 'amount'
+            })
+    }
+
     $: if ($activeBlockchain.id === 'fio') {
         // Adding delay to give time for $activeSession to catch up
         setTimeout(() => {
@@ -128,6 +172,7 @@
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
                 availableBalance={balanceValue}
+                {handleTransfer}
                 {quantity}
                 {txFee}
                 bind:amount
