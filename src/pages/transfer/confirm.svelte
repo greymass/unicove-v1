@@ -25,12 +25,12 @@
     export let availableBalance: number | undefined = undefined
     export let txFee: Asset
     export let step: string
+    export let displaySuccessTx: string | undefined = undefined
 
     let toAccountValid: boolean = false
     let toAddressValid: boolean = false
     let amountValid: boolean = false
 
-    let displaySuccessTx: string | undefined = undefined
 
     function getActionData() {
         let data: ABISerializable = Transfer.from({
@@ -140,8 +140,4 @@
             Create Transfer Request
         </Button>
     </div>
-
-    <Modal opened={!!displaySuccessTx}>
-        <TransactionNotificationSuccess tx={displaySuccessTx} {activeBlockchain} />
-    </Modal>
 </Form>
