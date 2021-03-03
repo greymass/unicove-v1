@@ -124,7 +124,7 @@
         <TransferBalance {balance} />
 
         {#if $quantity && txFee.value > 0}
-            <TransferSummary activeBlockchain={$activeBlockchain} {quantity} {txFee} />
+            <TransferSummary activeBlockchain={$activeBlockchain} quantity={$quantity} {txFee} />
         {/if}
 
         <br />
@@ -149,8 +149,8 @@
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
                 availableBalance={balanceValue}
+                quantity={$quantity}
                 {handleTransfer}
-                {quantity}
                 {txFee}
             />
         {/if}
