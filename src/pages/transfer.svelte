@@ -23,7 +23,6 @@
 
     let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let quantity: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     let balanceValue: number = 0
     let displaySuccessTx: string | undefined = $transferData.displaySuccessTx
