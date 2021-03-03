@@ -50,6 +50,8 @@ export interface ChainConfig {
     coreTokenTransfer: Name
     /** Node URL to use. */
     nodeUrl: string
+    /** True if network is a testnet. */
+    testnet: boolean
 }
 
 /** Supported chains. */
@@ -71,6 +73,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'EOS',
         nodeUrl: 'https://eos.greymass.com',
+        testnet: false,
     },
     {
         id: 'fio',
@@ -81,6 +84,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('trnsfiopubky'),
         name: 'FIO',
         nodeUrl: 'https://fio.greymass.com',
+        testnet: false,
     },
     {
         id: 'jungle3',
@@ -99,6 +103,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Jungle 3 (Testnet)',
         nodeUrl: 'https://jungle3.greymass.com',
+        testnet: true,
     },
     {
         id: 'telos',
@@ -116,6 +121,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
+        testnet: false,
     },
 ]
 

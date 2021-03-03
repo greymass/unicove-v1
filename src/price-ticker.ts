@@ -107,6 +107,10 @@ async function getOracleDatapoint(chain: ChainConfig, pair: Pair) {
 
 /** Gets the price in USD for given chain and pair, if pair is omitted the chains core symbol is used.  */
 export async function getPrice(chain: ChainConfig, pairName?: string) {
+    if (chain.testnet) {
+        // all prices are zero on testnets
+        return 0
+    }
     if (chain.chainFeatures.has(ChainFeatures.DelphiOracle)) {
         let pairs = await getOraclePairs(chain)
         let pair: Pair | undefined
@@ -134,6 +138,7 @@ const tickerStores: Record<string, Readable<number | null>> = {}
 /**
  * Returns a refreshing store wrapping [[getPrice]]
  * @note Does not throw on error, price will remain null and error will be logged to console.
+ * @note Does not resolve on testnets, store will stay null.
  */
 export function priceTicker(chain: ChainConfig, pairName?: string) {
     const tickerName = `${chain.id}-${pairName || 'coresymbol'}`
@@ -141,6 +146,9 @@ export function priceTicker(chain: ChainConfig, pairName?: string) {
         return tickerStores[tickerName]
     }
     const ticker = readable<number | null>(null, (set) => {
+        if (chain.testnet) {
+            return // don't resolve a to a price on testnets
+        }
         const load = () => {
             getPrice(chain, pairName)
                 .then(set)
