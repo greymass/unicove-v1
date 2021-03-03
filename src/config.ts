@@ -29,6 +29,8 @@ export enum ChainFeatures {
     Staking,
     /** eosio.voteproducer https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/voting.cpp */
     VoteProducer,
+    /** delphioracle https://github.com/eostitan/delphioracle */
+    DelphiOracle,
 }
 
 export interface ChainConfig {
@@ -61,6 +63,7 @@ export const chains: ChainConfig[] = [
             ChainFeatures.REX,
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
+            ChainFeatures.DelphiOracle,
         ]),
         chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
         coreTokenSymbol: Asset.Symbol.from('4,EOS'),
