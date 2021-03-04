@@ -4,7 +4,7 @@ import {Asset} from 'anchor-link'
 import type {TransferData} from './types'
 import {Step} from './types'
 
-import {activeBlockchain} from '~/store'
+import {fetchActiveBlockchain} from '~/store'
 
 export const transferData = writable<TransferData>({step: Step.Recipient})
 
@@ -26,11 +26,7 @@ export const quantity = derived(transferData, async (data, set) => {
 })
 
 export const txFee = derived(transferData, async (data, set) => {
-    const activeBlockchainData = await new Promise(resolve => {
-        activeBlockchain.subscribe(chainData => {
-            resolve(chainData)
-        })
-    })
+    const activeBlockchainData = await fetchActiveBlockchain()
 
     if (activeBlockchainData.id !== 'fio') {
         return Asset.fromUnits(0, activeBlockchainData.coreTokenSymbol)
