@@ -31,9 +31,7 @@
     let displaySuccessTx: string | undefined = $transferData.displaySuccessTx
 
     function fetchFioData() {
-        loadFee($activeBlockchain, activeSessionObject).then((fee) => {
-            txFee = fee
-        })
+
         loadBalance($activeBlockchain, activeSessionObject).then((assets) => {
             balance = assets[0]
         })
