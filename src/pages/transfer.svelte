@@ -57,9 +57,8 @@
             memo: $transferData.memo,
         })
 
-        switch (String(activeBlockchain.coreTokenContract)) {
+        switch (String($activeBlockchain.coreTokenContract)) {
             case 'fio.token': {
-                console.log({ transferData: $transferData})
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
                     amount: $quantity && $quantity.units,
@@ -67,8 +66,6 @@
                     actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
                 })
-
-                console.log({fioData: data})
             }
         }
         return data
