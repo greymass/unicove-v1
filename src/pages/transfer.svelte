@@ -99,7 +99,6 @@
 
     $: {
         balanceValue = (balance && balance.units.toNumber())!
-        console.log({fee: $currentTxFees})
     }
 
 </script>
