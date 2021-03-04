@@ -2,10 +2,12 @@ import App from './app.svelte'
 import {init as initAuth} from './auth'
 import {Preferences} from './preferences'
 import {appReady} from './store'
+import {syncAll} from './data-syncers'
 
 async function init() {
     try {
         await Promise.all([initAuth(), Preferences.shared.initStorage()])
+        syncAll()
     } catch (error) {
         console.warn('Error when initializing Anchor Link', error)
     }
