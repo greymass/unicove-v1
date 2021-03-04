@@ -14,6 +14,7 @@
     export let focus: boolean = false
     export let fullWidth: boolean = false
     export let placeholder: string | undefined = undefined
+    export let nonZero: boolean = false
 
     let errorMessage: string | undefined
 
@@ -21,7 +22,7 @@
         try {
             validatePresence(value)
             validateIsNumber(value)
-            validateNonZero(value)
+            nonZero && validateNonZero(value)
             validateBalance(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
