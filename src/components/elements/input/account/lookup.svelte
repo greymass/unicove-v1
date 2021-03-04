@@ -4,20 +4,20 @@
     import Input from '~/components/elements/input.svelte'
     import ErrorMessage from './errorMessage.svelte'
 
+    import Account from '../account.svelte'
+
     export let name: string = ''
     export let value: string = ''
     export let errorMessage: string | undefined = undefined
+    export let activeSession: LinkSession | undefined = undefined
     export let valid: boolean = false
-    export let isValid: (string) => boolean
     export let focus: boolean = false
     export let fullWidth: boolean = false
     export let placeholder: string | undefined = undefined
 
     const validate = async (value: string) => {
         try {
-            validatePresence(value)
-            validateLength(value)
-            isValid(value)
+            await validateExistence(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
             valid = false
@@ -29,26 +29,35 @@
         return true
     }
 
-    function validatePresence(value: string) {
-        if (value.length === 0) {
-            throw {
-                valid: false,
-                message: undefined,
-            }
+    async function validateExistence(value: string) {
+        if (!activeSession) {
+            return
         }
-    }
+        return activeSession.client.v1.chain.get_account(value).catch((error) => {
+            const isUnkownAccountError = error.toString().includes('exception: unknown key')
 
-    function validateLength(value: string) {
-        if (value.length > 13) {
-            throw {
-                valid: false,
-                message: 'Should be 13 characters or less.',
+            if (isUnkownAccountError) {
+                throw {
+                    valid: false,
+                    message: 'Is not a valid account name.',
+                }
             }
-        }
+        })
     }
 </script>
 
+<style type="scss">
+</style>
+
 <div>
-    <Input on:changed {name} {fullWidth} {focus} {placeholder} bind:value isValid={validate} />
-    <ErrorMessage {errorMessage} />
+    <Account
+      {name}
+      {fullWidth}
+      {focus}
+      {placeholder}
+      {errorMessage}
+      {valid}
+      bind:value
+      isValid={validate}
+    />
 </div>

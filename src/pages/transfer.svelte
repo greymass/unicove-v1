@@ -30,7 +30,6 @@
        }
     }
 
-
     let displaySuccessTx: string | undefined = undefined
 
     let previousChain
