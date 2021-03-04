@@ -6,6 +6,9 @@
     import {Step} from './transfer/types'
 
     import {activeBlockchain, activeSession, currentAccount} from '../store'
+
+    import {FIOTransfer, Transfer} from '~/abi-types'
+
     import {transferData, quantity} from './transfer/transferData'
 
     import TransferBalance from './transfer/balance.svelte'
@@ -48,31 +51,34 @@
 
     function getActionData() {
         let data: ABISerializable = Transfer.from({
-            from: activeSession!.auth.actor,
-            to: toAccount,
-            $quantity,
-            memo,
+            from: $activeSession!.auth.actor,
+            to: $transferData.toAccount,
+            quantity: $quantity,
+            memo: $transferData.memo,
         })
 
         switch (String(activeBlockchain.coreTokenContract)) {
             case 'fio.token': {
+                console.log({ transferData: $transferData})
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
                     amount: $quantity && $quantity.units,
                     max_fee: txFee.units,
-                    actor: activeSession!.auth.actor,
+                    actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
                 })
+
+                console.log({fioData: data})
             }
         }
         return data
     }
 
     async function handleTransfer() {
-        activeSession!
+        $activeSession!
             .transact({
                 action: {
-                    authorization: [activeSession!.auth],
+                    authorization: [$activeSession!.auth],
                     account: $activeBlockchain.coreTokenContract,
                     name: $activeBlockchain.coreTokenTransfer,
                     data: getActionData(),
@@ -81,7 +87,7 @@
             .then((result) => {
                 console.log('done!', result)
 
-                displaySuccessTx = transferData?.payload?.tx
+                displaySuccessTx = result?.payload?.tx
 
                 resetData()
             })

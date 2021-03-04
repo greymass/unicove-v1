@@ -14,16 +14,15 @@ export const quantity = derived(transferData, async (data, set) => {
             resolve(chainData)
         })
     })
+    console.log({data})
     let parsed = parseFloat(data.amount)
+    console.log({parsed})
     let asset
     if (isNaN(parsed) || parsed === 0) {
         asset = Asset.fromUnits(0, activeBlockchainData.coreTokenSymbol)
     } else {
-        asset = Asset.fromFloat(parsed, activeBlockchain.coreTokenSymbol)
+        asset = Asset.fromFloat(parsed, activeBlockchainData.coreTokenSymbol)
     }
-
-    console.log({asset})
-    console.log({set})
 
     set(asset)
 })

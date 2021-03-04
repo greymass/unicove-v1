@@ -3,7 +3,7 @@
     import {Asset, UInt64} from 'anchor-link'
     import type {ABISerializable, LinkSession} from 'anchor-link'
 
-    import {getContext} from 'svelte'
+    import {quantity, transferData} from './transferData'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
@@ -83,7 +83,7 @@
         label="Amount"
         secondLabel="Value"
         placeholder="0.0"
-        value={quantity && quantity.toString()}
+        value={$quantity && $quantity.toString()}
         valid={amountValid}
     >
         <InputAsset name="amount" {availableBalance} bind:value={amount} bind:valid={amountValid} />
