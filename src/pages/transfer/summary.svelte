@@ -5,8 +5,6 @@
     export let quantity: Asset
     export let txFee: Asset
     export let activeBlockchain: ChainConfig
-
-    console.log({quantity})
 </script>
 
 <style type="scss">

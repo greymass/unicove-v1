@@ -1,7 +1,8 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
     import type {LinkSession} from 'anchor-link'
-    import type {Step, TransferData} from './types'
+    import type {TransferData} from './types'
+    import {Step} from './types'
 
     import {transferData} from './transferData'
 
@@ -24,7 +25,7 @@
     let amountValid: boolean = false
 
     function handleKeydown(event: any) {
-        if (valid && event.key === 'Enter') {
+        if (amountValid && event.key === 'Enter') {
             confirmChange()
         }
     }
@@ -35,7 +36,7 @@
             toAccount,
             toAddress,
             amount,
-            step: Step.Amount,
+            step: Step.Confirm,
         }))
     }
 </script>
@@ -92,7 +93,7 @@
             {availableBalance}
         />
     </div>
-    <Button size="large" disabled={!amountValid} on:action={() => (step = 'confirm')}
+    <Button size="large" disabled={!amountValid} on:action={confirmChange}
         >Continue</Button
     >
 </div>
