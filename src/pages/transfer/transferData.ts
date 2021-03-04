@@ -9,11 +9,7 @@ import {fetchActiveBlockchain} from '~/store'
 export const transferData = writable<TransferData>({step: Step.Recipient})
 
 export const quantity = derived(transferData, async (data, set) => {
-    const activeBlockchainData = await new Promise(resolve => {
-        activeBlockchain.subscribe(chainData => {
-            resolve(chainData)
-        })
-    })
+    const activeBlockchainData = await fetchActiveBlockchain()
     let parsed = parseFloat(data.amount)
     let asset
     if (isNaN(parsed) || parsed === 0) {
@@ -21,20 +17,6 @@ export const quantity = derived(transferData, async (data, set) => {
     } else {
         asset = Asset.fromFloat(parsed, activeBlockchainData.coreTokenSymbol)
     }
-
-    set(asset)
-})
-
-export const txFee = derived(transferData, async (data, set) => {
-    const activeBlockchainData = await fetchActiveBlockchain()
-
-    if (activeBlockchainData.id !== 'fio') {
-        return Asset.fromUnits(0, activeBlockchainData.coreTokenSymbol)
-    }
-
-    loadFee($activeBlockchain, activeSessionObject).then((fee) => {
-        txFee = fee
-    })
 
     set(asset)
 })
