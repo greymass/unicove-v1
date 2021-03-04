@@ -24,3 +24,21 @@ export const quantity = derived(transferData, async (data, set) => {
 
     set(asset)
 })
+
+export const txFee = derived(transferData, async (data, set) => {
+    const activeBlockchainData = await new Promise(resolve => {
+        activeBlockchain.subscribe(chainData => {
+            resolve(chainData)
+        })
+    })
+
+    if (activeBlockchainData.id !== 'fio') {
+        return Asset.fromUnits(0, activeBlockchainData.coreTokenSymbol)
+    }
+
+    loadFee($activeBlockchain, activeSessionObject).then((fee) => {
+        txFee = fee
+    })
+
+    set(asset)
+})

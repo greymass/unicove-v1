@@ -29,20 +29,28 @@ export const preferences = Preferences.shared
 /** Current logged in users account. */
 export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
-    (session, set) => {
-        if (!session) {
-            set(undefined)
-            return
-        }
-        let active = true
-        loadAccount(session.auth.actor, session.chainId, (v) => {
-            if (active) {
-                set(v.account || undefined)
+    async (session, set) => {
+            const account = await fetchBalance(session)
+            if (!account.core_liquid_balance) {
+                account.core_liquid_balance = await fetchBalance(session)
             }
-        })
-        return () => {
-            active = false
-        }
-    },
+
+            set(account)
+        },
     undefined
 )
+
+function fetchAccount(session) {
+    return new Promise(resolve => {
+        loadAccount(session.auth.actor, session.chainId, (v) => {
+            resolve(v.account || undefined)
+        })
+    })
+}
+
+function fetchBalance(session) {
+    return session.client.v1.chain.get_currency_balance(
+        chainConfig(session.chainId).coreTokenContract,
+        session.auth.actor
+    );
+}
