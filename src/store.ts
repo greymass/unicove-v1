@@ -1,4 +1,5 @@
 import type {API, LinkSession} from 'anchor-link'
+import {Asset, UInt64} from 'anchor-link'
 import {derived, writable} from 'svelte/store'
 import {loadAccount} from './account-cache'
 import type {SessionLike} from './auth'
@@ -42,6 +43,27 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
     undefined
 )
 
+export const fees = derived<typeof activeSession, API.v1.AccountObject | undefined>(
+    activeSession,
+    async (session, set) => {
+        const account = await fetchAccount(session)
+        const blockchain = await fetchActiveBlockchain()
+
+        const fee = await fetchFee(account, blockchain)
+
+        set(fee)
+    },
+    undefined
+)
+
+export function fetchActiveBlockchain() {
+    return new Promise(resolve => {
+        activeBlockchain.subscribe(chainData => {
+            resolve(chainData)
+        })
+    })
+}
+
 function fetchAccount(session) {
     return new Promise(resolve => {
         loadAccount(session.auth.actor, session.chainId, (v) => {
@@ -55,4 +77,19 @@ function fetchBalance(session) {
         chainConfig(session.chainId).coreTokenContract,
         session.auth.actor
     );
+}
+
+async function fetchFee(session, blockchain) {
+    const fees = await session.client.v1.chain.get_table_rows({
+        code: "fio.fee",
+        table: "fiofees",
+        scope: "fio.fee",
+        key_type: "i64",
+        index_position: "primary",
+        lower_bound: UInt64.from(5),
+        upper_bound: UInt64.from(5),
+        limit: 1
+    });
+
+    return Asset.fromUnits(fees.rows[0].suf_amount, blockchain.coreTokenSymbol);
 }
