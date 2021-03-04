@@ -25,8 +25,17 @@ export const activeBlockchain = derived(activeSession, (session) => {
 /** List of all available anchor link sessions. */
 export const availableSessions = writable<SessionLike[]>([])
 
-/** List of all available anchor link sessions. */
-export const txFee = writable<Object>({})
+/** List of txFees by chain. */
+export const txFees = writable<Object>({})
+
+export const currentTxFees = derived<typeof txFees, Asset | undefined>(
+    txFees,
+    async (txFeesData, set) => {
+        const activeBlockchain = await fetchActiveBlockchain()
+
+        set(txFeesData[activeBlockchain.id])
+    }
+)
 
 /** List of preferences. */
 export const preferences = Preferences.shared
