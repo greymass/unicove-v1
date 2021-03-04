@@ -20,21 +20,22 @@
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
 
-    import {loadFee, loadBalance} from '~/services/eosio/transfer/fio'
-
     let activeSessionObject: LinkSession
 
     let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     $: {
-        balance = Asset.fromUnits($currentAccount.core_liquid_balance, $activeBlockchain.coreTokenSymbol)
+       if ($currentAccount) {
+          balance = $currentAccount.core_liquid_balance
+       }
     }
 
 
     let displaySuccessTx: string | undefined = undefined
 
     let previousChain
+    let balanceValue
 
     function resetData() {
         transferData.set({
@@ -98,7 +99,7 @@
     }
 
     $: {
-        balanceValue = ($curr && balance.units.toNumber())!
+        balanceValue = (balance && balance.units.toNumber())!
     }
 </script>
 

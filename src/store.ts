@@ -5,6 +5,7 @@ import {loadAccount} from './account-cache'
 import type {SessionLike} from './auth'
 import {chainConfig, chains} from './config'
 import {Preferences} from './preferences'
+import {wait} from '~/helpers'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
@@ -32,9 +33,12 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
     activeSession,
     async (session, set) => {
             const account = await fetchAccount(session)
+            console.log({account})
             if (!account.core_liquid_balance) {
                 const assets = await fetchBalance(session)
 
+
+                console.log({assets})
                 account.core_liquid_balance = assets[0]
             }
 
@@ -43,16 +47,17 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
     undefined
 )
 
-export const fees = derived<typeof activeSession, API.v1.AccountObject | undefined>(
+export const txFee = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
     async (session, set) => {
-
         let ableToFetch = true
         while (ableToFetch) {
             const account = await fetchAccount(session)
             const blockchain = await fetchActiveBlockchain(session)
 
-            const fee = await fetchFee(account, blockchain)
+            const fee = await fetchFee(account, blockchain).catch(error => {
+                ableToFetch = false
+            })
 
             set(fee)
 
