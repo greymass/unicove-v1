@@ -3,7 +3,7 @@ import {Asset, UInt64} from 'anchor-link'
 import {derived, writable} from 'svelte/store'
 import {loadAccount} from './account-cache'
 import type {SessionLike} from './auth'
-import {chainConfig, chains} from './config'
+import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
 import {wait} from '~/helpers'
 
@@ -25,6 +25,9 @@ export const activeBlockchain = derived(activeSession, (session) => {
 /** List of all available anchor link sessions. */
 export const availableSessions = writable<SessionLike[]>([])
 
+/** List of all available anchor link sessions. */
+export const txFee = writable<Object>({})
+
 /** List of preferences. */
 export const preferences = Preferences.shared
 
@@ -32,7 +35,7 @@ export const preferences = Preferences.shared
 export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
     async (session, set) => {
-            const account = await fetchAccount(session)
+            const account = await fetchActiveAccount(session)
             console.log({account})
             if (!account.core_liquid_balance) {
                 const assets = await fetchBalance(session)
@@ -47,36 +50,59 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
     undefined
 )
 
-export const txFee = derived<typeof activeSession, API.v1.AccountObject | undefined>(
-    activeSession,
-    async (session, set) => {
-        let ableToFetch = true
-        while (ableToFetch) {
-            const account = await fetchAccount(session)
-            const blockchain = await fetchActiveBlockchain(session)
+async function updateTxFee() {
+    let count = 0
+    while (true) {
+        const session: LinkSession = await fetchActiveSession()
 
-            const fee = await fetchFee(account, blockchain).catch(error => {
-                ableToFetch = false
-            })
-
-            set(fee)
-
+        if (!session) {
+            console.log('before')
             await wait(15000)
+            console.log('after')
+
+            continue
         }
 
-    },
-    undefined
-)
+        const account: Account = await fetchActiveAccount(session)
+        const blockchain: ChainConfig = await fetchActiveBlockchain(session)
+
+        const fee = await fetchFee(account, blockchain).catch(error => {
+            console.log('An error occured while fetching tx fee amount', { error })
+        })
+
+        txFee.update(txFees => ({
+            ...txFees,
+            [blockchain.id]: fee,
+        }))
+
+        console.log('before')
+        await wait(15000)
+        console.log('after')
+        count += 1
+        console.log({count})
+    }
+}
+
+updateTxFee()
+
+function fetchActiveSession() {
+    return new Promise(resolve => {
+        activeSession.subscribe(sessionData => {
+            resolve(sessionData)
+        })
+    })
+}
 
 export function fetchActiveBlockchain() {
     return new Promise(resolve => {
         activeBlockchain.subscribe(chainData => {
+            console.log({chainData})
             resolve(chainData)
         })
     })
 }
 
-function fetchAccount(session) {
+function fetchActiveAccount(session) {
     return new Promise(resolve => {
         loadAccount(session.auth.actor, session.chainId, (v) => {
             resolve(v.account || undefined)
