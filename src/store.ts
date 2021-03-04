@@ -30,9 +30,11 @@ export const preferences = Preferences.shared
 export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
     async (session, set) => {
-            const account = await fetchBalance(session)
+            const account = await fetchAccount(session)
             if (!account.core_liquid_balance) {
-                account.core_liquid_balance = await fetchBalance(session)
+                const assets = await fetchBalance(session)
+
+                account.core_liquid_balance = assets[0]
             }
 
             set(account)

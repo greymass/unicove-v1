@@ -27,15 +27,14 @@
     let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
-    let balanceValue: number = 0
-    let displaySuccessTx: string | undefined = $transferData.displaySuccessTx
-
-    function fetchFioData() {
-
-        loadBalance($activeBlockchain, activeSessionObject).then((assets) => {
-            balance = assets[0]
-        })
+    $: {
+        balance = Asset.fromUnits($currentAccount.core_liquid_balance, $activeBlockchain.coreTokenSymbol)
     }
+
+
+    let displaySuccessTx: string | undefined = undefined
+
+    let previousChain
 
     function resetData() {
         transferData.set({
@@ -92,25 +91,14 @@
         activeSessionObject = $activeSession!
     }
 
-    $: if ($activeBlockchain.id === 'fio') {
-        // Adding delay to give time for $activeSession to catch up
-        setTimeout(() => {
-            fetchFioData()
-            resetData()
-        }, 200)
-    }
-
-    $: if ($activeBlockchain.id !== 'fio') {
-        txFee = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-        balance =
-            $currentAccount?.core_liquid_balance ||
-            Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-
+    $: if ($activeBlockchain.id !== previousChain) {
         resetData()
+
+        previousChain = $activeBlockchain.id
     }
 
     $: {
-        balanceValue = (balance && balance.units.toNumber())!
+        balanceValue = ($curr && balance.units.toNumber())!
     }
 </script>
 
