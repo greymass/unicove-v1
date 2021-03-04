@@ -46,12 +46,19 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
 export const fees = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
     async (session, set) => {
-        const account = await fetchAccount(session)
-        const blockchain = await fetchActiveBlockchain()
 
-        const fee = await fetchFee(account, blockchain)
+        let ableToFetch = true
+        while (ableToFetch) {
+            const account = await fetchAccount(session)
+            const blockchain = await fetchActiveBlockchain(session)
 
-        set(fee)
+            const fee = await fetchFee(account, blockchain)
+
+            set(fee)
+
+            await wait(15000)
+        }
+
     },
     undefined
 )
