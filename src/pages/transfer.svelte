@@ -1,11 +1,11 @@
 <script lang="ts">
     import type {LinkSession} from 'anchor-link'
 
-    import {Asset, Name} from 'anchor-link'
+    import {Asset} from 'anchor-link'
 
     import {Step} from './transfer/types'
 
-    import {activeBlockchain, activeSession, currentAccount} from '../store'
+    import {activeBlockchain, activeSession, currentAccount, txFee} from '../store'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
@@ -22,7 +22,6 @@
 
     let activeSessionObject: LinkSession
 
-    let txFee: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     $: {
@@ -60,7 +59,7 @@
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
                     amount: $quantity && $quantity.units,
-                    max_fee: txFee.units,
+                    max_fee: $txFee.units,
                     actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
                 })
@@ -100,7 +99,9 @@
 
     $: {
         balanceValue = (balance && balance.units.toNumber())!
+        console.log({fee: $txFee})
     }
+
 </script>
 
 <style>
@@ -113,8 +114,8 @@
     <div class="container">
         <TransferBalance {balance} />
 
-        {#if $quantity && txFee.value > 0}
-            <TransferSummary activeBlockchain={$activeBlockchain} quantity={$quantity} {txFee} />
+        {#if $quantity && $txFee && $txFee.value > 0}
+            <TransferSummary activeBlockchain={$activeBlockchain} quantity={$quantity} txFee={$txFee} />
         {/if}
 
         <br />
@@ -140,8 +141,8 @@
                 activeSession={activeSessionObject}
                 availableBalance={balanceValue}
                 quantity={$quantity}
+                txFee={$txFee}
                 {handleTransfer}
-                {txFee}
             />
         {/if}
 
