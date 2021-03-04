@@ -7,7 +7,7 @@
 
     import {Step} from './types'
 
-    import InputAccount from '~/components/elements/input/account.svelte'
+    import InputAccountLookup from '~/components/elements/input/account/lookup.svelte'
     import InputAddress from '~/components/elements/input/address.svelte'
     import Button from '~/components/elements/button.svelte'
 
@@ -61,7 +61,7 @@
                 placeholder="recipient address or public key.."
             />
         {:else}
-            <InputAccount
+            <InputAccountLookup
                 bind:valid
                 bind:value={toAccount}
                 focus
