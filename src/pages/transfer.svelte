@@ -5,7 +5,7 @@
 
     import {Step} from './transfer/types'
 
-    import {activeBlockchain, activeSession, currentAccount, txFee} from '../store'
+    import {activeBlockchain, activeSession, currentAccount, currentTxFees} from '../store'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
@@ -59,7 +59,7 @@
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
                     amount: $quantity && $quantity.units,
-                    max_fee: $txFee.units,
+                    max_fee: $currentTxFees!.units,
                     actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
                 })
@@ -99,7 +99,7 @@
 
     $: {
         balanceValue = (balance && balance.units.toNumber())!
-        console.log({fee: $txFee})
+        console.log({fee: $currentTxFees})
     }
 
 </script>
@@ -114,8 +114,8 @@
     <div class="container">
         <TransferBalance {balance} />
 
-        {#if $quantity && $txFee && $txFee.value > 0}
-            <TransferSummary activeBlockchain={$activeBlockchain} quantity={$quantity} txFee={$txFee} />
+        {#if $quantity && $currentTxFees && $currentTxFees.value > 0}
+            <TransferSummary activeBlockchain={$activeBlockchain} quantity={$quantity} txFee={$currentTxFees} />
         {/if}
 
         <br />
@@ -141,7 +141,7 @@
                 activeSession={activeSessionObject}
                 availableBalance={balanceValue}
                 quantity={$quantity}
-                txFee={$txFee}
+                txFee={$currentTxFees}
                 {handleTransfer}
             />
         {/if}
