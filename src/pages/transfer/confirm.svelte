@@ -9,7 +9,7 @@
 
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
-    import InputAccount from '~/components/elements/input/account.svelte'
+    import InputAccountLookup from '~/components/elements/input/account/lookup.svelte'
     import InputAddress from '~/components/elements/input/address.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -70,7 +70,7 @@
             valid={toAccountValid}
             value={toAccount}
         >
-            <InputAccount
+            <InputAccountLookup
                 name="to"
                 {activeSession}
                 bind:value={toAccount}
@@ -86,7 +86,7 @@
         value={$quantity && $quantity.toString()}
         valid={amountValid}
     >
-        <InputAsset name="amount" {availableBalance} bind:value={amount} bind:valid={amountValid} />
+        <InputAsset name="amount" nonZero {availableBalance} bind:value={amount} bind:valid={amountValid} />
     </FieldContainer>
 
     {#if activeBlockchain.id !== 'fio'}

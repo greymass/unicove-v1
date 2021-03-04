@@ -8,7 +8,7 @@
 
     import InputAsset from '~/components/elements/input/asset.svelte'
     import InputAddress from '~/components/elements/input/address.svelte'
-    import InputAccount from '~/components/elements/input/account.svelte'
+    import InputAccountLookup from '~/components/elements/input/account/lookup.svelte'
     import Button from '~/components/elements/button.svelte'
     import FieldContainer from './fieldContainer.svelte'
 
@@ -74,7 +74,7 @@
             valid={toAccountValid}
             value={toAccount}
         >
-            <InputAccount
+            <InputAccountLookup
                 name="to"
                 {activeSession}
                 bind:value={toAccount}
@@ -88,6 +88,7 @@
             bind:value={amount}
             focus
             fullWidth
+            nonZero
             name="amount"
             placeholder="amount to be transfered.."
             {availableBalance}
