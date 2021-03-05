@@ -3,6 +3,7 @@
     import type {LinkSession} from 'anchor-link'
 
     import {quantity, transferData} from './transferData'
+    import {activeBlockchain, activeSession} from '~/store'
 
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
@@ -12,8 +13,6 @@
     import Form from '~/components/elements/form.svelte'
     import FieldContainer from './fieldContainer.svelte'
 
-    export let activeBlockchain: ChainConfig
-    export let activeSession: LinkSession
     export let availableBalance: number | undefined = undefined
     export let handleTransfer: () =>  Promise<void>
 
@@ -47,7 +46,7 @@
 </style>
 
 <Form>
-    {#if activeBlockchain.id === 'fio'}
+    {#if $activeBlockchain && $activeBlockchain.id === 'fio'}
         <FieldContainer
             label="To"
             secondLabel="Recipient"
@@ -67,7 +66,7 @@
         >
             <InputAccountLookup
                 name="to"
-                {activeSession}
+                activeSession={$activeSession}
                 bind:value={toAccount}
                 bind:valid={toAccountValid}
             />
@@ -84,7 +83,7 @@
         <InputAsset name="amount" nonZero {availableBalance} bind:value={amount} bind:valid={amountValid} />
     </FieldContainer>
 
-    {#if activeBlockchain.id !== 'fio'}
+    {#if $activeBlockchain && $activeBlockchain.id !== 'fio'}
         <FieldContainer
             label="Memo"
             secondLabel="(Optional)"

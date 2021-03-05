@@ -5,7 +5,7 @@
 
     import {Step} from './transfer/types'
 
-    import {activeBlockchain, activeSession, currentAccount, currentTxFees} from '../store'
+    import {activeBlockchain, activeSession, currentAccount, currentTxFee} from '../store'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
@@ -57,7 +57,7 @@
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
                     amount: $quantity && $quantity.units,
-                    max_fee: $currentTxFees!.units,
+                    max_fee: $currentTxFee!.units,
                     actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
                 })
@@ -107,38 +107,31 @@
     <div class="container">
         <TransferBalance {balance} />
 
-        {#if $quantity && $currentTxFees && $currentTxFees.value > 0}
-            <TransferSummary activeBlockchain={$activeBlockchain} quantity={$quantity} txFee={$currentTxFees} />
+        {#if $quantity && $currentTxFee && $currentTxFee.value > 0}
+            <TransferSummary />
         {/if}
 
         <br />
 
         {#if $transferData.step === Step.Recipient}
-            <TransferRecipient
-                activeBlockchain={$activeBlockchain}
-                activeSession={$activeSession}
-            />
+            <TransferRecipient />
         {/if}
 
         {#if $transferData.step === Step.Amount}
             <TransferAmount
-                activeBlockchain={$activeBlockchain}
-                activeSession={$activeSession}
                 availableBalance={balanceValue}
             />
         {/if}
 
         {#if $transferData.step === Step.Confirm}
             <TransferConfirm
-                activeBlockchain={$activeBlockchain}
-                activeSession={$activeSession}
                 availableBalance={balanceValue}
                 {handleTransfer}
             />
         {/if}
 
         <Modal opened={!!displaySuccessTx}>
-            <TransactionNotificationSuccess tx={displaySuccessTx} activeBlockchain={$activeBlockchain} />
+            <TransactionNotificationSuccess tx={displaySuccessTx} />
         </Modal>
     </div>
 </Page>
