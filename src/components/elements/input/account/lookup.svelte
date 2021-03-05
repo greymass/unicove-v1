@@ -1,8 +1,6 @@
 <script lang="ts">
     import type {LinkSession} from 'anchor-link'
 
-    import Input from '~/components/elements/input.svelte'
-
     import Account from '../account.svelte'
 
     export let name: string = ''

@@ -1,16 +1,15 @@
 <script lang="ts">
     import {Asset} from 'anchor-link'
-    import type {ChainConfig} from '~/config'
 
     import {activeBlockchain} from '~/store'
     import {quantity} from './transferData'
 
-    export let txFee: Asset
+    export let txFee: Asset | undefined = undefined
 
-    let total: string | undefined = undefined
+    let total: Asset | undefined = undefined
 
     $: {
-      total = $quantity && Asset.fromUnits(
+      total = $quantity && txFee && Asset.fromUnits(
           $quantity.units.toNumber() + txFee.units.toNumber(),
           $activeBlockchain.coreTokenSymbol
       )

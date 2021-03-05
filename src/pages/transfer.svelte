@@ -1,7 +1,5 @@
 <script lang="ts">
-    import type {LinkSession} from 'anchor-link'
-
-    import {Asset} from 'anchor-link'
+    import {Asset, ABISerializable} from 'anchor-link'
 
     import {Step} from './transfer/types'
 
@@ -25,9 +23,8 @@
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     $: {
-       if ($currentAccount) {
-          balance = $currentAccount.core_liquid_balance
-       }
+       balance = $currentAccount?.core_liquid_balance ||
+         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     }
 
     let displaySuccessTx: string | undefined = undefined
@@ -107,7 +104,7 @@
     <div class="container">
         <TransferBalance {balance} />
 
-        {#if $quantity && $currentTxFee && $currentTxFee.value > 0}
+        {#if $quantity && $currentTxFee}
             <TransferSummary txFee={$currentTxFee} />
         {/if}
 
@@ -131,7 +128,11 @@
         {/if}
 
         <Modal opened={!!displaySuccessTx}>
-            <TransactionNotificationSuccess tx={displaySuccessTx} />
+            <TransactionNotificationSuccess
+              onClose={() => displaySuccessTx = undefined }
+              activeBlockchain={$activeBlockchain}
+              tx={displaySuccessTx}
+            />
         </Modal>
     </div>
 </Page>

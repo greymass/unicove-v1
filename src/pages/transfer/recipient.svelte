@@ -1,7 +1,4 @@
 <script lang="ts">
-    import type {ChainConfig} from '~/config'
-    import type {LinkSession} from 'anchor-link'
-
     import {transferData} from './transferData'
 
     import {activeBlockchain, activeSession} from '~/store'
