@@ -1,6 +1,4 @@
 <script lang="ts">
-    import type {LinkSession} from 'anchor-link'
-
     import Input from '~/components/elements/input.svelte'
     import ErrorMessage from './errorMessage.svelte'
 
@@ -8,7 +6,7 @@
     export let value: string = ''
     export let errorMessage: string | undefined = undefined
     export let valid: boolean = false
-    export let isValid: (string) => boolean
+    export let isValid: ((arg0: string) => boolean | Promise<boolean>) | undefined = undefined
     export let focus: boolean = false
     export let fullWidth: boolean = false
     export let placeholder: string | undefined = undefined
@@ -17,7 +15,7 @@
         try {
             validatePresence(value)
             validateLength(value)
-            isValid(value)
+            isValid && isValid(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
             valid = false
