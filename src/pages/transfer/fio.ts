@@ -7,21 +7,29 @@ import {
     activeSession,
 } from '~/store'
 
+let interval
+
 export const txFee = writable<Asset>(undefined)
 
-export async function syncTxFee() {
-    while (true) {
-        await fetchFee().catch((error) => {
+export function syncTxFee() {
+    interval = setInterval(() => {
+        fetchTxFee().catch((error) => {
             console.log('An error occured while fetching tx fee amount', {error})
         })
-
-        await wait(15 * 60 * 1000)
-    }
+    }, 15 * 60 * 1000)
 }
 
-export async function fetchFee() {
+export function stopSyncTxFee() {
+    clearInterval(interval)
+}
+
+export async function fetchTxFee() {
     const session: LinkSession = get(activeSession)
     const blockchain: ChainConfig = get(activeBlockchain)
+
+    if (blockchain.id !== 'id') {
+        return
+    }
 
     const fees = await session.client.v1.chain.get_table_rows({
         code: 'fio.fee',

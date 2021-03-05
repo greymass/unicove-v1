@@ -5,7 +5,7 @@
     import type {TransferData} from './types'
 
     import {activeBlockchain, activeSession, currentAccount} from '../../store'
-    import {txFee} from './fio'
+    import {txFee, syncTxFee, stopSyncTxFee, fetchTxFee} from './fio'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
@@ -26,6 +26,15 @@
     let displaySuccessTx: string | undefined = undefined
     let previousChain: string | undefined = undefined
     let balanceValue: number | undefined = undefined
+
+    onMount(() => {
+        syncTxFee()
+
+        return () => {
+          // on unmount
+          stopSyncTxFee();
+        }
+    });
 
     $: {
         balance =
@@ -51,6 +60,10 @@
             memo: '',
             step: Step.Recipient,
         })
+
+        if ($activeBlockchain.id === 'fio') {
+          fetchTxFee()
+        }
     }
 
     function getActionData() {
