@@ -8,7 +8,9 @@ import {
     UInt16,
     UInt64,
 } from '@greymass/eosio'
-import {Readable, readable} from 'svelte/store'
+
+import {readable, derived, flatten, ReadableResult} from 'svelte-result-store'
+
 import {ChainConfig, ChainFeatures} from './config'
 import {getClient} from './api-client'
 import {cachedRead} from './db'
@@ -58,9 +60,9 @@ export class Pair extends Struct {
 }
 
 /** Loads available pairs from the oracle. */
-async function getOraclePairs(chain: ChainConfig) {
+function getOraclePairs(chain: ChainConfig): ReadableResult<Pair[]> {
     const client = getClient(chain)
-    let rows: any[] = await cachedRead({
+    const pairs: ReadableResult<any[]> = cachedRead({
         store: 'price-ticker',
         key: `${chain.id}-pairs`,
         load: async () => {
@@ -74,15 +76,17 @@ async function getOraclePairs(chain: ChainConfig) {
             return Serializer.objectify(result.rows)
         },
         maxAge: 6.048e8, // 1 week
-        updateAge: 8.64e7, // 1 day
+        refreshInterval: 8.64e7, // 1 day
     })
-    return rows.map((p: any) => Pair.from(p)).filter((p) => p.active)
+    return derived(pairs, ($pairs) => {
+        return $pairs.map((p) => Pair.from(p)).filter((p) => p.active)
+    })
 }
 
 /** Loads latest datapoint for given pair. */
-async function getOracleDatapoint(chain: ChainConfig, pair: Pair) {
+function getOracleDatapoint(chain: ChainConfig, pair: Pair): ReadableResult<Datapoint> {
     const client = getClient(chain)
-    let data = await cachedRead({
+    const data = cachedRead({
         store: 'price-ticker',
         key: `${chain.id}-${pair.name}`,
         load: async () => {
@@ -99,69 +103,87 @@ async function getOracleDatapoint(chain: ChainConfig, pair: Pair) {
             }
             return Serializer.objectify(latest)
         },
-        maxAge: MAX_AGE, // 2 hours
-        updateAge: UPDATE_INTERVAL, // 1 minute
+        maxAge: MAX_AGE,
+        refreshInterval: UPDATE_INTERVAL,
     })
-    return Datapoint.from(data)
+    return derived(data, ($data) => Datapoint.from($data))
 }
 
-/** Gets the price in USD for given chain and pair, if pair is omitted the chains core symbol is used.  */
-export async function getPrice(chain: ChainConfig, pairName?: string) {
-    if (chain.testnet) {
-        // all prices are zero on testnets
-        return 0
-    }
-    if (chain.chainFeatures.has(ChainFeatures.DelphiOracle)) {
-        let pairs = await getOraclePairs(chain)
-        let pair: Pair | undefined
-        if (!pairName) {
-            // use core symbol for pair
-            pair = pairs.find(
-                (p) => p.base_symbol.equals(chain.coreTokenSymbol) && p.quote_symbol.name === 'USD'
-            )
-        } else {
-            pair = pairs.find((p) => p.name.equals(pairName))
-        }
-        if (!pair) {
-            throw new Error(`Unknown pair ${pairName} on ${chain.id}`)
-        }
-        const datapoint = await getOracleDatapoint(chain, pair)
-        const price = datapoint.median.toNumber() / Math.pow(10, pair.quoted_precision.toNumber())
-        return price
-    } else {
-        throw new Error('TODO: fallback price feed')
-    }
+function bloksFallback(chain: ChainConfig, pairName?: string): ReadableResult<number> {
+    const chainName = chain.id
+    return cachedRead({
+        store: 'price-ticker',
+        key: `${chain.id}-fallback-${chainName}`,
+        load: async () => {
+            if (pairName) {
+                throw new Error('Fallback only supports core symbol')
+            }
+            let url = 'https://www.api.bloks.io/ticker/banana'
+            if (chainName !== 'eos') {
+                url = `https://www.api.bloks.io/${chainName}/ticker/banana`
+            }
+            const response = await fetch(url)
+            const data = await response.json()
+            if (typeof data === 'number') {
+                return data
+            } else {
+                throw new Error('Unexpected response from bloks')
+            }
+        },
+        maxAge: MAX_AGE,
+        refreshInterval: UPDATE_INTERVAL,
+    })
 }
 
-const tickerStores: Record<string, Readable<number | null>> = {}
+const tickerStores: Record<string, ReadableResult<number>> = {}
 
 /**
- * Returns a refreshing store wrapping [[getPrice]]
- * @note Does not throw on error, price will remain null and error will be logged to console.
- * @note Does not resolve on testnets, store will stay null.
+ * Latest price in USD for given chain and pair, if pair is omitted the chains core symbol is used.
+ * @note Testnets will return zero for all pairs.
  */
-export function priceTicker(chain: ChainConfig, pairName?: string) {
+export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResult<number> {
     const tickerName = `${chain.id}-${pairName || 'coresymbol'}`
     if (tickerStores[tickerName]) {
         return tickerStores[tickerName]
     }
-    const ticker = readable<number | null>(null, (set) => {
-        if (chain.testnet) {
-            return // don't resolve a to a price on testnets
+    const pairs: ReadableResult<Pair[]> = chain.chainFeatures.has(ChainFeatures.DelphiOracle)
+        ? getOraclePairs(chain)
+        : readable({value: []})
+    const pair = derived(pairs, ($pairs) => {
+        let pair: Pair | undefined
+        if (!pairName) {
+            // use core symbol for pair
+            pair = $pairs.find(
+                (p) => p.base_symbol.equals(chain.coreTokenSymbol) && p.quote_symbol.name === 'USD'
+            )
+        } else {
+            pair = $pairs.find((p) => p.name.equals(pairName))
         }
-        const load = () => {
-            getPrice(chain, pairName)
-                .then(set)
-                .catch((error) => {
-                    console.warn(`Error when updating price for ${pairName} on ${chain.id}`, error)
-                })
-        }
-        const timer = setInterval(load, UPDATE_INTERVAL / 2)
-        load()
-        return () => {
-            clearInterval(timer)
-        }
+        return pair || null
     })
+    const datapoint = flatten(
+        derived(pair, ($pair) => {
+            if ($pair) {
+                return getOracleDatapoint(chain, $pair)
+            } else {
+                return null
+            }
+        })
+    )
+    const ticker = flatten(
+        derived([datapoint, pair], ([$datapoint, $pair]) => {
+            if (chain.testnet) {
+                // all prices are zero on testnets
+                return 0
+            } else if ($datapoint && $pair) {
+                return (
+                    $datapoint.median.toNumber() / Math.pow(10, $pair.quoted_precision.toNumber())
+                )
+            } else {
+                return bloksFallback(chain, pairName)
+            }
+        })
+    )
     tickerStores[tickerName] = ticker
     return ticker
 }

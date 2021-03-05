@@ -4,7 +4,9 @@
     import {priceTicker} from '~/price-ticker'
     import {Asset} from '@greymass/eosio'
 
-    $: price = priceTicker($activeBlockchain)
+    $: price = priceTicker($activeBlockchain).catch((error) => {
+        console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+    })
 </script>
 
 <Page title="Dashboard">
