@@ -1,7 +1,8 @@
 <script lang="ts">
-    import {Asset, ABISerializable} from 'anchor-link'
+    import {Asset} from 'anchor-link'
 
     import {Step} from './transfer/types'
+    import type {TransferData} from './transfer/types'
 
     import {activeBlockchain, activeSession, currentAccount, currentTxFee} from '../store'
 
@@ -43,7 +44,7 @@
     }
 
     function getActionData() {
-        let data: ABISerializable = Transfer.from({
+        let data: TransferData = Transfer.from({
             from: $activeSession!.auth.actor,
             to: $transferData.toAccount,
             quantity: $quantity,

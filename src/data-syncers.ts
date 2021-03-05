@@ -1,12 +1,10 @@
 import {Asset, UInt64, LinkSession} from 'anchor-link'
 import {wait} from '~/helpers'
-import {ChainConfig} from '~/config'
+import type {ChainConfig} from '~/config'
 import {
     fetchActiveBlockchain,
     fetchActiveSession,
-    fetchActiveAccount,
     txFees,
-    setTxFee,
 } from '~/store'
 
 export async function syncTxFee() {
@@ -25,7 +23,7 @@ export function syncAll() {
 
 export async function fetchFee() {
     const session: LinkSession = await fetchActiveSession()
-    const blockchain: ChainConfig = await fetchActiveBlockchain(session)
+    const blockchain: ChainConfig = await fetchActiveBlockchain()
 
     if (!blockchain.hasFees) {
         return
