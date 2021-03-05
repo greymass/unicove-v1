@@ -1,10 +1,10 @@
-import type {API, LinkSession} from 'anchor-link'
-import {Asset} from 'anchor-link'
+import type {Asset, API, LinkSession} from 'anchor-link'
 import {derived, writable} from 'svelte/store'
 import {loadAccount} from './account-cache'
 import type {SessionLike} from './auth'
-import {chainConfig, chains} from './config'
+import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
+import Link from "anchor-link";
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
@@ -29,10 +29,11 @@ export const txFees = writable<Object>({})
 
 export const currentTxFee = derived<(typeof activeBlockchain | typeof txFees)[], Asset | undefined>(
     [activeBlockchain, txFees],
-    async (data, set) => {
-        const [blockchainData, txFeesData] = data
+     (data: [ChainConfig, { [key: string]: any }]) => {
+        const blockchainData: ChainConfig = data[0]
+        const txFeesData: { [key: string]: any } = data[1]
 
-        set(txFeesData[blockchainData.id])
+        return txFeesData[blockchainData.id]
     }
 )
 
@@ -42,28 +43,29 @@ export const preferences = Preferences.shared
 /** Current logged in users account. */
 export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
-    async (session, set) => {
-        const account = await fetchActiveAccount(session)
-        if (!account.core_liquid_balance) {
-            const assets = await fetchBalance(session)
+    (session: LinkSession | undefined, set: (v: API.v1.AccountObject | undefined) => void) => {
+        fetchActiveAccount(session!).then(async account => {
+            if (!account?.core_liquid_balance) {
+                const assets: Asset[] = await fetchBalance(session!)
 
-            account.core_liquid_balance = assets[0]
-        }
+                account!.core_liquid_balance = assets[0]!
+            }
 
-        set(account)
+            set(account)
+        })
     },
     undefined
 )
 
-export function fetchActiveSession() {
+export function fetchActiveSession(): Promise<LinkSession> {
     return new Promise((resolve) => {
         activeSession.subscribe((sessionData) => {
-            resolve(sessionData)
+            resolve(sessionData!)
         })
     })
 }
 
-export function fetchActiveBlockchain() {
+export function fetchActiveBlockchain(): Promise<ChainConfig> {
     return new Promise((resolve) => {
         activeBlockchain.subscribe((chainData) => {
             resolve(chainData)
@@ -71,7 +73,7 @@ export function fetchActiveBlockchain() {
     })
 }
 
-export function fetchActiveAccount(session) {
+export function fetchActiveAccount(session: LinkSession): Promise<API.v1.AccountObject | undefined> {
     return new Promise((resolve) => {
         loadAccount(session.auth.actor, session.chainId, (v) => {
             resolve(v.account || undefined)
@@ -79,14 +81,14 @@ export function fetchActiveAccount(session) {
     })
 }
 
-function fetchBalance(session) {
+function fetchBalance(session: LinkSession) {
     return session.client.v1.chain.get_currency_balance(
         chainConfig(session.chainId).coreTokenContract,
         session.auth.actor
     )
 }
 
-function fetchTxFees() {
+function fetchTxFees(): any {
     return new Promise((resolve) => {
         txFees.subscribe((txFeesData) => {
             resolve(txFeesData)
