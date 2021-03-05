@@ -1,5 +1,5 @@
 import type {API, LinkSession} from 'anchor-link'
-import {Asset, UInt64} from 'anchor-link'
+import {Asset} from 'anchor-link'
 import {derived, writable} from 'svelte/store'
 import {loadAccount} from './account-cache'
 import type {SessionLike} from './auth'
@@ -27,12 +27,12 @@ export const availableSessions = writable<SessionLike[]>([])
 /** List of txFees by chain. */
 export const txFees = writable<Object>({})
 
-export const currentTxFees = derived<typeof txFees, Asset | undefined>(
-    txFees,
-    async (txFeesData, set) => {
-        const activeBlockchain = await fetchActiveBlockchain()
+export const currentTxFees = derived<(typeof activeBlockchain|typeof txFees)[], Asset | undefined>(
+    [activeBlockchain, txFees],
+    async (data, set) => {
+        const [blockchainData, txFeesData] = data
 
-        set(txFeesData[activeBlockchain.id])
+        set(txFeesData[blockchainData.id])
     }
 )
 
@@ -84,4 +84,12 @@ function fetchBalance(session) {
         chainConfig(session.chainId).coreTokenContract,
         session.auth.actor
     );
+}
+
+function fetchTxFees() {
+    return new Promise(resolve => {
+        txFees.subscribe(txFeesData => {
+            resolve(txFeesData)
+        })
+    })
 }
