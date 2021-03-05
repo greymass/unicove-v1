@@ -108,7 +108,7 @@
         <TransferBalance {balance} />
 
         {#if $quantity && $currentTxFee && $currentTxFee.value > 0}
-            <TransferSummary />
+            <TransferSummary txFee={$currentTxFee} />
         {/if}
 
         <br />
