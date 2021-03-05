@@ -9,10 +9,13 @@
     let total: Asset | undefined = undefined
 
     $: {
-      total = $quantity && txFee && Asset.fromUnits(
-          $quantity.units.toNumber() + txFee.units.toNumber(),
-          $activeBlockchain.coreTokenSymbol
-      )
+        total =
+            $quantity &&
+            txFee &&
+            Asset.fromUnits(
+                $quantity.units.toNumber() + txFee.units.toNumber(),
+                $activeBlockchain.coreTokenSymbol
+            )
     }
 </script>
 
