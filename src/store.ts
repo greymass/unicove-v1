@@ -2,9 +2,8 @@ import type {Asset, API, LinkSession} from 'anchor-link'
 import {derived, writable} from 'svelte/store'
 import {loadAccount} from './account-cache'
 import type {SessionLike} from './auth'
-import {ChainConfig, chainConfig, chains} from './config'
+import {chainConfig, chains} from './config'
 import {Preferences} from './preferences'
-import Link from "anchor-link";
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
@@ -31,7 +30,7 @@ export const preferences = Preferences.shared
 export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
     (session: LinkSession | undefined, set: (v: API.v1.AccountObject | undefined) => void) => {
-        fetchActiveAccount(session!).then(async account => {
+        fetchActiveAccount(session!).then(async (account) => {
             if (!account?.core_liquid_balance) {
                 const assets: Asset[] = await fetchBalance(session!)
 
@@ -44,7 +43,9 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
     undefined
 )
 
-export function fetchActiveAccount(session: LinkSession): Promise<API.v1.AccountObject | undefined> {
+export function fetchActiveAccount(
+    session: LinkSession
+): Promise<API.v1.AccountObject | undefined> {
     return new Promise((resolve) => {
         loadAccount(session.auth.actor, session.chainId, (v) => {
             resolve(v.account || undefined)

@@ -1,8 +1,8 @@
 <script lang="ts">
     import {Asset} from 'anchor-link'
+    import {onMount} from 'svelte'
 
     import {Step} from './types'
-    import type {TransferData} from './types'
 
     import {activeBlockchain, activeSession, currentAccount} from '../../store'
     import {txFee, syncTxFee, stopSyncTxFee, fetchTxFee} from './fio'
@@ -31,10 +31,10 @@
         syncTxFee()
 
         return () => {
-          // on unmount
-          stopSyncTxFee();
+            // on unmount
+            stopSyncTxFee()
         }
-    });
+    })
 
     $: {
         balance =
@@ -62,12 +62,12 @@
         })
 
         if ($activeBlockchain.id === 'fio') {
-          fetchTxFee()
+            fetchTxFee()
         }
     }
 
     function getActionData() {
-        let data: TransferData = Transfer.from({
+        let data: Transfer | FIOTransfer = Transfer.from({
             from: $activeSession!.auth.actor,
             to: $transferData.toAccount,
             quantity: $quantity,

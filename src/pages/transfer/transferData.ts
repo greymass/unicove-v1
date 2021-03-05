@@ -5,12 +5,11 @@ import type {TransferData} from './types'
 import {Step} from './types'
 
 import {fetchActiveBlockchain} from '~/store'
-import type {ChainConfig} from '~/config';
 
 export const transferData = writable<TransferData>({step: Step.Recipient})
 
 export const quantity = derived<typeof transferData, Asset>(transferData, (data, set) => {
-    fetchActiveBlockchain().then(activeBlockchainData => {
+    fetchActiveBlockchain().then((activeBlockchainData) => {
         let parsed: number = parseFloat(data.amount || '')
         let asset: Asset = Asset.fromUnits(0, activeBlockchainData.coreTokenSymbol)
 

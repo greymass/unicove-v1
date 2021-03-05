@@ -1,11 +1,7 @@
 import {writable, get} from 'svelte/store'
 import {Asset, UInt64, LinkSession} from 'anchor-link'
-import {wait} from '~/helpers'
 import type {ChainConfig} from '~/config'
-import {
-    activeBlockchain,
-    activeSession,
-} from '~/store'
+import {activeBlockchain, activeSession} from '~/store'
 
 let interval
 
@@ -46,4 +42,3 @@ export async function fetchTxFee() {
 
     txFee.set(fee)
 }
-
