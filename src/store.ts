@@ -25,16 +25,10 @@ export const activeBlockchain = derived(activeSession, (session) => {
 export const availableSessions = writable<SessionLike[]>([])
 
 /** List of txFees by chain. */
-export const txFees = writable<Object>({})
+export const txFees = new Map<string, Asset>()
 
-export const currentTxFee = derived<(typeof activeBlockchain | typeof txFees)[], Asset | undefined>(
-    [activeBlockchain, txFees],
-     (data: [ChainConfig, { [key: string]: any }]) => {
-        const blockchainData: ChainConfig = data[0]
-        const txFeesData: { [key: string]: any } = data[1]
-
-        return txFeesData[blockchainData.id]
-    }
+export const currentTxFee = derived([activeBlockchain], ([$activeBlockchain]) =>
+    txFees.get($activeBlockchain.id)
 )
 
 /** List of preferences. */
@@ -73,7 +67,9 @@ export function fetchActiveBlockchain(): Promise<ChainConfig> {
     })
 }
 
-export function fetchActiveAccount(session: LinkSession): Promise<API.v1.AccountObject | undefined> {
+export function fetchActiveAccount(
+    session: LinkSession
+): Promise<API.v1.AccountObject | undefined> {
     return new Promise((resolve) => {
         loadAccount(session.auth.actor, session.chainId, (v) => {
             resolve(v.account || undefined)

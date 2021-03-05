@@ -1,11 +1,7 @@
 import {Asset, UInt64, LinkSession} from 'anchor-link'
 import {wait} from '~/helpers'
 import type {ChainConfig} from '~/config'
-import {
-    fetchActiveBlockchain,
-    fetchActiveSession,
-    txFees,
-} from '~/store'
+import {fetchActiveBlockchain, fetchActiveSession, txFees} from '~/store'
 
 export async function syncTxFee() {
     while (true) {
@@ -42,8 +38,5 @@ export async function fetchFee() {
 
     const fee = Asset.fromUnits(fees.rows[0].suf_amount, blockchain.coreTokenSymbol)
 
-    txFees.update((txFees) => ({
-        ...txFees,
-        [blockchain.id]: fee,
-    }))
+    txFees.set(blockchain.id, fee)
 }
