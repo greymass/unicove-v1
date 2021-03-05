@@ -1,38 +1,37 @@
 <script lang="ts">
     import {Asset} from 'anchor-link'
 
-    import {Step} from './transfer/types'
-    import type {TransferData} from './transfer/types'
+    import {Step} from './types'
+    import type {TransferData} from './types'
 
-    import {activeBlockchain, activeSession, currentAccount} from '../store'
-    import {txFee} from './transfer/fio'
+    import {activeBlockchain, activeSession, currentAccount} from '../../store'
+    import {txFee} from './fio'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
-    import {transferData, quantity} from './transfer/transferData'
+    import {transferData, quantity} from './transferData'
 
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
 
-    import TransferBalance from './transfer/balance.svelte'
-    import TransferSummary from './transfer/summary.svelte'
-    import TransferRecipient from './transfer/recipient.svelte'
-    import TransferAmount from './transfer/amount.svelte'
-    import TransferConfirm from './transfer/confirm.svelte'
+    import TransferBalance from './balance.svelte'
+    import TransferSummary from './summary.svelte'
+    import TransferRecipient from './recipient.svelte'
+    import TransferAmount from './amount.svelte'
+    import TransferConfirm from './confirm.svelte'
 
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
 
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    let displaySuccessTx: string | undefined = undefined
+    let previousChain: string | undefined = undefined
+    let balanceValue: number | undefined = undefined
 
     $: {
         balance =
             $currentAccount?.core_liquid_balance ||
             Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     }
-
-    let displaySuccessTx: string | undefined = undefined
-    let previousChain: string | undefined = undefined
-    let balanceValue: number | undefined = undefined
 
     $: if ($activeBlockchain.id !== previousChain) {
         resetData()
