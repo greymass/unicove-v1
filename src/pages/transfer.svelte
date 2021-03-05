@@ -138,7 +138,6 @@
                 activeBlockchain={$activeBlockchain}
                 activeSession={activeSessionObject}
                 availableBalance={balanceValue}
-                quantity={$quantity}
                 txFee={$currentTxFees}
                 {handleTransfer}
             />

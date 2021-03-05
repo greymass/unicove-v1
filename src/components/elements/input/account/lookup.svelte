@@ -2,7 +2,6 @@
     import type {LinkSession} from 'anchor-link'
 
     import Input from '~/components/elements/input.svelte'
-    import ErrorMessage from './errorMessage.svelte'
 
     import Account from '../account.svelte'
 

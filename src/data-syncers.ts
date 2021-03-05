@@ -5,23 +5,7 @@ import {fetchActiveBlockchain, fetchActiveSession, fetchActiveAccount, txFees, s
 
 export async function syncTxFee() {
     while (true) {
-        const session: LinkSession = await fetchActiveSession()
-
-        if (!session) {
-            await wait(15000)
-
-            continue
-        }
-
-        const blockchain: ChainConfig = await fetchActiveBlockchain(session)
-
-        if (!blockchain.hasFees) {
-            await wait(15000)
-
-            continue
-        }
-
-        await fetchFee(session, blockchain).catch(error => {
+        await fetchFee().catch(error => {
             console.log('An error occured while fetching tx fee amount', { error })
         })
 
@@ -33,7 +17,14 @@ export function syncAll() {
     syncTxFee()
 }
 
-export async function fetchFee(session, blockchain) {
+export async function fetchFee() {
+    const session: LinkSession = await fetchActiveSession()
+    const blockchain: ChainConfig = await fetchActiveBlockchain(session)
+
+    if (!blockchain.hasFees) {
+        return;
+    }
+
     const fees = await session.client.v1.chain.get_table_rows({
         code: `${blockchain.id}.fee`,
         table: `${blockchain.id}fees`,
