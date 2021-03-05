@@ -6,7 +6,6 @@ import {storeAccount} from './account-cache'
 import {getClient} from './api-client'
 import {appId, chains} from './config'
 import {activeSession, availableSessions} from './store'
-import {fetchFee} from '~/data-syncers'
 
 const transport = new Transport()
 const link = new Link({
@@ -73,10 +72,4 @@ export async function activate(id: SessionLike) {
         throw new Error('No such session')
     }
     activeSession.set(session)
-
-    fetchSessionData()
-}
-
-function fetchSessionData() {
-    fetchFee()
 }

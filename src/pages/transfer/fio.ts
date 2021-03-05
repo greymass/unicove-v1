@@ -3,9 +3,9 @@ import {Asset, UInt64, LinkSession} from 'anchor-link'
 import type {ChainConfig} from '~/config'
 import {activeBlockchain, activeSession} from '~/store'
 
-let interval
+let interval: any
 
-export const txFee = writable<Asset>(undefined)
+export const txFee = writable<Asset | undefined>(undefined)
 
 export function syncTxFee() {
     interval = setInterval(() => {
@@ -20,14 +20,14 @@ export function stopSyncTxFee() {
 }
 
 export async function fetchTxFee() {
-    const session: LinkSession = get(activeSession)
+    const session: LinkSession | undefined = get(activeSession)
     const blockchain: ChainConfig = get(activeBlockchain)
 
     if (blockchain.id !== 'id') {
         return
     }
 
-    const fees = await session.client.v1.chain.get_table_rows({
+    const fees = await session?.client.v1.chain.get_table_rows({
         code: 'fio.fee',
         table: 'fiofees',
         scope: 'fio.fee',
@@ -38,7 +38,7 @@ export async function fetchTxFee() {
         limit: 1,
     })
 
-    const fee = Asset.fromUnits(fees.rows[0].suf_amount, blockchain.coreTokenSymbol)
+    const fee = Asset.fromUnits(fees?.rows[0].suf_amount || 0, blockchain.coreTokenSymbol)
 
     txFee.set(fee)
 }
