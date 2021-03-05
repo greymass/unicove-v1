@@ -1,7 +1,6 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
     import type {LinkSession} from 'anchor-link'
-    import type {TransferData} from './types'
 
     import {transferData} from './transferData'
 

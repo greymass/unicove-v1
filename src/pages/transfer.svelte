@@ -11,6 +11,8 @@
 
     import {transferData, quantity} from './transfer/transferData'
 
+    import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
+
     import TransferBalance from './transfer/balance.svelte'
     import TransferSummary from './transfer/summary.svelte'
     import TransferRecipient from './transfer/recipient.svelte'
@@ -19,8 +21,6 @@
 
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
-
-    let activeSessionObject: LinkSession
 
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
@@ -31,9 +31,8 @@
     }
 
     let displaySuccessTx: string | undefined = undefined
-
-    let previousChain
-    let balanceValue
+    let previousChain: string | undefined = undefined
+    let balanceValue: number | undefined = undefined
 
     function resetData() {
         transferData.set({
@@ -86,10 +85,6 @@
             })
     }
 
-    $: {
-        activeSessionObject = $activeSession!
-    }
-
     $: if ($activeBlockchain.id !== previousChain) {
         resetData()
 
@@ -121,14 +116,14 @@
         {#if $transferData.step === Step.Recipient}
             <TransferRecipient
                 activeBlockchain={$activeBlockchain}
-                activeSession={activeSessionObject}
+                activeSession={$activeSession}
             />
         {/if}
 
         {#if $transferData.step === Step.Amount}
             <TransferAmount
                 activeBlockchain={$activeBlockchain}
-                activeSession={activeSessionObject}
+                activeSession={$activeSession}
                 availableBalance={balanceValue}
             />
         {/if}
@@ -136,15 +131,14 @@
         {#if $transferData.step === Step.Confirm}
             <TransferConfirm
                 activeBlockchain={$activeBlockchain}
-                activeSession={activeSessionObject}
+                activeSession={$activeSession}
                 availableBalance={balanceValue}
-                txFee={$currentTxFees}
                 {handleTransfer}
             />
         {/if}
 
         <Modal opened={!!displaySuccessTx}>
-            <TransactionNotificationSuccess tx={displaySuccessTx} {activeBlockchain} />
+            <TransactionNotificationSuccess tx={displaySuccessTx} activeBlockchain={$activeBlockchain} />
         </Modal>
     </div>
 </Page>

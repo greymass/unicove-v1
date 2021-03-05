@@ -1,7 +1,6 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
     import type {LinkSession} from 'anchor-link'
-    import type {TransferData} from './types'
     import {Step} from './types'
 
     import {transferData} from './transferData'
@@ -94,7 +93,7 @@
             {availableBalance}
         />
     </div>
-    <Button size="large" disabled={!amountValid} on:action={confirmChange}
-        >Continue</Button
-    >
+    <Button size="large" disabled={!amountValid} on:action={confirmChange}>
+      Continue
+    </Button>
 </div>
