@@ -20,8 +20,8 @@ export async function syncTxFee() {
 }
 
 export async function fetchFee() {
-    const session: LinkSession = get(activeBlockchain)
-    const blockchain: ChainConfig = get(fetchActiveBlockchain)
+    const session: LinkSession = get(activeSession)
+    const blockchain: ChainConfig = get(activeBlockchain)
 
     const fees = await session.client.v1.chain.get_table_rows({
         code: 'fio.fee',

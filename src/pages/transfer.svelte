@@ -4,7 +4,8 @@
     import {Step} from './transfer/types'
     import type {TransferData} from './transfer/types'
 
-    import {activeBlockchain, activeSession, currentAccount, currentTxFee} from '../store'
+    import {activeBlockchain, activeSession, currentAccount} from '../store'
+    import {txFee} from './transfer/fio'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
@@ -33,6 +34,16 @@
     let previousChain: string | undefined = undefined
     let balanceValue: number | undefined = undefined
 
+    $: if ($activeBlockchain.id !== previousChain) {
+        resetData()
+
+        previousChain = $activeBlockchain.id
+    }
+
+    $: {
+        balanceValue = (balance && balance.units.toNumber())!
+    }
+
     function resetData() {
         transferData.set({
             amount: '',
@@ -56,7 +67,7 @@
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
                     amount: $quantity && $quantity.units,
-                    max_fee: $currentTxFee!.units,
+                    max_fee: $txFee!.units,
                     actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
                 })
@@ -83,16 +94,6 @@
                 resetData()
             })
     }
-
-    $: if ($activeBlockchain.id !== previousChain) {
-        resetData()
-
-        previousChain = $activeBlockchain.id
-    }
-
-    $: {
-        balanceValue = (balance && balance.units.toNumber())!
-    }
 </script>
 
 <style>
@@ -105,8 +106,8 @@
     <div class="container">
         <TransferBalance {balance} />
 
-        {#if $quantity && $currentTxFee}
-            <TransferSummary txFee={$currentTxFee} />
+        {#if $quantity && $txFee}
+            <TransferSummary txFee={$txFee} />
         {/if}
 
         <br />
