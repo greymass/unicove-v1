@@ -24,17 +24,6 @@ export const activeBlockchain = derived(activeSession, (session) => {
 /** List of all available anchor link sessions. */
 export const availableSessions = writable<SessionLike[]>([])
 
-/** List of txFees by chain. */
-export const txFees = writable<Object>({})
-
-export const currentTxFee = derived(
-    [activeBlockchain, txFees],
-     ([$activeBlockchain, $txFees]) => {
-
-        return $txFees[$activeBlockchain.id]
-    }
-)
-
 /** List of preferences. */
 export const preferences = Preferences.shared
 
@@ -55,22 +44,6 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
     undefined
 )
 
-export function fetchActiveSession(): Promise<LinkSession> {
-    return new Promise((resolve) => {
-        activeSession.subscribe((sessionData) => {
-            resolve(sessionData!)
-        })
-    })
-}
-
-export function fetchActiveBlockchain(): Promise<ChainConfig> {
-    return new Promise((resolve) => {
-        activeBlockchain.subscribe((chainData) => {
-            resolve(chainData)
-        })
-    })
-}
-
 export function fetchActiveAccount(session: LinkSession): Promise<API.v1.AccountObject | undefined> {
     return new Promise((resolve) => {
         loadAccount(session.auth.actor, session.chainId, (v) => {
@@ -84,12 +57,4 @@ function fetchBalance(session: LinkSession) {
         chainConfig(session.chainId).coreTokenContract,
         session.auth.actor
     )
-}
-
-function fetchTxFees(): any {
-    return new Promise((resolve) => {
-        txFees.subscribe((txFeesData) => {
-            resolve(txFeesData)
-        })
-    })
 }
