@@ -27,13 +27,11 @@ export const availableSessions = writable<SessionLike[]>([])
 /** List of txFees by chain. */
 export const txFees = writable<Object>({})
 
-export const currentTxFee = derived<(typeof activeBlockchain | typeof txFees)[], Asset | undefined>(
+export const currentTxFee = derived(
     [activeBlockchain, txFees],
-     (data: [ChainConfig, { [key: string]: any }]) => {
-        const blockchainData: ChainConfig = data[0]
-        const txFeesData: { [key: string]: any } = data[1]
+     ([$activeBlockchain, $txFees]) => {
 
-        return txFeesData[blockchainData.id]
+        return $txFees[$activeBlockchain.id]
     }
 )
 
