@@ -91,7 +91,5 @@
             {availableBalance}
         />
     </div>
-    <Button size="large" disabled={!amountValid} on:action={confirmChange}>
-      Continue
-    </Button>
+    <Button size="large" disabled={!amountValid} on:action={confirmChange}>Continue</Button>
 </div>

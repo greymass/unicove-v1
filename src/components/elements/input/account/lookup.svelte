@@ -48,13 +48,13 @@
 
 <div>
     <Account
-      {name}
-      {fullWidth}
-      {focus}
-      {placeholder}
-      {errorMessage}
-      {valid}
-      bind:value
-      isValid={validate}
+        {name}
+        {fullWidth}
+        {focus}
+        {placeholder}
+        {errorMessage}
+        {valid}
+        bind:value
+        isValid={validate}
     />
 </div>

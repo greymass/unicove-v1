@@ -11,7 +11,7 @@
     import FieldContainer from './fieldContainer.svelte'
 
     export let availableBalance: number | undefined = undefined
-    export let handleTransfer: () =>  Promise<void>
+    export let handleTransfer: () => Promise<void>
 
     let toAccount: string | undefined = $transferData.toAccount
     let toAddress: string | undefined = $transferData.toAddress
@@ -77,7 +77,13 @@
         value={($quantity && $quantity.toString()) || ''}
         valid={amountValid}
     >
-        <InputAsset name="amount" nonZero {availableBalance} bind:value={amount} bind:valid={amountValid} />
+        <InputAsset
+            name="amount"
+            nonZero
+            {availableBalance}
+            bind:value={amount}
+            bind:valid={amountValid}
+        />
     </FieldContainer>
 
     {#if $activeBlockchain && $activeBlockchain.id !== 'fio'}

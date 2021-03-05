@@ -23,8 +23,9 @@
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     $: {
-       balance = $currentAccount?.core_liquid_balance ||
-         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+        balance =
+            $currentAccount?.core_liquid_balance ||
+            Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     }
 
     let displaySuccessTx: string | undefined = undefined
@@ -91,7 +92,6 @@
     $: {
         balanceValue = (balance && balance.units.toNumber())!
     }
-
 </script>
 
 <style>
@@ -115,23 +115,18 @@
         {/if}
 
         {#if $transferData.step === Step.Amount}
-            <TransferAmount
-                availableBalance={balanceValue}
-            />
+            <TransferAmount availableBalance={balanceValue} />
         {/if}
 
         {#if $transferData.step === Step.Confirm}
-            <TransferConfirm
-                availableBalance={balanceValue}
-                {handleTransfer}
-            />
+            <TransferConfirm availableBalance={balanceValue} {handleTransfer} />
         {/if}
 
         <Modal opened={!!displaySuccessTx}>
             <TransactionNotificationSuccess
-              onClose={() => displaySuccessTx = undefined }
-              activeBlockchain={$activeBlockchain}
-              tx={displaySuccessTx}
+                onClose={() => (displaySuccessTx = undefined)}
+                activeBlockchain={$activeBlockchain}
+                tx={displaySuccessTx}
             />
         </Modal>
     </div>
