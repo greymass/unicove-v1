@@ -8,7 +8,7 @@ import {fetchActiveBlockchain} from '~/store'
 
 export const transferData = writable<TransferData>({step: Step.Recipient})
 
-export const quantity = derived(transferData, async (data, set) => {
+export const quantity = derived<typeof transferData, Asset>(transferData, async (data, set) => {
     const activeBlockchainData = await fetchActiveBlockchain()
     let parsed = parseFloat(data.amount)
     let asset

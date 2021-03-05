@@ -1,11 +1,8 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
-    import {Asset, UInt64} from 'anchor-link'
-    import type {ABISerializable, LinkSession} from 'anchor-link'
+    import type {LinkSession} from 'anchor-link'
 
     import {quantity, transferData} from './transferData'
-
-    import {FIOTransfer, Transfer} from '~/abi-types'
 
     import Button from '~/components/elements/button.svelte'
     import Input from '~/components/elements/input.svelte'
@@ -13,14 +10,12 @@
     import InputAddress from '~/components/elements/input/address.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Form from '~/components/elements/form.svelte'
-    import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
     import FieldContainer from './fieldContainer.svelte'
 
     export let activeBlockchain: ChainConfig
     export let activeSession: LinkSession
     export let availableBalance: number | undefined = undefined
-    export let txFee: Asset
-    export let handleTransfer: (TransferData) => null
+    export let handleTransfer: () =>  Promise<void>
 
     let toAccount: string | undefined = $transferData.toAccount
     let toAddress: string | undefined = $transferData.toAddress
@@ -32,7 +27,7 @@
     let amountValid: boolean = false
 
     async function confirmTransaction() {
-        await transferData.update((data) => ({
+        transferData.update((data) => ({
             ...data,
             toAccount,
             toAddress,
@@ -83,7 +78,7 @@
         label="Amount"
         secondLabel="Value"
         placeholder="0.0"
-        value={$quantity && $quantity.toString()}
+        value={($quantity && $quantity.toString()) || ''}
         valid={amountValid}
     >
         <InputAsset name="amount" nonZero {availableBalance} bind:value={amount} bind:valid={amountValid} />
