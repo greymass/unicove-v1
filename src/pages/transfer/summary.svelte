@@ -2,9 +2,17 @@
     import {Asset} from 'anchor-link'
     import type {ChainConfig} from '~/config'
 
-    export let quantity: Asset
-    export let txFee: Asset
-    export let activeBlockchain: ChainConfig
+    import {activeBlockchain, currentTxFee} from '~/store'
+    import {quantity} from './transferData'
+
+    let total
+
+    $: {
+      total = $quantity && Asset.fromUnits(
+          $quantity.units.toNumber() + $txFee.units.toNumber(),
+          $activeBlockchain.coreTokenSymbol
+      )
+    }
 </script>
 
 <style type="scss">
@@ -26,19 +34,16 @@
 <table>
     <tr>
         <td>Sending:</td>
-        <td>{quantity}</td>
+        <td>{$quantity}</td>
     </tr>
     <tr>
         <td>Fee:</td>
-        <td>{txFee}</td>
+        <td>{$txFee}</td>
     </tr>
     <tr>
         <td>Total:</td>
         <td
-            >{Asset.fromUnits(
-                quantity.units.toNumber() + txFee.units.toNumber(),
-                activeBlockchain.coreTokenSymbol
-            )}</td
+            >{total}</td
         >
     </tr>
 </table>

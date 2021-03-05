@@ -5,6 +5,8 @@
 
     import {transferData} from './transferData'
 
+    import {activeBlockchain, activeSession} from '~/store'
+
     import InputAsset from '~/components/elements/input/asset.svelte'
     import InputAddress from '~/components/elements/input/address.svelte'
     import InputAccountLookup from '~/components/elements/input/account/lookup.svelte'
@@ -12,8 +14,6 @@
     import FieldContainer from './fieldContainer.svelte'
 
     export let availableBalance: number | undefined
-    export let activeBlockchain: ChainConfig
-    export let activeSession: LinkSession
 
     let toAddress: string = $transferData.toAddress || ''
     let toAccount: string = $transferData.toAccount || ''
@@ -55,7 +55,7 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="container">
-    {#if activeBlockchain.id === 'fio'}
+    {#if $activeBlockchain && $activeBlockchain.id === 'fio'}
         <FieldContainer
             label="To"
             secondLabel="Recipient"
@@ -75,7 +75,7 @@
         >
             <InputAccountLookup
                 name="to"
-                {activeSession}
+                activeSession={$activeSession}
                 bind:value={toAccount}
                 bind:valid={toAccountValid}
             />
