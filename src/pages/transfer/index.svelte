@@ -132,7 +132,7 @@
             <TransferConfirm availableBalance={balanceValue} {handleTransfer} />
         {/if}
 
-        <Modal opened={!!displaySuccessTx}>
+        <Modal display={!!displaySuccessTx}>
             <TransactionNotificationSuccess
                 onClose={() => (displaySuccessTx = undefined)}
                 activeBlockchain={$activeBlockchain}
