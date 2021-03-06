@@ -22,8 +22,8 @@
         position: relative;
 
         .iconContainer {
-          color: var(--success-green);
-          margin-bottom: 20px;
+            color: var(--success-green);
+            margin-bottom: 20px;
         }
 
         a {
