@@ -137,14 +137,7 @@
         {/if}
 
         <Modal display={displaySuccessTx}>
-            <TransactionNotificationSuccess
-                onClose={() => {
-                  successTx = undefined
-                  $displaySuccessTx = false
-                }}
-                activeBlockchain={$activeBlockchain}
-                tx={successTx}
-            />
+            <TransactionNotificationSuccess activeBlockchain={$activeBlockchain} tx={successTx} />
         </Modal>
     </div>
 </Page>

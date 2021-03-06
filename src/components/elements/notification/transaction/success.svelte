@@ -3,7 +3,6 @@
     import type {ChainConfig} from '~/config'
 
     export let tx: string | undefined
-    export let onClose: (() => undefined) | undefined = undefined
     export let activeBlockchain: ChainConfig
 
     let txUrl: string = ''
