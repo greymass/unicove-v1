@@ -23,9 +23,6 @@ export async function fetchTxFee() {
     const session: LinkSession | undefined = get(activeSession)
     const blockchain: ChainConfig = get(activeBlockchain)
 
-    console.log({session})
-    console.log({blockchain})
-
     let fee: Asset | undefined
 
     if (blockchain.id === 'fio') {
@@ -42,8 +39,6 @@ export async function fetchTxFee() {
 
         fee = Asset.fromUnits(fees?.rows[0].suf_amount || 0, blockchain.coreTokenSymbol)
     }
-
-    console.log({fee})
 
     txFee.set(fee)
 }

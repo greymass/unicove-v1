@@ -6,9 +6,8 @@
     import Icons from './icons.svelte'
     import Inputs from './inputs.svelte'
     import Progress from './progress.svelte'
-    import Modal from './modals.svelte'
-    import Segments from './segments.svelte'
     import Modals from './modals.svelte'
+    import Segments from './segments.svelte'
 
     import Nav from '~/components/elements/nav.svelte'
 
@@ -18,9 +17,8 @@
         {name: 'Icons', path: 'icons', component: Icons},
         {name: 'Inputs', path: 'inputs', component: Inputs},
         {name: 'Progress Bar', path: 'progress', component: Progress},
-        {name: 'Modals', path: 'modals', component: Modal},
-        {name: 'Segments', path: 'segment', component: Segments},
         {name: 'Modals', path: 'modals', component: Modals},
+        {name: 'Segments', path: 'segment', component: Segments},
     ]
 </script>
 
