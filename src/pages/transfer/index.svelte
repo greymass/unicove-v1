@@ -1,6 +1,7 @@
 <script lang="ts">
     import {Asset} from 'anchor-link'
     import {onMount} from 'svelte'
+    import {writable} from 'svelte/store'
 
     import {Step} from './types'
 
@@ -23,7 +24,9 @@
     import Page from '~/components/layout/page.svelte'
 
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let displaySuccessTx: string | undefined = undefined
+    let successTx: string | undefined = undefined
+    let displaySuccessTx = writable<boolean>(false)
+
     let previousChain: string | undefined = undefined
     let balanceValue: number | undefined = undefined
 
@@ -97,7 +100,8 @@
                 },
             })
             .then((result) => {
-                displaySuccessTx = result?.payload?.tx
+                successTx = result?.payload?.tx
+                $displaySuccessTx = true
 
                 resetData()
             })
@@ -132,9 +136,12 @@
             <TransferConfirm availableBalance={balanceValue} {handleTransfer} />
         {/if}
 
-        <Modal display={!!displaySuccessTx}>
+        <Modal display={displaySuccessTx}>
             <TransactionNotificationSuccess
-                onClose={() => (displaySuccessTx = undefined)}
+                onClose={() => {
+                  successTx = undefined
+                  $displaySuccessTx = false
+                }}
                 activeBlockchain={$activeBlockchain}
                 tx={displaySuccessTx}
             />
