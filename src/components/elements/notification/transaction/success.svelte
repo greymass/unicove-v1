@@ -47,5 +47,5 @@
         <Icon size="massive" name="check-circle" />
     </div>
     <h4>The transaction was successful!</h4>
-    <a class="link" href={txUrl}> View on Block Explorer </a>
+    <a class="link" href={txUrl} target="_blank"> View on Block Explorer </a>
 </div>

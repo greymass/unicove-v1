@@ -28,6 +28,7 @@
             toAccount,
             toAddress,
             amount,
+            memo,
         }))
 
         handleTransfer()

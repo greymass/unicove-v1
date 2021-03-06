@@ -143,7 +143,7 @@
                   $displaySuccessTx = false
                 }}
                 activeBlockchain={$activeBlockchain}
-                tx={displaySuccessTx}
+                tx={successTx}
             />
         </Modal>
     </div>
