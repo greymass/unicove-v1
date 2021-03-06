@@ -61,9 +61,7 @@
             step: Step.Recipient,
         })
 
-        if ($activeBlockchain.id === 'fio') {
-            fetchTxFee()
-        }
+        fetchTxFee()
     }
 
     function getActionData() {
@@ -99,8 +97,6 @@
                 },
             })
             .then((result) => {
-                console.log('done!', result)
-
                 displaySuccessTx = result?.payload?.tx
 
                 resetData()

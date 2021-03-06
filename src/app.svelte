@@ -7,7 +7,7 @@
 
     import Dashboard from '~/pages/dashboard.svelte'
     import Login from '~/pages/login.svelte'
-    import Transfer from '~/pages/transfer.svelte'
+    import Transfer from '~/pages/transfer/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
 
