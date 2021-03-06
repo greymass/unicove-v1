@@ -8,6 +8,7 @@
     import Dashboard from '~/pages/dashboard.svelte'
     import Login from '~/pages/login.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
+    import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
 
@@ -86,6 +87,9 @@
             </Route>
             <Route path="/transfer">
                 <Transfer />
+            </Route>
+            <Route path="/tokens">
+                <Tokens />
             </Route>
             <Route path="/resources/*">
                 <Resources />
