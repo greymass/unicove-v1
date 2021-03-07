@@ -8,6 +8,7 @@
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
+    import Group from '~/components/elements/segment/group.svelte'
 
     $: isActive = (session: SessionLike) => sessionEquals(session, $activeSession!)
 
@@ -132,7 +133,7 @@
     {#each groupings as group}
         <div class="network" on:click={() => toggle(group.chainId)}>
             <div class="header">
-                <Text>{group.name}</Text>
+                <Text>{group.name} ({group.sessions.length})</Text>
                 <Icon name={collapsed[group.chainId] ? 'chevron-right' : 'chevron-down'} />
             </div>
             <ul class="accounts" class:collapsed={collapsed[group.chainId]}>
