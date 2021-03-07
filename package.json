@@ -18,7 +18,7 @@
         "idb": "^6.0.0",
         "inter-ui": "^3.15.0",
         "svelte-result-store": "^1.0.6",
-        "tinro": "^0.5.6"
+        "tinro": "^0.6.0"
     },
     "devDependencies": {
         "@snowpack/plugin-svelte": "^3.4.0",
@@ -29,7 +29,7 @@
         "@typescript-eslint/parser": "^4.10.0",
         "autoprefixer": "^10.1.0",
         "eslint": "^7.15.0",
-        "eslint-config-prettier": "^7.0.0",
+        "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-prettier": "^3.3.0",
         "eslint-plugin-svelte3": "^3.0.0",
         "postcss": "^8.2.1",
