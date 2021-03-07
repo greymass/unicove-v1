@@ -29,6 +29,8 @@ export enum ChainFeatures {
     Staking,
     /** eosio.voteproducer https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/voting.cpp */
     VoteProducer,
+    /** delphioracle https://github.com/eostitan/delphioracle */
+    DelphiOracle,
 }
 
 export interface ChainConfig {
@@ -48,6 +50,8 @@ export interface ChainConfig {
     coreTokenTransfer: Name
     /** Node URL to use. */
     nodeUrl: string
+    /** True if network is a testnet. */
+    testnet: boolean
 }
 
 /** Supported chains. */
@@ -61,6 +65,7 @@ export const chains: ChainConfig[] = [
             ChainFeatures.REX,
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
+            ChainFeatures.DelphiOracle,
         ]),
         chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
         coreTokenSymbol: Asset.Symbol.from('4,EOS'),
@@ -68,6 +73,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'EOS',
         nodeUrl: 'https://eos.greymass.com',
+        testnet: false,
     },
     {
         id: 'fio',
@@ -78,6 +84,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('trnsfiopubky'),
         name: 'FIO',
         nodeUrl: 'https://fio.greymass.com',
+        testnet: false,
     },
     {
         id: 'jungle3',
@@ -96,6 +103,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Jungle 3 (Testnet)',
         nodeUrl: 'https://jungle3.greymass.com',
+        testnet: true,
     },
     {
         id: 'telos',
@@ -113,6 +121,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
+        testnet: false,
     },
 ]
 
