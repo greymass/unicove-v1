@@ -7,6 +7,7 @@
 
     import Dashboard from '~/pages/dashboard.svelte'
     import Login from '~/pages/login.svelte'
+    import Request from '~/pages/request/index.svelte'
     import TransferSelect from '~/pages/transferSelect/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Tokens from '~/pages/tokens/index.svelte'
@@ -94,6 +95,9 @@
             </Route>
             <Route path="/dashboard">
                 <Dashboard />
+            </Route>
+            <Route path="/request/:payload">
+                <Request />
             </Route>
             <Route path="/resources/*">
                 <Resources />

@@ -20,6 +20,7 @@
         "idb": "^6.0.0",
         "inter-ui": "^3.15.0",
         "svelte-qr": "^1.0.0",
+        "pako": "^2.0.3",
         "svelte-result-store": "^1.0.6",
         "tinro": "^0.6.0"
     },
@@ -27,6 +28,7 @@
         "@snowpack/plugin-svelte": "^3.4.0",
         "@snowpack/plugin-typescript": "^1.1.1",
         "@snowpack/plugin-webpack": "^2.2.0",
+        "@types/pako": "^1.0.1",
         "@types/snowpack-env": "^2.3.2",
         "@typescript-eslint/eslint-plugin": "^4.10.0",
         "@typescript-eslint/parser": "^4.10.0",
