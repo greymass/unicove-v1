@@ -17,3 +17,7 @@ format: node_modules
 
 node_modules:
 	yarn install --non-interactive --frozen-lockfile --ignore-scripts
+
+.PHONY: clean
+clean:
+	rm -rf build/

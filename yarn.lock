@@ -2666,10 +2666,10 @@ escodegen@^1.14.1:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-prettier@^7.0.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-7.2.0.tgz#f4a4bd2832e810e8cc7c1411ec85b3e85c0c53f9"
-  integrity sha512-rV4Qu0C3nfJKPOAhFujFxB7RMP+URFyQqqOZW9DMRD7ZDTFyjaIlETU3xzHELt++4ugC0+Jm084HQYkkJe+Ivg==
+eslint-config-prettier@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.1.0.tgz#4ef1eaf97afe5176e6a75ddfb57c335121abc5a6"
+  integrity sha512-oKMhGv3ihGbCIimCAjqkdzx2Q+jthoqnXSP+d86M9tptwugycmTFdVR4IpLgq2c4SHifbwO90z2fQ8/Aio73yw==
 
 eslint-plugin-prettier@^3.3.0:
   version "3.3.1"
@@ -5977,7 +5977,15 @@ svelte-preprocess@^4.0.0, svelte-preprocess@^4.6.0, svelte-preprocess@^4.6.1:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.31.0:
+svelte-result-store@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/svelte-result-store/-/svelte-result-store-1.0.6.tgz#e6f60459b820f7be02efdc97620a2500aa7153b8"
+  integrity sha512-S25sUpkVPB/zU7cirMcHfzOjcgepANdmtyfEx2+AMtgqxNnPl2516TOk5Jymvhk4Glv1gTcOm9YwGiNfQ5k3Ww==
+  dependencies:
+    svelte "^3.35.0"
+    tslib "^2.1.0"
+
+svelte@^3.35.0:
   version "3.35.0"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.35.0.tgz#e0d0ba60c4852181c2b4fd851194be6fda493e65"
   integrity sha512-gknlZkR2sXheu/X+B7dDImwANVvK1R0QGQLd8CNIfxxGPeXBmePnxfzb6fWwTQRsYQG7lYkZXvpXJvxvpsoB7g==
@@ -6106,10 +6114,10 @@ timsort@^0.3.0:
   resolved "https://registry.yarnpkg.com/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
 
-tinro@^0.5.6:
-  version "0.5.15"
-  resolved "https://registry.yarnpkg.com/tinro/-/tinro-0.5.15.tgz#8e7d0f1c3db8e8eaec227d77e748fa512ce68781"
-  integrity sha512-m1262wrO+7+Jsm7rDLCS9VnCd9CxlR7OXpfM5MsacjazSukYy2ymRx6yY+enm6QIIpC/jcmtKkplAkOZIkivXw==
+tinro@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/tinro/-/tinro-0.6.0.tgz#e50481d171b9533e864efd7df683b85199f76d0f"
+  integrity sha512-KbFguhU1kwFNr0Yf2CYKX0aw9UCYMub2vbe/lojOHMrW31xaf9jcnHW2MDFw9kMAO4LYEbtxfy28+czj1lx4Kw==
 
 to-arraybuffer@^1.0.0:
   version "1.0.1"
