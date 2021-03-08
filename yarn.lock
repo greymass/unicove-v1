@@ -5810,10 +5810,10 @@ supports-color@^7.0.0, supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-svelte-check@^1.1.27:
-  version "1.1.34"
-  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-1.1.34.tgz#3d99d3dc48278d13509f223b2875688d5dd48b11"
-  integrity sha512-9k3XoSBiXKIu34w3R8adM35pjJhbB7PJN8aMMusYVZQoPs9+HBJ8OPRfIr6c+LCT0kqR/3WnxkQ/1ooitISbBA==
+svelte-check@^1.1.33:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-1.2.3.tgz#bf39879f8cecd380a8f75553d169335cc9395497"
+  integrity sha512-EAuxtwjpTL2K7MHCDKUtt8YeDhM8sf8ZHTdODfE7yYb53nDD8u+p5I5Ub77VPSqgHUlaJh66ieB14rrLeA9YxA==
   dependencies:
     chalk "^4.0.0"
     chokidar "^3.4.1"
