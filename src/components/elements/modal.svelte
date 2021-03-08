@@ -34,8 +34,8 @@
         letter-spacing: -0.26px;
         background-color: white;
 
-        position: absolute;
-        top: 25%;
+        position: fixed;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
 
