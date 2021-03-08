@@ -131,8 +131,8 @@
 
 <div class="list">
     {#each groupings as group}
-        <div class="network" on:click={() => toggle(group.chainId)}>
-            <div class="header">
+        <div class="network">
+            <div class="header" on:click={() => toggle(group.chainId)}>
                 <Text>{group.name} ({group.sessions.length})</Text>
                 <Icon name={collapsed[group.chainId] ? 'chevron-right' : 'chevron-down'} />
             </div>
