@@ -5,13 +5,15 @@
     import {ChainFeatures} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
-    import Nav from '~/components/elements/nav.svelte'
 
-    import ResourcesOverview from '~/pages/resources/overview.svelte'
-    import ResourcesFuel from '~/pages/resources/fuel.svelte'
-    import ResourcesPowerUp from '~/pages/resources/powerup.svelte'
-    import ResourcesRex from '~/pages/resources/rex.svelte'
-    import ResourcesStaked from '~/pages/resources/staking.svelte'
+    import ResourcesOverview from '~/pages/resources/overview/index.svelte'
+    import ResourcesOverviewCpu from '~/pages/resources/overview/cpu.svelte'
+    import ResourcesOverviewNet from '~/pages/resources/overview/net.svelte'
+    import ResourcesOverviewRam from '~/pages/resources/overview/ram.svelte'
+    import ResourcesFuel from '~/pages/resources/systems/fuel.svelte'
+    import ResourcesPowerUp from '~/pages/resources/systems/powerup.svelte'
+    import ResourcesRex from '~/pages/resources/systems/rex.svelte'
+    import ResourcesStaked from '~/pages/resources/systems/staking.svelte'
 
     interface PotentialRoute {
         feature: ChainFeatures
@@ -56,10 +58,18 @@
     }
 </script>
 
-<Page title="Resources">
-    <Nav {routes} home="Overview" />
+<Page title="Network Resources">
     <Route path="/">
         <ResourcesOverview />
+    </Route>
+    <Route path="/cpu">
+        <ResourcesOverviewCpu />
+    </Route>
+    <Route path="/net">
+        <ResourcesOverviewNet />
+    </Route>
+    <Route path="/ram">
+        <ResourcesOverviewRam />
     </Route>
     {#each routes as route}
         <Route path={`/${route.path}`}>

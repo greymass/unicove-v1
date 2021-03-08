@@ -139,6 +139,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'WAX',
         nodeUrl: 'https://wax.greymass.com',
+        testnet: false,
     },
 ]
 

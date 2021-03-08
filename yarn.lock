@@ -846,15 +846,16 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@greymass/eosio-resources@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@greymass/eosio-resources/-/eosio-resources-0.3.1.tgz#828d9f18e067f85051dcb1fa10a6bbd3799a1550"
-  integrity sha512-BC4lGzDjP4s8TGC29ToYDJZ7gStzI3qYJxhSPVp4Hbdt7wnkdo68cjP3Ut3EiW/DI0IMpO/15XZmw+tSadvYug==
+"@greymass/eosio-resources@0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@greymass/eosio-resources/-/eosio-resources-0.5.2.tgz#f19c1b2bc5fbd80e8eb58c8f46e2db3c01704dfe"
+  integrity sha512-VP+gpvrBwivG84dob56JQFVG89LG9L776A8qkb4kcNJnfd03iO/wk0PGMo5EilONOprIJraostC8WipkTBX0qQ==
   dependencies:
     "@greymass/eosio" "^0.3.2"
+    bn.js "^4.11.9"
     tslib "^2.1.0"
 
-"@greymass/eosio@0.3.2", "@greymass/eosio@^0.3.2":
+"@greymass/eosio@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@greymass/eosio/-/eosio-0.3.2.tgz#2915a6687af0450b5a201b8f2f978e4a94c1671b"
   integrity sha512-9nHuXMwg2QYB4TAO35zD/zObik5CAqas439kQEuljRwn7QQUsISDX+txICaJmKuBCmbnhHSWXwpDxib3f2m9jQ==
@@ -5976,6 +5977,11 @@ svelte-preprocess@^4.0.0, svelte-preprocess@^4.6.0, svelte-preprocess@^4.6.1:
     "@types/sass" "^1.16.0"
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
+
+svelte-qr@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-qr/-/svelte-qr-1.0.0.tgz#e7a25c0fb952388a2ce8f1ea85f9c70473e2122e"
+  integrity sha512-7n/FPFhImPI68NCwChzYqzTbTpDhGCiFgGiCQY+IXS8sh0Xhzzd0wwQnN5n2BCJ0Uvti8s0RhKErwcw4Lp7RvQ==
 
 svelte-result-store@^1.0.6:
   version "1.0.6"

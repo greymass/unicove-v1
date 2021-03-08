@@ -38,7 +38,7 @@
     }
 
     .content {
-        margin: 45px;
+        margin: 45px 0;
     }
 
     .content h1 {

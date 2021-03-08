@@ -74,6 +74,7 @@
         border-radius: var(--radius);
         padding: 10px 12px;
         color: var(--main-blue);
+        text-decoration: none;
         user-select: none;
         -webkit-user-select: none;
         cursor: pointer;

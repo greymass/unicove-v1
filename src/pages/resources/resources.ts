@@ -56,10 +56,13 @@ export const statePowerUp = readable<PowerUpState | undefined>(undefined, (set) 
 export const msToRent = writable<number>(1)
 
 export const powerupPrice = derived(
-    [msToRent, statePowerUp, info],
-    ([$msToRent, $statePowerUp, $info]) => {
-        if ($msToRent && $statePowerUp) {
-            return Asset.from($statePowerUp.cpu.price_per_ms($msToRent, $info), '4,EOS')
+    [msToRent, sampleUsage, statePowerUp, info],
+    ([$msToRent, $sampleUsage, $statePowerUp, $info]) => {
+        if ($msToRent && $sampleUsage && $statePowerUp) {
+            return Asset.from(
+                $statePowerUp.cpu.price_per_ms($sampleUsage, $msToRent, $info),
+                '4,EOS'
+            )
         }
         return Asset.from(0, '4,EOS')
     }
