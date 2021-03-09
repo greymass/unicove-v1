@@ -62,16 +62,6 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
     undefined
 )
 
-export function fetchActiveAccount(
-    session: LinkSession
-): Promise<API.v1.AccountObject | undefined> {
-    return new Promise((resolve) => {
-        loadAccount(session.auth.actor, session.chainId, (v) => {
-            resolve(v.account || undefined)
-        })
-    })
-}
-
 function fetchBalance(session: LinkSession) {
     return session.client.v1.chain.get_currency_balance(
         chainConfig(session.chainId).coreTokenContract,
