@@ -54,8 +54,6 @@ export interface ChainConfig {
     testnet: boolean
     /** Bloks url  */
     bloksUrl: string
-    /** Whether or not the chain has fees  */
-    hasFees?: boolean
 }
 
 /** Supported chains. */
@@ -91,7 +89,6 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://fio.greymass.com',
         testnet: false,
         bloksUrl: 'https://fio.bloks.io',
-        hasFees: true,
     },
     {
         id: 'jungle3',
