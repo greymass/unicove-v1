@@ -28,6 +28,7 @@
     }
 
     :root {
+        --main-white: #fff;
         --main-blue: #2d8eff;
         --main-grey: #f7f7fc;
         --main-black: #585d6e;
@@ -36,6 +37,7 @@
         --light-grey: #9898b5;
         --light-red: rgba(255, 146, 30, 0.1);
         --light-blue: #e0eeff;
+        --light-black: #585d6e;
         --dark-grey: #b7c1cb;
         --divider-grey: #e0e6ee;
     }

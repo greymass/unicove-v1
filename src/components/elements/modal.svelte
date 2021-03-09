@@ -53,7 +53,7 @@
         }
 
         .modal-header {
-            color: #585d6e;
+            color: var(--light-grey);
             font-weight: bold;
             font-size: 18px;
             line-height: 22px;
