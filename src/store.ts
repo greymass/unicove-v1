@@ -30,13 +30,19 @@ export const preferences = Preferences.shared
 export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | undefined>(
     activeSession,
     (session: LinkSession | undefined, set: (v: API.v1.AccountObject | undefined) => void) => {
-        fetchActiveAccount(session!).then(async (account) => {
+        if (!session) {
+            return
+        }
+        loadAccount(session.auth.actor, session.chainId, async (v) => {
+            const account = v.account
+
             if (!account?.core_liquid_balance) {
-                const assets: Asset[] = await fetchBalance(session!)
+                const assets: Asset[] = await fetchBalance(session!).catch(err => {
+                    console.log('Error fetching account balance:', err)
+                })
 
                 account!.core_liquid_balance = assets[0]!
             }
-
             set(account)
         })
     },
