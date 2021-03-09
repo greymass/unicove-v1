@@ -88,6 +88,17 @@ export const chains: ChainConfig[] = [
         testnet: false,
     },
     {
+        id: 'fio-testnet',
+        chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),
+        chainId: ChainId.from('b20901380af44ef59c5918439a1f9a41d83669020319a80574b804a5f95cbd7e'),
+        coreTokenSymbol: Asset.Symbol.from('9,FIO'),
+        coreTokenContract: Name.from('fio.token'),
+        coreTokenTransfer: Name.from('trnsfiopubky'),
+        name: 'FIO Testnet',
+        nodeUrl: 'https://fiotestnet.greymass.com',
+        testnet: true,
+    },
+    {
         id: 'jungle3',
         chainFeatures: new Set([
             ChainFeatures.BidName,
