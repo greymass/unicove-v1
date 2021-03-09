@@ -10,6 +10,8 @@
     import Form from '~/components/elements/form.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
 
+    export let resource = 'cpu'
+
     $: account = $currentAccount
     let sampleAccount: API.v1.AccountObject
 
@@ -137,7 +139,6 @@
                     const resourceCost =
                         sampleAccount.cpu_limit.max.value /
                         sampleAccount.total_resources.cpu_weight.value
-                    console.log('resourceCost')
                     estimatedTransfers = ((resourceCost * cpuToReceive.value) / 200).toFixed(1)
                 }
             }

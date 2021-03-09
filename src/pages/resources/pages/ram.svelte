@@ -12,11 +12,10 @@
 </style>
 
 {#if $currentAccount}
-    <ResourceStateRAM>
-        <Button primary href="/resources">
+    <ResourceStateRAM showExtra>
+        <Button href="/resources">
             <Icon name="arrow-left" />
             <Text>Back to Resources</Text>
         </Button>
     </ResourceStateRAM>
-    <Button primary href="/resources">Back to Resources</Button>
 {/if}

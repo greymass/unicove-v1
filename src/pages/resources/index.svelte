@@ -1,79 +1,61 @@
 <script lang="ts">
     import {Route} from 'tinro'
-    import {activeBlockchain} from '~/store'
-    import type {ChainConfig} from '~/config'
-    import {ChainFeatures} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
 
-    import ResourcesOverview from '~/pages/resources/overview/index.svelte'
-    import ResourcesOverviewCpu from '~/pages/resources/overview/cpu.svelte'
-    import ResourcesOverviewNet from '~/pages/resources/overview/net.svelte'
-    import ResourcesOverviewRam from '~/pages/resources/overview/ram.svelte'
-    import ResourcesFuel from '~/pages/resources/systems/fuel.svelte'
-    import ResourcesPowerUp from '~/pages/resources/systems/powerup.svelte'
-    import ResourcesRex from '~/pages/resources/systems/rex.svelte'
-    import ResourcesStaked from '~/pages/resources/systems/staking.svelte'
-
-    interface PotentialRoute {
-        feature: ChainFeatures
-        route: NavigationRoute
-    }
-
-    interface NavigationRoute {
-        name: string
-        path: string
-        component: any
-    }
-
-    const potentialRoutes: PotentialRoute[] = [
-        {
-            feature: ChainFeatures.Fuel,
-            route: {name: 'Fuel', path: 'fuel', component: ResourcesFuel},
-        },
-        {
-            feature: ChainFeatures.PowerUp,
-            route: {name: 'PowerUp', path: 'powerup', component: ResourcesPowerUp},
-        },
-        {
-            feature: ChainFeatures.REX,
-            route: {name: 'REX', path: 'rex', component: ResourcesRex},
-        },
-        {
-            feature: ChainFeatures.Staking,
-            route: {name: 'Staking', path: 'staking', component: ResourcesStaked},
-        },
-    ]
-
-    $: routes = determineRoutes($activeBlockchain)
-
-    function determineRoutes(blockchain: ChainConfig): NavigationRoute[] {
-        const matchingRoutes: NavigationRoute[] = []
-        potentialRoutes.forEach((route: PotentialRoute) => {
-            if (blockchain.chainFeatures.has(route.feature)) {
-                matchingRoutes.push(route.route)
-            }
-        })
-        return matchingRoutes
-    }
+    import ResourcesOverview from '~/pages/resources/pages/index.svelte'
+    import ResourcesOverviewCpu from '~/pages/resources/pages/cpu.svelte'
+    import ResourcesOverviewNet from '~/pages/resources/pages/net.svelte'
+    import ResourcesOverviewRam from '~/pages/resources/pages/ram.svelte'
+    import ResourcesCPUFuel from '~/pages/resources/pages/cpu/fuel.svelte'
+    import ResourcesCPUPowerUp from '~/pages/resources/pages/cpu/powerup.svelte'
+    import ResourcesCPUREX from '~/pages/resources/pages/cpu/rex.svelte'
+    import ResourcesNETFuel from '~/pages/resources/pages/net/fuel.svelte'
+    import ResourcesNETPowerUp from '~/pages/resources/pages/net/powerup.svelte'
+    import ResourcesNETREX from '~/pages/resources/pages/net/rex.svelte'
+    import ResourcesCPUStaking from '~/pages/resources/pages/cpu/staking.svelte'
+    import ResourcesNETStaking from '~/pages/resources/pages/net/staking.svelte'
 </script>
 
 <Page title="Network Resources">
     <Route path="/">
         <ResourcesOverview />
     </Route>
+    <!-- CPU -->
     <Route path="/cpu">
         <ResourcesOverviewCpu />
     </Route>
+    <Route path="/cpu/fuel">
+        <ResourcesCPUFuel />
+    </Route>
+    <Route path="/cpu/powerup">
+        <ResourcesCPUPowerUp />
+    </Route>
+    <Route path="/cpu/rex">
+        <ResourcesCPUREX />
+    </Route>
+    <!-- NET -->
     <Route path="/net">
         <ResourcesOverviewNet />
     </Route>
+    <Route path="/net/fuel">
+        <ResourcesNETFuel />
+    </Route>
+    <Route path="/net/powerup">
+        <ResourcesNETPowerUp />
+    </Route>
+    <Route path="/net/rex">
+        <ResourcesNETREX />
+    </Route>
+    <!-- RAM -->
     <Route path="/ram">
         <ResourcesOverviewRam />
     </Route>
-    {#each routes as route}
-        <Route path={`/${route.path}`}>
-            <svelte:component this={route.component} />
-        </Route>
-    {/each}
+    <!-- Staking -->
+    <Route path="/cpu/stake">
+        <ResourcesCPUStaking />
+    </Route>
+    <Route path="/net/stake">
+        <ResourcesNETStaking />
+    </Route>
 </Page>
