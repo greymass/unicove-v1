@@ -31,9 +31,16 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
     activeSession,
     (session: LinkSession | undefined, set: (v: API.v1.AccountObject | undefined) => void) => {
         if (!session) {
+            set(undefined)
             return
         }
+
+        let active = true
+
         loadAccount(session.auth.actor, session.chainId, async (v) => {
+            if (!active) {
+                return
+            }
             const account = v.account
 
             if (!account?.core_liquid_balance) {
@@ -47,6 +54,10 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
             }
             set(account)
         })
+
+        return () => {
+            active = false
+        }
     },
     undefined
 )
