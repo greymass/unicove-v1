@@ -52,6 +52,8 @@ export interface ChainConfig {
     nodeUrl: string
     /** True if network is a testnet. */
     testnet: boolean
+    /** Bloks url  */
+    bloksUrl: string
 }
 
 /** Supported chains. */
@@ -75,6 +77,7 @@ export const chains: ChainConfig[] = [
         name: 'EOS',
         nodeUrl: 'https://eos.greymass.com',
         testnet: false,
+        bloksUrl: 'https://bloks.io',
     },
     {
         id: 'fio',
@@ -86,6 +89,7 @@ export const chains: ChainConfig[] = [
         name: 'FIO',
         nodeUrl: 'https://fio.greymass.com',
         testnet: false,
+        bloksUrl: 'https://fio.bloks.io',
     },
     {
         id: 'fio-testnet',
@@ -116,6 +120,7 @@ export const chains: ChainConfig[] = [
         name: 'Jungle 3 (Testnet)',
         nodeUrl: 'https://jungle3.greymass.com',
         testnet: true,
+        bloksUrl: 'https://jungle3.bloks.io',
     },
     {
         id: 'telos',
@@ -134,6 +139,7 @@ export const chains: ChainConfig[] = [
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
         testnet: false,
+        bloksUrl: 'https://telos.bloks.io',
     },
     {
         id: 'wax',

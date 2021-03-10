@@ -58,7 +58,7 @@ export async function logout(id: SessionLike) {
             if (list.length > 0) {
                 activate(list[0])
             } else {
-                activeSession.set(null)
+                activeSession.set(undefined)
             }
         }
         availableSessions.set(list)

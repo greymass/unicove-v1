@@ -7,11 +7,11 @@
 
     import Dashboard from '~/pages/dashboard.svelte'
     import Login from '~/pages/login.svelte'
-    import Transfer from '~/pages/transfer.svelte'
+    import Transfer from '~/pages/transfer/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
 
-    $: needLogin = $activeSession === null && !$router.path.startsWith('/_components')
+    $: needLogin = $activeSession === undefined && !$router.path.startsWith('/_components')
 </script>
 
 <style lang="scss" global>
@@ -27,19 +27,37 @@
         pointer-events: none;
     }
 
+    label,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    tr,
+    td {
+        color: var(--main-black);
+    }
+
+    a {
+        cursor: pointer;
+    }
+
     :root {
-        --main-white: #fff;
-        --main-blue: #2d8eff;
-        --main-grey: #f7f7fc;
-        --main-black: #585d6e;
-        --main-red: #ff931e;
-        --light-black: #2c3e50;
-        --light-grey: #9898b5;
-        --light-red: rgba(255, 146, 30, 0.1);
-        --light-blue: #e0eeff;
-        --light-black: #585d6e;
         --dark-grey: #b7c1cb;
         --divider-grey: #e0e6ee;
+        --light-black: #2c3e50;
+        --light-blue: #e0eeff;
+        --light-grey: #9898b5;
+        --light-red: rgba(255, 146, 30, 0.1);
+        --main-black: #585d6e;
+        --main-blue: #2d8eff;
+        --main-grey: #f7f7fc;
+        --main-red: #ff931e;
+        --success-green: #4bca81;
+        --error-red: #ff0033;
+
+        --mobile-breakpoint: 600px;
     }
 
     main {

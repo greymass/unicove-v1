@@ -38,11 +38,17 @@
     }
 
     .content {
-        margin: 45px 0;
+        margin: 45px;
+
+        h1 {
+            margin-bottom: 20px;
+        }
     }
 
-    .content h1 {
-        margin-bottom: 20px;
+    @media only screen and (max-width: 600px) {
+        .content {
+            margin: 55px 8px;
+        }
     }
 </style>
 
