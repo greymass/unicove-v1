@@ -1,6 +1,7 @@
 <script>
- import {onMount} from 'svelte'
-  import {activeAccount} from '~/store'
+  import {onMount} from 'svelte'
+  import {currentAccount} from '~/store'
+  import Page from '~/components/layout/page.svelte'
   import {syncTokenBalances, stopSyncTokenBalances, tokensData} from './tokensData'
 
   onMount(() => {
@@ -14,18 +15,36 @@
 
 </script>
 
-<div>
+<style type="scss">
+
+  h2 {
+      margin-top: 30px;
+
+      span {
+        text-decoration: underline;
+        margin-left: 10px;
+      }
+  }
+
+</style>
+<Page title="Tokens">
   <h2>
-      System Token: {$activeAccount?.core_liquid_balance.units}
+      Current Balance:
+      <span>
+        {$currentAccount?.core_liquid_balance.toString()}
+      </span>
   </h2>
-  {#each Object.values($tokensData) as token}
-      <div>
-        <h2>
-            {token.name}
-        </h2>
-        <p>
-            Balance: {token.balance.units}
-        </p>
-      </div>
-  {/each}
-</div>
+  {#if $tokensData}
+      {#each Object.values($tokensData) as token}
+          <div>
+            <h2>
+                {token.name}
+            </h2>
+            <p>
+                Balance: {token.balance.units}
+            </p>
+          </div>
+      {/each}
+  {/if}
+</Page>
+
