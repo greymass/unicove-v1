@@ -1,5 +1,6 @@
 import {writable, get} from 'svelte/store'
 
+import {Asset} from 'anchor-link'
 import type {LinkSession} from 'anchor-link'
 
 import type {TokensData} from './types'
@@ -59,7 +60,13 @@ function parseTokens(tokens: object[]) : { string: TokensData } {
     const tokensData = {}
 
     tokens.forEach(token => {
-        tokensData[token.currency] = token
+        console.log({token})
+        console.log({sy: Asset.Symbol.from(`${token.decimals},${token.currency}`)})
+        tokensData[token.currency] = {
+            name: token.currency,
+            balance: Asset.fromUnits(token.amount || 0, Asset.Symbol.from(`${token.decimals},${token.currency}`)),
+            usdValue: Asset.fromUnits(token.usd_value * 100 || 0, Asset.Symbol.from(`2,USD`)),
+        }
     })
 
     return tokensData

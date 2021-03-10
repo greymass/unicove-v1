@@ -41,7 +41,7 @@
                 {token.name}
             </h2>
             <p>
-                Balance: {token.balance.units}
+                Balance: {token.balance.toString()} ({token.usdValue.toString()})
             </p>
           </div>
       {/each}
