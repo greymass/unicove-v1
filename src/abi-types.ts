@@ -1,5 +1,12 @@
 import {Asset, Float64, Int64, Name, Struct, TimePointSec, UInt8, UInt32, UInt64} from 'anchor-link'
 
+@Struct.type('buyrambytes')
+export class BuyRamBytes extends Struct {
+    @Struct.field(Name) payer!: Name
+    @Struct.field(Name) receiver!: Name
+    @Struct.field(UInt32) bytes!: UInt32
+}
+
 @Struct.type('transfer')
 export class Transfer extends Struct {
     @Struct.field('name') from!: Name

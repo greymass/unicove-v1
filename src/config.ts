@@ -101,6 +101,7 @@ export const chains: ChainConfig[] = [
         name: 'FIO Testnet',
         nodeUrl: 'https://fiotestnet.greymass.com',
         testnet: true,
+        bloksUrl: 'https://fio-test.bloks.io',
     },
     {
         id: 'jungle3',
