@@ -1,151 +1,72 @@
 <script lang="ts">
-    import type {AnyAction, API, LinkSession} from 'anchor-link'
-    import {Asset, UInt64} from '@greymass/eosio'
+    import type {AnyAction} from 'anchor-link'
+    import {Asset} from '@greymass/eosio'
 
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {ChainFeatures} from '~/config'
-    import {REXDeposit, REXRentCPU, REXRentNET} from '~/abi-types'
+
+    import {rexPrice, sampleUsage, stateREX} from '~/pages/resources/resources'
 
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
-    import InputAsset from '~/components/elements/input/asset.svelte'
+    import Input from '~/components/elements/input.svelte'
+    import Segment from '~/components/elements/segment.svelte'
+
+    import {REXDeposit, REXRentCPU, REXRentNET} from '~/abi-types'
 
     export let resource = 'cpu'
 
-    $: account = $currentAccount
-    let sampleAccount: API.v1.AccountObject
+    $: loading = $currentAccount
 
-    // Internal values
+    let amount: string = '1'
+    let cost = Asset.from(Number($rexPrice) * Number(amount), $activeBlockchain.coreTokenSymbol)
+
     $: balance =
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let totalRent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let totalUnlent: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let price: number = 0
-    let cpuToReceive: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-    let netToReceive: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
-    let rentNET = false
-    let rentCPU = true
-
-    let rentSplitNETFloor = 0.0001
-    let rentSplitNETCeiling = 0.0002
-    let rentSplitCPU = 0.9
-    let estimatedTransfers: string = '0'
-
-    // User entered payment amount
-    let value = '0.0025'
-
-    // Asset representation of user entered amount
-    let amount = Asset.fromFloat(parseFloat(value), $activeBlockchain.coreTokenSymbol)
-
-    // Asset representation of the user entered amount to each resource
-    let amountCPU = Asset.fromFloat(parseFloat(value), $activeBlockchain.coreTokenSymbol)
-    let amountNET = Asset.fromFloat(parseFloat(value), $activeBlockchain.coreTokenSymbol)
-
-    async function loadSampleAccount(session: LinkSession) {
-        sampleAccount = await session.client.v1.chain.get_account('teamgreymass')
-        return sampleAccount
-    }
-
-    async function loadTables(session: LinkSession) {
-        const results = await session.client.v1.chain.get_table_rows({
-            code: 'eosio',
-            scope: 'eosio',
-            table: 'rexpool',
-        })
-        if (results.rows) {
-            const [row] = results.rows
-            totalRent = Asset.from(row.total_rent)
-            totalUnlent = Asset.from(row.total_unlent)
-            price = totalRent.value / totalUnlent.value
-        }
-        return results
-    }
-
-    // load account based on active session
-    $: loading = loadSampleAccount($activeSession!) && loadTables($activeSession!)
-
-    // TODO: find or build some form builder and validation instead
-    //       sextant admin ui has the beginnings of one that can handle core types we could build on
     $: {
-        let parsed = parseFloat(value)
-        if (!sampleAccount || !account || isNaN(parsed) || parsed === 0) {
-            amount = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-            amountCPU = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-            amountNET = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-            cpuToReceive = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-            netToReceive = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-        } else {
-            amount = Asset.fromFloat(parsed, $activeBlockchain.coreTokenSymbol)
-            if (price) {
-                // Determine if the account needs to also rent NET
-                if (account.net_limit.available.value < 1000) {
-                    rentNET = true
-                    // If true, split the entered amount by the defined split
-                    amountCPU = Asset.fromFloat(
-                        amount.value * rentSplitCPU,
-                        $activeBlockchain.coreTokenSymbol
-                    )
-                    amountNET = Asset.fromFloat(
-                        amount.value - amountCPU.value,
-                        $activeBlockchain.coreTokenSymbol
-                    )
-                    // If the split is below the floor, readjust to set it to the floor
-                    if (amountNET.value < rentSplitNETFloor) {
-                        amountCPU = Asset.fromFloat(
-                            amount.value - rentSplitNETFloor,
-                            $activeBlockchain.coreTokenSymbol
-                        )
-                        amountNET = Asset.fromFloat(
-                            rentSplitNETFloor,
-                            $activeBlockchain.coreTokenSymbol
-                        )
-                    }
-                    // If the split is above the ceiling, readjust to set to the ceiling
-                    if (amountNET.value > rentSplitNETCeiling) {
-                        amountCPU = Asset.fromFloat(
-                            amount.value - rentSplitNETCeiling,
-                            $activeBlockchain.coreTokenSymbol
-                        )
-                        amountNET = Asset.fromFloat(
-                            rentSplitNETCeiling,
-                            $activeBlockchain.coreTokenSymbol
-                        )
-                    }
-                    // Calculate the amount of CPU and NET to receive
-                    cpuToReceive = Asset.fromFloat(
-                        amountCPU.value / price,
-                        $activeBlockchain.coreTokenSymbol
-                    )
-                    netToReceive = Asset.fromFloat(
-                        amountNET.value / price,
-                        $activeBlockchain.coreTokenSymbol
-                    )
-                    // Estimate the number of token transfer this amount would allow
-                    const resourceCost =
-                        sampleAccount.cpu_limit.max.value /
-                        sampleAccount.total_resources.cpu_weight.value
-                    estimatedTransfers = ((resourceCost * cpuToReceive.value) / 200).toFixed(1)
-                } else {
-                    rentNET = false
-                    amountCPU = Asset.fromFloat(amount.value, $activeBlockchain.coreTokenSymbol)
-                    amountNET = Asset.fromFloat(0, $activeBlockchain.coreTokenSymbol)
-                    cpuToReceive = Asset.fromFloat(
-                        amount.value / price,
-                        $activeBlockchain.coreTokenSymbol
-                    )
-                    netToReceive = Asset.fromFloat(0, $activeBlockchain.coreTokenSymbol)
-                    const resourceCost =
-                        sampleAccount.cpu_limit.max.value /
-                        sampleAccount.total_resources.cpu_weight.value
-                    estimatedTransfers = ((resourceCost * cpuToReceive.value) / 200).toFixed(1)
-                }
-            }
+        cost = Asset.from(
+            Number($rexPrice.value) * Number(amount),
+            $activeBlockchain.coreTokenSymbol
+        )
+    }
+
+    function cpu() {
+        return {
+            authorization: [$activeSession!.auth],
+            account: 'eosio',
+            name: 'rentcpu',
+            data: REXRentCPU.from({
+                from: $activeSession!.auth.actor,
+                receiver: $activeSession!.auth.actor,
+                loan_payment: cost,
+                loan_fund: Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol),
+            }),
         }
     }
 
-    async function rent() {
+    function net() {
+        return {
+            authorization: [$activeSession!.auth],
+            account: 'eosio',
+            name: 'rentnet',
+            data: REXRentNET.from({
+                from: $activeSession!.auth.actor,
+                receiver: $activeSession!.auth.actor,
+                loan_payment: cost,
+                loan_fund: Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol),
+            }),
+        }
+    }
+
+    async function powerup() {
+        if (!$stateREX) {
+            throw new Error('PowerUp state not loaded.')
+        }
+        if (!$sampleUsage) {
+            throw new Error('Usage sample required.')
+        }
         const actions: AnyAction[] = [
             {
                 authorization: [$activeSession!.auth],
@@ -153,72 +74,42 @@
                 name: 'deposit',
                 data: REXDeposit.from({
                     owner: $activeSession!.auth.actor,
-                    amount,
+                    amount: cost,
                 }),
             },
         ]
-        // If this transaction should rent CPU, append to actions
-        if (rentCPU) {
-            actions.push({
-                authorization: [$activeSession!.auth],
-                account: 'eosio',
-                name: 'rentcpu',
-                data: REXRentCPU.from({
-                    from: $activeSession!.auth.actor,
-                    receiver: $activeSession!.auth.actor,
-                    loan_payment: amountCPU,
-                    loan_fund: Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol),
-                }),
-            })
+        if (resource === 'cpu') {
+            actions.push(cpu())
         }
-        // If this transaction should rent NET, append to actions
-        if (rentNET) {
-            actions.push({
-                authorization: [$activeSession!.auth],
-                account: 'eosio',
-                name: 'rentnet',
-                data: REXRentNET.from({
-                    from: $activeSession!.auth.actor,
-                    receiver: $activeSession!.auth.actor,
-                    loan_payment: amountNET,
-                    loan_fund: Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol),
-                }),
-            })
+        if (resource === 'net') {
+            actions.push(net())
         }
-        await $activeSession!.transact({actions})
-        // adjust balance to reflect transfer
-        balance.units = UInt64.from(balance.units.toNumber() - Asset.from(amount).units.toNumber())
+        await $activeSession!.transact({
+            actions,
+        })
     }
 </script>
 
 <style>
 </style>
 
-{#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
+<Segment color="white">
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
-        <Form>
-            <p>You have <i on:click={() => (value = String(balance))}> {balance} </i></p>
-            <p>Rent Resources by paying...</p>
-            <InputAsset name="amount" bind:value />
-            <p>You will pay the following for each resource:</p>
-            <ul>
-                <li>{amountCPU} towards CPU</li>
-                <li>{amountNET} towards NET</li>
-            </ul>
-            <p>You will receive approximately:</p>
-            <ul>
-                <li>{cpuToReceive} as staked CPU</li>
-                <li>{netToReceive} as staked NET</li>
-            </ul>
-            <p>
-                Which is an amount capable of performing {estimatedTransfers} token transfers (based
-                on ~200μs per transfer).
-            </p>
-            <Button formValidation on:action={rent}>Pay</Button>
-        </Form>
+        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
+            <Form>
+                <p>
+                    Enter the number of <strong>{resource === 'cpu' ? 'ms' : 'kb'}</strong> you would
+                    like to rent.
+                </p>
+                <Input name="amount" bind:value={amount} />
+                <p>Cost: {cost}</p>
+                <p>Balance: {balance}</p>
+                <Button formValidation on:action={powerup}>Rent</Button>
+            </Form>
+        {:else}
+            <p>This feature is unavailable on this blockchain.</p>
+        {/if}
     {/await}
-{:else}
-    <p>This feature is unavailable on this blockchain.</p>
-{/if}
+</Segment>
