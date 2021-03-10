@@ -9,6 +9,10 @@
     export let name: string = ''
     export let placeholder: string = ''
     export let value: string = ''
+
+    /** Whether or not the button should go full width */
+    export let fullWidth: boolean = false
+
     let ref: HTMLInputElement
 
     export let isValid: any = () => true
@@ -18,9 +22,13 @@
 
     // Get parent form context (if exists)
     const form: Form = getContext('form')
+
+    const setInitialFormValidation = async () => {
+        form.setInput(name, isValid ? await isValid(value) : true)
+    }
+
     if (form) {
-        // Specify this input as a field on the parent form
-        form.setInput(name, isValid ? isValid(value) : true)
+        setInitialFormValidation()
     }
 
     onMount(() => {
@@ -35,10 +43,10 @@
     const debounce = (e: Event) => {
         clearTimeout(timer)
         value = (<HTMLInputElement>e.target).value
-        timer = setTimeout(() => {
+        timer = setTimeout(async () => {
             const response = {
                 name,
-                valid: isValid ? isValid(value) : true,
+                valid: isValid ? await isValid(value) : true,
                 value,
             }
             // If a form context exists, signal change events
@@ -65,11 +73,16 @@
             color: #585d6e;
             outline: none;
         }
+
+        &.fullWidth {
+            width: 100%;
+        }
     }
 </style>
 
 <input
     on:keyup={handleKeyup}
+    class={fullWidth ? 'fullWidth' : ''}
     type="text"
     {name}
     {disabled}

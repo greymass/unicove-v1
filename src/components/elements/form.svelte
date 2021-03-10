@@ -9,6 +9,7 @@
     const form: Form = {
         setInput: (name: string, valid: boolean = false) => {
             formFields[name] = valid
+            validate()
         },
         onChange: (response: InputResponse) => {
             formFields[response.name] = response.valid
