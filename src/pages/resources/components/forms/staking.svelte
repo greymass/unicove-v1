@@ -13,6 +13,8 @@
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
+    export let resource = 'cpu'
+
     let cpu: string = '0'
     let net: string = '0'
 
@@ -40,7 +42,7 @@
                         receiver: $activeSession!.auth.actor,
                         stake_net_quantity: amountNET,
                         stake_cpu_quantity: amountCPU,
-                        methods: false,
+                        transfer: false,
                     }),
                 },
             ],
@@ -63,15 +65,14 @@
     {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
         <Form>
             <p>You have {balance}</p>
-            <p>Amount of CPU:</p>
-            <InputAsset allowZero name="cpu" bind:value={cpu} />
-            <p>Amount of NET:</p>
-            <InputAsset allowZero name="net" bind:value={net} />
-            <p>The following amounts will be staked:</p>
-            <ul>
-                <li>to CPU: {amountCPU}</li>
-                <li>to NET: {amountNET}</li>
-            </ul>
+            {#if resource === 'cpu'}
+                <p>Amount of EOS to stake into CPU:</p>
+                <InputAsset allowZero name="cpu" bind:value={cpu} />
+            {/if}
+            {#if resource === 'net'}
+                <p>Amount of NET:</p>
+                <InputAsset allowZero name="net" bind:value={net} />
+            {/if}
             <Button formValidation on:action={stake}>Stake</Button>
         </Form>
         <ul />
