@@ -13,7 +13,6 @@ import {activeBlockchain, activeSession} from '~/store'
 let interval: any
 
 export function syncTokenBalances() {
-    console.log('sync')
     fetchBalances()
     interval = setInterval(() => {
         fetchBalances()
@@ -40,8 +39,6 @@ export async function fetchBalances() {
         blockchain.coreTokenSymbol
     }`
 
-    console.log({apiUrl})
-
     const apiResponse = await fetch(apiUrl).catch((error) => {
         console.log('An error occured while fetching token balances:', {error})
     })
@@ -50,9 +47,6 @@ export async function fetchBalances() {
         console.log('An error occured while parsing the token balances response body:', {error})
     })
 
-    console.log({apiResponse})
-    console.log({body: jsonBody})
-
     tokensData.set(parseTokens(jsonBody.tokens))
 }
 
@@ -60,8 +54,6 @@ function parseTokens(tokens: object[]) : { string: TokensData } {
     const tokensData = {}
 
     tokens.forEach(token => {
-        console.log({token})
-        console.log({sy: Asset.Symbol.from(`${token.decimals},${token.currency}`)})
         tokensData[token.currency] = {
             name: token.currency,
             balance: Asset.fromUnits(token.amount || 0, Asset.Symbol.from(`${token.decimals},${token.currency}`)),
