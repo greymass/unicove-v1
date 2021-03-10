@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type {API, LinkSession} from 'anchor-link'
     import {Asset} from '@greymass/eosio'
 
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
@@ -15,8 +14,6 @@
     import {PowerUp} from '~/abi-types'
 
     export let resource = 'cpu'
-
-    let account: API.v1.AccountObject
 
     $: loading = $currentAccount
 

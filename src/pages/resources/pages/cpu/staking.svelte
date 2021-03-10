@@ -17,4 +17,4 @@
     </Button>
 </ResourceStateCPU>
 
-<ResourcesStaking />
+<ResourcesStaking resource="cpu" />

@@ -11,7 +11,7 @@
 </style>
 
 <ResourceStateNET showExtra>
-    <Button href="/resources/cpu">
+    <Button href="/resources/net">
         <Icon name="arrow-left" />
         <Text>Back to NET Options</Text>
     </Button>

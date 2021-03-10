@@ -11,10 +11,10 @@
 </style>
 
 <ResourceStateNET showExtra>
-    <Button href="/resources/cpu">
+    <Button href="/resources/net">
         <Icon name="arrow-left" />
-        <Text>Back to CPU Options</Text>
+        <Text>Back to NET Options</Text>
     </Button>
 </ResourceStateNET>
 
-<ResourcesStaking />
+<ResourcesStaking resource="net" />

@@ -5,8 +5,6 @@ import {Resources, SampleUsage, PowerUpState, REXState} from '@greymass/eosio-re
 import {activeBlockchain} from '~/store'
 
 import {getClient} from '../../api-client'
-import {active} from 'tinro'
-import {compute_rest_props} from 'svelte/internal'
 
 let chainId: ChainId
 activeBlockchain.subscribe((value) => (chainId = value.chainId))

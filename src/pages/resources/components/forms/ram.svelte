@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Asset, UInt64} from '@greymass/eosio'
+    import {Asset} from '@greymass/eosio'
 
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {ChainFeatures} from '~/config'

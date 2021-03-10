@@ -8,7 +8,6 @@
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
-    import Group from '~/components/elements/segment/group.svelte'
 
     $: isActive = (session: SessionLike) => sessionEquals(session, $activeSession!)
 
