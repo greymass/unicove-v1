@@ -158,6 +158,7 @@ export const chains: ChainConfig[] = [
         name: 'WAX',
         nodeUrl: 'https://wax.greymass.com',
         testnet: false,
+        bloksUrl: 'https://wax.bloks.io',
     },
 ]
 
