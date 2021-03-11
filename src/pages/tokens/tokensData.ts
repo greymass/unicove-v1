@@ -5,10 +5,10 @@ import type {LinkSession} from 'anchor-link'
 
 import type {TokensData} from './types'
 
-export const tokensData = writable<{ string: TokensData } | undefined>(undefined)
-
 import type {ChainConfig} from '~/config'
 import {activeBlockchain, activeSession} from '~/store'
+
+export const tokensData = writable<{ [key: string]: TokensData } | undefined>(undefined)
 
 let interval: any
 
@@ -43,15 +43,22 @@ export async function fetchBalances() {
         console.log('An error occured while fetching token balances:', {error})
     })
 
-    const jsonBody = await apiResponse.json().catch((error) => {
+    const jsonBody = apiResponse && await apiResponse.json().catch((error) => {
         console.log('An error occured while parsing the token balances response body:', {error})
     })
 
     tokensData.set(parseTokens(jsonBody.tokens))
 }
 
-function parseTokens(tokens: object[]) : { string: TokensData } {
-    const tokensData = {}
+interface TokenObject {
+    currency: string,
+    amount: number,
+    usd_value: number,
+    decimals: number
+}
+
+function parseTokens(tokens: TokenObject[]) : { [key: string]: TokensData } {
+    const tokensData: { [key: string]: TokensData } = {}
 
     tokens.forEach(token => {
         tokensData[token.currency] = {
