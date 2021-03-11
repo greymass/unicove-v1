@@ -7,6 +7,7 @@
     import {powerupPrice, sampleUsage, statePowerUp} from '~/pages/resources/resources'
 
     import Button from '~/components/elements/button.svelte'
+    import ErrorMessage from '~/components/elements/input/errorMessage.svelte'
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
     import Segment from '~/components/elements/segment.svelte'
@@ -14,6 +15,7 @@
     import {PowerUp} from '~/abi-types'
 
     export let resource = 'cpu'
+    export let error: string | undefined
 
     $: loading = $currentAccount
 
@@ -29,42 +31,46 @@
     }
 
     async function powerup() {
-        let cpu_frac = 0
-        let net_frac = 0
-        if (!$statePowerUp) {
-            throw new Error('PowerUp state not loaded.')
-        }
-        if (!$sampleUsage) {
-            throw new Error('Usage sample required.')
-        }
-        switch (resource) {
-            case 'net': {
-                net_frac = $statePowerUp.net.frac_by_kb($sampleUsage, Number(amount))
-                break
+        try {
+            let cpu_frac = 0
+            let net_frac = 0
+            if (!$statePowerUp) {
+                throw new Error('PowerUp state not loaded.')
             }
-            default:
-            case 'cpu': {
-                cpu_frac = $statePowerUp.cpu.frac_by_ms($sampleUsage, Number(amount))
-                break
+            if (!$sampleUsage) {
+                throw new Error('Usage sample required.')
             }
+            switch (resource) {
+                case 'net': {
+                    net_frac = $statePowerUp.net.frac_by_kb($sampleUsage, Number(amount))
+                    break
+                }
+                default:
+                case 'cpu': {
+                    cpu_frac = $statePowerUp.cpu.frac_by_ms($sampleUsage, Number(amount))
+                    break
+                }
+            }
+            await $activeSession!.transact({
+                actions: [
+                    {
+                        authorization: [$activeSession!.auth],
+                        account: 'eosio',
+                        name: 'powerup',
+                        data: PowerUp.from({
+                            payer: $activeSession!.auth.actor,
+                            receiver: $activeSession!.auth.actor,
+                            days: 1,
+                            net_frac,
+                            cpu_frac,
+                            max_payment: Asset.from(cost, '4,EOS'),
+                        }),
+                    },
+                ],
+            })
+        } catch (e) {
+            error = String(e)
         }
-        await $activeSession!.transact({
-            actions: [
-                {
-                    authorization: [$activeSession!.auth],
-                    account: 'eosio',
-                    name: 'powerup',
-                    data: PowerUp.from({
-                        payer: $activeSession!.auth.actor,
-                        receiver: $activeSession!.auth.actor,
-                        days: 1,
-                        net_frac,
-                        cpu_frac,
-                        max_payment: Asset.from(cost, '4,EOS'),
-                    }),
-                },
-            ],
-        })
     }
 </script>
 
@@ -84,6 +90,7 @@
                 <Input name="amount" bind:value={amount} />
                 <p>Cost: {cost}</p>
                 <p>Balance: {balance}</p>
+                <ErrorMessage errorMessage={error} />
                 <Button formValidation on:action={powerup}>Rent</Button>
             </Form>
         {:else}
