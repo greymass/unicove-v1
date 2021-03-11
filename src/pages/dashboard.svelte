@@ -1,5 +1,6 @@
 <script lang="ts">
-    import {activeBlockchain, currentAccount} from '~/store'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import Button from '~/components/elements/button.svelte'
     import Page from '~/components/layout/page.svelte'
     import {priceTicker} from '~/price-ticker'
     import {Asset} from '@greymass/eosio'
@@ -7,6 +8,20 @@
     $: price = priceTicker($activeBlockchain).catch((error) => {
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
     })
+
+    async function testmessage() {
+        await $activeSession!.transact({
+            action: {
+                authorization: [$activeSession!.auth],
+                account: 'hello.gm',
+                name: 'setmessage',
+                data: {
+                    account: $activeSession!.auth.actor,
+                    message: 'Hello world',
+                },
+            },
+        })
+    }
 </script>
 
 <Page title="Dashboard">
@@ -19,4 +34,5 @@
             {Asset.fromFloat(1, $activeBlockchain.coreTokenSymbol)} = {$price} USD
         </p>
     {/if}
+    <Button on:action={testmessage}>Message</Button>
 </Page>
