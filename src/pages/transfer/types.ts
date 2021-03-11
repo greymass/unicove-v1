@@ -14,4 +14,5 @@ export interface TransferData {
     amount?: string
     displaySuccessTx?: string
     step: Step
+    token?: string
 }

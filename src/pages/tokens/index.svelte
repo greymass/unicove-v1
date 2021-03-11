@@ -70,6 +70,9 @@
                 <p>
                     Balance: {token.balance.toString()} ({token.usdValue.toString()})
                 </p>
+                <a href=`/transfer/${token.name.toLowerCase()}`>
+                    Transfer
+                </a>
               </div>
             {/each}
        </div>

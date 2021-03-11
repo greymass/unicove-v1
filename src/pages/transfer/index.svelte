@@ -32,6 +32,7 @@
 
     onMount(() => {
         syncTxFee()
+        syncTokenBalances() // This method needs to be moved to store.ts file.
 
         return () => {
             // on unmount
@@ -40,9 +41,14 @@
     })
 
     $: {
-        balance =
-            $currentAccount?.core_liquid_balance ||
-            Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+      if (!meta.params.token || meta.params.token === 'eos') {
+        balance = $currentAccount?.core_liquid_balance ||
+          Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+      } else {
+          const token = $tokensData[meta.params.token]
+
+          balance = Asset.fromUnits(token.balance, Asset.Symbol.from(`${token.decimals},${token.currency}`))
+      }
     }
 
     $: if ($activeBlockchain.id !== previousChain) {
