@@ -1,7 +1,7 @@
 import {APIClient, ChainId} from 'anchor-link'
 import {ChainConfig, chains} from './config'
 
-const clients = new Map<ChainId, APIClient>()
+const clients = new Map<string, APIClient>()
 
 /**
  * Get a APIClient instance for given chain config or chain id.
@@ -17,10 +17,10 @@ export function getClient(chainOrId: ChainConfig | ChainId): APIClient {
     } else {
         chain = chainOrId
     }
-    let client = clients.get(chain.chainId)
+    let client = clients.get(String(chain.chainId))
     if (!client) {
         client = new APIClient({url: chain.nodeUrl})
-        clients.set(chain.chainId, client)
+        clients.set(String(chain.chainId), client)
     }
     return client
 }
