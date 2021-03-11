@@ -2,7 +2,9 @@
   import {onMount} from 'svelte'
   import {currentAccount} from '~/store'
   import Page from '~/components/layout/page.svelte'
+  import {activeBlockchain} from '~/store'
   import {syncTokenBalances, stopSyncTokenBalances, tokensData} from './tokensData'
+  import {priceTicker} from '~/price-ticker'
 
   onMount(() => {
     syncTokenBalances()
@@ -12,6 +14,13 @@
         stopSyncTokenBalances()
     }
  })
+
+
+ $: price = priceTicker($activeBlockchain).catch((error) => {
+     console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+ })
+
+ $: usdValue = $currentAccount?.core_liquid_balance.value * $price
 
 </script>
 
@@ -38,14 +47,17 @@
       text-align: center;
     }
   }
-
 </style>
+
 <Page title="Tokens">
   <h2>
       Current Balance:
       <span>
         {$currentAccount?.core_liquid_balance.toString()}
       </span>
+      <p>
+        {usdValue.toFixed(2)} USD
+      </p>
   </h2>
 
   {#if $tokensData}
