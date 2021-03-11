@@ -18,10 +18,16 @@ const getResourceClient = () => {
 export const sampleUsage = readable<SampleUsage | undefined>(undefined, (set) => {
     // Update on a set interval
     const interval = setInterval(
-        async () =>
+        () =>
             getResourceClient()
                 .getSampledUsage()
-                .then((v) => set(v)),
+                .then((v) => set(v))
+                .catch((e) => {
+                    // TODO: We should probably have some sort of error catcher for stuff like this?
+                    console.error(e)
+                    // Set to undefined, which is the same as uninitialized
+                    set(undefined)
+                }),
         30000
     )
 
@@ -30,6 +36,12 @@ export const sampleUsage = readable<SampleUsage | undefined>(undefined, (set) =>
         getResourceClient()
             .getSampledUsage()
             .then((v) => set(v))
+            .catch((e) => {
+                // TODO: We should probably have some sort of error catcher for stuff like this?
+                console.error(e)
+                // Set to undefined, which is the same as uninitialized
+                set(undefined)
+            })
     )
 
     // Return callback w/ interval clear + unsubscribe
@@ -40,14 +52,30 @@ export const sampleUsage = readable<SampleUsage | undefined>(undefined, (set) =>
 })
 
 export const getInfo = async (set: (v: any) => void) =>
-    set(await getClient(chainId).v1.chain.get_info())
+    getClient(chainId)
+        .v1.chain.get_info()
+        .then((result) => set(result))
+        .catch((e) => {
+            // TODO: We should probably have some sort of error catcher for stuff like this?
+            console.error(e)
+            // Set to undefined, which is the same as uninitialized
+            set(undefined)
+        })
 
 export const info = readable<API.v1.GetInfoResponse | undefined>(undefined, (set) => {
     getInfo(set)
 })
 
 export const getPowerUpState = async (set: (v: any) => void) =>
-    set(await getResourceClient().v1.powerup.get_state())
+    getResourceClient()
+        .v1.powerup.get_state()
+        .then((result) => set(result))
+        .catch((e) => {
+            // TODO: We should probably have some sort of error catcher for stuff like this?
+            console.error(e)
+            // Set to undefined, which is the same as uninitialized
+            set(undefined)
+        })
 
 // The state of the PowerUp system
 export const statePowerUp = readable<PowerUpState | undefined>(undefined, (set) => {
@@ -91,7 +119,15 @@ export const stakingPrice = derived([msToRent, sampleUsage], ([$msToRent, $sampl
 })
 
 export const getREXState = async (set: (v: any) => void) =>
-    set(await getResourceClient().v1.rex.get_state())
+    getResourceClient()
+        .v1.rex.get_state()
+        .then((result) => set(result))
+        .catch((e) => {
+            // TODO: We should probably have some sort of error catcher for stuff like this?
+            console.error(e)
+            // Set to undefined, which is the same as uninitialized
+            set(undefined)
+        })
 
 // The state of the REX system
 export const stateREX = readable<REXState | undefined>(undefined, (set) => {
