@@ -1,27 +1,20 @@
 <script>
   import {onMount} from 'svelte'
-  import {currentAccount} from '~/store'
   import Page from '~/components/layout/page.svelte'
-  import {activeBlockchain} from '~/store'
-  import {syncTokenBalances, stopSyncTokenBalances, tokensData} from '../../tokensData'
+  import {activeSession, activeBlockchain, currentAccount} from '~/store'
+  import {tokenBalancesTicker} from '~/token-balances-ticker'
   import {priceTicker} from '~/price-ticker'
+  import type {TokenBalance} from '~/price-ticker'
 
-  onMount(() => {
-    syncTokenBalances()
-
-    return () => {
-        // on unmount
-        stopSyncTokenBalances()
-    }
+ $: tokenBalances = tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
+   console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
  })
-
 
  $: price = priceTicker($activeBlockchain).catch((error) => {
      console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
  })
 
  $: usdValue = $currentAccount?.core_liquid_balance.value * $price
-
 </script>
 
 <style type="scss">
@@ -60,9 +53,9 @@
       </p>
   </h2>
 
-  {#if $tokensData}
+  {#if $tokenBalances}
       <div class="tokensContainer">
-            {#each Object.values($tokensData) as token}
+            {#each Object.values($tokenBalances) as token}
               <div class="tokenContainer">
                 <h2>
                     {token.name}

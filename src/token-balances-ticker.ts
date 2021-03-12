@@ -2,27 +2,32 @@ import { Asset } from '@greymass/eosio'
 
 import {derived, ReadableResult} from 'svelte-result-store'
 
-import {ChainConfig} from './config'
 import {LinkSession} from "anchor-link";
-import {TokensData} from "~/pages/tokens/types";
+
+import {ChainConfig} from './config'
 import {cachedRead} from "~/db";
 
 /** How often to update prices.  */
 const UPDATE_INTERVAL = 1 * 60 * 1000 // 1 minute
 const MAX_AGE = 2 * 60 * 60 * 1000 // 2 hours
 
-interface TokenBalance {
+interface RawTokenBalance {
     currency: string,
     amount: number,
     usd_value: number,
     decimals: number
 }
 
+export interface TokenBalance {
+    name: string,
+    balance: Asset,
+    usdValue: Asset,
+}
+
 const tickerStores: Record<string, ReadableResult<{[key: string]: TokenBalance}>> = {}
 
 /**
- * Latest price in USD for given chain and pair, if pair is omitted the chains core symbol is used.
- * @note Testnets will return zero for all pairs.
+ * Latest token balances by chain and session.
  */
 export function tokenBalancesTicker(session: LinkSession, chain: ChainConfig): ReadableResult<{[key: string]: TokenBalance}> {
     const tickerName = `${session.auth.actor}-balances`
@@ -33,7 +38,7 @@ export function tokenBalancesTicker(session: LinkSession, chain: ChainConfig): R
     const balances: ReadableResult<TokenBalance[]> = fetchBalances(tickerName, session, chain)
 
     const balancesByAccount = derived(balances, ($balances) => {
-        parseTokens($balances)
+        return parseTokenBalances($balances)
     })
 
     tickerStores[tickerName] = balancesByAccount
@@ -41,7 +46,7 @@ export function tokenBalancesTicker(session: LinkSession, chain: ChainConfig): R
     return balancesByAccount
 }
 
-export async function fetchBalances(tickerName: string, session: LinkSession, chain: ChainConfig) {
+function fetchBalances(tickerName: string, session: LinkSession, chain: ChainConfig) {
     if (!session) {
         return [];
     }
@@ -75,16 +80,16 @@ export async function fetchBalances(tickerName: string, session: LinkSession, ch
     return balances
 }
 
-function parseTokens(tokens: TokenBalance[]) : { [key: string]: TokensData } {
-    const tokensData: { [key: string]: TokensData } = {}
+function parseTokenBalances(tokens: RawTokenBalance[]) : { [key: string]: TokenBalance } {
+    const tokensBalances: { [key: string]: TokenBalance } = {}
 
     tokens.forEach(token => {
-        tokensData[token.currency] = {
+        tokensBalances[token.currency] = {
             name: token.currency,
             balance: Asset.fromUnits(token.amount || 0, Asset.Symbol.from(`${token.decimals},${token.currency}`)),
             usdValue: Asset.fromUnits(token.usd_value * 100 || 0, Asset.Symbol.from(`2,USD`)),
         }
     })
 
-    return tokensData
+    return tokensBalances
 }
