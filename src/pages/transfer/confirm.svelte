@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {quantity, transferData} from './transferData'
+    import {transferData} from './transferData'
     import {activeBlockchain, activeSession} from '~/store'
 
     import Button from '~/components/elements/button.svelte'
@@ -12,6 +12,7 @@
 
     export let availableBalance: number | undefined = undefined
     export let handleTransfer: () => Promise<void>
+    export let quantity: Asset | undefined = undefined
 
     let toAccount: string | undefined = $transferData.toAccount
     let toAddress: string | undefined = $transferData.toAddress
@@ -75,7 +76,7 @@
         label="Amount"
         secondLabel="Value"
         placeholder="0.0"
-        value={($quantity && $quantity.toString()) || ''}
+        value={(quantity && $quantity.toString()) || ''}
         valid={amountValid}
     >
         <InputAsset

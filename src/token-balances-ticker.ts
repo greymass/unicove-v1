@@ -84,11 +84,13 @@ function parseTokenBalances(tokens: RawTokenBalance[]) : { [key: string]: TokenB
     const tokensBalances: { [key: string]: TokenBalance } = {}
 
     tokens.forEach(token => {
+        const assetSymbol: Asset.Symbol = Asset.Symbol.from(`${token.decimals},${token.currency}`)
         tokensBalances[token.currency] = {
             name: token.currency,
-            balance: Asset.fromUnits(token.amount || 0, Asset.Symbol.from(`${token.decimals},${token.currency}`)),
+            balance: Asset.fromUnits(token.amount || 0, assetSymbol),
             usdValue: Asset.fromUnits(token.usd_value * 100 || 0, Asset.Symbol.from(`2,USD`)),
             decimals: token.decimals,
+            symbol: assetSymbol,
         }
     })
 

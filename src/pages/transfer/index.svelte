@@ -10,7 +10,7 @@
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
-    import {transferData, quantity} from './transferData'
+    import {transferData} from './transferData'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
 
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
@@ -32,6 +32,8 @@
 
     let previousChain: string | undefined = undefined
     let balanceValue: number | undefined = undefined
+    let tokenBalance: TokenBalance | undefined = undefined
+    let quantity: Asset | undefined = undefined
 
     onMount(() => {
         syncTxFee()
@@ -47,19 +49,16 @@
     })
 
     $: {
-      console.log({tokenBalances: $tokenBalances})
-
       if (meta.params.token === 'eos') {
          balance = $currentAccount?.core_liquid_balance ||
                            Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
       } else if ($tokenBalances) {
-        const token = $tokenBalances[meta.params.token.toUpperCase()]
+        tokenBalance = $tokenBalances[meta.params.token.toUpperCase()]
 
-        console.log({tB: $tokenBalances})
-        console.log({token})
-        console.log({s: Asset.Symbol.from(`${token.decimals},${token.name}`)})
-
-        balance = token && token.balance
+        if (tokenBalance && tokenBalance.balance) {
+           balance = tokenBalance.balance
+        }
+        console.log({balance})
       }
     }
 
@@ -71,6 +70,20 @@
 
     $: {
         balanceValue = (balance && balance.units.toNumber())!
+    }
+
+    $: {
+      console.log({am:$transferData.amount})
+      const parsed: number = parseFloat($transferData.amount || '')
+      console.log({parsed})
+
+      console.log({tokenBalance})
+
+      quantity = tokenBalance &&
+        parsed &&
+        Asset.fromFloat(parsed, tokenBalance.symbol)
+        console.log('here')
+        console.log({quantity})
     }
 
     function resetData() {
@@ -89,7 +102,7 @@
         let data: Transfer | FIOTransfer = Transfer.from({
             from: $activeSession!.auth.actor,
             to: $transferData.toAccount,
-            quantity: $quantity,
+            quantity,
             memo: $transferData.memo,
         })
 
@@ -97,7 +110,7 @@
             case 'fio.token': {
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
-                    amount: $quantity && $quantity.units,
+                    amount: quantity && quantity.units,
                     max_fee: $txFee!.units,
                     actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
@@ -136,8 +149,8 @@
     <div class="container">
         <TransferBalance {balance} />
 
-        {#if $quantity && $txFee}
-            <TransferSummary txFee={$txFee} />
+        {#if quantity && $txFee}
+            <TransferSummary txFee={$txFee} quantity={quantity} />
         {/if}
 
         <br />

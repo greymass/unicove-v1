@@ -17,8 +17,8 @@
     let toAccount: string = $transferData.toAccount || ''
     let amount: string = $transferData.amount || ''
 
-    let toAccountValid: boolean = false
-    let toAddressValid: boolean = false
+    let toAccountValid: boolean = true
+    let toAddressValid: boolean = true
     let amountValid: boolean = false
 
     function handleKeydown(event: any) {

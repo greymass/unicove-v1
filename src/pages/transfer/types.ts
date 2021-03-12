@@ -8,7 +8,6 @@ export const enum Step {
 
 export interface TransferData {
     memo?: string
-    quantity?: Asset
     toAccount?: string
     toAddress?: string
     amount?: string
