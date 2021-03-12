@@ -164,7 +164,7 @@
         {/if}
 
         {#if $transferData.step === Step.Confirm}
-            <TransferConfirm availableBalance={balanceValue} {handleTransfer} />
+            <TransferConfirm availableBalance={balanceValue} {quantity} {handleTransfer} />
         {/if}
 
         <Modal display={displaySuccessTx}>
