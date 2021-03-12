@@ -14,13 +14,13 @@
 
     import {PowerUp} from '~/abi-types'
 
-    export let resource = 'cpu'
-    export let error: string | undefined
+    export let resource: string = 'cpu'
 
     $: loading = $currentAccount
 
     let amount: string = '1'
     let cost = Number($powerupPrice) * Number(amount)
+    let error: string | undefined
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
