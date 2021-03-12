@@ -3,10 +3,10 @@ import {writable, get} from 'svelte/store'
 import {Asset} from 'anchor-link'
 import type {LinkSession} from 'anchor-link'
 
-import type {TokensData} from './types'
+import type {TokensData} from './pages/tokens/types'
 
-import type {ChainConfig} from '~/config'
-import {activeBlockchain, activeSession} from '~/store'
+import type {ChainConfig} from 'src/config'
+import {activeBlockchain, activeSession} from 'src/store'
 
 export const tokensData = writable<{ [key: string]: TokensData } | undefined>(undefined)
 

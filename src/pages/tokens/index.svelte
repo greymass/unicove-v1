@@ -3,7 +3,7 @@
   import {currentAccount} from '~/store'
   import Page from '~/components/layout/page.svelte'
   import {activeBlockchain} from '~/store'
-  import {syncTokenBalances, stopSyncTokenBalances, tokensData} from './tokensData'
+  import {syncTokenBalances, stopSyncTokenBalances, tokensData} from '../../tokensData'
   import {priceTicker} from '~/price-ticker'
 
   onMount(() => {
@@ -70,7 +70,7 @@
                 <p>
                     Balance: {token.balance.toString()} ({token.usdValue.toString()})
                 </p>
-                <a href=`/transfer/${token.name.toLowerCase()}`>
+                <a href={`/transfer/${token.name.toLowerCase()}`}>
                     Transfer
                 </a>
               </div>
