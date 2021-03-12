@@ -5,12 +5,13 @@
 
     import {Step} from './types'
 
-    import {activeBlockchain, activeSession, currentAccount} from '../../store'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {txFee, syncTxFee, stopSyncTxFee, fetchTxFee} from './fio'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
     import {transferData, quantity} from './transferData'
+    import {tokenBalancesTicker} from '~/token-balances-ticker'
 
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
 
@@ -23,6 +24,8 @@
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
 
+    export let meta;
+
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let successTx: string | undefined = undefined
     let displaySuccessTx = writable<boolean>(false)
@@ -32,7 +35,6 @@
 
     onMount(() => {
         syncTxFee()
-        syncTokenBalances() // This method needs to be moved to store.ts file.
 
         return () => {
             // on unmount
@@ -40,14 +42,24 @@
         }
     })
 
-    $: {
-      if (!meta.params.token || meta.params.token === 'eos') {
-        balance = $currentAccount?.core_liquid_balance ||
-          Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-      } else {
-          const token = $tokensData[meta.params.token]
+    $: tokenBalances = tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
+      console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+    })
 
-          balance = Asset.fromUnits(token.balance, Asset.Symbol.from(`${token.decimals},${token.currency}`))
+    $: {
+      console.log({tokenBalances: $tokenBalances})
+
+      if (meta.params.token === 'eos') {
+         balance = $currentAccount?.core_liquid_balance ||
+                           Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+      } else if ($tokenBalances) {
+        const token = $tokenBalances[meta.params.token.toUpperCase()]
+
+        console.log({tB: $tokenBalances})
+        console.log({token})
+        console.log({s: Asset.Symbol.from(`${token.decimals},${token.name}`)})
+
+        balance = token && token.balance
       }
     }
 

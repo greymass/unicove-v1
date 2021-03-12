@@ -46,7 +46,7 @@ export function tokenBalancesTicker(session: LinkSession, chain: ChainConfig): R
     return balancesByAccount
 }
 
-function fetchBalances(tickerName: string, session: LinkSession, chain: ChainConfig) {
+export function fetchBalances(tickerName: string, session: LinkSession, chain: ChainConfig) {
     if (!session) {
         return [];
     }
@@ -88,6 +88,7 @@ function parseTokenBalances(tokens: RawTokenBalance[]) : { [key: string]: TokenB
             name: token.currency,
             balance: Asset.fromUnits(token.amount || 0, Asset.Symbol.from(`${token.decimals},${token.currency}`)),
             usdValue: Asset.fromUnits(token.usd_value * 100 || 0, Asset.Symbol.from(`2,USD`)),
+            decimals: token.decimals,
         }
     })
 
