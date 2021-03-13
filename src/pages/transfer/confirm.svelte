@@ -93,7 +93,7 @@
             label="Memo"
             secondLabel="(Optional)"
             placeholder="Add"
-            value={memo}token-balances-ticker
+            value={memo}
             valid
             optional
         >

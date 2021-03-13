@@ -24,7 +24,7 @@
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
 
-    export let meta;
+    export let meta
 
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let successTx: string | undefined = undefined
@@ -45,20 +45,21 @@
     })
 
     $: tokenBalances = tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
-      console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+        console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
     })
 
     $: {
-      if (meta.params.token === 'eos') {
-         balance = $currentAccount?.core_liquid_balance ||
-                           Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-      } else if ($tokenBalances) {
-        tokenBalance = $tokenBalances[meta.params.token.toUpperCase()]
+        if (meta.params.token === 'eos') {
+            balance =
+                $currentAccount?.core_liquid_balance ||
+                Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+        } else if ($tokenBalances) {
+            tokenBalance = $tokenBalances[meta.params.token.toUpperCase()]
 
-        if (tokenBalance && tokenBalance.balance) {
-           balance = tokenBalance.balance
+            if (tokenBalance && tokenBalance.balance) {
+                balance = tokenBalance.balance
+            }
         }
-      }
     }
 
     $: if ($activeBlockchain.id !== previousChain) {
@@ -72,11 +73,15 @@
     }
 
     $: {
-      const parsed: number = parseFloat($transferData.amount || '')
+        const parsed: number = parseFloat($transferData.amount || '')
 
-      quantity = tokenBalance &&
-        parsed &&
-        Asset.fromFloat(parsed, tokenBalance.symbol)
+        quantity =
+            parsed &&
+            Asset.fromFloat(
+                parsed,
+                (tokenBalance && tokenBalance.symbol) || $activeBlockchain.coreTokenSymbol
+            )
+        console.log({quantity})
     }
 
     function resetData() {
@@ -143,7 +148,7 @@
         <TransferBalance {balance} />
 
         {#if quantity && $txFee}
-            <TransferSummary txFee={$txFee} quantity={quantity} />
+            <TransferSummary txFee={$txFee} {quantity} />
         {/if}
 
         <br />

@@ -1,80 +1,75 @@
 <script>
-  import {onMount} from 'svelte'
-  import Page from '~/components/layout/page.svelte'
-  import {activeSession, activeBlockchain, currentAccount} from '~/store'
-  import {tokenBalancesTicker} from '~/token-balances-ticker'
-  import {priceTicker} from '~/price-ticker'
-  import type {TokenBalance} from '~/price-ticker'
+    import {onMount} from 'svelte'
+    import Page from '~/components/layout/page.svelte'
+    import {activeSession, activeBlockchain, currentAccount} from '~/store'
+    import {tokenBalancesTicker} from '~/token-balances-ticker'
+    import {priceTicker} from '~/price-ticker'
+    import type {TokenBalance} from '~/price-ticker'
 
- $: tokenBalances = tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
-   console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
- })
+    $: tokenBalances = tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
+        console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+    })
 
- $: price = priceTicker($activeBlockchain).catch((error) => {
-     console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
- })
+    $: price = priceTicker($activeBlockchain).catch((error) => {
+        console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+    })
 
- $: usdValue = $currentAccount?.core_liquid_balance.value * $price
+    $: usdValue = $currentAccount?.core_liquid_balance.value * $price
 </script>
 
 <style type="scss">
-  h2 {
-      margin-top: 30px;
+    h2 {
+        margin-top: 30px;
 
-      span {
-        text-decoration: underline;
-        margin-left: 10px;
-      }
-  }
-
-  .tokensContainer {
-    padding: 20px 0 40px 0;
-  }
-
-  .noTokensContainer {
-    padding: 20px;
-    max-width: 250px;
-    margin-top: 40px;
-
-    h3 {
-      text-align: center;
+        span {
+            text-decoration: underline;
+            margin-left: 10px;
+        }
     }
-  }
+
+    .tokensContainer {
+        padding: 20px 0 40px 0;
+    }
+
+    .noTokensContainer {
+        padding: 20px;
+        max-width: 250px;
+        margin-top: 40px;
+
+        h3 {
+            text-align: center;
+        }
+    }
 </style>
 
 <Page title="Tokens">
-  <h2>
-      Current Balance:
-      <span>
-        {$currentAccount?.core_liquid_balance.toString()}
-      </span>
-      <p>
-        {usdValue.toFixed(2)} USD
-      </p>
-  </h2>
+    <h2>
+        Current Balance:
+        <span>
+            {$currentAccount?.core_liquid_balance.toString()}
+        </span>
+        <p>
+            {usdValue.toFixed(2)} USD
+        </p>
+    </h2>
 
-  {#if $tokenBalances}
-      <div class="tokensContainer">
+    {#if $tokenBalances}
+        <div class="tokensContainer">
             {#each Object.values($tokenBalances) as token}
-              <div class="tokenContainer">
-                <h2>
-                    {token.name}
-                </h2>
-                <p>
-                    Balance: {token.balance.toString()} ({token.usdValue.toString()})
-                </p>
-                <a href={`/transfer/${token.name.toLowerCase()}`}>
-                    Transfer
-                </a>
-              </div>
+                <div class="tokenContainer">
+                    <h2>
+                        {token.name}
+                    </h2>
+                    <p>
+                        Balance: {token.balance.toString()} ({token.usdValue.toString()})
+                    </p>
+                    <a href={`/transfer/${token.name.toLowerCase()}`}> Transfer </a>
+                </div>
             {/each}
-       </div>
-  {:else}
-    <div class="noTokensContainer">
-      <h3>
-        You do not currently have any token balances.
-      </h3>
-    </div>
-  {/if}
+        </div>
+    {:else}
+        <div class="noTokensContainer">
+            <h3>You do not currently have any token balances.</h3>
+        </div>
+    {/if}
 </Page>
-

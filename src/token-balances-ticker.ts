@@ -1,29 +1,29 @@
-import { Asset } from '@greymass/eosio'
+import {Asset} from '@greymass/eosio'
 
 import {derived, ReadableResult} from 'svelte-result-store'
 
 import type {LinkSession} from 'anchor-link'
 import type {ChainConfig} from './config'
 
-import {cachedRead} from "~/db";
+import {cachedRead} from '~/db'
 
 /** How often to update prices.  */
 const UPDATE_INTERVAL = 1 * 60 * 1000 // 1 minute
 const MAX_AGE = 2 * 60 * 60 * 1000 // 2 hours
 
 interface RawTokenBalance {
-    currency: string,
-    amount: number,
-    usd_value: number,
+    currency: string
+    amount: number
+    usd_value: number
     decimals: number
 }
 
 export interface TokenBalance {
-    name: string,
-    balance: Asset,
-    usdValue: Asset,
-    decimals: number,
-    symbol: Asset.Symbol,
+    name: string
+    balance: Asset
+    usdValue: Asset
+    decimals: number
+    symbol: Asset.Symbol
 }
 
 const tickerStores: Record<string, ReadableResult<{[key: string]: TokenBalance}>> = {}
@@ -31,7 +31,10 @@ const tickerStores: Record<string, ReadableResult<{[key: string]: TokenBalance}>
 /**
  * Latest token balances by chain and session.
  */
-export function tokenBalancesTicker(session: LinkSession, chain: ChainConfig): ReadableResult<{[key: string]: TokenBalance}> {
+export function tokenBalancesTicker(
+    session: LinkSession,
+    chain: ChainConfig
+): ReadableResult<{[key: string]: TokenBalance}> {
     const tickerName = `${session.auth.actor}-balances`
     if (tickerStores[tickerName]) {
         return tickerStores[tickerName]
@@ -48,26 +51,33 @@ export function tokenBalancesTicker(session: LinkSession, chain: ChainConfig): R
     return balancesByAccount
 }
 
-export function fetchBalances(tickerName: string, session: LinkSession, chain: ChainConfig): ReadableResult<RawTokenBalance[]> {
+export function fetchBalances(
+    tickerName: string,
+    session: LinkSession,
+    chain: ChainConfig
+): ReadableResult<RawTokenBalance[]> {
     const balances: ReadableResult<any[]> = cachedRead({
         store: 'price-ticker',
         key: tickerName,
         load: async () => {
             const apiUrl = `https://www.api.bloks.io${
-                  chain.id === 'eos' ? '' : `/${chain.id}`
-                }/account/${
-                  session.auth.actor
-                }?type=getAccountTokens&coreSymbol=${
-                  chain.coreTokenSymbol
-                }`
+                chain.id === 'eos' ? '' : `/${chain.id}`
+            }/account/${session.auth.actor}?type=getAccountTokens&coreSymbol=${
+                chain.coreTokenSymbol
+            }`
 
             const apiResponse = await fetch(apiUrl).catch((error) => {
                 console.log('An error occured while fetching token balances:', {error})
             })
 
-            const jsonBody = apiResponse && await apiResponse.json().catch((error) => {
-                console.log('An error occured while parsing the token balances response body:', {error})
-            })
+            const jsonBody =
+                apiResponse &&
+                (await apiResponse.json().catch((error) => {
+                    console.log(
+                        'An error occured while parsing the token balances response body:',
+                        {error}
+                    )
+                }))
 
             return jsonBody.tokens
         },
@@ -78,10 +88,10 @@ export function fetchBalances(tickerName: string, session: LinkSession, chain: C
     return balances
 }
 
-function parseTokenBalances(tokens: RawTokenBalance[]) : { [key: string]: TokenBalance } {
-    const tokensBalances: { [key: string]: TokenBalance } = {}
+function parseTokenBalances(tokens: RawTokenBalance[]): {[key: string]: TokenBalance} {
+    const tokensBalances: {[key: string]: TokenBalance} = {}
 
-    tokens.forEach(token => {
+    tokens.forEach((token) => {
         const assetSymbol: Asset.Symbol = Asset.Symbol.from(`${token.decimals},${token.currency}`)
         tokensBalances[token.currency] = {
             name: token.currency,
