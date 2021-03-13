@@ -18,9 +18,9 @@
             path: '/',
         },
         {
-            icon: 'arrow-right',
-            name: 'Transfer',
-            path: '/transfer',
+            icon: 'dollar-sign',
+            name: 'Tokens',
+            path: '/tokens',
         },
         {
             icon: 'battery-charging',

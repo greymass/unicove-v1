@@ -51,6 +51,7 @@
         <p>
             {usdValue.toFixed(2)} USD
         </p>
+        <a href={`/transfer`}> Transfer </a>
     </h2>
 
     {#if tokenBalances && $tokenBalances}
