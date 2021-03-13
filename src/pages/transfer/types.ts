@@ -1,5 +1,3 @@
-import type {Asset} from 'anchor-link'
-
 export const enum Step {
     Recipient,
     Amount,
@@ -14,10 +12,4 @@ export interface TransferData {
     displaySuccessTx?: string
     step: Step
     token?: string
-}
-
-export interface Meta {
-    params: {
-        token: string
-    }
 }
