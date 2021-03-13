@@ -57,9 +57,9 @@
         })
 
     $: {
-        const chainToken = $activeBlockchain && $activeBlockchain.coreTokenSymbol.toString().split(',')[1]
+        const chainToken =
+            $activeBlockchain && $activeBlockchain.coreTokenSymbol.toString().split(',')[1]
 
-        console.log({chainToken})
         if (meta.params.token.toUpperCase() === chainToken) {
             balance =
                 $currentAccount?.core_liquid_balance ||
