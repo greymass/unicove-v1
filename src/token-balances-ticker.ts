@@ -16,6 +16,7 @@ interface RawTokenBalance {
     amount: number
     usd_value: number
     decimals: number
+    contract: string
 }
 
 export interface TokenBalance {
@@ -24,6 +25,7 @@ export interface TokenBalance {
     usdValue: Asset
     decimals: number
     symbol: Asset.Symbol
+    contract: string
 }
 
 const tickerStores: Record<string, ReadableResult<{[key: string]: TokenBalance}>> = {}
@@ -99,6 +101,7 @@ function parseTokenBalances(tokens: RawTokenBalance[]): {[key: string]: TokenBal
             usdValue: Asset.fromUnits(token.usd_value * 100 || 0, Asset.Symbol.from(`2,USD`)),
             decimals: token.decimals,
             symbol: assetSymbol,
+            contract: token.contract,
         }
     })
 

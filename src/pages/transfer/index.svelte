@@ -2,6 +2,7 @@
     import {Asset} from 'anchor-link'
     import {onMount} from 'svelte'
     import {writable} from 'svelte/store'
+    import type {TinroRouteMeta} from 'tinro'
 
     import {Step} from './types'
 
@@ -12,6 +13,7 @@
 
     import {transferData} from './transferData'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
+    import type {TokenBalance} from '~/token-balances-ticker'
 
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
 
@@ -24,7 +26,7 @@
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
 
-    export let meta
+    export let meta: TinroRouteMeta
 
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let successTx: string | undefined = undefined
@@ -34,6 +36,7 @@
     let balanceValue: number | undefined = undefined
     let tokenBalance: TokenBalance | undefined = undefined
     let quantity: Asset | undefined = undefined
+    let transferContract: string = 'eosio.token'
 
     onMount(() => {
         syncTxFee()
@@ -44,16 +47,21 @@
         }
     })
 
-    $: tokenBalances = tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
-        console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
-    })
+    $: transferContract =
+        (tokenBalance && tokenBalance.contract) || String($activeBlockchain.coreTokenContract)
+
+    $: tokenBalances =
+        $activeSession &&
+        tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
+            console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+        })
 
     $: {
         if (meta.params.token === 'eos') {
             balance =
                 $currentAccount?.core_liquid_balance ||
                 Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-        } else if ($tokenBalances) {
+        } else if (tokenBalances && $tokenBalances) {
             tokenBalance = $tokenBalances[meta.params.token.toUpperCase()]
 
             if (tokenBalance && tokenBalance.balance) {
@@ -75,13 +83,12 @@
     $: {
         const parsed: number = parseFloat($transferData.amount || '')
 
-        quantity =
-            parsed &&
-            Asset.fromFloat(
+        if (parsed) {
+            quantity = Asset.fromFloat(
                 parsed,
                 (tokenBalance && tokenBalance.symbol) || $activeBlockchain.coreTokenSymbol
             )
-        console.log({quantity})
+        }
     }
 
     function resetData() {
@@ -104,7 +111,7 @@
             memo: $transferData.memo,
         })
 
-        switch (String($activeBlockchain.coreTokenContract)) {
+        switch (String(transferContract)) {
             case 'fio.token': {
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
@@ -123,7 +130,7 @@
             .transact({
                 action: {
                     authorization: [$activeSession!.auth],
-                    account: $activeBlockchain.coreTokenContract,
+                    account: transferContract,
                     name: $activeBlockchain.coreTokenTransfer,
                     data: getActionData(),
                 },

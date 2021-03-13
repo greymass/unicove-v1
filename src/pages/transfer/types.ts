@@ -15,3 +15,9 @@ export interface TransferData {
     step: Step
     token?: string
 }
+
+export interface Meta {
+    params: {
+        token: string
+    }
+}

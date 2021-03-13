@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type {Asset} from 'anchor-link'
     import {transferData} from './transferData'
     import {activeBlockchain, activeSession} from '~/store'
 

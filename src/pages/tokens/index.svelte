@@ -1,20 +1,20 @@
 <script>
-    import {onMount} from 'svelte'
     import Page from '~/components/layout/page.svelte'
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
     import {priceTicker} from '~/price-ticker'
-    import type {TokenBalance} from '~/price-ticker'
 
-    $: tokenBalances = tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
-        console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
-    })
+    $: tokenBalances =
+        $activeSession &&
+        tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
+            console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+        })
 
     $: price = priceTicker($activeBlockchain).catch((error) => {
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
     })
 
-    $: usdValue = $currentAccount?.core_liquid_balance.value * $price
+    $: usdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
 </script>
 
 <style type="scss">
@@ -46,14 +46,14 @@
     <h2>
         Current Balance:
         <span>
-            {$currentAccount?.core_liquid_balance.toString()}
+            {$currentAccount?.core_liquid_balance?.toString()}
         </span>
         <p>
             {usdValue.toFixed(2)} USD
         </p>
     </h2>
 
-    {#if $tokenBalances}
+    {#if tokenBalances && $tokenBalances}
         <div class="tokensContainer">
             {#each Object.values($tokenBalances) as token}
                 <div class="tokenContainer">

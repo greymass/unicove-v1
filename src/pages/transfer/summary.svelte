@@ -10,7 +10,7 @@
 
     $: {
         total =
-            $quantity &&
+            quantity &&
             txFee &&
             Asset.fromUnits(
                 quantity.units.toNumber() + txFee.units.toNumber(),
@@ -38,7 +38,7 @@
 <table>
     <tr>
         <td>Sending:</td>
-        <td>{$quantity}</td>
+        <td>{quantity}</td>
     </tr>
     <tr>
         <td>Fee:</td>
