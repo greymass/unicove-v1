@@ -57,7 +57,10 @@
         })
 
     $: {
-        if (meta.params.token === 'eos') {
+        const chainToken = $activeBlockchain && $activeBlockchain.coreTokenSymbol.toString().split(',')[1]
+
+        console.log({chainToken})
+        if (meta.params.token.toUpperCase() === chainToken) {
             balance =
                 $currentAccount?.core_liquid_balance ||
                 Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
@@ -99,6 +102,8 @@
             memo: '',
             step: Step.Recipient,
         })
+
+        quantity = undefined
 
         fetchTxFee()
     }
