@@ -17,8 +17,6 @@
         valueToDisplay = value && `${value.substring(0, 15)}${value.length > 16 ? '...' : ''}`
         displayOutsideCheck = (!!value || !optional) && valid
     }
-
-    $: console.log({inFIeldContainjer: valid})
 </script>
 
 <style type="scss">

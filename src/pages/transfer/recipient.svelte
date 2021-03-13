@@ -28,8 +28,6 @@
             step: Step.Amount,
         }))
     }
-
-    $: console.log({valid})
 </script>
 
 <style type="scss">

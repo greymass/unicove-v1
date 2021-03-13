@@ -14,8 +14,6 @@
     export let handleTransfer: () => Promise<void>
     export let quantity: Asset | undefined = undefined
 
-    $: console.log({quantityInConfirm: quantity && quantity.toString()})
-
     let toAccount: string | undefined = $transferData.toAccount
     let toAddress: string | undefined = $transferData.toAddress
     let amount: string | undefined = $transferData.amount

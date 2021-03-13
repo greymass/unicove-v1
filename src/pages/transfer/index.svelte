@@ -58,7 +58,6 @@
         if (tokenBalance && tokenBalance.balance) {
            balance = tokenBalance.balance
         }
-        console.log({balance})
       }
     }
 
@@ -73,17 +72,11 @@
     }
 
     $: {
-      console.log({am:$transferData.amount})
       const parsed: number = parseFloat($transferData.amount || '')
-      console.log({parsed})
-
-      console.log({tokenBalance})
 
       quantity = tokenBalance &&
         parsed &&
         Asset.fromFloat(parsed, tokenBalance.symbol)
-        console.log('here')
-        console.log({quantity})
     }
 
     function resetData() {
