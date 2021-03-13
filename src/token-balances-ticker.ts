@@ -2,9 +2,9 @@ import { Asset } from '@greymass/eosio'
 
 import {derived, ReadableResult} from 'svelte-result-store'
 
-import {LinkSession} from "anchor-link";
+import type {LinkSession} from 'anchor-link'
+import type {ChainConfig} from './config'
 
-import {ChainConfig} from './config'
 import {cachedRead} from "~/db";
 
 /** How often to update prices.  */
@@ -22,6 +22,8 @@ export interface TokenBalance {
     name: string,
     balance: Asset,
     usdValue: Asset,
+    decimals: number,
+    symbol: Asset.Symbol,
 }
 
 const tickerStores: Record<string, ReadableResult<{[key: string]: TokenBalance}>> = {}
@@ -35,7 +37,7 @@ export function tokenBalancesTicker(session: LinkSession, chain: ChainConfig): R
         return tickerStores[tickerName]
     }
 
-    const balances: ReadableResult<TokenBalance[]> = fetchBalances(tickerName, session, chain)
+    const balances: ReadableResult<RawTokenBalance[]> = fetchBalances(tickerName, session, chain)
 
     const balancesByAccount = derived(balances, ($balances) => {
         return parseTokenBalances($balances)
@@ -46,11 +48,7 @@ export function tokenBalancesTicker(session: LinkSession, chain: ChainConfig): R
     return balancesByAccount
 }
 
-export function fetchBalances(tickerName: string, session: LinkSession, chain: ChainConfig) {
-    if (!session) {
-        return [];
-    }
-
+export function fetchBalances(tickerName: string, session: LinkSession, chain: ChainConfig): ReadableResult<RawTokenBalance[]> {
     const balances: ReadableResult<any[]> = cachedRead({
         store: 'price-ticker',
         key: tickerName,
