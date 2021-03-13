@@ -85,6 +85,9 @@
             <Route path="/">
                 <Dashboard />
             </Route>
+            <Route path="/transfer">
+                <Transfer />
+            </Route>
             <Route path="/transfer/:token" let:meta>
                 <Transfer {meta} />
             </Route>

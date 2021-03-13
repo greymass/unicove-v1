@@ -26,7 +26,7 @@
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
 
-    export let meta: TinroRouteMeta
+    export let meta: TinroRouteMeta | undefined = undefined
 
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let successTx: string | undefined = undefined
@@ -60,7 +60,7 @@
         const chainToken =
             $activeBlockchain && $activeBlockchain.coreTokenSymbol.toString().split(',')[1]
 
-        if (meta.params.token.toUpperCase() === chainToken) {
+        if (!meta || meta.params.token.toUpperCase() === chainToken) {
             balance =
                 $currentAccount?.core_liquid_balance ||
                 Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
