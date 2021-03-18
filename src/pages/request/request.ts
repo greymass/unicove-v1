@@ -1,12 +1,24 @@
 import {SigningRequest} from 'eosio-signing-request'
+import type {LinkChain} from 'anchor-link'
+
+import {activeBlockchain, activeSession} from '~/store'
 
 import zlib from 'pako'
 
-export const opts = {
-    // Implement the rest of the ESR options
-    zlib,
-}
+let chainId: string
+activeBlockchain.subscribe((value) => (chainId = value.chainId))
 
-export async function request(params: any): Promise<SigningRequest> {
+let linkChain: LinkChain
+activeSession.subscribe((session) => {
+    if (session) {
+        linkChain = session.link.getChain(chainId)
+    }
+})
+
+export async function getRequest(params: any): Promise<SigningRequest> {
+    const opts = {
+        abiProvider: linkChain,
+        zlib,
+    }
     return SigningRequest.from(`esr:${params.payload}`, opts)
 }
