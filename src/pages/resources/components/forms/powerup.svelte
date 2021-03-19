@@ -91,7 +91,7 @@
                 <p>Cost: {cost}</p>
                 <p>Balance: {balance}</p>
                 <ErrorMessage errorMessage={error} />
-                <Button formValidation on:action={powerup}>Rent</Button>
+                <Button fluid size="large" formValidation on:action={powerup}>Rent for {Asset.from(cost, $activeBlockchain.coreTokenSymbol)}</Button>
             </Form>
         {:else}
             <p>This feature is unavailable on this blockchain.</p>

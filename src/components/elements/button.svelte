@@ -10,6 +10,8 @@
     export let size: 'large' | 'regular' = 'regular'
     /** Disabled state */
     export let disabled: boolean = false
+    /** Fluid width of the button */
+    export let fluid: boolean = false
     /** Type of button */
     export let formValidation: boolean = false
 
@@ -108,6 +110,12 @@
             cursor: not-allowed;
             pointer-events: all !important;
         }
+        &.fluid {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+            align-items: center;
+        }
         :global(*) {
             pointer-events: none;
         }
@@ -159,8 +167,9 @@
     on:mousemove={handleMousemove}
     on:mouseenter={handleMouseenter}
     class={`button size-${size}`}
-    class:primary
     class:disabled={(formValidation && $formDisabled) || disabled}
+    class:fluid
+    class:primary
     {href}
     role="button"
     tabindex="0"
