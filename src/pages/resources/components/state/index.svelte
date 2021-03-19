@@ -79,6 +79,11 @@
             margin-bottom: 8px;
         }
     }
+    @media (max-width: 460px) {
+        .extra {
+            display: none;
+        }
+    }
 </style>
 
 <Segment>
