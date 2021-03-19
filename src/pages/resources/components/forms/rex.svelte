@@ -98,15 +98,14 @@
 <style>
 </style>
 
+<h2>Rent {resource.toUpperCase()} from REX...</h2>
 <Segment color="white">
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
             <Form>
-                <p>
-                    Number of <strong>{resource === 'cpu' ? 'ms' : 'kb'}</strong> to rent.
-                </p>
+                <p>Amount of {resource.toUpperCase()} to rent.</p>
                 <Input focus fullWidth name="amount" bind:value={amount} />
                 <Button fluid size="large" formValidation on:action={rex}>Rent for {cost}</Button>
                 <p>Account Balance: {balance}</p>

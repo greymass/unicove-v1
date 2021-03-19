@@ -64,6 +64,7 @@
 <style>
 </style>
 
+<h2>Stake {resource.toUpperCase()} tokens to the network...</h2>
 <Segment color="white">
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>
@@ -75,7 +76,7 @@
                     <InputAsset allowZero fullWidth name="cpu" bind:value={cpu} />
                 {/if}
                 {#if resource === 'net'}
-                    <p>Amount of NET:</p>
+                    <p>Amount of EOS to stake into NET:</p>
                     <InputAsset allowZero fullWidth name="net" bind:value={net} />
                 {/if}
                 <Button fluid size="large" formValidation on:action={stake}>Stake Tokens</Button>

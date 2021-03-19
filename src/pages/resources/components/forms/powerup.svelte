@@ -77,15 +77,14 @@
 <style>
 </style>
 
+<h2>Rent CPU from PowerUp</h2>
 <Segment color="white">
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)}
             <Form>
-                <p>
-                    Number of <strong>{resource === 'cpu' ? 'ms' : 'kb'}</strong> to rent.
-                </p>
+                <p>Amount of CPU to rent.</p>
                 <Input focus fullWidth name="amount" bind:value={amount} />
                 <ErrorMessage errorMessage={error} />
                 <Button fluid size="large" formValidation on:action={powerup}
