@@ -1,6 +1,7 @@
 <script lang="ts">
     import {Asset} from '@greymass/eosio'
     import {getContext} from 'svelte'
+    import {derived} from 'svelte/store'
 
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {ChainFeatures} from '~/config'
@@ -22,8 +23,18 @@
 
     $: loading = $currentAccount
 
+    // Create a derived store of the field we expect to be modified
+    export const field = derived([currentAccount], ([$currentAccount]) => {
+        if ($currentAccount) {
+            console.log($currentAccount.ram_quota)
+            return $currentAccount.ram_quota
+        }
+        return undefined
+    })
+
     async function buyrambytes() {
         try {
+            // Perform the transaction
             const result = await $activeSession!.transact({
                 actions: [
                     {
@@ -39,18 +50,15 @@
                 ],
             })
 
-            console.log('context', context)
+            // If the context exists and this is part of a FormTransaction
             if (context) {
+                // Pass the transaction ID to the parent
                 const txid = String(result.transaction.id)
-                console.log('setting txid', txid)
                 context.setTransaction(txid)
-                context.awaitAccountUpdate($currentAccount)
+
+                // Await an update on the field expected for this transaction
+                context.awaitAccountUpdate(field)
             }
-            // context.setCallback()
-            // transaction_id.set(txid)
-            // console.log($transaction_id)
-            // console.log('getAccount')
-            // getAccount($activeSession!.auth.actor, $activeSession!.chainId, true)
         } catch (e) {
             error = String(e)
         }

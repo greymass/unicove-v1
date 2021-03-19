@@ -1,6 +1,7 @@
 <script lang="ts">
     import {setContext} from 'svelte'
-    import {writable} from 'svelte/store'
+    import {get, writable} from 'svelte/store'
+    import type {Name} from '@greymass/eosio'
 
     import {activeSession, currentAccount} from '~/store'
     import {getAccount} from '~/account-cache'
@@ -15,28 +16,39 @@
     let transaction_id = writable<string | undefined>(undefined)
     let refreshInterval: number
 
-    function refreshAccount(account: any, start: number) {
+    function refreshAccount(account_name: Name) {
         // Refresh the account data
-        getAccount(account.account_name, $activeSession!.chainId, true)
+        getAccount(account_name, $activeSession!.chainId, true)
         // Force update of activeSession, triggering update of currentAccount
         activeSession.update((state) => state)
-        // Check the new head block time to see if it changed
-        const current = $currentAccount!.head_block_time.toMilliseconds()
-        // If a change occurred, stop this process
-        if (current !== start) {
-            clearInterval(refreshInterval)
-            pending = false
-            success = true
-        }
     }
 
     const context: FormTransaction = {
-        awaitAccountUpdate: (account: any) => {
+        awaitAccountUpdate: (field: any) => {
+            // Reset transaction form state
             pending = true
             success = false
-            // Capture current head block time
-            const start = account.head_block_time.toMilliseconds()
-            refreshInterval = setInterval(() => refreshAccount(account, start), 1000)
+
+            // Create a copy of the initial value
+            const initialValue = get(field)
+
+            // Set the current value equal to the initial value
+            let currentValue: any = initialValue
+
+            // Start an interval to continously monitor for changes to that value
+            refreshInterval = setInterval(() => {
+                // Refresh the account
+                refreshAccount($currentAccount!.account_name)
+                // Subscribe to changes on the store passed in
+                field.subscribe((v: any) => (currentValue = v))
+                // If the store changed, stop the interval
+                if (!currentValue.equals(initialValue)) {
+                    pending = false
+                    success = true
+                    clearInterval(refreshInterval)
+                }
+            }, 1000)
+
             // Timeout after 30 seconds
             setTimeout(() => {
                 pending = false
