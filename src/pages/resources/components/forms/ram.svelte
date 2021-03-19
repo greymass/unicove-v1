@@ -44,6 +44,7 @@
 <style>
 </style>
 
+<h2>Purchase RAM from the network...</h2>
 <Segment color="white">
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>

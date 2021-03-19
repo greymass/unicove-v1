@@ -13,7 +13,7 @@
     <h3>
         {((Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) / 1000).toFixed(
             precision
-        )} kb
+        )}
     </h3>
     <p>
         {((Number($currentAccount?.ram_usage) / Number($currentAccount?.ram_quota)) * 100).toFixed(
@@ -28,13 +28,13 @@
                 Available: {(
                     (Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) /
                     1000
-                ).toFixed(precision)} kb
+                ).toFixed(precision)}
             </li>
             <li>
-                Used: {(Number($currentAccount?.ram_usage) / 1000).toFixed(precision)} kb
+                Used: {(Number($currentAccount?.ram_usage) / 1000).toFixed(precision)}
             </li>
             <li>
-                Maximum: {(Number($currentAccount?.ram_quota) / 1000).toFixed(precision)} kb
+                Maximum: {(Number($currentAccount?.ram_quota) / 1000).toFixed(precision)}
             </li>
         </ul>
     </div>
