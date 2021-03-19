@@ -12,8 +12,8 @@
         let percentage = 100
         if ($currentAccount) {
             const max = Number($currentAccount?.net_limit.max)
-            const used = Number($currentAccount?.net_limit.used)
-            percentage = (used / max) * 100
+            const usage = Number($currentAccount?.net_limit.used)
+            percentage = (usage / max) * 100
             if (max === 0 || percentage > 100) {
                 console.log('set percentage')
                 percentage = 100
