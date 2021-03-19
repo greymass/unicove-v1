@@ -69,7 +69,9 @@
             <p>Amount to purchase:</p>
             <InputAsset focus fullWidth name="bytes" bind:value={bytes} />
             <Button fluid size="large" formValidation on:action={buyrambytes}>Buy RAM</Button>
-            {error}
+            {#if error}
+                {error}
+            {/if}
             <p>Account Balance: {balance}</p>
         {:else}
             <p>This feature is unavailable on this blockchain.</p>

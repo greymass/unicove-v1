@@ -16,6 +16,10 @@
     :global(.segment-group) {
         padding-bottom: 1em;
     }
+    :global(h2) {
+        text-align: center;
+        padding: 2em 0 1em;
+    }
 </style>
 
 {#if $currentAccount}

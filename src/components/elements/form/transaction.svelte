@@ -54,11 +54,16 @@
 </script>
 
 <style type="scss">
-    :global(.segment) p.txid,
-    :global(.segment) div.success,
-    :global(.segment) div.error {
-        text-align: center;
-        padding: 0 0 2em;
+    :global(.segment) {
+        p.txid,
+        div.success,
+        div.error {
+            max-width: 70vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            padding: 0 0 2em;
+        }
     }
     .loader {
         color: var(--main-black);
