@@ -70,7 +70,7 @@
         padding: 10px 12px;
         &:focus {
             border: 1px solid #2d8eff;
-            color: #585d6e;
+            color: var(--light-grey);
             outline: none;
         }
 

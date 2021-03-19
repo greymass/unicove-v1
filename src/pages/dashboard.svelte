@@ -12,7 +12,10 @@
 <Page title="Dashboard">
     <p>
         Hello <b>{$currentAccount?.account_name}</b> looks like you are using
-        <b>{$currentAccount?.ram_usage}</b> of RAM.
+        <b>
+            {$currentAccount?.ram_usage} / {$currentAccount?.ram_quota}
+        </b>
+        of RAM.
     </p>
     {#if $price}
         <p>

@@ -10,17 +10,17 @@ export function getClient(chainOrId: ChainConfig | ChainId): APIClient {
     let chain: ChainConfig
     if (chainOrId instanceof ChainId) {
         const id = String(chainOrId)
-        chain = chains.find((cfg) => cfg.chainId === id)!
+        chain = chains.find((cfg) => cfg.chainId.equals(id))!
         if (!chain) {
             throw new Error(`Unconfigured chain: ${id}`)
         }
     } else {
         chain = chainOrId
     }
-    let client = clients.get(chain.chainId)
+    let client = clients.get(String(chain.chainId))
     if (!client) {
         client = new APIClient({url: chain.nodeUrl})
-        clients.set(chain.chainId, client)
+        clients.set(String(chain.chainId), client)
     }
     return client
 }

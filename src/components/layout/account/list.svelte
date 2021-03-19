@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {ChainId} from 'anchor-link'
     import type {SessionLike} from '~/auth'
     import {sessionEquals, login, logout} from '~/auth'
     import {chainConfig} from '~/config'
@@ -31,7 +32,7 @@
 
     const groupings: SessionGroup[] = chainIds
         .map((chainId) => {
-            const config = chainConfig(chainId)
+            const config = chainConfig(ChainId.from(chainId))
             return {
                 chainId,
                 name: config.name,
@@ -129,9 +130,9 @@
 
 <div class="list">
     {#each groupings as group}
-        <div class="network" on:click={() => toggle(group.chainId)}>
-            <div class="header">
-                <Text>{group.name}</Text>
+        <div class="network">
+            <div class="header" on:click={() => toggle(group.chainId)}>
+                <Text>{group.name} ({group.sessions.length})</Text>
                 <Icon name={collapsed[group.chainId] ? 'chevron-right' : 'chevron-down'} />
             </div>
             <ul class="accounts" class:collapsed={collapsed[group.chainId]}>

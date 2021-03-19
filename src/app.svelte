@@ -27,6 +27,14 @@
         pointer-events: none;
     }
 
+    html {
+        height: 100%;
+        overflow: auto;
+    }
+    body {
+        height: 100%;
+    }
+
     label,
     p,
     h1,
