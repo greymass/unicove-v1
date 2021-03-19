@@ -49,7 +49,6 @@ export async function loadAccount(
         set({account: API.v1.AccountObject.from(row.account), stale})
     }
     if (stale || refresh) {
-        console.log('setting store')
         const account = await getClient(chainId).v1.chain.get_account(name)
         await storeAccount(account, chainId)
         set({account: account, stale: false})
@@ -62,7 +61,6 @@ export function getAccount(
     chainId: ChainId,
     refresh = false
 ): Readable<AccountResponse> {
-    console.log('getAccount!')
     const store = writable<AccountResponse>({stale: true})
     loadAccount(Name.from(name), chainId, store.set, refresh).catch((error) => {
         console.log('error', error)
