@@ -2,6 +2,7 @@
     import {currentAccount} from '~/store'
 
     import Button from '~/components/elements/button.svelte'
+    import FormTransaction from '~/components/elements/form/transaction.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
 
@@ -19,6 +20,7 @@
             <Text>Back to Resources</Text>
         </Button>
     </ResourceStateRAM>
-    <h2>Buy RAM</h2>
-    <RAM />
+    <FormTransaction>
+        <RAM />
+    </FormTransaction>
 {/if}

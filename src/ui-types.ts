@@ -3,6 +3,12 @@ export interface Form {
     onChange: (response: InputResponse) => void
 }
 
+export interface FormTransaction {
+    awaitAccountUpdate: (account: any) => void
+    setTransaction: (id: string) => void
+    clear: () => void
+}
+
 export interface InputResponse {
     name: string
     valid: boolean
