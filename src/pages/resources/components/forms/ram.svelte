@@ -14,24 +14,29 @@
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     let bytes: string = '0'
+    let error: string | undefined
 
     $: loading = $currentAccount
 
     async function buyrambytes() {
-        await $activeSession!.transact({
-            actions: [
-                {
-                    authorization: [$activeSession!.auth],
-                    account: 'eosio',
-                    name: 'buyrambytes',
-                    data: BuyRamBytes.from({
-                        payer: $activeSession!.auth.actor,
-                        receiver: $activeSession!.auth.actor,
-                        bytes: Number(bytes),
-                    }),
-                },
-            ],
-        })
+        try {
+            await $activeSession!.transact({
+                actions: [
+                    {
+                        authorization: [$activeSession!.auth],
+                        account: 'eosio',
+                        name: 'buyrambytes',
+                        data: BuyRamBytes.from({
+                            payer: $activeSession!.auth.actor,
+                            receiver: $activeSession!.auth.actor,
+                            bytes: Number(bytes),
+                        }),
+                    },
+                ],
+            })
+        } catch (e) {
+            error = String(e)
+        }
     }
 </script>
 

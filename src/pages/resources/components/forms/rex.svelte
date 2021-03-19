@@ -20,6 +20,7 @@
 
     let amount: string = '1'
     let cost = Asset.from(Number($rexPrice) * Number(amount), $activeBlockchain.coreTokenSymbol)
+    let error: string | undefined
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
@@ -84,9 +85,13 @@
         if (resource === 'net') {
             actions.push(net())
         }
-        await $activeSession!.transact({
-            actions,
-        })
+        try {
+            await $activeSession!.transact({
+                actions,
+            })
+        } catch (e) {
+            error = String(e)
+        }
     }
 </script>
 

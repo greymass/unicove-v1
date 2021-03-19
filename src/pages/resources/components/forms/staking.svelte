@@ -14,7 +14,7 @@
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
     export let resource = 'cpu'
-
+    let error: string | undefined
     let cpu: string = '0'
     let net: string = '0'
 
@@ -31,28 +31,32 @@
     }
 
     async function stake() {
-        await $activeSession!.transact({
-            actions: [
-                {
-                    authorization: [$activeSession!.auth],
-                    account: 'eosio',
-                    name: 'delegatebw',
-                    data: Stake.from({
-                        from: $activeSession!.auth.actor,
-                        receiver: $activeSession!.auth.actor,
-                        stake_net_quantity: amountNET,
-                        stake_cpu_quantity: amountCPU,
-                        transfer: false,
-                    }),
-                },
-            ],
-        })
-        // adjust balance to reflect staking operation
-        balance.units = UInt64.from(
-            balance.units.toNumber() -
-                Asset.from(amountNET).units.toNumber() -
-                Asset.from(amountCPU).units.toNumber()
-        )
+        try {
+            await $activeSession!.transact({
+                actions: [
+                    {
+                        authorization: [$activeSession!.auth],
+                        account: 'eosio',
+                        name: 'delegatebw',
+                        data: Stake.from({
+                            from: $activeSession!.auth.actor,
+                            receiver: $activeSession!.auth.actor,
+                            stake_net_quantity: amountNET,
+                            stake_cpu_quantity: amountCPU,
+                            transfer: false,
+                        }),
+                    },
+                ],
+            })
+            // adjust balance to reflect staking operation
+            balance.units = UInt64.from(
+                balance.units.toNumber() -
+                    Asset.from(amountNET).units.toNumber() -
+                    Asset.from(amountCPU).units.toNumber()
+            )
+        } catch (e) {
+            error = String(e)
+        }
     }
 </script>
 
