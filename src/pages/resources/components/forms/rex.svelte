@@ -108,6 +108,7 @@
                 <p>Amount of {resource.toUpperCase()} to rent.</p>
                 <Input focus fullWidth name="amount" bind:value={amount} />
                 <Button fluid size="large" formValidation on:action={rex}>Rent for {cost}</Button>
+                {error}
                 <p>Account Balance: {balance}</p>
             </Form>
         {:else}
