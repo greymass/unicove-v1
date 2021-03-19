@@ -18,7 +18,7 @@
 
     $: loading = $currentAccount
 
-    let amount: string
+    let amount: string = '0'
     let cost = Number($powerupPrice) * Number(amount)
     let error: string | undefined
 

@@ -18,7 +18,7 @@
 
     $: loading = $currentAccount
 
-    let amount: string
+    let amount: string = '0'
     let cost = Asset.from(Number($rexPrice) * Number(amount), $activeBlockchain.coreTokenSymbol)
     let error: string | undefined
 
