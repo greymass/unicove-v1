@@ -18,7 +18,7 @@
 
     $: loading = $currentAccount
 
-    let amount: string = '1'
+    let amount: string
     let cost = Number($powerupPrice) * Number(amount)
     let error: string | undefined
 
@@ -84,14 +84,14 @@
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)}
             <Form>
                 <p>
-                    Enter the number of <strong>{resource === 'cpu' ? 'ms' : 'kb'}</strong> you would
-                    like to rent.
+                    Number of <strong>{resource === 'cpu' ? 'ms' : 'kb'}</strong> to rent.
                 </p>
-                <Input name="amount" bind:value={amount} />
-                <p>Cost: {cost}</p>
-                <p>Balance: {balance}</p>
+                <Input focus fullWidth name="amount" bind:value={amount} />
                 <ErrorMessage errorMessage={error} />
-                <Button fluid size="large" formValidation on:action={powerup}>Rent for {Asset.from(cost, $activeBlockchain.coreTokenSymbol)}</Button>
+                <Button fluid size="large" formValidation on:action={powerup}
+                    >Rent for {Asset.from(cost, $activeBlockchain.coreTokenSymbol)}</Button
+                >
+                <p>Account Balance: {balance}</p>
             </Form>
         {:else}
             <p>This feature is unavailable on this blockchain.</p>

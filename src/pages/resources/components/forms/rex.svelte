@@ -18,7 +18,7 @@
 
     $: loading = $currentAccount
 
-    let amount: string = '1'
+    let amount: string
     let cost = Asset.from(Number($rexPrice) * Number(amount), $activeBlockchain.coreTokenSymbol)
     let error: string | undefined
 
@@ -61,7 +61,7 @@
         }
     }
 
-    async function powerup() {
+    async function rex() {
         if (!$stateREX) {
             throw new Error('PowerUp state not loaded.')
         }
@@ -105,13 +105,11 @@
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
             <Form>
                 <p>
-                    Enter the number of <strong>{resource === 'cpu' ? 'ms' : 'kb'}</strong> you would
-                    like to rent.
+                    Number of <strong>{resource === 'cpu' ? 'ms' : 'kb'}</strong> to rent.
                 </p>
-                <Input name="amount" bind:value={amount} />
-                <p>Cost: {cost}</p>
-                <p>Balance: {balance}</p>
-                <Button formValidation on:action={powerup}>Rent</Button>
+                <Input focus fullWidth name="amount" bind:value={amount} />
+                <Button fluid size="large" formValidation on:action={rex}>Rent for {cost}</Button>
+                <p>Account Balance: {balance}</p>
             </Form>
         {:else}
             <p>This feature is unavailable on this blockchain.</p>

@@ -7,6 +7,7 @@
 
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
+    import Segment from '~/components/elements/segment.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
 
     $: balance =
@@ -63,24 +64,26 @@
 <style>
 </style>
 
-{#await loading}
-    <p>Hang on, fetching balances and stuff...</p>
-{:then _}
-    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
-        <Form>
-            <p>You have {balance}</p>
-            {#if resource === 'cpu'}
-                <p>Amount of EOS to stake into CPU:</p>
-                <InputAsset allowZero name="cpu" bind:value={cpu} />
-            {/if}
-            {#if resource === 'net'}
-                <p>Amount of NET:</p>
-                <InputAsset allowZero name="net" bind:value={net} />
-            {/if}
-            <Button formValidation on:action={stake}>Stake</Button>
-        </Form>
-        <ul />
-    {:else}
-        <p>This feature is unavailable on this blockchain.</p>
-    {/if}
-{/await}
+<Segment color="white">
+    {#await loading}
+        <p>Hang on, fetching balances and stuff...</p>
+    {:then _}
+        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
+            <Form>
+                {#if resource === 'cpu'}
+                    <p>Amount of EOS to stake into CPU:</p>
+                    <InputAsset allowZero fullWidth name="cpu" bind:value={cpu} />
+                {/if}
+                {#if resource === 'net'}
+                    <p>Amount of NET:</p>
+                    <InputAsset allowZero fullWidth name="net" bind:value={net} />
+                {/if}
+                <Button fluid size="large" formValidation on:action={stake}>Stake Tokens</Button>
+                <p>Account Balance: {balance}</p>
+            </Form>
+            <ul />
+        {:else}
+            <p>This feature is unavailable on this blockchain.</p>
+        {/if}
+    {/await}
+</Segment>

@@ -7,13 +7,14 @@
 
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
+    import Segment from '~/components/elements/segment.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
 
-    let bytes: string = '0'
+    let bytes: string
     let error: string | undefined
 
     $: loading = $currentAccount
@@ -43,18 +44,19 @@
 <style>
 </style>
 
-{#await loading}
-    <p>Hang on, fetching balances and stuff...</p>
-{:then _}
-    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.BuyRAM)}
-        <Form>
-            <p>You have {balance}</p>
-            <p>Number of bytes to buy:</p>
-            <InputAsset name="bytes" bind:value={bytes} />
-            <Button formValidation on:action={buyrambytes}>Buy RAM</Button>
-        </Form>
-        <ul />
-    {:else}
-        <p>This feature is unavailable on this blockchain.</p>
-    {/if}
-{/await}
+<Segment color="white">
+    {#await loading}
+        <p>Hang on, fetching balances and stuff...</p>
+    {:then _}
+        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.BuyRAM)}
+            <Form>
+                <p>Number of <strong>bytes</strong> to buy:</p>
+                <InputAsset focus fullWidth name="bytes" bind:value={bytes} />
+                <Button fluid size="large" formValidation on:action={buyrambytes}>Buy RAM</Button>
+                <p>Account Balance: {balance}</p>
+            </Form>
+        {:else}
+            <p>This feature is unavailable on this blockchain.</p>
+        {/if}
+    {/await}
+</Segment>
