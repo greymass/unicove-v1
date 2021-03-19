@@ -1,18 +1,21 @@
 <script lang="ts">
     import {Asset} from '@greymass/eosio'
+    import {getContext} from 'svelte'
 
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {ChainFeatures} from '~/config'
     import {BuyRamBytes} from '~/abi-types'
 
     import Button from '~/components/elements/button.svelte'
-    import Form from '~/components/elements/form.svelte'
     import Segment from '~/components/elements/segment.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
+    import type {FormTransaction} from '~/ui-types'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
         Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+
+    const context: FormTransaction = getContext('transaction')
 
     let bytes: string
     let error: string | undefined
@@ -21,7 +24,7 @@
 
     async function buyrambytes() {
         try {
-            await $activeSession!.transact({
+            const result = await $activeSession!.transact({
                 actions: [
                     {
                         authorization: [$activeSession!.auth],
@@ -30,11 +33,24 @@
                         data: BuyRamBytes.from({
                             payer: $activeSession!.auth.actor,
                             receiver: $activeSession!.auth.actor,
-                            bytes: Number(bytes),
+                            bytes: Number(bytes) * 1000,
                         }),
                     },
                 ],
             })
+
+            console.log('context', context)
+            if (context) {
+                const txid = String(result.transaction.id)
+                console.log('setting txid', txid)
+                context.setTransaction(txid)
+                context.awaitAccountUpdate($currentAccount)
+            }
+            // context.setCallback()
+            // transaction_id.set(txid)
+            // console.log($transaction_id)
+            // console.log('getAccount')
+            // getAccount($activeSession!.auth.actor, $activeSession!.chainId, true)
         } catch (e) {
             error = String(e)
         }
@@ -50,13 +66,11 @@
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.BuyRAM)}
-            <Form>
-                <p>Number of <strong>bytes</strong> to buy:</p>
-                <InputAsset focus fullWidth name="bytes" bind:value={bytes} />
-                <Button fluid size="large" formValidation on:action={buyrambytes}>Buy RAM</Button>
-                <p>Account Balance: {balance}</p>
-            </Form>
+            <p>Amount to purchase:</p>
+            <InputAsset focus fullWidth name="bytes" bind:value={bytes} />
+            <Button fluid size="large" formValidation on:action={buyrambytes}>Buy RAM</Button>
             {error}
+            <p>Account Balance: {balance}</p>
         {:else}
             <p>This feature is unavailable on this blockchain.</p>
         {/if}
