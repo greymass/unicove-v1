@@ -56,6 +56,7 @@
                 <Button fluid size="large" formValidation on:action={buyrambytes}>Buy RAM</Button>
                 <p>Account Balance: {balance}</p>
             </Form>
+            {error}
         {:else}
             <p>This feature is unavailable on this blockchain.</p>
         {/if}

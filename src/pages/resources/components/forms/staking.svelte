@@ -80,6 +80,7 @@
                     <InputAsset allowZero fullWidth name="net" bind:value={net} />
                 {/if}
                 <Button fluid size="large" formValidation on:action={stake}>Stake Tokens</Button>
+                {error}
                 <p>Account Balance: {balance}</p>
             </Form>
             <ul />
