@@ -43,6 +43,44 @@
 </style>
 
 <Page title="Tokens">
+    <table>
+      <tr>
+          <th>
+            Token
+          </th>
+           <th>
+             Balance
+           </th>
+           <th>
+             Value
+           </th>
+      </tr>
+      <tr>
+            <td>
+              {$activeBlockchain?.coreTokenSymbol?.toString()}
+            </td>
+             <td>
+               {$currentAccount?.core_liquid_balance?.toString()}
+             </td>
+             <td>
+               {usdValue.toFixed(2)} USD
+             </td>
+        </tr>
+        {#each Object.values($tokenBalances) as token}
+            <tr>
+                <td>
+                  {token.name}
+                </td>
+                 <td>
+                   {token.balance.toString()}
+                 </td>
+                 <td>
+                   {token.usdValue.toString()}
+                 </td>
+            </tr>
+        {/each}
+
+    </table>
     <h2>
         Current Balance:
         <span>
@@ -68,5 +106,5 @@
                 </div>
             {/each}
         </div>
-    {
+    {/end}
 </Page>
