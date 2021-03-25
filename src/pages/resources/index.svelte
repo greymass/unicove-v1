@@ -6,7 +6,8 @@
     import ResourcesOverview from '~/pages/resources/pages/index.svelte'
     import ResourcesOverviewCpu from '~/pages/resources/pages/cpu.svelte'
     import ResourcesOverviewNet from '~/pages/resources/pages/net.svelte'
-    import ResourcesOverviewRam from '~/pages/resources/pages/ram.svelte'
+    import ResourcesRAMBuy from '~/pages/resources/pages/ram/buy.svelte'
+    import ResourcesRAMSell from '~/pages/resources/pages/ram/sell.svelte'
     import ResourcesCPUFuel from '~/pages/resources/pages/cpu/fuel.svelte'
     import ResourcesCPUPowerUp from '~/pages/resources/pages/cpu/powerup.svelte'
     import ResourcesCPUREX from '~/pages/resources/pages/cpu/rex.svelte'
@@ -48,8 +49,11 @@
         <ResourcesNETREX />
     </Route>
     <!-- RAM -->
-    <Route path="/ram">
-        <ResourcesOverviewRam />
+    <Route path="/ram/buy">
+        <ResourcesRAMBuy />
+    </Route>
+    <Route path="/ram/sell">
+        <ResourcesRAMSell />
     </Route>
     <!-- Staking -->
     <Route path="/cpu/stake">

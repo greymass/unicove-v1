@@ -7,7 +7,7 @@
     import Text from '~/components/elements/text.svelte'
 
     import ResourceStateRAM from '~/pages/resources/components/state/ram.svelte'
-    import RAM from '~/pages/resources/components/forms/ram.svelte'
+    import RAMBuy from '~/pages/resources/components/forms/rambuy.svelte'
 </script>
 
 <style type="scss">
@@ -19,8 +19,12 @@
             <Icon name="arrow-left" />
             <Text>Back to Resources</Text>
         </Button>
+        <Button primary href="/resources/ram/sell">
+            <Icon name="hard-drive" />
+            <Text>Sell RAM</Text>
+        </Button>
     </ResourceStateRAM>
     <FormTransaction>
-        <RAM />
+        <RAMBuy />
     </FormTransaction>
 {/if}

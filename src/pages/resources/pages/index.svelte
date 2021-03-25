@@ -16,26 +16,35 @@
     :global(.segment-group) {
         padding-bottom: 1em;
     }
-    :global(h2) {
+    :global(h2.header, h4.description) {
         text-align: center;
+    }
+    :global(h2.header) {
         padding: 2em 0 1em;
+    }
+    :global(h4.description) {
+        padding: 1em 0 2em;
     }
 </style>
 
 {#if $currentAccount}
     <SegmentGroup>
+        <ResourceStateRAM>
+            <Button primary href="/resources/ram/buy">
+                <Text>Buy RAM</Text>
+                <Icon name="hard-drive" />
+            </Button>
+            <Button primary href="/resources/ram/sell">
+                <Text>Sell RAM</Text>
+                <Icon name="hard-drive" />
+            </Button>
+        </ResourceStateRAM>
         <ResourceStateCPU>
             <Button primary href="/resources/cpu">
                 <Text>Rent CPU</Text>
                 <Icon name="cpu" />
             </Button>
         </ResourceStateCPU>
-        <ResourceStateRAM>
-            <Button primary href="/resources/ram">
-                <Text>Buy RAM</Text>
-                <Icon name="hard-drive" />
-            </Button>
-        </ResourceStateRAM>
         <ResourceStateNET>
             <Button primary href="/resources/net">
                 <Text>Rent NET</Text>
