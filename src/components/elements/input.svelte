@@ -6,6 +6,7 @@
 
     export let disabled: boolean = false
     export let focus: boolean = false
+    export let inputmode: string = ''
     export let name: string = ''
     export let placeholder: string = ''
     export let value: string = ''
@@ -86,7 +87,11 @@
     type="text"
     {name}
     {disabled}
+    {inputmode}
     {placeholder}
     bind:this={ref}
     bind:value
+    autocapitalize="none"
+    autocorrect="off"
+    autocomplete="off"
 />

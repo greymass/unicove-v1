@@ -96,6 +96,15 @@
 </style>
 
 <div>
-    <Input on:changed {name} {fullWidth} {focus} {placeholder} bind:value isValid={validate} />
+    <Input
+        on:changed
+        {name}
+        {fullWidth}
+        {focus}
+        {placeholder}
+        bind:value
+        isValid={validate}
+        inputmode="decimal"
+    />
     <ErrorMessage {errorMessage} />
 </div>
