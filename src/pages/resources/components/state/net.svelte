@@ -26,10 +26,14 @@
 <Wrapper icon="wifi" {showExtra}>
     <h4>NET</h4>
     <h3>
-        {(Number($currentAccount?.net_limit.available) / 1000).toFixed(2)}
+        {(Number($currentAccount?.net_limit.available) / 1000).toFixed(2)} <span>kb</span>
     </h3>
     <p>
-        {$used}% Used
+        {#if Number($used) < 100}
+            {$used}% Quota Usage
+        {:else}
+            No usable NET
+        {/if}
     </p>
     <slot />
     <div slot="extra">
@@ -38,11 +42,11 @@
             <li>
                 Available: {(Number($currentAccount?.net_limit.available) / 1000).toFixed(
                     precision
-                )}
+                )} kb
             </li>
-            <li>Used: {(Number($currentAccount?.net_limit.used) / 1000).toFixed(precision)}</li>
+            <li>Used: {(Number($currentAccount?.net_limit.used) / 1000).toFixed(precision)} kb</li>
             <li>
-                Maximum: {(Number($currentAccount?.net_limit.max) / 1000).toFixed(precision)}
+                Maximum: {(Number($currentAccount?.net_limit.max) / 1000).toFixed(precision)} kb
             </li>
         </ul>
     </div>

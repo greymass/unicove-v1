@@ -6,6 +6,7 @@
     import SegmentGroup from '~/components/elements/segment/group.svelte'
 
     export let resource = 'cpu'
+    const unit = resource === 'cpu' ? 'ms' : 'kb'
 </script>
 
 <style type="scss">
@@ -53,7 +54,10 @@
 </style>
 
 <div class="offers">
-    <h2>Select a method acquire {resource.toUpperCase()}...</h2>
+    <h2 class="header">Resource Provider Costs for {resource.toUpperCase()}...</h2>
+    <h4 class="description">
+        Select a Resource Provider from the choices below to increase your {resource.toUpperCase()}.
+    </h4>
     <SegmentGroup>
         <!-- <Segment>
             <div class="offer">
@@ -70,7 +74,7 @@
                 <div class="price">
                     {$powerupPrice.value.toFixed($powerupPrice.symbol.precision)}
                 </div>
-                <div class="pair">EOS/CPU</div>
+                <div class="pair">EOS per {unit}</div>
                 <div class="term">Usable for up to <br /> 24 hours.</div>
                 <Button primary href="/resources/{resource}/powerup">Rent via PowerUp</Button>
             </div>
@@ -79,7 +83,7 @@
             <div class="offer">
                 <div class="service">REX</div>
                 <div class="price">{$rexPrice.value.toFixed($rexPrice.symbol.precision)}</div>
-                <div class="pair">EOS/{resource.toUpperCase()}</div>
+                <div class="pair">EOS per {unit}</div>
                 <div class="term">Usable each day for <br />the next 30 days.</div>
                 <Button primary href="/resources/{resource}/rex">Rent via REX</Button>
             </div>
@@ -90,7 +94,7 @@
                 <div class="price">
                     {(Number($stakingPrice.value) * 1000).toFixed($stakingPrice.symbol.precision)}
                 </div>
-                <div class="pair">EOS/{resource.toUpperCase()}</div>
+                <div class="pair">EOS per {unit}</div>
                 <div class="term">Usable each day until <br />they are unstaked.</div>
                 <Button primary href="/resources/{resource}/stake">Stake Tokens</Button>
             </div>

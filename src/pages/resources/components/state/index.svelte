@@ -55,6 +55,11 @@
 
             color: var(--light-black);
         }
+        :global(h3 > span) {
+            font-weight: normal;
+            font-size: 18px;
+            color: var(--light-grey);
+        }
         :global(h4) {
             color: var(--dark-grey);
             font-family: Inter;

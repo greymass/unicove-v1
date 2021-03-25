@@ -15,6 +15,7 @@
     import {PowerUp} from '~/abi-types'
 
     export let resource: string = 'cpu'
+    const unit = resource === 'cpu' ? 'ms' : 'kb'
 
     $: loading = $currentAccount
 
@@ -77,18 +78,19 @@
 <style>
 </style>
 
-<h2>Rent CPU from PowerUp</h2>
+<h2 class="header">Rent {resource.toUpperCase()} from PowerUp</h2>
 <Segment color="white">
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)}
             <Form>
-                <p>Amount of CPU to rent.</p>
+                <p>Amount of {unit} to rent.</p>
                 <Input focus fullWidth name="amount" bind:value={amount} />
                 <ErrorMessage errorMessage={error} />
                 <Button fluid size="large" formValidation on:action={powerup}
-                    >Rent for {Asset.from(cost, $activeBlockchain.coreTokenSymbol)}</Button
+                    >Rent {Number(amount)}
+                    {unit} for {Asset.from(cost, $activeBlockchain.coreTokenSymbol)}</Button
                 >
                 <p>Account Balance: {balance}</p>
             </Form>
