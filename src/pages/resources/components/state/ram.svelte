@@ -11,8 +11,8 @@
     export const used = derived([currentAccount], ([$currentAccount]) => {
         let percentage = 100
         if ($currentAccount) {
-            const max = Number($currentAccount?.ram_usage)
-            const usage = Number($currentAccount?.ram_quota)
+            const max = Number($currentAccount?.ram_quota)
+            const usage = Number($currentAccount?.ram_usage)
             percentage = (usage / max) * 100
             if (max === 0 || percentage > 100) {
                 percentage = 100
