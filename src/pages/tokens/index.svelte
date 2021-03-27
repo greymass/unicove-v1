@@ -44,33 +44,54 @@
 
 <Page title="Tokens">
     <h2>
-        Current Balance:
-        <span>
-            {$currentAccount?.core_liquid_balance?.toString()}
-        </span>
-        <p>
-            {usdValue.toFixed(2)} USD
-        </p>
-        <a href={`/transfer`}> Transfer </a>
+        Account
     </h2>
-
-    {#if tokenBalances && $tokenBalances}
-        <div class="tokensContainer">
-            {#each Object.values($tokenBalances) as token}
-                <div class="tokenContainer">
-                    <h2>
-                        {token.name}
-                    </h2>
-                    <p>
-                        Balance: {token.balance.toString()} ({token.usdValue.toString()})
-                    </p>
-                    <a href={`/transfer/${token.name.toLowerCase()}`}> Transfer </a>
-                </div>
-            {/each}
-        </div>
-    {:else}
-        <div class="noTokensContainer">
-            <h3>You do not currently have any token balances.</h3>
-        </div>
-    {/if}
+    <h3>
+        {$currentAccount.name} - total value {$tokenBalances.totalUSD}
+    </h3>
+   <table>
+      <tr>
+          <th>
+            Token
+          </th>
+           <th>
+             Balance
+           </th>
+           <th>
+             Value
+           </th>
+      </tr>
+      <tr>
+            <td>
+              {$activeBlockchain?.coreTokenSymbol?.toString()}
+            </td>
+             <td>
+               {$currentAccount?.core_liquid_balance?.toString()}
+             </td>
+             <td>
+               {usdValue.toFixed(2)} USD
+             </td>
+        </tr>
+        {#each Object.values($tokenBalances.tokens) as token}
+            <tr>
+                <td>
+                  {token.name}
+                </td>
+                 <td>
+                   {token.balance.toString()}
+                 </td>
+                 <td>
+                   {token.usdValue.toString()}
+                 </td>
+            </tr>
+        {/each}
+    </table>
+    <div class="button-container">
+        <a href="/transfer">
+            <Button size="large">Create new transfer</Button>
+        </a>
+        <a href={$currentAccount.bloksUrl}>
+            <Button size="large">View on block explorer</Button>
+        </a>
+    </div>
 </Page>
