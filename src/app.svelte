@@ -7,6 +7,7 @@
 
     import Dashboard from '~/pages/dashboard.svelte'
     import Login from '~/pages/login.svelte'
+    import TransferSelect from '~/pages/transferSelect/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
@@ -86,7 +87,7 @@
                 <Dashboard />
             </Route>
             <Route path="/transfer">
-                <Transfer />
+                <TransferSelect />
             </Route>
             <Route path="/transfer/:token" let:meta>
                 <Transfer {meta} />
