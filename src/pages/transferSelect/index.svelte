@@ -48,12 +48,7 @@
           <th>
             Token
           </th>
-           <th>
-             Balance
-           </th>
-           <th>
-             Value
-           </th>
+           <th/>
       </tr>
       <tr>
             <td>
@@ -61,9 +56,6 @@
             </td>
              <td>
                {$currentAccount?.core_liquid_balance?.toString()}
-             </td>
-             <td>
-               {usdValue.toFixed(2)} USD
              </td>
         </tr>
         {#each Object.values($tokenBalances) as token}
@@ -73,9 +65,6 @@
                 </td>
                  <td>
                    {token.balance.toString()}
-                 </td>
-                 <td>
-                   {token.usdValue.toString()}
                  </td>
             </tr>
         {/each}
