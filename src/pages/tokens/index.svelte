@@ -3,6 +3,7 @@
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
     import {priceTicker} from '~/price-ticker'
+    import Button from '~/components/elements/button.svelte'
 
     $: tokenBalances =
         $activeSession &&
@@ -18,13 +19,30 @@
 </script>
 
 <style type="scss">
+  .container {
+    width: 600px;
+
     h2 {
         margin-top: 30px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 29px;
+        letter-spacing: -0.47px;
+        color: var(--main-black);
+    }
 
-        span {
-            text-decoration: underline;
-            margin-left: 10px;
-        }
+    h3 {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 19px;
+      letter-spacing: -0.26px;
+      color: var(--dark-grey);
+
+      margin-bottom: 30px;
     }
 
     .tokensContainer {
@@ -40,18 +58,64 @@
             text-align: center;
         }
     }
+
+    table {
+        margin-bottom: 20px;
+        width: 600px;
+
+        tr {
+            th {
+                height: 30px;
+                width: 30%;
+                font-family: Inter;
+                font-style: normal;
+                font-weight: 600;
+                font-size: 12px;
+                line-height: 12px;
+                text-align: left;
+                letter-spacing: 0.1px;
+                text-transform: uppercase;
+                color: var(--dark-grey);
+            }
+
+            td {
+              width: 120px;
+              padding: 10px 0 24px 0;
+              border-bottom: 1px solid var(--divider-grey);
+
+              &:first-child {
+                width: 30px;
+                border: none;
+              }
+            }
+        }
+    }
+
+    .button-container {
+            display: flex;
+            flex-direction: row;
+      a {
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+      }
+    }
+  }
+
 </style>
 
 <Page title="Tokens">
+  <div class="container">
     <h2>
         Account
     </h2>
     <h3>
-        {$currentAccount.name} - total value {$tokenBalances.totalUSD}
+        {$currentAccount?.name || '_____'} - total value $ {$tokenBalances?.totalUSD || '___ USD'}
     </h3>
    <table>
       <tr>
-          <th>
+          <th colspan="2">
             Token
           </th>
            <th>
@@ -62,8 +126,11 @@
            </th>
       </tr>
       <tr>
+          <td>
+            {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
+          </td>
             <td>
-              {$activeBlockchain?.coreTokenSymbol?.toString()}
+              {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
             </td>
              <td>
                {$currentAccount?.core_liquid_balance?.toString()}
@@ -72,7 +139,7 @@
                {usdValue.toFixed(2)} USD
              </td>
         </tr>
-        {#each Object.values($tokenBalances.tokens) as token}
+        {#each Object.values($tokenBalances?.tokens || {}) as token}
             <tr>
                 <td>
                   {token.name}
@@ -90,8 +157,9 @@
         <a href="/transfer">
             <Button size="large">Create new transfer</Button>
         </a>
-        <a href={$currentAccount.bloksUrl}>
+        <a href={$currentAccount?.bloksUrl}>
             <Button size="large">View on block explorer</Button>
         </a>
     </div>
+  </div>
 </Page>
