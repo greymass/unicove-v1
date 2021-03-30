@@ -92,8 +92,9 @@
     }
 
     .button-container {
-            display: flex;
-            flex-direction: row;
+      display: flex;
+      flex-direction: row;
+      
       a {
         width: 300px;
         display: flex;
@@ -111,7 +112,7 @@
         Account
     </h2>
     <h3>
-        {$currentAccount?.name || '_____'} - total value $ {$tokenBalances?.totalUSD || '___ USD'}
+        {$currentAccount?.name || '_____'} - total value $ {$tokenBalances?.totalUSD || '___'}
     </h3>
    <table>
       <tr>

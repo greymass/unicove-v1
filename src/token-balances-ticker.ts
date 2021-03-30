@@ -105,5 +105,12 @@ function parseTokenBalances(tokens: RawTokenBalance[]): {[key: string]: TokenBal
         }
     })
 
-    return tokensBalances
+    return {
+        tokens: tokensBalances,
+        totalAmount: calculateTotalUSD(tokens)
+    }
+}
+
+function calculateTotalUSD(tokens) {
+    return tokens.reduce((total, token) => total + (token.usd_value || 0), 0);
 }
