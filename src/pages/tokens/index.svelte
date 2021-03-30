@@ -16,6 +16,8 @@
     })
 
     $: usdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
+
+    $: console.log({c: $tokenBalances})
 </script>
 
 <style type="scss">
@@ -94,7 +96,7 @@
     .button-container {
       display: flex;
       flex-direction: row;
-      
+
       a {
         width: 300px;
         display: flex;
@@ -112,7 +114,7 @@
         Account
     </h2>
     <h3>
-        {$currentAccount?.name || '_____'} - total value $ {$tokenBalances?.totalUSD || '___'}
+        {$currentAccount?.account_name?.toString() || '_____'} - total value $ {$tokenBalances?.totalUsdValue?.toFixed(2) || '___'}
     </h3>
    <table>
       <tr>
@@ -142,6 +144,9 @@
         </tr>
         {#each Object.values($tokenBalances?.tokens || {}) as token}
             <tr>
+                <td>
+                  {token.name}
+                </td>
                 <td>
                   {token.name}
                 </td>
