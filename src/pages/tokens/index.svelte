@@ -15,9 +15,8 @@
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
     })
 
-    $: usdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
-
-    $: console.log({c: $tokenBalances})
+    $: coreTokenUsdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
+    $: totalUsdValue = ($tokenBalances?.totalUsdValue || 0) + coreTokenUsdValue
 </script>
 
 <style type="scss">
@@ -82,12 +81,21 @@
 
             td {
               width: 120px;
-              padding: 10px 0 24px 0;
+              padding: 24px 0;
               border-bottom: 1px solid var(--divider-grey);
 
               &:first-child {
-                width: 30px;
+                width: 40px;
                 border: none;
+                padding: 0;
+                height: 30px;
+                position: relative;
+
+                img {
+                    position: absolute;
+                    top: 15px;
+                    width: 30px;
+                  }
               }
             }
         }
@@ -114,7 +122,7 @@
         Account
     </h2>
     <h3>
-        {$currentAccount?.account_name?.toString() || '_____'} - total value $ {$tokenBalances?.totalUsdValue?.toFixed(2) || '___'}
+        {$currentAccount?.account_name?.toString() || '_____'} - total value $ {totalUsdValue.toFixed(2) || '___'}
     </h3>
    <table>
       <tr>
@@ -130,7 +138,9 @@
       </tr>
       <tr>
           <td>
-            {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
+            <img src={`https://www.bloks.io/img/chains/${
+                $activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]?.toLowerCase()
+            }.png`} />
           </td>
             <td>
               {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
@@ -139,13 +149,13 @@
                {$currentAccount?.core_liquid_balance?.toString()}
              </td>
              <td>
-               {usdValue.toFixed(2)} USD
+               {coreTokenUsdValue.toFixed(2)} USD
              </td>
         </tr>
         {#each Object.values($tokenBalances?.tokens || {}) as token}
             <tr>
                 <td>
-                  {token.name}
+                  <img src={token.logo} />
                 </td>
                 <td>
                   {token.name}

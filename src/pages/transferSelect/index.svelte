@@ -58,7 +58,7 @@
                {$currentAccount?.core_liquid_balance?.toString()}
              </td>
         </tr>
-        {#each Object.values($tokenBalances) as token}
+        {#each Object.values($tokenBalances || {}) as token}
             <tr>
                 <td>
                   {token.name}
@@ -83,7 +83,7 @@
 
     {#if tokenBalances && $tokenBalances}
         <div class="tokensContainer">
-            {#each Object.values($tokenBalances) as token}
+            {#each Object.values($tokenBalances || {}) as token}
                 <div class="tokenContainer">
                     <h2>
                         {token.name}

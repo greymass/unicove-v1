@@ -102,6 +102,7 @@ function parseTokenBalances(tokens: RawTokenBalance[]): {[key: string]: TokenBal
             decimals: token.decimals,
             symbol: assetSymbol,
             contract: token.contract,
+            logo: token.metadata?.logo
         }
     })
 
@@ -112,5 +113,6 @@ function parseTokenBalances(tokens: RawTokenBalance[]): {[key: string]: TokenBal
 }
 
 function calculateTotalUsdValue(tokens) {
+    console.log({tokens})
     return tokens.reduce((total, token) => total + (token.usd_value || 0), 0);
 }
