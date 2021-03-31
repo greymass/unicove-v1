@@ -43,6 +43,8 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
             }
             const account = v.account
 
+            console.log({account})
+
             if (!account?.core_liquid_balance) {
                 const assets: Asset[] | void = await fetchBalance(session!).catch((err) => {
                     console.log('Error fetching account balance:', err)

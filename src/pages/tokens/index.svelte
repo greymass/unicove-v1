@@ -17,6 +17,12 @@
 
     $: coreTokenUsdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
     $: totalUsdValue = ($tokenBalances?.totalUsdValue || 0) + coreTokenUsdValue
+    $: bloksAccountUrl = `https://www.${
+      $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
+    }bloks.io/account/${$currentAccount?.account_name?.toString()}`
+
+    $: console.log({bloksAccountUrl})
+    $: console.log({a: $currentAccount})
 </script>
 
 <style type="scss">
@@ -173,7 +179,7 @@
         <a href="/transfer">
             <Button size="large">Create new transfer</Button>
         </a>
-        <a href={$currentAccount?.bloksUrl}>
+        <a href={bloksAccountUrl} target="_blank">
             <Button size="large">View on block explorer</Button>
         </a>
     </div>
