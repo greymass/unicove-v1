@@ -20,9 +20,6 @@
     $: bloksAccountUrl = `https://www.${
       $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
     }bloks.io/account/${$currentAccount?.account_name?.toString()}`
-
-    $: console.log({bloksAccountUrl})
-    $: console.log({a: $currentAccount})
 </script>
 
 <style type="scss">

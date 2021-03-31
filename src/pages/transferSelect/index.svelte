@@ -14,17 +14,39 @@
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
     })
 
-    $: usdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
+    $: coreTokenUsdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
+    $: totalUsdValue = ($tokenBalances?.totalUsdValue || 0) + coreTokenUsdValue
+    $: bloksAccountUrl = `https://www.${
+      $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
+    }bloks.io/account/${$currentAccount?.account_name?.toString()}`
 </script>
 
 <style type="scss">
+  .container {
+    width: 300px;
+    margin: auto;
+
     h2 {
         margin-top: 30px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 29px;
+        letter-spacing: -0.47px;
+        color: var(--main-black);
+    }
 
-        span {
-            text-decoration: underline;
-            margin-left: 10px;
-        }
+    h3 {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 19px;
+      letter-spacing: -0.26px;
+      color: var(--dark-grey);
+
+      margin-bottom: 30px;
     }
 
     .tokensContainer {
@@ -40,60 +62,110 @@
             text-align: center;
         }
     }
+
+    .selector-container {
+      height: 500px;
+      overflow-y: scroll;
+
+       table {
+              margin-bottom: 20px;
+              width: 260px;
+
+              tr {
+                  th {
+                      height: 30px;
+                      font-family: Inter;
+                      font-style: normal;
+                      font-weight: 600;
+                      font-size: 12px;
+                      line-height: 12px;
+                      text-align: left;
+                      letter-spacing: 0.1px;
+                      text-transform: uppercase;
+                      color: var(--dark-grey);
+                  }
+
+                  td {
+                    width: 120px;
+                    padding: 24px 0;
+                    border-bottom: 1px solid var(--divider-grey);
+
+                    &:first-child {
+                      width: 40px;
+                      border: none;
+                      padding: 0;
+                      height: 30px;
+                      position: relative;
+
+                      img {
+                          position: absolute;
+                          top: 17px;
+                          width: 25px;
+                        }
+                    }
+                  }
+              }
+          }
+
+          .button-container {
+            display: flex;
+            flex-direction: row;
+
+            a {
+              width: 300px;
+              display: flex;
+              flex-direction: column;
+              padding: 5px;
+            }
+          }
+        }
+    }
+
 </style>
 
-<Page title="Tokens">
+<Page title="">
+  <div class="container">
+    <h2>
+        Create Transfer
+    </h2>
+    <h3>
+        Step of 1 of 3
+    </h3>
+    <div class="selector-container">
     <table>
-      <tr>
-          <th>
-            Token
-          </th>
-           <th/>
-      </tr>
-      <tr>
-            <td>
-              {$activeBlockchain?.coreTokenSymbol?.toString()}
-            </td>
-             <td>
-               {$currentAccount?.core_liquid_balance?.toString()}
-             </td>
-        </tr>
-        {#each Object.values($tokenBalances || {}) as token}
-            <tr>
+          <tr>
+              <th colspan="3">
+                Token
+              </th>
+          </tr>
+          <tr>
+              <td>
+                <img src={`https://www.bloks.io/img/chains/${
+                    $activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]?.toLowerCase()
+                }.png`} />
+              </td>
                 <td>
-                  {token.name}
+                  {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
                 </td>
                  <td>
-                   {token.balance.toString()}
+                   {$currentAccount?.core_liquid_balance?.toString()}
                  </td>
             </tr>
-        {/each}
-
-    </table>
-    <h2>
-        Current Balance:
-        <span>
-            {$currentAccount?.core_liquid_balance?.toString()}
-        </span>
-        <p>
-            {usdValue.toFixed(2)} USD
-        </p>
-        <a href={`/transfer`}> Transfer </a>
-    </h2>
-
-    {#if tokenBalances && $tokenBalances}
-        <div class="tokensContainer">
-            {#each Object.values($tokenBalances || {}) as token}
-                <div class="tokenContainer">
-                    <h2>
-                        {token.name}
-                    </h2>
-                    <p>
-                        Balance: {token.balance.toString()} ({token.usdValue.toString()})
-                    </p>
-                    <a href={`/transfer/${token.name.toLowerCase()}`}> Transfer </a>
-                </div>
+            {#each Object.values($tokenBalances?.tokens || {}) as token}
+                <tr>
+                    <td>
+                      <img src={token.logo} />
+                    </td>
+                    <td>
+                      {token.name}
+                    </td>
+                     <td>
+                       {token.balance.toString()}
+                     </td>
+                </tr>
             {/each}
-        </div>
-    {/if}
+        </table>
+      </div>
+
+  </div>
 </Page>
