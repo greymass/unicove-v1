@@ -124,7 +124,7 @@
 
 </style>
 
-<Page title="">
+<Page>
   <div class="container">
     <h2>
         Create Transfer
