@@ -4,6 +4,7 @@
     import {tokenBalancesTicker} from '~/token-balances-ticker'
     import {priceTicker} from '~/price-ticker'
     import Button from '~/components/elements/button.svelte'
+    import Header from '~/components/layout/header.svelte'
 
     $: tokenBalances =
         $activeSession &&
@@ -25,29 +26,6 @@
 <style type="scss">
   .container {
     width: 600px;
-
-    h2 {
-        margin-top: 30px;
-        font-family: Inter;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 24px;
-        line-height: 29px;
-        letter-spacing: -0.47px;
-        color: var(--main-black);
-    }
-
-    h3 {
-      font-family: Inter;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 19px;
-      letter-spacing: -0.26px;
-      color: var(--dark-grey);
-
-      margin-bottom: 30px;
-    }
 
     .tokensContainer {
         padding: 20px 0 40px 0;
@@ -116,17 +94,14 @@
       }
     }
   }
-
 </style>
 
-<Page title="Tokens">
+<Page>
   <div class="container">
-    <h2>
-        Account
-    </h2>
-    <h3>
-        {$currentAccount?.account_name?.toString() || '_____'} - total value $ {totalUsdValue.toFixed(2) || '___'}
-    </h3>
+    <Header
+        title="Account"
+        subtitle={`${$currentAccount?.account_name?.toString() || '_____'} - total value $ ${totalUsdValue.toFixed(2) || '___'}`}
+    />
    <table>
       <tr>
           <th colspan="2">

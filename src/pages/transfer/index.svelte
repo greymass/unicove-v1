@@ -25,6 +25,7 @@
 
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
+    import Header from '~/components/layout/header.svelte'
 
     export let meta: TinroRouteMeta | undefined = undefined
 
@@ -152,11 +153,16 @@
 <style>
     .container {
         max-width: 400px;
+        margin: auto;
     }
 </style>
 
-<Page title="Transfer">
+<Page>
     <div class="container">
+      <Header
+        title="Create Transfer"
+        subtitle={$transferData.step === Step.Confirm ? "Step of 3 of 3" : "Step 2 of 3"}
+      />
         <TransferBalance {balance} />
 
         {#if quantity && $txFee}

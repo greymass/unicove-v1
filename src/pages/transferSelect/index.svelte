@@ -3,6 +3,7 @@
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
     import {priceTicker} from '~/price-ticker'
+    import Header from '~/components/layout/header.svelte'
 
     $: tokenBalances =
         $activeSession &&
@@ -24,7 +25,7 @@
 
 <style type="scss">
   .container {
-    width: 300px;
+    width: 400px;
     margin: auto;
 
     h2 {
@@ -70,7 +71,7 @@
 
        table {
               margin-bottom: 20px;
-              width: 260px;
+              width: 360px;
 
               tr {
                   th {
@@ -126,12 +127,11 @@
 
 <Page>
   <div class="container">
-    <h2>
-        Create Transfer
-    </h2>
-    <h3>
-        Step of 1 of 3
-    </h3>
+    <Header
+      title="Create Transfer"
+      subtitle="Step of 1 of 3"
+    />
+
     <div class="selector-container">
     <table>
           <tr>
