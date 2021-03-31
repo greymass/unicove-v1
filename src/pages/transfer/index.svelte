@@ -64,8 +64,8 @@
             balance =
                 $currentAccount?.core_liquid_balance ||
                 Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-        } else if (tokenBalances && $tokenBalances) {
-            tokenBalance = $tokenBalances[meta.params.token.toUpperCase()]
+        } else if (tokenBalances && $tokenBalances?.tokens) {
+            tokenBalance = $tokenBalances?.tokens[meta.params.token.toUpperCase()]
 
             if (tokenBalance && tokenBalance.balance) {
                 balance = tokenBalance.balance
