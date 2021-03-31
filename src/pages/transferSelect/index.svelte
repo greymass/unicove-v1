@@ -19,6 +19,7 @@
     $: bloksAccountUrl = `https://www.${
       $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
     }bloks.io/account/${$currentAccount?.account_name?.toString()}`
+    $: coreTokenSymbol = $activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]?.toLowerCase()
 </script>
 
 <style type="scss">
@@ -138,11 +139,9 @@
                 Token
               </th>
           </tr>
-          <tr>
+          <tr onclick={`window.location='/transfer/${coreTokenSymbol}';`}>
               <td>
-                <img src={`https://www.bloks.io/img/chains/${
-                    $activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]?.toLowerCase()
-                }.png`} />
+                <img src={`https://www.bloks.io/img/chains/${coreTokenSymbol}.png`} />
               </td>
                 <td>
                   {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
@@ -152,7 +151,7 @@
                  </td>
             </tr>
             {#each Object.values($tokenBalances?.tokens || {}) as token}
-                <tr>
+                <tr onclick={`window.location='/transfer/${token.name?.toLowerCase()}';`}>
                     <td>
                       <img src={token.logo} />
                     </td>
