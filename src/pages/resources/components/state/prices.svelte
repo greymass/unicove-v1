@@ -6,14 +6,12 @@
     import SegmentGroup from '~/components/elements/segment/group.svelte'
 
     export let resource = 'cpu'
+    const unit = resource === 'cpu' ? 'ms' : 'kb'
 </script>
 
 <style type="scss">
-    :global(.segment) {
+    * :global(.segment) {
         margin-top: 12px;
-    }
-    .offers {
-        padding: 1em 0;
     }
     .offer {
         text-align: center;
@@ -43,7 +41,7 @@
         color: var(--light-grey);
         margin: 1em 0;
     }
-    :global(p) {
+    * :global(p) {
         font-family: Inter;
         font-style: normal;
         font-weight: normal;
@@ -56,13 +54,16 @@
 </style>
 
 <div class="offers">
-    <h2>Prices</h2>
+    <h2 class="header">Resource Provider Costs for {resource.toUpperCase()}...</h2>
+    <h4 class="description">
+        Select a Resource Provider from the choices below to increase your {resource.toUpperCase()}.
+    </h4>
     <SegmentGroup>
         <!-- <Segment>
             <div class="offer">
                 <div class="service">Fuel</div>
                 <div class="price">A.BCDE</div>
-                <div class="pair">EOS/{resource === 'cpu' ? 'ms' : 'kb'}</div>
+                <div class="pair">EOS/{resource.toUpperCase()}</div>
                 <div class="term">Prepaid/On-demand</div>
                 <Button primary href="/resources/{resource}/fuel">Rent via Fuel</Button>
             </div>
@@ -73,8 +74,8 @@
                 <div class="price">
                     {$powerupPrice.value.toFixed($powerupPrice.symbol.precision)}
                 </div>
-                <div class="pair">EOS/{resource === 'cpu' ? 'ms' : 'kb'}</div>
-                <div class="term">Expires after 24hrs</div>
+                <div class="pair">EOS per {unit}</div>
+                <div class="term">Usable for up to <br /> 24 hours.</div>
                 <Button primary href="/resources/{resource}/powerup">Rent via PowerUp</Button>
             </div>
         </Segment>
@@ -82,8 +83,8 @@
             <div class="offer">
                 <div class="service">REX</div>
                 <div class="price">{$rexPrice.value.toFixed($rexPrice.symbol.precision)}</div>
-                <div class="pair">EOS/{resource === 'cpu' ? 'ms' : 'kb'}</div>
-                <div class="term">Expires in 30 days</div>
+                <div class="pair">EOS per {unit}</div>
+                <div class="term">Usable each day for <br />the next 30 days.</div>
                 <Button primary href="/resources/{resource}/rex">Rent via REX</Button>
             </div>
         </Segment>
@@ -93,8 +94,8 @@
                 <div class="price">
                     {(Number($stakingPrice.value) * 1000).toFixed($stakingPrice.symbol.precision)}
                 </div>
-                <div class="pair">EOS/{resource === 'cpu' ? 'ms' : 'kb'}</div>
-                <div class="term">Never expires</div>
+                <div class="pair">EOS per {unit}</div>
+                <div class="term">Usable each day until <br />they are unstaked.</div>
                 <Button primary href="/resources/{resource}/stake">Stake Tokens</Button>
             </div>
         </Segment>

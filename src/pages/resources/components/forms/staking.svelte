@@ -64,6 +64,7 @@
 <style>
 </style>
 
+<h2 class="header">Stake {resource.toUpperCase()} tokens to the network...</h2>
 <Segment color="white">
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>
@@ -71,14 +72,15 @@
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
             <Form>
                 {#if resource === 'cpu'}
-                    <p>Amount of EOS to stake into CPU:</p>
+                    <p>Amount of EOS to stake as CPU:</p>
                     <InputAsset allowZero fullWidth name="cpu" bind:value={cpu} />
                 {/if}
                 {#if resource === 'net'}
-                    <p>Amount of NET:</p>
+                    <p>Amount of EOS to stake as NET:</p>
                     <InputAsset allowZero fullWidth name="net" bind:value={net} />
                 {/if}
                 <Button fluid size="large" formValidation on:action={stake}>Stake Tokens</Button>
+                {error}
                 <p>Account Balance: {balance}</p>
             </Form>
             <ul />

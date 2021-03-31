@@ -15,6 +15,7 @@
     import {REXDeposit, REXRentCPU, REXRentNET} from '~/abi-types'
 
     export let resource = 'cpu'
+    const unit = resource === 'cpu' ? 'ms' : 'kb'
 
     $: loading = $currentAccount
 
@@ -98,17 +99,19 @@
 <style>
 </style>
 
+<h2 class="header">Rent {resource.toUpperCase()} from REX...</h2>
 <Segment color="white">
     {#await loading}
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
             <Form>
-                <p>
-                    Number of <strong>{resource === 'cpu' ? 'ms' : 'kb'}</strong> to rent.
-                </p>
+                <p>Amount of {unit} to rent.</p>
                 <Input focus fullWidth name="amount" bind:value={amount} />
-                <Button fluid size="large" formValidation on:action={rex}>Rent for {cost}</Button>
+                <Button fluid size="large" formValidation on:action={rex}
+                    >Rent {amount} {unit} for {cost}</Button
+                >
+                {error}
                 <p>Account Balance: {balance}</p>
             </Form>
         {:else}

@@ -55,6 +55,11 @@
 
             color: var(--light-black);
         }
+        :global(h3 > span) {
+            font-weight: normal;
+            font-size: 18px;
+            color: var(--light-grey);
+        }
         :global(h4) {
             color: var(--dark-grey);
             font-family: Inter;
@@ -77,6 +82,11 @@
             letter-spacing: -0.26px;
             color: var(--light-grey);
             margin-bottom: 8px;
+        }
+    }
+    @media (max-width: 460px) {
+        .extra {
+            display: none;
         }
     }
 </style>

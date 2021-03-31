@@ -7,6 +7,12 @@ export class BuyRamBytes extends Struct {
     @Struct.field(UInt32) bytes!: UInt32
 }
 
+@Struct.type('sellram')
+export class Sellram extends Struct {
+    @Struct.field(Name) account!: Name
+    @Struct.field(Int64) bytes!: Int64
+}
+
 @Struct.type('transfer')
 export class Transfer extends Struct {
     @Struct.field('name') from!: Name
