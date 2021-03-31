@@ -13,16 +13,16 @@
 </script>
 
 <style type="scss">
-    :global(.segment-group) {
+    * :global(.segment-group) {
         padding-bottom: 1em;
     }
-    :global(h2.header, h4.description) {
+    * :global(h2.header, h4.description) {
         text-align: center;
     }
-    :global(h2.header) {
+    * :global(h2.header) {
         padding: 2em 0 1em;
     }
-    :global(h4.description) {
+    * :global(h4.description) {
         padding: 1em 0 2em;
     }
 </style>
@@ -52,7 +52,4 @@
             </Button>
         </ResourceStateNET>
     </SegmentGroup>
-    <Segment>
-        <p>List of recent transactions and their usage?</p>
-    </Segment>
 {/if}

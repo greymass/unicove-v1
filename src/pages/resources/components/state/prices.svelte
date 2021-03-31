@@ -10,7 +10,7 @@
 </script>
 
 <style type="scss">
-    :global(.segment) {
+    * :global(.segment) {
         margin-top: 12px;
     }
     .offer {
@@ -41,7 +41,7 @@
         color: var(--light-grey);
         margin: 1em 0;
     }
-    :global(p) {
+    * :global(p) {
         font-family: Inter;
         font-style: normal;
         font-weight: normal;
