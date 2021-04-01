@@ -19,7 +19,7 @@
     $: coreTokenUsdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
     $: totalUsdValue = ($tokenBalances?.totalUsdValue || 0) + coreTokenUsdValue
     $: bloksAccountUrl = `https://www.${
-      $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
+        $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
     }bloks.io/account/${$currentAccount?.account_name?.toString()}`
 </script>
 
@@ -35,33 +35,33 @@
             width: 600px;
         }
     }
-  .container {
-    .tokensContainer {
-        padding: 20px 0 40px 0;
-    }
-
-    .noTokensContainer {
-        padding: 20px;
-        max-width: 250px;
-        margin-top: 40px;
-
-        h3 {
-            text-align: center;
+    .container {
+        .tokensContainer {
+            padding: 20px 0 40px 0;
         }
-    }
 
-    @media only screen and (max-width: 600px) {
+        .noTokensContainer {
+            padding: 20px;
+            max-width: 250px;
+            margin-top: 40px;
+
+            h3 {
+                text-align: center;
+            }
+        }
+
+        @media only screen and (max-width: 600px) {
+            table {
+                width: 100%;
+            }
+        }
+        @media only screen and (min-width: 601px) {
+            table {
+                width: 600px;
+            }
+        }
+
         table {
-            width: 100%;
-        }
-    }
-    @media only screen and (min-width: 601px) {
-        table {
-            width: 600px;
-        }
-    }
-
-    table {
             tr {
                 th {
                     height: 30px;
@@ -79,134 +79,132 @@
 
                 @media only screen and (max-width: 600px) {
                     td {
-                      width: 80px;
+                        width: 80px;
                     }
                 }
 
                 td {
-                  width: 120px;
-                  padding: 24px 0;
-                  border-bottom: 1px solid var(--divider-grey);
+                    width: 120px;
+                    padding: 24px 0;
+                    border-bottom: 1px solid var(--divider-grey);
 
-                   @media only screen and (min-width: 601px) {
-                      &:first-child {
-                        width: 40px;
-                      }
-                   }
+                    @media only screen and (min-width: 601px) {
+                        &:first-child {
+                            width: 40px;
+                        }
+                    }
 
-                   @media only screen and (max-width: 600px) {
-                     &:first-child {
-                       width: 80px;
-                     }
-                   }
+                    @media only screen and (max-width: 600px) {
+                        &:first-child {
+                            width: 80px;
+                        }
+                    }
 
-                  &:first-child {
-                    border: none;
-                    padding: 0;
-                    height: 30px;
-                    position: relative;
+                    &:first-child {
+                        border: none;
+                        padding: 0;
+                        height: 30px;
+                        position: relative;
 
-                    img {
-                        position: absolute;
-                        top: 15px;
-                        width: 30px;
-                      }
-                  }
+                        img {
+                            position: absolute;
+                            top: 15px;
+                            width: 30px;
+                        }
+                    }
                 }
             }
         }
 
+        @media only screen and (min-width: 600px) {
+            .buttons-container {
+                display: flex;
+                flex-direction: row;
+                padding: 20px 0;
 
-    @media only screen and (min-width: 600px) {
-        .buttons-container {
-          display: flex;
-          flex-direction: row;
-          padding: 20px 0;
+                .button-container {
+                    display: flex;
+                    flex-direction: column;
+                    width: 50%;
+                    padding: 5px;
+                }
+            }
+        }
 
-          .button-container {
-            display: flex;
-            flex-direction: column;
-            width: 50%;
-            padding: 5px;
-          }
+        @media only screen and (max-width: 600px) {
+            .buttons-container {
+                display: flex;
+                flex-direction: column;
+                padding: 20px 0;
+
+                .button-container {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    padding: 10px;
+                }
+            }
         }
     }
-
-    @media only screen and (max-width: 600px) {
-        .buttons-container {
-          display: flex;
-          flex-direction: column;
-          padding: 20px 0;
-
-          .button-container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            padding: 10px;
-          }
-        }
-    }
-  }
 </style>
 
 <Page>
-  <div class="container">
-    <Header
-        title="Account"
-        subtitle={`${$currentAccount?.account_name?.toString() || '_____'} - total value $ ${totalUsdValue.toFixed(2) || '___'}`}
-    />
-   <table>
-      <tr>
-          <th colspan="2">
-            Token
-          </th>
-           <th>
-             Balance
-           </th>
-           <th>
-             Value
-           </th>
-      </tr>
-      <tr>
-          <td>
-            <img src={`https://www.bloks.io/img/chains/${
-                $activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]?.toLowerCase()
-            }.png`} />
-          </td>
-            <td>
-              {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
-            </td>
-             <td>
-               {$currentAccount?.core_liquid_balance?.toString()}
-             </td>
-             <td>
-               {coreTokenUsdValue.toFixed(2)} USD
-             </td>
-        </tr>
-        {#each Object.values($tokenBalances?.tokens || {}) as token}
+    <div class="container">
+        <Header
+            title="Account"
+            subtitle={`${$currentAccount?.account_name?.toString() || '_____'} - total value $ ${
+                totalUsdValue.toFixed(2) || '___'
+            }`}
+        />
+        <table>
+            <tr>
+                <th colspan="2"> Token </th>
+                <th> Balance </th>
+                <th> Value </th>
+            </tr>
             <tr>
                 <td>
-                  <img src={token.logo} />
+                    <img
+                        src={`https://www.bloks.io/img/chains/${$activeBlockchain?.coreTokenSymbol
+                            ?.toString()
+                            ?.split(',')[1]
+                            ?.toLowerCase()}.png`}
+                    />
                 </td>
                 <td>
-                  {token.name}
+                    {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
                 </td>
-                 <td>
-                   {token.balance.toString()}
-                 </td>
-                 <td>
-                   {token.usdValue.toString()}
-                 </td>
+                <td>
+                    {$currentAccount?.core_liquid_balance?.toString()}
+                </td>
+                <td>
+                    {coreTokenUsdValue.toFixed(2)} USD
+                </td>
             </tr>
-        {/each}
-    </table>
-    <div class="buttons-container">
-        <div class="button-container">
-            <Button href="/transfer" size="large"}>Create new transfer</Button>
-        </div>
-        <div class="button-container">
-            <Button href={bloksAccountUrl} size="large">View on block explorer</Button>
+            {#each Object.values($tokenBalances?.tokens || {}) as token}
+                <tr>
+                    <td>
+                        <img src={token.logo} />
+                    </td>
+                    <td>
+                        {token.name}
+                    </td>
+                    <td>
+                        {token.balance.toString()}
+                    </td>
+                    <td>
+                        {token.usdValue.toString()}
+                    </td>
+                </tr>
+            {/each}
+        </table>
+        <div class="buttons-container">
+            <div class="button-container">
+                <Button href="/transfer" size="large" }>Create new transfer</Button>
+            </div>
+            <div class="button-container">
+                <Button href={bloksAccountUrl} size="large">View on block explorer</Button>
+            </div>
         </div>
     </div>
-  </div>
 </Page>

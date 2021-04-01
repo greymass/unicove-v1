@@ -159,10 +159,10 @@
 
 <Page>
     <div class="container">
-      <Header
-        title="Create Transfer"
-        subtitle={$transferData.step === Step.Confirm ? "Step of 3 of 3" : "Step 2 of 3"}
-      />
+        <Header
+            title="Create Transfer"
+            subtitle={$transferData.step === Step.Confirm ? 'Step of 3 of 3' : 'Step 2 of 3'}
+        />
         <TransferBalance {balance} />
 
         {#if quantity && $txFee}
