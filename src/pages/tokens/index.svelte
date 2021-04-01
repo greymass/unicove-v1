@@ -24,9 +24,18 @@
 </script>
 
 <style type="scss">
-  .container {
-    width: 600px;
+    @media only screen and (max-width: 600px) {
+        .container {
+            width: 100%;
+        }
+    }
 
+    @media only screen and (min-width: 601px) {
+        .container {
+            width: 600px;
+        }
+    }
+  .container {
     .tokensContainer {
         padding: 20px 0 40px 0;
     }
@@ -41,56 +50,72 @@
         }
     }
 
-    table {
-        margin-bottom: 20px;
-        width: 600px;
-
-        tr {
-            th {
-                height: 30px;
-                width: 30%;
-                font-family: Inter;
-                font-style: normal;
-                font-weight: 600;
-                font-size: 12px;
-                line-height: 12px;
-                text-align: left;
-                letter-spacing: 0.1px;
-                text-transform: uppercase;
-                color: var(--dark-grey);
-            }
-
-            td {
-              width: 120px;
-              padding: 24px 0;
-              border-bottom: 1px solid var(--divider-grey);
-
-              &:first-child {
-                width: 40px;
-                border: none;
-                padding: 0;
-                height: 30px;
-                position: relative;
-
-                img {
-                    position: absolute;
-                    top: 15px;
-                    width: 30px;
-                  }
-              }
-            }
+    @media only screen and (max-width: 600px) {
+        table {
+            width: 100%;
         }
     }
+    @media only screen and (min-width: 601px) {
+        table {
+            margin-bottom: 20px;
+            width: 600px;
+        }
+    }
+
+    table {
+            tr {
+                th {
+                    height: 30px;
+                    width: 30%;
+                    font-family: Inter;
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 12px;
+                    line-height: 12px;
+                    text-align: left;
+                    letter-spacing: 0.1px;
+                    text-transform: uppercase;
+                    color: var(--dark-grey);
+                }
+
+                @media only screen and (max-width: 600px) {
+                    td {
+                      width: 80px;
+                    }
+                }
+
+                td {
+                  width: 120px;
+                  padding: 24px 0;
+                  border-bottom: 1px solid var(--divider-grey);
+
+                  &:first-child {
+                    width: 80px;
+                    border: none;
+                    padding: 0;
+                    height: 30px;
+                    position: relative;
+
+                    img {
+                        position: absolute;
+                        top: 15px;
+                        width: 30px;
+                      }
+                  }
+                }
+            }
+        }
 
     .button-container {
       display: flex;
       flex-direction: row;
 
       a {
-        width: 300px;
+        width: 50%;
         display: flex;
         flex-direction: column;
         padding: 5px;
+        margin: 20px 0;
       }
     }
   }
@@ -149,10 +174,10 @@
     </table>
     <div class="button-container">
         <a href="/transfer">
-            <Button size="large">Create new transfer</Button>
+            <Button size={window.innerWidth > 600 ? "large" : "regular"}>Create new transfer</Button>
         </a>
         <a href={bloksAccountUrl} target="_blank">
-            <Button size="large">View on block explorer</Button>
+            <Button size={window.innerWidth > 600 ? "large" : "regular"}>View on block explorer</Button>
         </a>
     </div>
   </div>
