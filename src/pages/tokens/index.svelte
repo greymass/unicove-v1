@@ -57,7 +57,6 @@
     }
     @media only screen and (min-width: 601px) {
         table {
-            margin-bottom: 20px;
             width: 600px;
         }
     }
@@ -89,8 +88,19 @@
                   padding: 24px 0;
                   border-bottom: 1px solid var(--divider-grey);
 
+                   @media only screen and (min-width: 601px) {
+                      &:first-child {
+                        width: 40px;
+                      }
+                   }
+
+                   @media only screen and (max-width: 600px) {
+                     &:first-child {
+                       width: 80px;
+                     }
+                   }
+
                   &:first-child {
-                    width: 80px;
                     border: none;
                     padding: 0;
                     height: 30px;
@@ -106,17 +116,35 @@
             }
         }
 
-    .button-container {
-      display: flex;
-      flex-direction: row;
 
-      a {
-        width: 50%;
-        display: flex;
-        flex-direction: column;
-        padding: 5px;
-        margin: 20px 0;
-      }
+    @media only screen and (min-width: 600px) {
+        .buttons-container {
+          display: flex;
+          flex-direction: row;
+          padding: 20px 0;
+
+          .button-container {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            padding: 5px;
+          }
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        .buttons-container {
+          display: flex;
+          flex-direction: column;
+          padding: 20px 0;
+
+          .button-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 10px;
+          }
+        }
     }
   }
 </style>
@@ -172,13 +200,13 @@
             </tr>
         {/each}
     </table>
-    <div class="button-container">
-        <a href="/transfer">
-            <Button size={window.innerWidth > 600 ? "large" : "regular"}>Create new transfer</Button>
-        </a>
-        <a href={bloksAccountUrl} target="_blank">
-            <Button size={window.innerWidth > 600 ? "large" : "regular"}>View on block explorer</Button>
-        </a>
+    <div class="buttons-container">
+        <div class="button-container">
+            <Button href="/transfer" size="large"}>Create new transfer</Button>
+        </div>
+        <div class="button-container">
+            <Button href={bloksAccountUrl} size="large">View on block explorer</Button>
+        </div>
     </div>
   </div>
 </Page>
