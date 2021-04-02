@@ -83,7 +83,7 @@
                 <tr>
                     <th colspan="3"> Token </th>
                 </tr>
-                <tr onclick={() => { window.location.href = `/transfer/${coreTokenSymbol}`; }}>
+                <tr onClick={`window.location = "/transfer/${coreTokenSymbol}";`}>
                     <td>
                         <img alt="token symbol" src={`https://www.bloks.io/img/chains/${coreTokenSymbol}.png`} />
                     </td>
@@ -95,7 +95,7 @@
                     </td>
                 </tr>
                 {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
-                    <tr onclick={() => { window.location.href = `/transfer/${token.name?.toLowerCase()}`; }}>
+                    <tr onclick={`window.location = "/transfer/${token.name}";`}>
                         <td>
                             <img alt="token symbol" src={token.logo} />
                         </td>
