@@ -17,6 +17,9 @@ interface RawTokenBalance {
     usd_value: number
     decimals: number
     contract: string
+    metadata: {
+        logo?: string
+    }
 }
 
 export interface TokenBalance {
@@ -26,7 +29,7 @@ export interface TokenBalance {
     decimals: number
     symbol: Asset.Symbol
     contract: string
-    logo: string
+    logo?: string
 }
 
 export interface TokenBalances {
@@ -34,7 +37,7 @@ export interface TokenBalances {
     totalUsdValue: number,
 }
 
-const tickerStores: Record<string, ReadableResult<{[key: string]: TokenBalance}>> = {}
+const tickerStores: Record<string, ReadableResult<TokenBalances>> = {}
 
 /**
  * Latest token balances by chain and session.
@@ -96,7 +99,7 @@ export function fetchBalances(
     return balances
 }
 
-function parseTokenBalances(tokens: RawTokenBalance[]): {[key: string]: TokenBalance} {
+function parseTokenBalances(tokens: RawTokenBalance[]): TokenBalances {
     const tokensBalances: {[key: string]: TokenBalance} = {}
 
     tokens.forEach((token) => {
@@ -118,7 +121,6 @@ function parseTokenBalances(tokens: RawTokenBalance[]): {[key: string]: TokenBal
     }
 }
 
-function calculateTotalUsdValue(tokens) {
-    console.log({tokens})
+function calculateTotalUsdValue(tokens: RawTokenBalance[]): number {
     return tokens.reduce((total, token) => total + (token.usd_value || 0), 0)
 }

@@ -83,7 +83,7 @@
                 <tr>
                     <th colspan="3"> Token </th>
                 </tr>
-                <tr onClick={`window.location = "/transfer/${coreTokenSymbol}";`}>
+                <tr onclick={`window.location = "/transfer/${coreTokenSymbol}";`}>
                     <td>
                         <img alt="token symbol" src={`https://www.bloks.io/img/chains/${coreTokenSymbol}.png`} />
                     </td>
