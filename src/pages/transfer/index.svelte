@@ -53,7 +53,8 @@
         (tokenBalance && tokenBalance.contract) || String($activeBlockchain.coreTokenContract)
 
     $: {
-      tokenBalances = $activeSession &&
+        tokenBalances =
+            $activeSession &&
             tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
                 console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
             })
@@ -162,10 +163,10 @@
 
 <Page>
     <div class="container">
-      <Header
-        title="Create Transfer"
-        subtitle={$transferData.step === Step.Confirm ? "Step of 3 of 3" : "Step 2 of 3"}
-      />
+        <Header
+            title="Create Transfer"
+            subtitle={$transferData.step === Step.Confirm ? 'Step of 3 of 3' : 'Step 2 of 3'}
+        />
         <TransferBalance {balance} />
 
         {#if quantity && $txFee}

@@ -33,8 +33,8 @@ export interface TokenBalance {
 }
 
 export interface TokenBalances {
-    tokens: { [key: string]: TokenBalance },
-    totalUsdValue: number,
+    tokens: {[key: string]: TokenBalance}
+    totalUsdValue: number
 }
 
 const tickerStores: Record<string, ReadableResult<TokenBalances>> = {}

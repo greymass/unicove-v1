@@ -3,20 +3,15 @@
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
     import {priceTicker} from '~/price-ticker'
-    import type {TokenBalances} from '~/token-balances-ticker'
 
     import Button from '~/components/elements/button.svelte'
     import Header from '~/components/layout/header.svelte'
 
-    let tokenBalances: SvelteStore<TokenBalances | undefined> | undefined = undefined
-
-    $: {
-      tokenBalances =
+    $: tokenBalances =
         $activeSession &&
         tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
             console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
         })
-     }
 
     $: price = priceTicker($activeBlockchain).catch((error) => {
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
