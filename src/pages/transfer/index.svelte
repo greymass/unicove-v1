@@ -13,7 +13,7 @@
 
     import {transferData} from './transferData'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
-    import type {TokenBalance} from '~/token-balances-ticker'
+    import type {TokenBalance, TokenBalances} from '~/token-balances-ticker'
 
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
 
@@ -38,6 +38,7 @@
     let tokenBalance: TokenBalance | undefined = undefined
     let quantity: Asset | undefined = undefined
     let transferContract: string = 'eosio.token'
+    let tokenBalances: SvelteStore<TokenBalances | undefined> | undefined
 
     onMount(() => {
         syncTxFee()
@@ -51,11 +52,12 @@
     $: transferContract =
         (tokenBalance && tokenBalance.contract) || String($activeBlockchain.coreTokenContract)
 
-    $: tokenBalances =
-        $activeSession &&
-        tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
-            console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
-        })
+    $: {
+      tokenBalances = $activeSession &&
+            tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
+                console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+            })
+    }
 
     $: {
         const chainToken =
@@ -66,7 +68,8 @@
                 $currentAccount?.core_liquid_balance ||
                 Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
         } else if (tokenBalances && $tokenBalances?.tokens) {
-            tokenBalance = $tokenBalances?.tokens[meta.params.token.toUpperCase()]
+            const tokenName: string = meta.params.token.toUpperCase()
+            tokenBalance = tokenBalances && $tokenBalances?.tokens[tokenName]
 
             if (tokenBalance && tokenBalance.balance) {
                 balance = tokenBalance.balance
@@ -159,10 +162,10 @@
 
 <Page>
     <div class="container">
-        <Header
-            title="Create Transfer"
-            subtitle={$transferData.step === Step.Confirm ? 'Step of 3 of 3' : 'Step 2 of 3'}
-        />
+      <Header
+        title="Create Transfer"
+        subtitle={$transferData.step === Step.Confirm ? "Step of 3 of 3" : "Step 2 of 3"}
+      />
         <TransferBalance {balance} />
 
         {#if quantity && $txFee}

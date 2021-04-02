@@ -3,21 +3,27 @@
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
     import {priceTicker} from '~/price-ticker'
+    import type {TokenBalances} from '~/token-balances-ticker'
+
     import Button from '~/components/elements/button.svelte'
     import Header from '~/components/layout/header.svelte'
 
-    $: tokenBalances =
+    let tokenBalances: SvelteStore<TokenBalances | undefined> | undefined = undefined
+
+    $: {
+      tokenBalances =
         $activeSession &&
         tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
             console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
         })
+     }
 
     $: price = priceTicker($activeBlockchain).catch((error) => {
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
     })
 
     $: coreTokenUsdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
-    $: totalUsdValue = ($tokenBalances?.totalUsdValue || 0) + coreTokenUsdValue
+    $: totalUsdValue = ((tokenBalances && $tokenBalances?.totalUsdValue) || 0) + coreTokenUsdValue
     $: bloksAccountUrl = `https://www.${
         $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
     }bloks.io/account/${$currentAccount?.account_name?.toString()}`
@@ -36,20 +42,6 @@
         }
     }
     .container {
-        .tokensContainer {
-            padding: 20px 0 40px 0;
-        }
-
-        .noTokensContainer {
-            padding: 20px;
-            max-width: 250px;
-            margin-top: 40px;
-
-            h3 {
-                text-align: center;
-            }
-        }
-
         @media only screen and (max-width: 600px) {
             table {
                 width: 100%;
@@ -165,6 +157,7 @@
             <tr>
                 <td>
                     <img
+                        alt="logo icon"
                         src={`https://www.bloks.io/img/chains/${$activeBlockchain?.coreTokenSymbol
                             ?.toString()
                             ?.split(',')[1]
@@ -181,10 +174,10 @@
                     {coreTokenUsdValue.toFixed(2)} USD
                 </td>
             </tr>
-            {#each Object.values($tokenBalances?.tokens || {}) as token}
+            {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
                 <tr>
                     <td>
-                        <img src={token.logo} />
+                        <img alt="logo icon" src={token.logo} />
                     </td>
                     <td>
                         {token.name}
@@ -200,7 +193,7 @@
         </table>
         <div class="buttons-container">
             <div class="button-container">
-                <Button href="/transfer" size="large" }>Create new transfer</Button>
+                <Button href="/transfer" size="large">Create new transfer</Button>
             </div>
             <div class="button-container">
                 <Button href={bloksAccountUrl} size="large">View on block explorer</Button>

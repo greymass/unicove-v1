@@ -26,6 +26,12 @@ export interface TokenBalance {
     decimals: number
     symbol: Asset.Symbol
     contract: string
+    logo: string
+}
+
+export interface TokenBalances {
+    tokens: { [key: string]: TokenBalance },
+    totalUsdValue: number,
 }
 
 const tickerStores: Record<string, ReadableResult<{[key: string]: TokenBalance}>> = {}
@@ -36,7 +42,7 @@ const tickerStores: Record<string, ReadableResult<{[key: string]: TokenBalance}>
 export function tokenBalancesTicker(
     session: LinkSession,
     chain: ChainConfig
-): ReadableResult<{[key: string]: TokenBalance}> {
+): ReadableResult<TokenBalances | undefined> {
     const tickerName = `${session.auth.actor}-balances`
     if (tickerStores[tickerName]) {
         return tickerStores[tickerName]
