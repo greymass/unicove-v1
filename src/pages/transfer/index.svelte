@@ -88,7 +88,7 @@
     }
 
     $: {
-        const parsed: number = parseFloat($transferData.amount || '')
+        const parsed: number = parseFloat($transferData.amount || 0)
 
         if (parsed) {
             quantity = Asset.fromFloat(
