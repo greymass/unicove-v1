@@ -84,11 +84,11 @@
     }
 
     $: {
-        balanceValue = (balance && balance.units.toNumber())!
+        balanceValue = balance?.units?.toNumber()!
     }
 
     $: {
-        const parsed: number = parseFloat($transferData.amount || 0)
+        const parsed: number = parseFloat($transferData.amount || '')
 
         if (parsed) {
             quantity = Asset.fromFloat(
@@ -100,10 +100,6 @@
 
     function resetData() {
         transferData.set({
-            amount: '',
-            toAccount: '',
-            toAddress: '',
-            memo: '',
             step: Step.Recipient,
         })
 

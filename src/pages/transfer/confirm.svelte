@@ -1,5 +1,6 @@
 <script lang="ts">
     import type {Asset} from 'anchor-link'
+    import {PublicKey, Name} from '@greymass/eosio'
     import {transferData} from './transferData'
     import {activeBlockchain, activeSession} from '~/store'
 
@@ -15,8 +16,8 @@
     export let handleTransfer: () => Promise<void>
     export let quantity: Asset | undefined = undefined
 
-    let toAccount: string | undefined = $transferData.toAccount
-    let toAddress: string | undefined = $transferData.toAddress
+    let toAccount: string = String($transferData.toAccount)
+    let toAddress: string = String($transferData.toAddress)
     let amount: string | undefined = $transferData.amount
     let memo: string | undefined = $transferData.memo
 
@@ -27,8 +28,8 @@
     async function confirmTransaction() {
         transferData.update((data) => ({
             ...data,
-            toAccount,
-            toAddress,
+            toAccount: Name.from(toAccount),
+            toAddress: PublicKey.from(toAddress),
             amount,
             memo,
         }))
