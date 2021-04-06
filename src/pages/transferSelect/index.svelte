@@ -10,9 +10,7 @@
             console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
         })
 
-    $: coreTokenSymbol = String($activeBlockchain?.coreTokenSymbol)
-        .split(',')[1]
-        ?.toLowerCase()
+    $: coreTokenSymbolName = $activeBlockchain?.coreTokenSymbol?.name
 </script>
 
 <style type="scss">
@@ -84,17 +82,17 @@
                 </tr>
                 <tr
                     on:click={() => {
-                        window.location.href = `/transfer/${coreTokenSymbol}`
+                        window.location.href = `/transfer/${coreTokenSymbolName?.toLowerCase()}`
                     }}
                 >
                     <td>
                         <img
                             alt="token symbol"
-                            src={`https://www.bloks.io/img/chains/${coreTokenSymbol}.png`}
+                            src={`https://www.bloks.io/img/chains/${coreTokenSymbolName?.toLowerCase()}.png`}
                         />
                     </td>
                     <td>
-                        {String($activeBlockchain?.coreTokenSymbol).split(',')[1]}
+                        {coreTokenSymbolName}
                     </td>
                     <td>
                         {String($currentAccount?.core_liquid_balance)}

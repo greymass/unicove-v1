@@ -153,13 +153,11 @@
                 <td>
                     <img
                         alt="logo icon"
-                        src={`https://www.bloks.io/img/chains/${String($activeBlockchain?.coreTokenSymbol)
-                            ?.split(',')[1]
-                            ?.toLowerCase()}.png`}
+                        src={`https://www.bloks.io/img/chains/${$activeBlockchain?.coreTokenSymbol?.name?.toLowerCase()}.png`}
                     />
                 </td>
                 <td>
-                    {String($activeBlockchain?.coreTokenSymbol).split(',')[1]}
+                    {$activeBlockchain?.coreTokenSymbol?.name}
                 </td>
                 <td>
                     {String($currentAccount?.core_liquid_balance)}
