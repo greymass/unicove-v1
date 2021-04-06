@@ -12,8 +12,10 @@
     export let fullWidth: boolean = false
     export let placeholder: string | undefined = undefined
 
-    const validate = async (value: string) => {
-        return validateExistence(value)
+    const validate = async (value: string): Promise<boolean> => {
+        await validateExistence(value)
+
+        return true
     }
 
     async function validateExistence(value: string) {
