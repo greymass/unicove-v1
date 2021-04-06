@@ -84,7 +84,7 @@
     {:else}
         <Route>
             <Route path="/">
-                <Dashboard />
+                <Tokens />
             </Route>
             <Route path="/transfer">
                 <TransferSelect />
@@ -92,8 +92,8 @@
             <Route path="/transfer/:token" let:meta>
                 <Transfer {meta} />
             </Route>
-            <Route path="/tokens">
-                <Tokens />
+            <Route path="/dashboard">
+                <Dashboard />
             </Route>
             <Route path="/resources/*">
                 <Resources />
