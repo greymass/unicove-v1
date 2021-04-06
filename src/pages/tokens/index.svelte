@@ -34,6 +34,7 @@
     @media only screen and (min-width: 601px) {
         .container {
             width: 600px;
+            margin: auto;
         }
     }
     .container {
