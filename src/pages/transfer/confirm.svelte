@@ -28,8 +28,8 @@
     async function confirmTransaction() {
         transferData.update((data) => ({
             ...data,
-            toAccount: toAccount && Name.from(toAccount),
-            toAddress: toAddress && PublicKey.from(toAddress),
+            toAccount: toAccount && toAccount.length > 0 && Name.from(toAccount),
+            toAddress: toAddress && toAddress.length > 0 && PublicKey.from(toAddress),
             amount,
             memo,
         }))
