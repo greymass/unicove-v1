@@ -1,4 +1,4 @@
-import {Name, PublicKey} from '@greymass/eosio'
+import type {Name, PublicKey} from '@greymass/eosio'
 
 export const enum Step {
     Recipient,

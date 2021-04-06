@@ -73,7 +73,7 @@
 
 <Page>
     <div class="container">
-        <Header title="Create Transfer" subtitle="Step of 1 of 3" />
+        <Header title="Create Transfer" subtitle="Step 1 of 3" />
 
         <div class="selector-container">
             <table>
