@@ -15,7 +15,7 @@
         try {
             validatePresence(value)
             validateLength(value)
-            isValid && isValid(value)
+            isValid && (await isValid(value))
         } catch (errorObject) {
             errorMessage = errorObject.message
             valid = false

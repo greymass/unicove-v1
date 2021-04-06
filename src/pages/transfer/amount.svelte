@@ -14,9 +14,9 @@
 
     export let availableBalance: number | undefined
 
-    let toAddress: string = String($transferData.toAddress)
-    let toAccount: string = String($transferData.toAccount)
-    let amount: string = String($transferData.amount)
+    let toAddress: string = String($transferData.toAddress || '')
+    let toAccount: string = String($transferData.toAccount || '')
+    let amount: string = String($transferData.amount || '')
 
     let toAccountValid: boolean = true
     let toAddressValid: boolean = true
@@ -31,8 +31,8 @@
     function confirmChange() {
         transferData.update((data) => ({
             ...data,
-            toAccount: Name.from(toAccount),
-            toAddress: PublicKey.from(toAddress),
+            toAccount: toAccount && Name.from(toAccount),
+            toAddress: toAddress && PublicKey.from(toAddress),
             amount,
             step: Step.Confirm,
         }))

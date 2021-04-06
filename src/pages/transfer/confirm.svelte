@@ -16,8 +16,8 @@
     export let handleTransfer: () => Promise<void>
     export let quantity: Asset | undefined = undefined
 
-    let toAccount: string = String($transferData.toAccount)
-    let toAddress: string = String($transferData.toAddress)
+    let toAccount: string = String($transferData.toAccount || '')
+    let toAddress: string = String($transferData.toAddress || '')
     let amount: string | undefined = $transferData.amount
     let memo: string | undefined = $transferData.memo
 
@@ -28,8 +28,8 @@
     async function confirmTransaction() {
         transferData.update((data) => ({
             ...data,
-            toAccount: Name.from(toAccount),
-            toAddress: PublicKey.from(toAddress),
+            toAccount: toAccount && Name.from(toAccount),
+            toAddress: toAddress && PublicKey.from(toAddress),
             amount,
             memo,
         }))

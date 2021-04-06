@@ -11,6 +11,6 @@ export interface TransferData {
     amount?: string
     displaySuccessTx?: string
     memo?: string
-    toAccount?: Name
-    toAddress?: PublicKey
+    toAccount?: Name | undefined
+    toAddress?: PublicKey | undefined
 }

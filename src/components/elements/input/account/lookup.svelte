@@ -13,17 +13,7 @@
     export let placeholder: string | undefined = undefined
 
     const validate = async (value: string) => {
-        try {
-            await validateExistence(value)
-        } catch (errorObject) {
-            errorMessage = errorObject.message
-            valid = false
-            return false
-        }
-
-        errorMessage = undefined
-        valid = true
-        return true
+        return validateExistence(value)
     }
 
     async function validateExistence(value: string) {
@@ -53,7 +43,7 @@
         {focus}
         {placeholder}
         {errorMessage}
-        {valid}
+        bind:valid
         bind:value
         isValid={validate}
     />
