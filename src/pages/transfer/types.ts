@@ -1,3 +1,5 @@
+import { Name, PublicKey, Asset } from '@greymass/eosio';
+
 export const enum Step {
     Recipient,
     Amount,
@@ -5,11 +7,10 @@ export const enum Step {
 }
 
 export interface TransferData {
-    memo?: string
-    toAccount?: string
-    toAddress?: string
-    amount?: string
-    displaySuccessTx?: string
     step: Step
-    token?: string
+    amount?: number
+    displaySuccessTx?: string
+    memo?: string
+    toAccount?: Name
+    toAddress?: PublicKey
 }
