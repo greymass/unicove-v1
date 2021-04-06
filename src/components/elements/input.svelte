@@ -11,9 +11,6 @@
     export let placeholder: string = ''
     export let value: string = ''
 
-    $: console.log({name})
-    $: console.log({focus})
-
     /** Whether or not the button should go full width */
     export let fullWidth: boolean = false
 
