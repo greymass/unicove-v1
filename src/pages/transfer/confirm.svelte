@@ -77,7 +77,7 @@
         label="Amount"
         secondLabel="Value"
         placeholder="0.0"
-        value={(quantity && quantity.toString()) || ''}
+        value={String(quantity)}
         valid={amountValid}
     >
         <InputAsset

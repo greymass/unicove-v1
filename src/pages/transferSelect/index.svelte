@@ -10,9 +10,8 @@
             console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
         })
 
-    $: coreTokenSymbol = $activeBlockchain?.coreTokenSymbol
-        ?.toString()
-        ?.split(',')[1]
+    $: coreTokenSymbol = String($activeBlockchain?.coreTokenSymbol)
+        .split(',')[1]
         ?.toLowerCase()
 </script>
 
@@ -95,10 +94,10 @@
                         />
                     </td>
                     <td>
-                        {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
+                        {String($activeBlockchain?.coreTokenSymbol).split(',')[1]}
                     </td>
                     <td>
-                        {$currentAccount?.core_liquid_balance?.toString()}
+                        {String($currentAccount?.core_liquid_balance)}
                     </td>
                 </tr>
                 {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
@@ -114,7 +113,7 @@
                             {token.name}
                         </td>
                         <td>
-                            {token.balance.toString()}
+                            {String(token.balance)}
                         </td>
                     </tr>
                 {/each}

@@ -61,8 +61,7 @@
     }
 
     $: {
-        const chainToken =
-            $activeBlockchain && $activeBlockchain.coreTokenSymbol.toString().split(',')[1]
+        const chainToken = String($activeBlockchain?.coreTokenSymbol).split(',')[1]
 
         if (!meta || meta.params.token.toUpperCase() === chainToken) {
             balance =

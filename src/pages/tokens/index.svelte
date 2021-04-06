@@ -21,7 +21,7 @@
     $: totalUsdValue = ((tokenBalances && $tokenBalances?.totalUsdValue) || 0) + coreTokenUsdValue
     $: bloksAccountUrl = `https://www.${
         $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
-    }bloks.io/account/${$currentAccount?.account_name?.toString()}`
+    }bloks.io/account/${String($currentAccount?.account_name)}`
 </script>
 
 <style type="scss">
@@ -139,7 +139,7 @@
     <div class="container">
         <Header
             title="Account"
-            subtitle={`${$currentAccount?.account_name?.toString() || '_____'} - total value $ ${
+            subtitle={`${String($currentAccount?.account_name) || '_____'} - total value $ ${
                 totalUsdValue.toFixed(2) || '___'
             }`}
         />
@@ -153,17 +153,16 @@
                 <td>
                     <img
                         alt="logo icon"
-                        src={`https://www.bloks.io/img/chains/${$activeBlockchain?.coreTokenSymbol
-                            ?.toString()
+                        src={`https://www.bloks.io/img/chains/${String($activeBlockchain?.coreTokenSymbol)
                             ?.split(',')[1]
                             ?.toLowerCase()}.png`}
                     />
                 </td>
                 <td>
-                    {$activeBlockchain?.coreTokenSymbol?.toString()?.split(',')[1]}
+                    {String($activeBlockchain?.coreTokenSymbol).split(',')[1]}
                 </td>
                 <td>
-                    {$currentAccount?.core_liquid_balance?.toString()}
+                    {String($currentAccount?.core_liquid_balance)}
                 </td>
                 <td>
                     {coreTokenUsdValue.toFixed(2)} USD
@@ -178,10 +177,10 @@
                         {token.name}
                     </td>
                     <td>
-                        {token.balance.toString()}
+                        {String(token.balance)}
                     </td>
                     <td>
-                        {token.usdValue.toString()}
+                        {String(token.usdValue)}
                     </td>
                 </tr>
             {/each}
