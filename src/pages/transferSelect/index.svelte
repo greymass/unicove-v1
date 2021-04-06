@@ -101,7 +101,7 @@
                 {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
                     <tr
                         on:click={() => {
-                            window.location.href = `/transfer/${token.name}`
+                            window.location.href = `/transfer/${token.name?.toLowerCase()}`
                         }}
                     >
                         <td>

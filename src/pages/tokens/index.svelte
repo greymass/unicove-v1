@@ -150,7 +150,11 @@
                 <th> Balance </th>
                 <th> Value </th>
             </tr>
-            <tr>
+            <tr
+                on:click={() => {
+                    window.location.href = `/transfer/${$activeBlockchain?.coreTokenSymbol?.name?.toLowerCase()}`
+                }}
+            >
                 <td>
                     <img
                         alt="logo icon"
@@ -168,7 +172,11 @@
                 </td>
             </tr>
             {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
-                <tr>
+                <tr
+                    on:click={() => {
+                        window.location.href = `/transfer/${token.name?.toLowerCase()}`
+                    }}
+                >
                     <td>
                         <img alt="logo icon" src={token.logo} />
                     </td>
