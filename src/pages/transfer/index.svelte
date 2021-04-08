@@ -2,15 +2,18 @@
     import {Asset} from 'anchor-link'
     import {onMount} from 'svelte'
     import {writable} from 'svelte/store'
+    import type {TinroRouteMeta} from 'tinro'
 
     import {Step} from './types'
 
-    import {activeBlockchain, activeSession, currentAccount} from '../../store'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {txFee, syncTxFee, stopSyncTxFee, fetchTxFee} from './fio'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
 
-    import {transferData, quantity} from './transferData'
+    import {transferData} from './transferData'
+    import {tokenBalancesTicker} from '~/token-balances-ticker'
+    import type {TokenBalance, TokenBalances} from '~/token-balances-ticker'
 
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
 
@@ -22,6 +25,9 @@
 
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
+    import Header from '~/components/layout/header.svelte'
+
+    export let meta: TinroRouteMeta | undefined = undefined
 
     let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let successTx: string | undefined = undefined
@@ -29,6 +35,10 @@
 
     let previousChain: string | undefined = undefined
     let balanceValue: number | undefined = undefined
+    let tokenBalance: TokenBalance | undefined = undefined
+    let quantity: Asset | undefined = undefined
+    let transferContract: string = 'eosio.token'
+    let tokenBalances: SvelteStore<TokenBalances | undefined> | undefined
 
     onMount(() => {
         syncTxFee()
@@ -39,10 +49,32 @@
         }
     })
 
+    $: transferContract =
+        (tokenBalance && tokenBalance.contract) || String($activeBlockchain.coreTokenContract)
+
     $: {
-        balance =
-            $currentAccount?.core_liquid_balance ||
-            Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+        tokenBalances =
+            $activeSession &&
+            tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
+                console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+            })
+    }
+
+    $: {
+        const chainToken = $activeBlockchain?.coreTokenSymbol?.name
+
+        if (!meta || meta.params.token.toUpperCase() === chainToken) {
+            balance =
+                $currentAccount?.core_liquid_balance ||
+                Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+        } else if (tokenBalances && $tokenBalances?.tokens) {
+            const tokenName: string = meta.params.token.toUpperCase()
+            tokenBalance = tokenBalances && $tokenBalances?.tokens[tokenName]
+
+            if (tokenBalance && tokenBalance.balance) {
+                balance = tokenBalance.balance
+            }
+        }
     }
 
     $: if ($activeBlockchain.id !== previousChain) {
@@ -52,17 +84,26 @@
     }
 
     $: {
-        balanceValue = (balance && balance.units.toNumber())!
+        balanceValue = balance?.units?.toNumber()!
+    }
+
+    $: {
+        const parsed: number = parseFloat($transferData.amount || '')
+
+        if (parsed) {
+            quantity = Asset.fromFloat(
+                parsed,
+                (tokenBalance && tokenBalance.symbol) || $activeBlockchain.coreTokenSymbol
+            )
+        }
     }
 
     function resetData() {
         transferData.set({
-            amount: '',
-            toAccount: '',
-            toAddress: '',
-            memo: '',
             step: Step.Recipient,
         })
+
+        quantity = undefined
 
         fetchTxFee()
     }
@@ -71,15 +112,15 @@
         let data: Transfer | FIOTransfer = Transfer.from({
             from: $activeSession!.auth.actor,
             to: $transferData.toAccount,
-            quantity: $quantity,
+            quantity,
             memo: $transferData.memo,
         })
 
-        switch (String($activeBlockchain.coreTokenContract)) {
+        switch (String(transferContract)) {
             case 'fio.token': {
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress,
-                    amount: $quantity && $quantity.units,
+                    amount: quantity && quantity.units,
                     max_fee: $txFee!.units,
                     actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
@@ -94,7 +135,7 @@
             .transact({
                 action: {
                     authorization: [$activeSession!.auth],
-                    account: $activeBlockchain.coreTokenContract,
+                    account: transferContract,
                     name: $activeBlockchain.coreTokenTransfer,
                     data: getActionData(),
                 },
@@ -111,15 +152,20 @@
 <style>
     .container {
         max-width: 400px;
+        margin: auto;
     }
 </style>
 
-<Page title="Transfer">
+<Page>
     <div class="container">
+        <Header
+            title="Create Transfer"
+            subtitle={$transferData.step === Step.Confirm ? 'Step of 3 of 3' : 'Step 2 of 3'}
+        />
         <TransferBalance {balance} />
 
-        {#if $quantity && $txFee}
-            <TransferSummary txFee={$txFee} />
+        {#if quantity && $txFee}
+            <TransferSummary txFee={$txFee} {quantity} />
         {/if}
 
         <br />
@@ -133,7 +179,7 @@
         {/if}
 
         {#if $transferData.step === Step.Confirm}
-            <TransferConfirm availableBalance={balanceValue} {handleTransfer} />
+            <TransferConfirm availableBalance={balanceValue} {quantity} {handleTransfer} />
         {/if}
 
         <Modal display={displaySuccessTx}>

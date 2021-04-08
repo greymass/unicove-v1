@@ -3,7 +3,7 @@
     import Navigation from './navigation/index.svelte'
 
     /** Title of the page. */
-    export let title: string
+    export let title: string = ''
 
     let accountSidebar = false
     let navigationSidebar = false
@@ -35,6 +35,7 @@
         padding: 30px;
         height: 100vh;
         min-height: 100vh;
+        width: 100%;
     }
 
     .content {

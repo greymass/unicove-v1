@@ -1,4 +1,4 @@
-import type {Asset} from 'anchor-link'
+import type {Name, PublicKey} from '@greymass/eosio'
 
 export const enum Step {
     Recipient,
@@ -7,11 +7,10 @@ export const enum Step {
 }
 
 export interface TransferData {
-    memo?: string
-    quantity?: Asset
-    toAccount?: string
-    toAddress?: string
+    step: Step
     amount?: string
     displaySuccessTx?: string
-    step: Step
+    memo?: string
+    toAccount?: Name | undefined
+    toAddress?: PublicKey | undefined
 }

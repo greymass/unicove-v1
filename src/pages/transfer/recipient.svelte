@@ -1,4 +1,6 @@
 <script lang="ts">
+    import {PublicKey, Name} from '@greymass/eosio'
+
     import {transferData} from './transferData'
 
     import {activeBlockchain, activeSession} from '~/store'
@@ -9,8 +11,8 @@
     import InputAddress from '~/components/elements/input/address.svelte'
     import Button from '~/components/elements/button.svelte'
 
-    let toAddress: string = $transferData.toAddress || ''
-    let toAccount: string = $transferData.toAccount || ''
+    let toAddress: string = String($transferData.toAddress || '')
+    let toAccount: string = String($transferData.toAccount || '')
 
     let valid: boolean = false
 
@@ -23,8 +25,8 @@
     function confirmChange() {
         transferData.update((data) => ({
             ...data,
-            toAccount,
-            toAddress,
+            toAccount: toAccount && toAccount.length > 0 ? Name.from(toAccount) : undefined,
+            toAddress: toAddress && toAddress.length > 0 ? PublicKey.from(toAddress) : undefined,
             step: Step.Amount,
         }))
     }

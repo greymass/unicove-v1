@@ -1,5 +1,7 @@
 <script lang="ts">
-    import {quantity, transferData} from './transferData'
+    import type {Asset} from 'anchor-link'
+    import {PublicKey, Name} from '@greymass/eosio'
+    import {transferData} from './transferData'
     import {activeBlockchain, activeSession} from '~/store'
 
     import Button from '~/components/elements/button.svelte'
@@ -12,9 +14,10 @@
 
     export let availableBalance: number | undefined = undefined
     export let handleTransfer: () => Promise<void>
+    export let quantity: Asset | undefined = undefined
 
-    let toAccount: string | undefined = $transferData.toAccount
-    let toAddress: string | undefined = $transferData.toAddress
+    let toAccount: string = String($transferData.toAccount || '')
+    let toAddress: string = String($transferData.toAddress || '')
     let amount: string | undefined = $transferData.amount
     let memo: string | undefined = $transferData.memo
 
@@ -25,8 +28,8 @@
     async function confirmTransaction() {
         transferData.update((data) => ({
             ...data,
-            toAccount,
-            toAddress,
+            toAccount: toAccount && toAccount.length > 0 ? Name.from(toAccount) : undefined,
+            toAddress: toAddress && toAddress.length > 0 ? PublicKey.from(toAddress) : undefined,
             amount,
             memo,
         }))
@@ -75,7 +78,7 @@
         label="Amount"
         secondLabel="Value"
         placeholder="0.0"
-        value={($quantity && $quantity.toString()) || ''}
+        value={String(quantity)}
         valid={amountValid}
     >
         <InputAsset

@@ -23,7 +23,7 @@
     const dispatch = createEventDispatcher<{action: Event}>()
 
     function handleClick(event: MouseEvent) {
-        if (href !== undefined) {
+        if (href === undefined) {
             event.preventDefault()
         }
         if (!formValidation || (!$formDisabled && !disabled)) {

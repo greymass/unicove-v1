@@ -7,7 +7,9 @@
 
     import Dashboard from '~/pages/dashboard.svelte'
     import Login from '~/pages/login.svelte'
+    import TransferSelect from '~/pages/transferSelect/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
+    import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
 
@@ -82,10 +84,16 @@
     {:else}
         <Route>
             <Route path="/">
-                <Dashboard />
+                <Tokens />
             </Route>
             <Route path="/transfer">
-                <Transfer />
+                <TransferSelect />
+            </Route>
+            <Route path="/transfer/:token" let:meta>
+                <Transfer {meta} />
+            </Route>
+            <Route path="/dashboard">
+                <Dashboard />
             </Route>
             <Route path="/resources/*">
                 <Resources />

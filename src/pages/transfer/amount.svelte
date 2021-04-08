@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {Name, PublicKey} from '@greymass/eosio'
     import {Step} from './types'
 
     import {transferData} from './transferData'
@@ -13,12 +14,12 @@
 
     export let availableBalance: number | undefined
 
-    let toAddress: string = $transferData.toAddress || ''
-    let toAccount: string = $transferData.toAccount || ''
-    let amount: string = $transferData.amount || ''
+    let toAddress: string = String($transferData.toAddress || '')
+    let toAccount: string = String($transferData.toAccount || '')
+    let amount: string = String($transferData.amount || '')
 
-    let toAccountValid: boolean = false
-    let toAddressValid: boolean = false
+    let toAccountValid: boolean = true
+    let toAddressValid: boolean = true
     let amountValid: boolean = false
 
     function handleKeydown(event: any) {
@@ -30,8 +31,8 @@
     function confirmChange() {
         transferData.update((data) => ({
             ...data,
-            toAccount,
-            toAddress,
+            toAccount: toAccount && toAccount.length > 0 ? Name.from(toAccount) : undefined,
+            toAddress: toAddress && toAddress.length > 0 ? PublicKey.from(toAddress) : undefined,
             amount,
             step: Step.Confirm,
         }))

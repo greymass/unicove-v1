@@ -12,17 +12,9 @@
     export let fullWidth: boolean = false
     export let placeholder: string | undefined = undefined
 
-    const validate = async (value: string) => {
-        try {
-            await validateExistence(value)
-        } catch (errorObject) {
-            errorMessage = errorObject.message
-            valid = false
-            return false
-        }
+    const validate = async (value: string): Promise<boolean> => {
+        await validateExistence(value)
 
-        errorMessage = undefined
-        valid = true
         return true
     }
 
@@ -53,7 +45,7 @@
         {focus}
         {placeholder}
         {errorMessage}
-        {valid}
+        bind:valid
         bind:value
         isValid={validate}
     />
