@@ -4,7 +4,6 @@
     import Page from '~/components/layout/page.svelte'
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
-    import Header from '~/components/layout/header.svelte'
 
     $: tokenBalances =
         $activeSession &&
@@ -73,10 +72,8 @@
     }
 </style>
 
-<Page>
+<Page title="Create Transfer" subtitle="Step 1 of 3">
     <div class="container">
-        <Header title="Create Transfer" subtitle="Step 1 of 3" />
-
         <div class="selector-container">
             <table>
                 <tr>

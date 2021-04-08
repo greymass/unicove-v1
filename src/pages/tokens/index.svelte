@@ -7,7 +7,6 @@
     import {priceTicker} from '~/price-ticker'
 
     import Button from '~/components/elements/button.svelte'
-    import Header from '~/components/layout/header.svelte'
 
     $: tokenBalances =
         $activeSession &&
@@ -138,14 +137,13 @@
     }
 </style>
 
-<Page>
+<Page
+    title="Account"
+    subtitle={`${String($currentAccount?.account_name) || '_____'} - total value $ ${
+        totalUsdValue.toFixed(2) || '___'
+    }`}
+>
     <div class="container">
-        <Header
-            title="Account"
-            subtitle={`${String($currentAccount?.account_name) || '_____'} - total value $ ${
-                totalUsdValue.toFixed(2) || '___'
-            }`}
-        />
         <table>
             <tr>
                 <th colspan="2"> Token </th>
