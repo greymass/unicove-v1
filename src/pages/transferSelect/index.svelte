@@ -90,7 +90,7 @@
                         {coreTokenSymbolName}
                     </td>
                     <td>
-                        {String($currentAccount?.core_liquid_balance)}
+                        {$currentAccount?.core_liquid_balance?.value}
                     </td>
                 </tr>
                 {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
@@ -102,7 +102,7 @@
                             {token.name}
                         </td>
                         <td>
-                            {String(token.balance)}
+                            {token.balance.value}
                         </td>
                     </tr>
                 {/each}

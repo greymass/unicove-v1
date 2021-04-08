@@ -166,7 +166,7 @@
                     {$activeBlockchain?.coreTokenSymbol?.name}
                 </td>
                 <td>
-                    {String($currentAccount?.core_liquid_balance)}
+                    {$currentAccount?.core_liquid_balance?.value}
                 </td>
                 <td>
                     {coreTokenUsdValue.toFixed(2)} USD
@@ -181,7 +181,7 @@
                         {token.name}
                     </td>
                     <td>
-                        {String(token.balance)}
+                        {token.balance.value}
                     </td>
                     <td>
                         {String(token.usdValue)}
