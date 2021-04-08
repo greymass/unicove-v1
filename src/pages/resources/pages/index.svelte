@@ -8,7 +8,6 @@
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
-    import Segment from '~/components/elements/segment.svelte'
     import SegmentGroup from '~/components/elements/segment/group.svelte'
 </script>
 
