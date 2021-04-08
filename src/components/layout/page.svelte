@@ -42,10 +42,6 @@
 
     .content {
         margin: 45px;
-
-        h1 {
-            margin-bottom: 20px;
-        }
     }
 
     @media only screen and (max-width: 600px) {

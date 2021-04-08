@@ -26,31 +26,15 @@
 </script>
 
 <style type="scss">
-    @media only screen and (max-width: 600px) {
-        .container {
-            width: 100%;
-        }
-    }
-
     @media only screen and (min-width: 601px) {
         .container {
-            width: 600px;
             margin: auto;
         }
     }
     .container {
-        @media only screen and (max-width: 600px) {
-            table {
-                width: 100%;
-            }
-        }
-        @media only screen and (min-width: 601px) {
-            table {
-                width: 600px;
-            }
-        }
-
+        width: 100%;
         table {
+            width: 100%;
             tr {
                 th {
                     height: 30px;

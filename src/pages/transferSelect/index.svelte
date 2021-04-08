@@ -16,7 +16,6 @@
 
 <style type="scss">
     .container {
-        width: 400px;
         max-width: 100%;
         margin: auto;
 
@@ -28,10 +27,10 @@
 
             table {
                 margin-bottom: 20px;
-                width: 360px;
-                max-width: 100%;
+                width: 100%;
 
                 tr {
+                    cursor: pointer;
                     max-width: 100%;
 
                     th {
@@ -53,8 +52,7 @@
                         border-bottom: 1px solid var(--divider-grey);
 
                         &:first-child {
-                            width: 40px;
-                            border: none;
+                            max-width: 40px;
                             padding: 0;
                             height: 30px;
                             position: relative;

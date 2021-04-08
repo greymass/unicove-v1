@@ -142,17 +142,12 @@
             .then((result) => {
                 successTx = result?.payload?.tx
                 $displaySuccessTx = true
-
                 resetData()
             })
     }
 </script>
 
 <style>
-    .container {
-        max-width: 400px;
-        margin: auto;
-    }
 </style>
 
 <Page
