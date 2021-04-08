@@ -1,4 +1,6 @@
 <script>
+    import {router} from 'tinro'
+
     import Page from '~/components/layout/page.svelte'
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
@@ -80,11 +82,7 @@
                 <tr>
                     <th colspan="3"> Token </th>
                 </tr>
-                <tr
-                    on:click={() => {
-                        window.location.href = `/transfer/${coreTokenSymbolName?.toLowerCase()}`
-                    }}
-                >
+                <tr on:click={() => router.goto(`/transfer/${coreTokenSymbolName?.toLowerCase()}`)}>
                     <td>
                         <img
                             alt="token symbol"
@@ -99,11 +97,7 @@
                     </td>
                 </tr>
                 {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
-                    <tr
-                        on:click={() => {
-                            window.location.href = `/transfer/${token.name?.toLowerCase()}`
-                        }}
-                    >
+                    <tr on:click={() => router.goto(`/transfer/${token.name?.toLowerCase()}`)}>
                         <td>
                             <img alt="token symbol" src={token.logo} />
                         </td>
