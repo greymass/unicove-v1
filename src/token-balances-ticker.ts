@@ -46,7 +46,7 @@ export function tokenBalancesTicker(
     session: LinkSession,
     chain: ChainConfig
 ): ReadableResult<TokenBalances | undefined> {
-    const tickerName = `${session.auth.actor}-balances`
+    const tickerName = `${chain.id}-${session.auth.actor}-balances`
     if (tickerStores[tickerName]) {
         return tickerStores[tickerName]
     }
