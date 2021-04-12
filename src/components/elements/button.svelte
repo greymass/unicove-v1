@@ -178,6 +178,7 @@
     on:mouseenter={handleMouseenter}
     class={`button size-${size}`}
     class:disabled={(formValidation && $formDisabled) || disabled}
+    class:loading
     class:fluid
     class:primary
     {href}
