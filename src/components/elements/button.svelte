@@ -12,7 +12,7 @@
     export let disabled: boolean = false
     /** Fluid width of the button */
     export let fluid: boolean = false
-    /** Type of button */
+    /** Should the button obey form validation */
     export let formValidation: boolean = false
 
     // Get parent form disabled state (if exists)
