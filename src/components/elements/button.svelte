@@ -2,6 +2,9 @@
     import {createEventDispatcher, getContext} from 'svelte'
     import {spring} from 'svelte/motion'
 
+    import Icon from '~/components/elements/icon.svelte'
+    import Text from '~/components/elements/text.svelte'
+
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
     /** Whether the button is primary. */
@@ -14,6 +17,8 @@
     export let fluid: boolean = false
     /** Should the button obey form validation */
     export let formValidation: boolean = false
+    /** Is the button in a loading state? */
+    export let loading: boolean = false
 
     // Get parent form disabled state (if exists)
     const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
@@ -116,6 +121,11 @@
             margin: 20px 0;
             align-items: center;
         }
+        &.loading {
+            :global(.content .icon:not(.loading)) {
+                display: none;
+            }
+        }
         :global(*) {
             pointer-events: none;
         }
@@ -176,6 +186,11 @@
 >
     <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
     <span class="content">
-        <slot>Click me</slot>
+        {#if loading}
+            <Icon loading name="life-buoy" />
+            <Text><slot>Click me</slot></Text>
+        {:else}
+            <slot>Click me</slot>
+        {/if}
     </span>
 </a>
