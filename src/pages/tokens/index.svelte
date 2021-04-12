@@ -1,5 +1,6 @@
 <script>
     import {router} from 'tinro'
+    import {Asset} from '@greymass/eosio'
 
     import Page from '~/components/layout/page.svelte'
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
@@ -132,6 +133,7 @@
             <tr>
                 <th colspan="2"> Token </th>
                 <th> Balance </th>
+                <th> Price </th>
                 <th> Value </th>
             </tr>
             <tr
@@ -153,6 +155,11 @@
                     {$currentAccount?.core_liquid_balance?.value}
                 </td>
                 <td>
+                    {#if $price}
+                        {Asset.from($price, '2,USD')}
+                    {/if}
+                </td>
+                <td>
                     {coreTokenUsdValue.toFixed(2)} USD
                 </td>
             </tr>
@@ -166,6 +173,9 @@
                     </td>
                     <td>
                         {token.balance.value}
+                    </td>
+                    <td>
+                        {token.price}
                     </td>
                     <td>
                         {String(token.usdValue)}
