@@ -61,6 +61,7 @@
                     width: 120px;
                     padding: 24px 0;
                     border-bottom: 1px solid var(--divider-grey);
+                    text-align: center;
 
                     @media only screen and (min-width: 601px) {
                         &:first-child {
@@ -78,12 +79,11 @@
                         border: none;
                         padding: 0;
                         height: 30px;
-                        position: relative;
+                        width: 30px;
 
                         img {
-                            position: absolute;
-                            top: 15px;
-                            width: 30px;
+                            width: 32px;
+                            vertical-align: middle;
                         }
                     }
                 }
