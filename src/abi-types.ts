@@ -7,20 +7,6 @@ export class BuyRamBytes extends Struct {
     @Struct.field(UInt32) bytes!: UInt32
 }
 
-@Struct.type('sellram')
-export class Sellram extends Struct {
-    @Struct.field(Name) account!: Name
-    @Struct.field(Int64) bytes!: Int64
-}
-
-@Struct.type('transfer')
-export class Transfer extends Struct {
-    @Struct.field('name') from!: Name
-    @Struct.field('name') to!: Name
-    @Struct.field('asset') quantity!: Asset
-    @Struct.field('string') memo!: string
-}
-
 @Struct.type('fiotransfer')
 export class FIOTransfer extends Struct {
     @Struct.field('string') payee_public_key!: string
@@ -38,37 +24,6 @@ export class PowerUp extends Struct {
     @Struct.field('int64') net_frac!: Int64
     @Struct.field('int64') cpu_frac!: Int64
     @Struct.field('asset') max_payment!: Asset
-}
-
-@Struct.type('rexdeposit')
-export class REXDeposit extends Struct {
-    @Struct.field('name') owner!: Name
-    @Struct.field('asset') amount!: Asset
-}
-
-@Struct.type('rexrentcpu')
-export class REXRentCPU extends Struct {
-    @Struct.field('name') from!: Name
-    @Struct.field('name') receiver!: Name
-    @Struct.field('asset') loan_payment!: Asset
-    @Struct.field('asset') loan_fund!: Asset
-}
-
-@Struct.type('rexrentnet')
-export class REXRentNET extends Struct {
-    @Struct.field('name') from!: Name
-    @Struct.field('name') receiver!: Name
-    @Struct.field('asset') loan_payment!: Asset
-    @Struct.field('asset') loan_fund!: Asset
-}
-
-@Struct.type('stake')
-export class Stake extends Struct {
-    @Struct.field('name') from!: Name
-    @Struct.field('name') receiver!: Name
-    @Struct.field('asset') stake_net_quantity!: Asset
-    @Struct.field('asset') stake_cpu_quantity!: Asset
-    @Struct.field('bool') transfer!: boolean
 }
 
 @Struct.type('powerupstateresource')
@@ -99,6 +54,28 @@ export class PowerUpState extends Struct {
     @Struct.field('asset') min_powerup_fee!: Asset
 }
 
+@Struct.type('rexdeposit')
+export class REXDeposit extends Struct {
+    @Struct.field('name') owner!: Name
+    @Struct.field('asset') amount!: Asset
+}
+
+@Struct.type('rexrentcpu')
+export class REXRentCPU extends Struct {
+    @Struct.field('name') from!: Name
+    @Struct.field('name') receiver!: Name
+    @Struct.field('asset') loan_payment!: Asset
+    @Struct.field('asset') loan_fund!: Asset
+}
+
+@Struct.type('rexrentnet')
+export class REXRentNET extends Struct {
+    @Struct.field('name') from!: Name
+    @Struct.field('name') receiver!: Name
+    @Struct.field('asset') loan_payment!: Asset
+    @Struct.field('asset') loan_fund!: Asset
+}
+
 @Struct.type('rexstate')
 export class REXState extends Struct {
     @Struct.field('uint8') version!: UInt8
@@ -109,4 +86,27 @@ export class REXState extends Struct {
     @Struct.field('asset') total_rex!: Asset
     @Struct.field('asset') namebid_proceeds!: Asset
     @Struct.field('uint64') loan_num!: UInt64
+}
+
+@Struct.type('sellram')
+export class Sellram extends Struct {
+    @Struct.field(Name) account!: Name
+    @Struct.field(Int64) bytes!: Int64
+}
+
+@Struct.type('stake')
+export class Stake extends Struct {
+    @Struct.field('name') from!: Name
+    @Struct.field('name') receiver!: Name
+    @Struct.field('asset') stake_net_quantity!: Asset
+    @Struct.field('asset') stake_cpu_quantity!: Asset
+    @Struct.field('bool') transfer!: boolean
+}
+
+@Struct.type('transfer')
+export class Transfer extends Struct {
+    @Struct.field('name') from!: Name
+    @Struct.field('name') to!: Name
+    @Struct.field('asset') quantity!: Asset
+    @Struct.field('string') memo!: string
 }
