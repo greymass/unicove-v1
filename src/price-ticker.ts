@@ -113,7 +113,7 @@ function bloksFallback(chain: ChainConfig, pairName?: string): ReadableResult<nu
     const chainName = chain.id
     return cachedRead({
         store: 'price-ticker',
-        key: `${chain.id}-fallback-${chainName}`,
+        key: `${chainName}-fallback`,
         load: async () => {
             if (pairName) {
                 throw new Error('Fallback only supports core symbol')
