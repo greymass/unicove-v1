@@ -1,13 +1,14 @@
 <script lang="ts">
-    import Input from '~/components/elements/input.svelte'
-    import ErrorMessage from './errorMessage.svelte'
+    import InputLabelled from '~/components/elements/input/labelled.svelte'
+
+    import {validatePresence} from './validators/presence'
 
     export let name: string = ''
     export let value: string = ''
     export let errorMessage: string | undefined = undefined
     export let valid: boolean = false
     export let focus: boolean = false
-    export let fullWidth: boolean = false
+    export let fluid: boolean = false
     export let placeholder: string | undefined = undefined
 
     const validate = async (value: string) => {
@@ -23,21 +24,9 @@
         valid = true
         return true
     }
-
-    function validatePresence(value: string) {
-        if (value.length === 0) {
-            throw {
-                valid: false,
-                message: undefined,
-            }
-        }
-    }
 </script>
 
 <style type="scss">
 </style>
 
-<div>
-    <Input on:changed {name} {fullWidth} {focus} {placeholder} bind:value isValid={validate} />
-    <ErrorMessage {errorMessage} />
-</div>
+<InputLabelled on:changed {name} {fluid} {focus} {placeholder} bind:value isValid={validate} />

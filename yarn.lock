@@ -896,12 +896,12 @@
     rimraf "^3.0.2"
 
 "@snowpack/plugin-svelte@^3.4.0":
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/@snowpack/plugin-svelte/-/plugin-svelte-3.5.2.tgz#144d6ff9716ce6878ffeba67811e98b2c3744e7d"
-  integrity sha512-i7OhkIRNt1uJ/y3qpowlU7icjtSgFPIl/GjMmBxhtwoIqHAnowFLh1Ur5G6S36GCFo65ymClnYfEIM/2x1+wPQ==
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/@snowpack/plugin-svelte/-/plugin-svelte-3.6.1.tgz#3e53c0805b66f54bafd6b248325a336a7855a746"
+  integrity sha512-i5E3AurytgdaUx58Ki40x+brjfALowxuM3At7EUw16QQAQ5tB2HY12enO0+BlWggLOdmNO5hR+pccd3soErdkQ==
   dependencies:
     rollup-plugin-svelte "^7.0.0"
-    svelte-hmr "^0.12.1"
+    svelte-hmr "^0.13.2"
     svelte-preprocess "^4.6.0"
 
 "@snowpack/plugin-typescript@^1.1.1":
@@ -943,9 +943,9 @@
   integrity sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==
 
 "@types/node@*":
-  version "14.14.31"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.31.tgz#72286bd33d137aa0d152d47ec7c1762563d34055"
-  integrity sha512-vFHy/ezP5qI0rFgJ7aQnjDXwAMrG0KqqIH7tQG5PPv3BWBayOPIQNBjVc/P6hhdZfMx51REc6tfDNXHUio893g==
+  version "14.14.37"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.37.tgz#a3dd8da4eb84a996c36e331df98d82abd76b516e"
+  integrity sha512-XYmBiy+ohOR4Lh5jE379fV2IU+6Jn4g5qASinhitfyO71b/sCo6MKsMLF5tc7Zf2CE8hViVQyYSobJNke8OvUw==
 
 "@types/pug@^2.0.4":
   version "2.0.4"
@@ -5963,15 +5963,25 @@ svelte-check@^1.1.33:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
-svelte-hmr@^0.12.1:
-  version "0.12.7"
-  resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.12.7.tgz#69ad87501f2376a93723a4ef3bd482f088749996"
-  integrity sha512-f5FlHAO7o5vuRI2ZV5ZG1CTP0dtOekYDMQxjeELOR7nHJpVTXLNosFh822FM9WxYr0Vbv17caXRCOKD+l4ThEA==
+svelte-hmr@^0.13.2:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.13.3.tgz#fba5739b477ea44caf70e542a24a4352bee2b897"
+  integrity sha512-gagW62pLQ2lULmvNA3pIZu9pBCYOaGu3rQikUOv6Nokz5VxUgT9/mQLfMxj9phDEKHCg/lgr3i6PkqZDbO9P2Q==
 
-svelte-preprocess@^4.0.0, svelte-preprocess@^4.6.0, svelte-preprocess@^4.6.1:
+svelte-preprocess@^4.0.0, svelte-preprocess@^4.6.1:
   version "4.6.9"
   resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.6.9.tgz#073d923eb351b98b6c6a454ba5feee981cd9dbf5"
   integrity sha512-SROWH0rB0DJ+0Ii264cprmNu/NJyZacs5wFD71ya93Cg/oA2lKHgQm4F6j0EWA4ktFMzeuJJm/eX6fka39hEHA==
+  dependencies:
+    "@types/pug" "^2.0.4"
+    "@types/sass" "^1.16.0"
+    detect-indent "^6.0.0"
+    strip-indent "^3.0.0"
+
+svelte-preprocess@^4.6.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.7.0.tgz#10a0acf1a8b1afdd7e0aff3769f4175eb77776fe"
+  integrity sha512-iNrY4YGqi0LD2e6oT9YbdSzOKntxk8gmzfqso1z/lUJOZh4o6fyIqkirmiZ8/dDJFqtIE1spVgDFWgkfhLEYlw==
   dependencies:
     "@types/pug" "^2.0.4"
     "@types/sass" "^1.16.0"

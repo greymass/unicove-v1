@@ -22,4 +22,6 @@
     {content}
 </Button>
 
-<slot {display} {close} />
+{#if $display}
+    <slot {display} {close} />
+{/if}

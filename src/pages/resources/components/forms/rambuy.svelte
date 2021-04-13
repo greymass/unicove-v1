@@ -8,6 +8,7 @@
     import {BuyRamBytes} from '~/abi-types'
 
     import Button from '~/components/elements/button.svelte'
+    import Form from '~/components/elements/form.svelte'
     import Segment from '~/components/elements/segment.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import type {FormTransaction} from '~/ui-types'
@@ -73,15 +74,17 @@
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.BuyRAM)}
-            <p>Amount of kb to buy:</p>
-            <InputAsset focus fullWidth name="kb" bind:value={kb} />
-            <Button fluid size="large" formValidation on:action={buyrambytes}
-                >Buy {kb} kb for PRICE</Button
-            >
-            {#if error}
-                {error}
-            {/if}
-            <p>Account Balance: {balance}</p>
+            <Form on:submit={buyrambytes}>
+                <p>Amount of kb to buy:</p>
+                <InputAsset focus fluid name="kb" bind:value={kb} />
+                <Button fluid size="large" formValidation on:action={buyrambytes}
+                    >Buy {kb} kb for PRICE</Button
+                >
+                {#if error}
+                    {error}
+                {/if}
+                <p>Account Balance: {balance}</p>
+            </Form>
         {:else}
             <p>This feature is unavailable on this blockchain.</p>
         {/if}

@@ -1,6 +1,9 @@
 <script lang="ts">
+    import type {Writable} from 'svelte/store'
+
     import {createEventDispatcher, getContext} from 'svelte'
     import {spring} from 'svelte/motion'
+    import {writable} from 'svelte/store'
 
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
@@ -18,10 +21,10 @@
     /** Should the button obey form validation */
     export let formValidation: boolean = false
     /** Is the button in a loading state? */
-    export let loading: boolean = false
+    export let loading: Writable<boolean> = writable<boolean>(false)
 
     // Get parent form disabled state (if exists)
-    const formDisabled: SvelteStore<boolean> = getContext('formDisabled')
+    const formDisabled: Writable<boolean> = getContext('formDisabled')
 
     // Dispatched when button is activated via keyboard or click
     // no need to preventDefault on the event unless the href attribute is set
@@ -178,7 +181,7 @@
     on:mouseenter={handleMouseenter}
     class={`button size-${size}`}
     class:disabled={(formValidation && $formDisabled) || disabled}
-    class:loading
+    class:$loading
     class:fluid
     class:primary
     {href}
@@ -187,7 +190,7 @@
 >
     <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
     <span class="content">
-        {#if loading}
+        {#if $loading}
             <Icon loading name="life-buoy" />
             <Text><slot>Click me</slot></Text>
         {:else}

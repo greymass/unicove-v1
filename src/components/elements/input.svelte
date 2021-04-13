@@ -12,14 +12,14 @@
     export let value: string = ''
 
     /** Whether or not the button should go full width */
-    export let fullWidth: boolean = false
+    export let fluid: boolean = false
 
     let ref: HTMLInputElement
 
     export let isValid: any = () => true
 
     let timer: number | undefined
-    let delay: number = 100
+    let delay: number = 250
 
     // Get parent form context (if exists)
     const form: Form = getContext('form')
@@ -41,9 +41,27 @@
     // Dispatched when button is activated via keyboard or click
     const dispatch = createEventDispatcher<{changed: InputResponse}>()
 
+    function invalidate(name: string, value: any) {
+        if (form) {
+            form.onChange({
+                name,
+                valid: false,
+                value,
+            })
+        }
+        dispatch('changed', {
+            name,
+            valid: false,
+            value,
+        })
+    }
+
     const debounce = (e: Event) => {
         clearTimeout(timer)
         value = (<HTMLInputElement>e.target).value
+        // Immediately invalidate
+        invalidate(name, value)
+        // Debounce actual validation
         timer = setTimeout(async () => {
             const response = {
                 name,
@@ -83,7 +101,7 @@
 
 <input
     on:keyup={handleKeyup}
-    class={fullWidth ? 'fullWidth' : ''}
+    class={fluid ? 'fullWidth' : ''}
     type="text"
     {name}
     {disabled}

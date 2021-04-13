@@ -11,6 +11,7 @@
     import Segment from '~/components/elements/segment.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import type {FormTransaction} from '~/ui-types'
+    import Form from '~/components/elements/form.svelte'
 
     $: balance =
         $currentAccount?.core_liquid_balance ||
@@ -72,15 +73,17 @@
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.BuyRAM)}
-            <p>Amount of kb to sell:</p>
-            <InputAsset focus fullWidth name="kb" bind:value={kb} />
-            <Button fluid size="large" formValidation on:action={sellram}
-                >Sell {kb} kb for PRICE</Button
-            >
-            {#if error}
-                {error}
-            {/if}
-            <p>Account Balance: {balance}</p>
+            <Form on:submit={sellram}>
+                <p>Amount of kb to sell:</p>
+                <InputAsset focus fluid name="kb" bind:value={kb} />
+                <Button fluid size="large" formValidation on:action={sellram}
+                    >Sell {kb} kb for PRICE</Button
+                >
+                {#if error}
+                    {error}
+                {/if}
+                <p>Account Balance: {balance}</p>
+            </Form>
         {:else}
             <p>This feature is unavailable on this blockchain.</p>
         {/if}

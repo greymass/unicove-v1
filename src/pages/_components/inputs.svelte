@@ -35,7 +35,7 @@
 </div>
 <div class="fullWidthContainer">
     <p>Full Width</p>
-    <Input fullWidth />
+    <Input fluid />
 </div>
 <div>
     <p>Disabled</p>

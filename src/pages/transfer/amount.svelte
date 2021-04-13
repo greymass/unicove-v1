@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Name, PublicKey} from '@greymass/eosio'
+    import {Asset, Name, PublicKey} from '@greymass/eosio'
     import {Step} from './types'
 
     import {transferData} from './transferData'
@@ -10,9 +10,11 @@
     import InputAddress from '~/components/elements/input/address.svelte'
     import InputAccountLookup from '~/components/elements/input/account/lookup.svelte'
     import Button from '~/components/elements/button.svelte'
+    import Form from '~/components/elements/form.svelte'
     import FieldContainer from './fieldContainer.svelte'
+    import TransferBalance from './balance.svelte'
 
-    export let availableBalance: number | undefined
+    export let balance: Asset
 
     let toAddress: string = String($transferData.toAddress || '')
     let toAccount: string = String($transferData.toAccount || '')
@@ -21,12 +23,6 @@
     let toAccountValid: boolean = true
     let toAddressValid: boolean = true
     let amountValid: boolean = false
-
-    function handleKeydown(event: any) {
-        if (amountValid && event.key === 'Enter') {
-            confirmChange()
-        }
-    }
 
     function confirmChange() {
         transferData.update((data) => ({
@@ -51,8 +47,6 @@
     }
 </style>
 
-<svelte:window on:keydown={handleKeydown} />
-
 <div class="container">
     {#if $activeBlockchain && $activeBlockchain.id === 'fio'}
         <FieldContainer
@@ -72,25 +66,24 @@
             valid={toAccountValid}
             value={toAccount}
         >
-            <InputAccountLookup
-                name="to"
-                activeSession={$activeSession}
-                bind:value={toAccount}
-                bind:valid={toAccountValid}
-            />
+            <InputAccountLookup name="to" activeSession={$activeSession} bind:value={toAccount} />
         </FieldContainer>
     {/if}
-    <div class="field-container">
-        <InputAsset
-            bind:valid={amountValid}
-            bind:value={amount}
-            focus
-            fullWidth
-            nonZero
-            name="amount"
-            placeholder="amount to be transfered.."
-            {availableBalance}
-        />
-    </div>
-    <Button size="large" disabled={!amountValid} on:action={confirmChange}>Continue</Button>
+    <Form on:submit={confirmChange}>
+        <div class="field-container">
+            <TransferBalance {balance} />
+            <InputAsset
+                bind:valid={amountValid}
+                bind:value={amount}
+                focus
+                fluid
+                name="amount"
+                placeholder="amount to be transfered.."
+                {balance}
+            />
+        </div>
+    </Form>
+    <Button primary size="large" disabled={!amountValid} on:action={confirmChange}
+        >Send {amount}</Button
+    >
 </div>

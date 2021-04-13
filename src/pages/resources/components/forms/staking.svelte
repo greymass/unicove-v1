@@ -70,14 +70,14 @@
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
-            <Form>
+            <Form on:submit={stake}>
                 {#if resource === 'cpu'}
                     <p>Amount of EOS to stake as CPU:</p>
-                    <InputAsset allowZero fullWidth name="cpu" bind:value={cpu} />
+                    <InputAsset allowZero fluid name="cpu" bind:value={cpu} />
                 {/if}
                 {#if resource === 'net'}
                     <p>Amount of EOS to stake as NET:</p>
-                    <InputAsset allowZero fullWidth name="net" bind:value={net} />
+                    <InputAsset allowZero fluid name="net" bind:value={net} />
                 {/if}
                 <Button fluid size="large" formValidation on:action={stake}>Stake Tokens</Button>
                 {error}

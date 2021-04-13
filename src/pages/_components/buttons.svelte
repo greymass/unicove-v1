@@ -1,7 +1,12 @@
 <script>
+    import type {Writable} from 'svelte/store'
+    import {writable} from 'svelte/store'
+
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
+
+    const loading: Writable<boolean> = writable<boolean>(false)
 </script>
 
 <style lang="scss">
@@ -68,27 +73,13 @@
 
 <p>Loading</p>
 <div>
-    <Button loading size="large">Loading</Button>
-    <Button loading primary size="large">Loading Primary</Button>
-    <Button loading size="large">
+    <Button {loading} size="large">Loading</Button>
+    <Button {loading} primary size="large">Loading Primary</Button>
+    <Button {loading} size="large">
         <Icon name="tool" />
         <Text>Loading with Icon</Text>
     </Button>
-    <Button loading primary size="large">
-        <Icon name="tool" />
-        <Text>Loading Primary with Icon</Text>
-    </Button>
-</div>
-
-<p>Loading false doesn't impact design</p>
-<div>
-    <Button loading={false} size="large">Loading</Button>
-    <Button loading={false} primary size="large">Loading Primary</Button>
-    <Button loading={false} size="large">
-        <Icon name="tool" />
-        <Text>Loading with Icon</Text>
-    </Button>
-    <Button loading={false} primary size="large">
+    <Button {loading} primary size="large">
         <Icon name="tool" />
         <Text>Loading Primary with Icon</Text>
     </Button>
@@ -96,13 +87,13 @@
 
 <p>Loading while Disabled</p>
 <div>
-    <Button disabled loading size="large">Loading</Button>
-    <Button disabled loading primary size="large">Loading Primary</Button>
-    <Button disabled loading size="large">
+    <Button disabled {loading} size="large">Loading</Button>
+    <Button disabled {loading} primary size="large">Loading Primary</Button>
+    <Button disabled {loading} size="large">
         <Icon name="tool" />
         <Text>Loading with Icon</Text>
     </Button>
-    <Button disabled loading primary size="large">
+    <Button disabled {loading} primary size="large">
         <Icon name="tool" />
         <Text>Loading Primary with Icon</Text>
     </Button>

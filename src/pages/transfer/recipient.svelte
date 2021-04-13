@@ -1,5 +1,8 @@
 <script lang="ts">
-    import {PublicKey, Name} from '@greymass/eosio'
+    import type {Writable} from 'svelte/store'
+
+    import {Asset, PublicKey, Name} from '@greymass/eosio'
+    import {writable} from 'svelte/store'
 
     import {transferData} from './transferData'
 
@@ -7,20 +10,16 @@
 
     import {Step} from './types'
 
+    import Button from '~/components/elements/button.svelte'
     import InputAccountLookup from '~/components/elements/input/account/lookup.svelte'
     import InputAddress from '~/components/elements/input/address.svelte'
-    import Button from '~/components/elements/button.svelte'
+    import Form from '~/components/elements/form.svelte'
 
+    export let balance: Asset
+
+    let loading: Writable<boolean> = writable<boolean>(false)
     let toAddress: string = String($transferData.toAddress || '')
     let toAccount: string = String($transferData.toAccount || '')
-
-    let valid: boolean = false
-
-    function handleKeydown(event: any) {
-        if (valid && event.key === 'Enter') {
-            confirmChange()
-        }
-    }
 
     function confirmChange() {
         transferData.update((data) => ({
@@ -37,38 +36,50 @@
         display: flex;
         flex-direction: column;
         border-top: 1px solid var(--divider-grey);
-
-        .field-container {
-            margin: 20px 0;
-        }
     }
 </style>
 
-<svelte:window on:keydown={handleKeydown} />
-
 <div class="container">
     <div class="field-container">
-        {#if $activeBlockchain && $activeBlockchain.id === 'fio'}
-            <InputAddress
-                bind:valid
-                bind:value={toAddress}
-                focus
-                fullWidth
-                name="to"
-                placeholder="recipient address or public key.."
-            />
-        {:else}
-            <InputAccountLookup
-                bind:valid
-                bind:value={toAccount}
-                focus
-                fullWidth
-                name="to"
-                placeholder="recipient account name.."
-                activeSession={$activeSession}
-            />
-        {/if}
+        <Form on:submit={confirmChange}>
+            {#if $activeBlockchain && $activeBlockchain.id === 'fio'}
+                <InputAddress
+                    bind:value={toAddress}
+                    focus
+                    fluid
+                    name="to"
+                    placeholder="recipient public key..."
+                />
+                <Button size="large" fluid formValidation on:action={confirmChange}>
+                    Send {balance.symbol.name}
+                    {#if toAddress}
+                        to {toAddress}
+                    {/if}
+                </Button>
+            {:else}
+                <InputAccountLookup
+                    bind:loading
+                    bind:value={toAccount}
+                    focus
+                    fluid
+                    name="to"
+                    placeholder="recipient account name..."
+                    activeSession={$activeSession}
+                />
+                <Button
+                    primary
+                    {loading}
+                    size="large"
+                    fluid
+                    formValidation
+                    on:action={confirmChange}
+                >
+                    Send {balance.symbol.name}
+                    {#if toAccount}
+                        to {toAccount}
+                    {/if}
+                </Button>
+            {/if}
+        </Form>
     </div>
-
-    <Button size="large" disabled={!valid} on:action={confirmChange}>Continue</Button>
 </div>

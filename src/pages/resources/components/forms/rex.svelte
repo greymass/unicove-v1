@@ -105,9 +105,9 @@
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.REX)}
-            <Form>
+            <Form on:submit={rex}>
                 <p>Amount of {unit} to rent.</p>
-                <Input focus fullWidth name="amount" bind:value={amount} />
+                <Input focus fluid name="amount" bind:value={amount} />
                 <Button fluid size="large" formValidation on:action={rex}
                     >Rent {amount} {unit} for {cost}</Button
                 >
