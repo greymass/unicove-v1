@@ -13,8 +13,8 @@
 </style>
 
 <div>
-    Generic Component
-    <QRCode data={String(request)} />
+    <QRCode data={String($request)} />
+
     {#if $chain && $session}
         {#if $chain.chainId.equals($session.chainId)}
             <Button on:action={sign}>Sign Transaction</Button>
