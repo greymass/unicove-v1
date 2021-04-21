@@ -32,7 +32,6 @@
     })
 
     stateRAM.subscribe((state: any) => {
-        console.log(state)
         if (state) {
             cost = Asset.from(state.price_per(buyram.data.bytes), $chain.coreTokenSymbol)
         }
@@ -126,6 +125,7 @@
                     >Create Account by paying {cost}</Button
                 >
             {:else}
+                <h2>Switch to an account on {$chain.name} to sign.</h2>
                 <Button primary size="large" disabled>Sign Transaction</Button>
             {/if}
         {/if}

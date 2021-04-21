@@ -1,7 +1,6 @@
 <script lang="ts">
     import {onMount} from 'svelte'
     import {meta} from 'tinro'
-    import type {Transaction} from '@greymass/eosio'
 
     import {activeSession} from '~/store'
     import Page from '~/components/layout/page.svelte'
@@ -17,20 +16,19 @@
     import Default from './requests/default.svelte'
     import NewAccount from './requests/newaccount.svelte'
 
-    onMount(() => currentRoute.set(meta()))
+    const route = meta()
+    onMount(async () => {
+        currentRoute.set(route)
+    })
 
     const templates: any = {
         newaccount: NewAccount,
     }
 
     async function sign() {
-        if (!$currentTransaction) return
-        const transaction: Transaction = await $currentTransaction
-        if ($currentTransaction) {
-            $activeSession!.transact({
-                transaction,
-            })
-        }
+        $activeSession!.transact({
+            transaction: $currentTransaction,
+        })
     }
 </script>
 

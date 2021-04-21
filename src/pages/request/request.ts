@@ -1,4 +1,5 @@
-import {derived, Derived, writable} from 'svelte/store'
+import {derived, writable} from 'svelte/store'
+import type {Readable} from 'svelte/store'
 import {AbiMap, SigningRequest} from 'eosio-signing-request'
 import type {AnyAction, API, ChainId, LinkChain, Transaction, TransactionHeader} from 'anchor-link'
 import type {TinroRouteMeta} from 'tinro'
@@ -12,7 +13,7 @@ activeBlockchain.subscribe((value) => (chainId = value.chainId))
 
 export let currentRoute = writable<TinroRouteMeta | undefined>(undefined)
 
-export const currentRequest: Derived<SigningRequest | undefined> = derived(
+export const currentRequest: Readable<SigningRequest | undefined> = derived(
     currentRoute,
     ($currentRoute) => {
         if ($currentRoute) {
@@ -31,13 +32,16 @@ activeSession.subscribe(async (session) => {
     }
 })
 
-export const abis: Derived<AbiMap | undefined> = derived(currentRequest, ($currentRequest, set) => {
-    if ($currentRequest) {
-        set($currentRequest.fetchAbis())
+export const abis: Readable<AbiMap | undefined> = derived(
+    currentRequest,
+    ($currentRequest, set) => {
+        if ($currentRequest) {
+            $currentRequest.fetchAbis().then((abis) => set(abis))
+        }
     }
-})
+)
 
-export let currentChain: Derived<ChainConfig | undefined> = derived(
+export let currentChain: Readable<ChainConfig | undefined> = derived(
     currentRequest,
     ($currentRequest) => {
         if ($currentRequest) {
@@ -46,7 +50,7 @@ export let currentChain: Derived<ChainConfig | undefined> = derived(
     }
 )
 
-export let multichain: Derived<boolean> = derived(currentRequest, ($currentRequest) => {
+export let multichain: Readable<boolean> = derived(currentRequest, ($currentRequest) => {
     if ($currentRequest) {
         return $currentRequest.isMultiChain()
     }
@@ -64,7 +68,7 @@ export const resolveTransaction = async (
     set(request.resolveTransaction(await abis, session.auth, header))
 }
 
-export const currentTransaction: Derived<Transaction> = derived(
+export const currentTransaction: Readable<Transaction> = derived(
     [abis, activeSession, activeBlockchain, currentRequest],
     ([$abis, $activeSession, $activeBlockchain, $currentRequest], set) => {
         if ($abis && $activeSession && $activeBlockchain && $currentRequest) {
@@ -81,10 +85,9 @@ const templates = [
     },
 ]
 
-export const currentTemplate: Derived<string> = derived(
+export const currentTemplate: Readable<string | undefined> = derived(
     currentTransaction,
     ($currentTransaction: any) => {
-        console.log($currentTransaction)
         if ($currentTransaction) {
             const actions = $currentTransaction.actions.map(
                 (action: AnyAction) => `${action.account}::${action.name}`
