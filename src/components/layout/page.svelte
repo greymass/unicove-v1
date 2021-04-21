@@ -1,9 +1,11 @@
 <script lang="ts">
     import AccountSidebar from './account/sidebar.svelte'
+    import Header from './header.svelte'
     import Navigation from './navigation/index.svelte'
 
     /** Title of the page. */
     export let title: string = ''
+    export let subtitle: string = ''
 
     let accountSidebar = false
     let navigationSidebar = false
@@ -40,10 +42,6 @@
 
     .content {
         margin: 45px;
-
-        h1 {
-            margin-bottom: 20px;
-        }
     }
 
     @media only screen and (max-width: 600px) {
@@ -67,7 +65,7 @@
 
     <div class="main">
         <div class="content">
-            <h1>{title}</h1>
+            <Header {title} {subtitle} />
             <slot />
         </div>
     </div>

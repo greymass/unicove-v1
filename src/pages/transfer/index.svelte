@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type {Readable} from 'svelte/store'
+
     import {Asset} from 'anchor-link'
     import {onMount} from 'svelte'
     import {writable} from 'svelte/store'
@@ -17,7 +19,8 @@
 
     import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
 
-    import TransferBalance from './balance.svelte'
+    import Button from '~/components/elements/button.svelte'
+
     import TransferSummary from './summary.svelte'
     import TransferRecipient from './recipient.svelte'
     import TransferAmount from './amount.svelte'
@@ -25,7 +28,6 @@
 
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
-    import Header from '~/components/layout/header.svelte'
 
     export let meta: TinroRouteMeta | undefined = undefined
 
@@ -34,11 +36,10 @@
     let displaySuccessTx = writable<boolean>(false)
 
     let previousChain: string | undefined = undefined
-    let balanceValue: number | undefined = undefined
     let tokenBalance: TokenBalance | undefined = undefined
     let quantity: Asset | undefined = undefined
     let transferContract: string = 'eosio.token'
-    let tokenBalances: SvelteStore<TokenBalances | undefined> | undefined
+    let tokenBalances: Readable<TokenBalances | undefined> | undefined
 
     onMount(() => {
         syncTxFee()
@@ -81,10 +82,6 @@
         resetData()
 
         previousChain = $activeBlockchain.id
-    }
-
-    $: {
-        balanceValue = balance?.units?.toNumber()!
     }
 
     $: {
@@ -143,27 +140,16 @@
             .then((result) => {
                 successTx = result?.payload?.tx
                 $displaySuccessTx = true
-
                 resetData()
             })
     }
 </script>
 
 <style>
-    .container {
-        max-width: 400px;
-        margin: auto;
-    }
 </style>
 
-<Page>
+<Page title="Create Transfer" subtitle={`Step of ${$transferData.step + 1} of 3`}>
     <div class="container">
-        <Header
-            title="Create Transfer"
-            subtitle={$transferData.step === Step.Confirm ? 'Step of 3 of 3' : 'Step 2 of 3'}
-        />
-        <TransferBalance {balance} />
-
         {#if quantity && $txFee}
             <TransferSummary txFee={$txFee} {quantity} />
         {/if}
@@ -171,19 +157,28 @@
         <br />
 
         {#if $transferData.step === Step.Recipient}
-            <TransferRecipient />
+            <TransferRecipient {balance} />
         {/if}
 
         {#if $transferData.step === Step.Amount}
-            <TransferAmount availableBalance={balanceValue} />
+            <TransferAmount {balance} />
         {/if}
 
         {#if $transferData.step === Step.Confirm}
-            <TransferConfirm availableBalance={balanceValue} {quantity} {handleTransfer} />
+            <TransferConfirm {balance} {quantity} {handleTransfer} />
         {/if}
 
-        <Modal display={displaySuccessTx}>
-            <TransactionNotificationSuccess activeBlockchain={$activeBlockchain} tx={successTx} />
-        </Modal>
+        {#if $displaySuccessTx}
+            <Modal display={displaySuccessTx}>
+                <TransactionNotificationSuccess
+                    activeBlockchain={$activeBlockchain}
+                    tx={successTx}
+                />
+            </Modal>
+        {/if}
+
+        {#if $transferData.step > 0}
+            <Button fluid on:action={resetData}>Reset Transfer</Button>
+        {/if}
     </div>
 </Page>

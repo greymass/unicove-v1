@@ -32,9 +32,11 @@
             <div>
                 <Button on:action={() => ($displaySmallModal = true)}>Open Small Modal</Button>
 
-                <Modal size="small" display={displaySmallModal}>
-                    <p>This is where your modal body goes.</p>
-                </Modal>
+                {#if $displaySmallModal}
+                    <Modal size="small" display={displaySmallModal}>
+                        <p>This is where your modal body goes.</p>
+                    </Modal>
+                {/if}
             </div>
             <div>
                 <Button on:action={showExternallyControlled}

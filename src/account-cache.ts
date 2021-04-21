@@ -1,5 +1,6 @@
+import type {Readable} from 'svelte/store'
 import {API, Name} from 'anchor-link'
-import {Readable, writable} from 'svelte/store'
+import {writable} from 'svelte/store'
 import type {NameType, ChainId} from 'anchor-link'
 
 import {dbPromise} from './db'

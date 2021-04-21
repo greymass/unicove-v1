@@ -1,8 +1,9 @@
 <script>
+    import {router} from 'tinro'
+
     import Page from '~/components/layout/page.svelte'
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
-    import Header from '~/components/layout/header.svelte'
 
     $: tokenBalances =
         $activeSession &&
@@ -15,7 +16,6 @@
 
 <style type="scss">
     .container {
-        width: 400px;
         max-width: 100%;
         margin: auto;
 
@@ -27,10 +27,10 @@
 
             table {
                 margin-bottom: 20px;
-                width: 360px;
-                max-width: 100%;
+                width: 100%;
 
                 tr {
+                    cursor: pointer;
                     max-width: 100%;
 
                     th {
@@ -52,8 +52,7 @@
                         border-bottom: 1px solid var(--divider-grey);
 
                         &:first-child {
-                            width: 40px;
-                            border: none;
+                            max-width: 40px;
                             padding: 0;
                             height: 30px;
                             position: relative;
@@ -71,20 +70,14 @@
     }
 </style>
 
-<Page>
+<Page title="Create Transfer" subtitle="Step 1 of 3">
     <div class="container">
-        <Header title="Create Transfer" subtitle="Step 1 of 3" />
-
         <div class="selector-container">
             <table>
                 <tr>
                     <th colspan="3"> Token </th>
                 </tr>
-                <tr
-                    on:click={() => {
-                        window.location.href = `/transfer/${coreTokenSymbolName?.toLowerCase()}`
-                    }}
-                >
+                <tr on:click={() => router.goto(`/transfer/${coreTokenSymbolName?.toLowerCase()}`)}>
                     <td>
                         <img
                             alt="token symbol"
@@ -95,15 +88,11 @@
                         {coreTokenSymbolName}
                     </td>
                     <td>
-                        {String($currentAccount?.core_liquid_balance)}
+                        {$currentAccount?.core_liquid_balance?.value}
                     </td>
                 </tr>
                 {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
-                    <tr
-                        on:click={() => {
-                            window.location.href = `/transfer/${token.name?.toLowerCase()}`
-                        }}
-                    >
+                    <tr on:click={() => router.goto(`/transfer/${token.name?.toLowerCase()}`)}>
                         <td>
                             <img alt="token symbol" src={token.logo} />
                         </td>
@@ -111,7 +100,7 @@
                             {token.name}
                         </td>
                         <td>
-                            {String(token.balance)}
+                            {token.balance.value}
                         </td>
                     </tr>
                 {/each}

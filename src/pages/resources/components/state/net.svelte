@@ -15,7 +15,6 @@
             const usage = Number($currentAccount?.net_limit.used)
             percentage = (usage / max) * 100
             if (max === 0 || percentage > 100) {
-                console.log('set percentage')
                 percentage = 100
             }
             return percentage.toFixed(1)

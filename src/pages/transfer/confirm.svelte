@@ -12,7 +12,7 @@
     import Form from '~/components/elements/form.svelte'
     import FieldContainer from './fieldContainer.svelte'
 
-    export let availableBalance: number | undefined = undefined
+    export let balance: Asset
     export let handleTransfer: () => Promise<void>
     export let quantity: Asset | undefined = undefined
 
@@ -65,12 +65,7 @@
             valid={toAccountValid}
             value={toAccount}
         >
-            <InputAccountLookup
-                name="to"
-                activeSession={$activeSession}
-                bind:value={toAccount}
-                bind:valid={toAccountValid}
-            />
+            <InputAccountLookup name="to" activeSession={$activeSession} bind:value={toAccount} />
         </FieldContainer>
     {/if}
 
@@ -81,13 +76,7 @@
         value={String(quantity)}
         valid={amountValid}
     >
-        <InputAsset
-            name="amount"
-            nonZero
-            {availableBalance}
-            bind:value={amount}
-            bind:valid={amountValid}
-        />
+        <InputAsset name="amount" {balance} bind:value={amount} bind:valid={amountValid} />
     </FieldContainer>
 
     {#if $activeBlockchain && $activeBlockchain.id !== 'fio'}
@@ -103,8 +92,8 @@
         </FieldContainer>
     {/if}
     <div class="button-container">
-        <Button size="large" formValidation on:action={confirmTransaction}>
-            Create Transfer Request
-        </Button>
+        <Button primary size="large" formValidation on:action={confirmTransaction}
+            >Confirm Transfer</Button
+        >
     </div>
 </Form>

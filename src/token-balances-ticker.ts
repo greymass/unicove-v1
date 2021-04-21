@@ -26,6 +26,7 @@ export interface TokenBalance {
     name: string
     balance: Asset
     usdValue: Asset
+    price: Asset
     decimals: number
     symbol: Asset.Symbol
     contract: string
@@ -46,7 +47,7 @@ export function tokenBalancesTicker(
     session: LinkSession,
     chain: ChainConfig
 ): ReadableResult<TokenBalances | undefined> {
-    const tickerName = `${session.auth.actor}-balances`
+    const tickerName = `${chain.id}-${session.auth.actor}-balances`
     if (tickerStores[tickerName]) {
         return tickerStores[tickerName]
     }
@@ -104,14 +105,17 @@ function parseTokenBalances(tokens: RawTokenBalance[]): TokenBalances {
 
     tokens.forEach((token) => {
         const assetSymbol: Asset.Symbol = Asset.Symbol.from(`${token.decimals},${token.currency}`)
-        tokensBalances[token.currency] = {
-            name: token.currency,
-            balance: Asset.fromUnits(token.amount || 0, assetSymbol),
-            usdValue: Asset.fromUnits(token.usd_value * 100 || 0, Asset.Symbol.from(`2,USD`)),
-            decimals: token.decimals,
-            symbol: assetSymbol,
-            contract: token.contract,
-            logo: token.metadata?.logo,
+        if (token.amount > 0) {
+            tokensBalances[token.currency] = {
+                name: token.currency,
+                balance: Asset.from(token.amount || 0, assetSymbol),
+                price: Asset.from(token.usd_value / token.amount, Asset.Symbol.from(`5,USD`)),
+                usdValue: Asset.from(token.usd_value || 0, Asset.Symbol.from(`2,USD`)),
+                decimals: token.decimals,
+                symbol: assetSymbol,
+                contract: token.contract,
+                logo: token.metadata?.logo,
+            }
         }
     })
 

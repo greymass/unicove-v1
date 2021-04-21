@@ -1,20 +1,35 @@
 <script lang="ts">
     import type {LinkSession} from 'anchor-link'
+    import type {Writable} from 'svelte/store'
 
-    import Account from '../account.svelte'
+    import {writable} from 'svelte/store'
+
+    import InputLabelled from '../labelled.svelte'
 
     export let name: string = ''
     export let value: string = ''
     export let errorMessage: string | undefined = undefined
     export let activeSession: LinkSession | undefined = undefined
-    export let valid: boolean = false
     export let focus: boolean = false
-    export let fullWidth: boolean = false
+    export let fluid: boolean = false
+    export let loading: Writable<boolean> = writable<boolean>(false)
     export let placeholder: string | undefined = undefined
 
-    const validate = async (value: string): Promise<boolean> => {
-        await validateExistence(value)
-
+    const isValid = async (value: string): Promise<boolean> => {
+        try {
+            if (value) {
+                $loading = true
+                await validateExistence(value)
+                $loading = false
+            } else {
+                errorMessage = undefined
+                return false
+            }
+        } catch (errorObject) {
+            errorMessage = errorObject.message
+            return false
+        }
+        errorMessage = undefined
         return true
     }
 
@@ -25,10 +40,14 @@
         return activeSession.client.v1.chain.get_account(value).catch((error) => {
             const isUnkownAccountError = error.toString().includes('exception: unknown key')
 
+            if ($loading) {
+                $loading = false
+            }
+
             if (isUnkownAccountError) {
                 throw {
                     valid: false,
-                    message: 'Is not a valid account name.',
+                    message: 'Account name not found.',
                 }
             }
         })
@@ -38,15 +57,4 @@
 <style type="scss">
 </style>
 
-<div>
-    <Account
-        {name}
-        {fullWidth}
-        {focus}
-        {placeholder}
-        {errorMessage}
-        bind:valid
-        bind:value
-        isValid={validate}
-    />
-</div>
+<InputLabelled {name} {fluid} {focus} {placeholder} {errorMessage} bind:value {isValid} />

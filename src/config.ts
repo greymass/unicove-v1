@@ -150,6 +150,7 @@ export const chains: ChainConfig[] = [
             ChainFeatures.Fuel,
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
+            ChainFeatures.DelphiOracle,
         ]),
         chainId: ChainId.from('1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4'),
         coreTokenSymbol: Asset.Symbol.from('8,WAX'),

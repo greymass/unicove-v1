@@ -1,11 +1,13 @@
 <script>
+    import {router} from 'tinro'
+    import {Asset} from '@greymass/eosio'
+
     import Page from '~/components/layout/page.svelte'
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
     import {tokenBalancesTicker} from '~/token-balances-ticker'
     import {priceTicker} from '~/price-ticker'
 
     import Button from '~/components/elements/button.svelte'
-    import Header from '~/components/layout/header.svelte'
 
     $: tokenBalances =
         $activeSession &&
@@ -25,31 +27,15 @@
 </script>
 
 <style type="scss">
-    @media only screen and (max-width: 600px) {
-        .container {
-            width: 100%;
-        }
-    }
-
     @media only screen and (min-width: 601px) {
         .container {
-            width: 600px;
             margin: auto;
         }
     }
     .container {
-        @media only screen and (max-width: 600px) {
-            table {
-                width: 100%;
-            }
-        }
-        @media only screen and (min-width: 601px) {
-            table {
-                width: 600px;
-            }
-        }
-
+        width: 100%;
         table {
+            width: 100%;
             tr {
                 th {
                     height: 30px;
@@ -75,6 +61,7 @@
                     width: 120px;
                     padding: 24px 0;
                     border-bottom: 1px solid var(--divider-grey);
+                    text-align: center;
 
                     @media only screen and (min-width: 601px) {
                         &:first-child {
@@ -92,12 +79,11 @@
                         border: none;
                         padding: 0;
                         height: 30px;
-                        position: relative;
+                        width: 30px;
 
                         img {
-                            position: absolute;
-                            top: 15px;
-                            width: 30px;
+                            width: 32px;
+                            vertical-align: middle;
                         }
                     }
                 }
@@ -136,24 +122,25 @@
     }
 </style>
 
-<Page>
+<Page
+    title="Account"
+    subtitle={`${String($currentAccount?.account_name) || '_____'} - total value $ ${
+        totalUsdValue.toFixed(2) || '___'
+    }`}
+>
     <div class="container">
-        <Header
-            title="Account"
-            subtitle={`${String($currentAccount?.account_name) || '_____'} - total value $ ${
-                totalUsdValue.toFixed(2) || '___'
-            }`}
-        />
         <table>
             <tr>
                 <th colspan="2"> Token </th>
                 <th> Balance </th>
+                <th> Price </th>
                 <th> Value </th>
             </tr>
             <tr
-                on:click={() => {
-                    window.location.href = `/transfer/${$activeBlockchain?.coreTokenSymbol?.name?.toLowerCase()}`
-                }}
+                on:click={() =>
+                    router.goto(
+                        `/transfer/${$activeBlockchain?.coreTokenSymbol?.name?.toLowerCase()}`
+                    )}
             >
                 <td>
                     <img
@@ -165,18 +152,19 @@
                     {$activeBlockchain?.coreTokenSymbol?.name}
                 </td>
                 <td>
-                    {String($currentAccount?.core_liquid_balance)}
+                    {$currentAccount?.core_liquid_balance?.value}
+                </td>
+                <td>
+                    {#if $price}
+                        {Asset.from($price, '2,USD')}
+                    {/if}
                 </td>
                 <td>
                     {coreTokenUsdValue.toFixed(2)} USD
                 </td>
             </tr>
             {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
-                <tr
-                    on:click={() => {
-                        window.location.href = `/transfer/${token.name?.toLowerCase()}`
-                    }}
-                >
+                <tr on:click={() => router.goto(`/transfer/${token.name?.toLowerCase()}`)}>
                     <td>
                         <img alt="logo icon" src={token.logo} />
                     </td>
@@ -184,7 +172,10 @@
                         {token.name}
                     </td>
                     <td>
-                        {String(token.balance)}
+                        {token.balance.value}
+                    </td>
+                    <td>
+                        {token.price}
                     </td>
                     <td>
                         {String(token.usdValue)}

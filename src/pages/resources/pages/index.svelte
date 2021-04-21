@@ -8,23 +8,10 @@
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
-    import Segment from '~/components/elements/segment.svelte'
     import SegmentGroup from '~/components/elements/segment/group.svelte'
 </script>
 
 <style type="scss">
-    * :global(.segment-group) {
-        padding-bottom: 1em;
-    }
-    * :global(h2.header, h4.description) {
-        text-align: center;
-    }
-    * :global(h2.header) {
-        padding: 2em 0 1em;
-    }
-    * :global(h4.description) {
-        padding: 1em 0 2em;
-    }
 </style>
 
 {#if $currentAccount}

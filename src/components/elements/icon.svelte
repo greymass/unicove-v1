@@ -5,7 +5,8 @@
 <script lang="ts">
     import {icons} from 'feather-icons'
 
-    export let name = 'help-circle'
+    export let name: string = 'help-circle'
+    export let loading: boolean = false
     export let size: IconSize = 'regular'
 
     if (!icons[name]) {
@@ -14,6 +15,15 @@
 </script>
 
 <style type="scss">
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(359deg);
+        }
+    }
+
     .icon {
         --size: 1em;
 
@@ -25,6 +35,10 @@
             display: block;
             width: 100%;
             height: 100%;
+        }
+
+        &.loading {
+            animation: spin 2s linear infinite;
         }
 
         &.tiny {
@@ -48,6 +62,6 @@
     }
 </style>
 
-<span class={`icon ${size}`}>
+<span class={`icon ${size}`} class:loading>
     {@html icons[name].toSvg()}
 </span>

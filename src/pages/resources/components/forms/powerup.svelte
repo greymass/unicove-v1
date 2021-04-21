@@ -84,9 +84,9 @@
         <p>Hang on, fetching balances and stuff...</p>
     {:then _}
         {#if $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)}
-            <Form>
+            <Form on:submit={powerup}>
                 <p>Amount of {unit} to rent.</p>
-                <Input focus fullWidth name="amount" bind:value={amount} />
+                <Input focus fluid name="amount" bind:value={amount} />
                 <ErrorMessage errorMessage={error} />
                 <Button fluid size="large" formValidation on:action={powerup}
                     >Rent {Number(amount)}
