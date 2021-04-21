@@ -1,7 +1,7 @@
 import {derived, readable, writable} from 'svelte/store'
 import type {ChainId} from 'anchor-link'
 import {API, Asset} from '@greymass/eosio'
-import {Resources, SampleUsage, PowerUpState, REXState} from '@greymass/eosio-resources'
+import {Resources, SampleUsage, PowerUpState, RAMState, REXState} from '@greymass/eosio-resources'
 import {activeBlockchain} from '~/store'
 
 import {getClient} from '../../api-client'
@@ -149,8 +149,34 @@ export const rexPrice = derived(
     [msToRent, sampleUsage, stateREX],
     ([$msToRent, $sampleUsage, $stateREX]) => {
         if ($msToRent && $sampleUsage && $stateREX) {
-            return Asset.from($stateREX.price_per_ms($sampleUsage, $msToRent), '4,EOS')
+            return Asset.from($stateREX.price_per($sampleUsage, $msToRent * 1000), '4,EOS')
         }
         return Asset.from(0, '4,EOS')
     }
 )
+
+// The state of the REX system
+export const stateRAM = readable<RAMState | undefined>(undefined, (set) => {
+    // Update on a set interval
+    const interval = setInterval(() => getRAMState(set), 30000)
+
+    // Subscribe to changes to the active blockchain and update on change
+    const unsubscribe = activeBlockchain.subscribe(() => getRAMState(set))
+
+    // Return callback w/ interval clear + unsubscribe
+    return () => {
+        unsubscribe()
+        clearInterval(interval)
+    }
+})
+
+export const getRAMState = async (set: (v: any) => void) =>
+    getResourceClient()
+        .v1.ram.get_state()
+        .then((result) => set(result))
+        .catch((e) => {
+            // TODO: We should probably have some sort of error catcher for stuff like this?
+            console.error(e)
+            // Set to undefined, which is the same as uninitialized
+            set(undefined)
+        })
