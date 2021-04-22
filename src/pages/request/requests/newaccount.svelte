@@ -58,7 +58,6 @@
         }
     }
     ul.request {
-        width: 400px;
         margin: 2em auto;
         font-size: 1.25em;
         li {
@@ -106,6 +105,12 @@
     <ul class="request">
         {#if newaccount}
             <li>
+                <span>EOSIO Network</span>
+                <span>{String($chain.name)}</span>
+            </li>
+        {/if}
+        {#if newaccount}
+            <li>
                 <span>Account Name</span>
                 <span>{String(newaccount.data.name)}</span>
             </li>
@@ -119,19 +124,33 @@
     </ul>
 
     <div class="info">
-        {#if $chain && $session}
-            {#if $chain.chainId.equals($session.chainId)}
-                <Button primary size="large" on:action={sign}
-                    >Create Account by paying {cost}</Button
-                >
+        {#if $chain}
+            {#if $session}
+                {#if $chain.chainId.equals($session.chainId)}
+                    <Button primary size="large" on:action={sign}>Pay to create this account</Button
+                    >
+                {:else}
+                    <h2>Switch to an account on {$chain.name} to sign.</h2>
+                    <Button primary size="large" disabled>Pay to create this account</Button>
+                {/if}
             {:else}
-                <h2>Switch to an account on {$chain.name} to sign.</h2>
-                <Button primary size="large" disabled>Sign Transaction</Button>
+                <p>
+                    To approve this request, either scan the QR code above with a compatible wallet
+                    or use the button below to manually sign this request with Anchor.
+                </p>
+                <Button primary size="large" on:action={sign}>Pay to create this account</Button>
             {/if}
         {/if}
         {#if cost && $price && $chain}
             <div>
-                Estimated total cost of ${Asset.from(cost.value * Number($price), '2,USD')}
+                <p>Estimated account creation cost of {cost}</p>
+                <p>
+                    Valued at ${Asset.from(cost.value * Number($price), '2,USD')} (${Asset.from(
+                        Number($price),
+                        '2,USD'
+                    ).value}
+                    {$chain.coreTokenSymbol.name}/USD)
+                </p>
             </div>
         {/if}
     </div>
