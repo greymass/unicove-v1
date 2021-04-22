@@ -26,9 +26,13 @@
     }
 
     async function sign() {
-        $activeSession!.transact({
-            transaction: $currentTransaction,
-        })
+        if ($activeSession) {
+            $activeSession!.transact({
+                transaction: $currentTransaction,
+            })
+        } else if ($currentRequest) {
+            window.location.href = $currentRequest.encode()
+        }
     }
 </script>
 
