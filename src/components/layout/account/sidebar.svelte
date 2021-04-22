@@ -74,7 +74,11 @@
         <Icon name="user" />
     </span>
     <span class="text">
-        {$activeSession?.auth.actor}
+        {#if $activeSession}
+            {$activeSession?.auth.actor}
+        {:else}
+            Login
+        {/if}
     </span>
 </div>
 

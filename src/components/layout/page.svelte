@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {activeSession} from '~/store'
     import AccountSidebar from './account/sidebar.svelte'
     import Header from './header.svelte'
     import Navigation from './navigation/index.svelte'
@@ -52,7 +53,9 @@
 </style>
 
 <div class="layout">
-    <Navigation bind:open={navigationSidebar} />
+    {#if $activeSession}
+        <Navigation bind:open={navigationSidebar} />
+    {/if}
     <AccountSidebar bind:open={accountSidebar} />
     <div
         class="dimmer"

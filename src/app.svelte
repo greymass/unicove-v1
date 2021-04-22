@@ -14,7 +14,10 @@
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
 
-    $: needLogin = $activeSession === undefined && !$router.path.startsWith('/_components')
+    $: needLogin =
+        $activeSession === undefined &&
+        !$router.path.startsWith('/_components') &&
+        !$router.path.startsWith('/request')
 </script>
 
 <style lang="scss" global>
