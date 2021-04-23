@@ -9,7 +9,10 @@ export class Preferences implements Readable<Preferences> {
     @Setting({default: false}) expandNavbar!: boolean
 
     /** Dark mode */
-    @Setting({default: false}) darkmode!: boolean
+    @Setting({
+        default: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+    })
+    darkmode!: boolean
 
     /** Preferences singleton. */
     static shared = new Preferences()
