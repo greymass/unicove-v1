@@ -67,6 +67,11 @@
 <style type="scss">
     $borderRadius: 8px;
 
+    :global(.darkmode) .list .network .accounts li.active {
+        background-color: var(--darkmode-grey);
+        color: var(--darkmode-white);
+    }
+
     .list {
         margin: 10px;
         .network {

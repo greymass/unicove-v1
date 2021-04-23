@@ -1,5 +1,5 @@
 <script>
-    import {activeSession} from '~/store'
+    import {activeSession, preferences} from '~/store'
     import {activate} from '~/auth'
 
     import type {SessionLike} from '~/auth'
@@ -28,6 +28,10 @@
             line-height: 14px;
             margin-right: 10px;
         }
+    }
+
+    :global(.darkmode) aside {
+        background-color: var(--darkmode-dark-grey);
     }
 
     aside {
@@ -69,16 +73,27 @@
     }
 </style>
 
-<div class="account-button" on:click={() => (open = true)}>
-    <span class="icon">
-        <Icon name="user" />
-    </span>
-    <span class="text">
-        {#if $activeSession}
-            {$activeSession?.auth.actor}
-        {:else}
-            Login
-        {/if}
+<div class="account-button">
+    {#if preferences.darkmode}
+        <span class="icon" on:click={() => (preferences.darkmode = false)}>
+            <Icon name="sun" />
+        </span>
+    {:else}
+        <span class="icon" on:click={() => (preferences.darkmode = true)}>
+            <Icon name="moon" />
+        </span>
+    {/if}
+    <span class="accounts" on:click={() => (open = true)}>
+        <span class="icon">
+            <Icon name="user" />
+        </span>
+        <span class="text">
+            {#if $activeSession}
+                {$activeSession?.auth.actor}
+            {:else}
+                Login
+            {/if}
+        </span>
     </span>
 </div>
 

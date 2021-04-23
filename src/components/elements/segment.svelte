@@ -3,6 +3,10 @@
 </script>
 
 <style type="scss">
+    :global(.darkmode) .segment {
+        background: var(--darkmode-dark-grey);
+        color: var(--darkmode-blue);
+    }
     .segment {
         background: #f7f7fc;
         border-radius: 20px;

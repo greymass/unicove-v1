@@ -8,6 +8,9 @@ export class Preferences implements Readable<Preferences> {
     /** Whether the side navigation bar is expanded. */
     @Setting({default: false}) expandNavbar!: boolean
 
+    /** Dark mode */
+    @Setting({default: false}) darkmode!: boolean
+
     /** Preferences singleton. */
     static shared = new Preferences()
 

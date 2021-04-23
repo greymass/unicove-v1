@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {activeSession} from '~/store'
+    import {activeSession, preferences} from '~/store'
     import AccountSidebar from './account/sidebar.svelte'
     import Header from './header.svelte'
     import Navigation from './navigation/index.svelte'
@@ -10,6 +10,8 @@
 
     let accountSidebar = false
     let navigationSidebar = false
+
+    $: darkmode = $preferences.darkmode
 </script>
 
 <style type="scss">
@@ -41,6 +43,24 @@
         width: 100%;
     }
 
+    .darkmode {
+        :global(label),
+        :global(p),
+        :global(h1),
+        :global(h2),
+        :global(h3),
+        :global(h4),
+        :global(h5),
+        :global(tr),
+        :global(td) {
+            color: var(--darkmode-white);
+        }
+        .main {
+            background: var(--darkmode-black);
+            color: var(--darkmode-white);
+        }
+    }
+
     .content {
         margin: 45px;
     }
@@ -52,7 +72,7 @@
     }
 </style>
 
-<div class="layout">
+<div class="layout" class:darkmode>
     {#if $activeSession}
         <Navigation bind:open={navigationSidebar} />
     {/if}

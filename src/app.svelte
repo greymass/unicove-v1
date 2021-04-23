@@ -71,6 +71,13 @@
         --success-green: #4bca81;
         --error-red: #ff0033;
 
+        --darkmode-blue: #0a84ff;
+        --darkmode-dark-grey: #2c2c2e;
+        --darkmode-grey: #3a3a3c;
+        --darkmode-light-grey: #8e8e93;
+        --darkmode-white: #eef1f5;
+        --darkmode-black: #1c1c1e;
+
         --mobile-breakpoint: 600px;
     }
 

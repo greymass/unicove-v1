@@ -80,6 +80,15 @@
 </script>
 
 <style type="scss">
+    :global(.darkmode) input {
+        background-color: var(--darkmode-grey);
+        border: 1px solid var(--darkmode-blue);
+        color: var(--darkmode-white);
+        &:focus {
+            color: var(--darkmode-white);
+        }
+    }
+
     input {
         background: #f5f6f8;
         border: 1px solid #e4e6ea;

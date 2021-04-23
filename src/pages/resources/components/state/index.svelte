@@ -15,6 +15,13 @@
         height: 32px;
         width: 32px;
     }
+    :global(.darkmode) .state {
+        background: var(--darkmode-dark-grey);
+        color: var(--darkmode-blue);
+        :global(h3) {
+            color: var(--darkmode-white);
+        }
+    }
     .state {
         position: relative;
         display: flex;
@@ -32,7 +39,6 @@
                 font-size: 16px;
                 line-height: 16px;
                 letter-spacing: -0.26px;
-                background: var(--main-grey);
                 padding: 0.25em;
                 text-align: right;
                 &:first-child {

@@ -26,6 +26,19 @@
 </script>
 
 <style type="scss">
+    :global(.darkmode) .navigation {
+        background-color: var(--darkmode-dark-grey);
+        .title {
+            color: var(--darkmode-light-grey);
+        }
+        .items .item {
+            color: var(--darkmode-blue);
+            &.active {
+                background-color: var(--darkmode-grey);
+                color: var(--darkmode-white);
+            }
+        }
+    }
     .navigation {
         align-self: stretch;
         background-color: var(--main-grey);
