@@ -1,101 +1,87 @@
 import {derived, writable} from 'svelte/store'
-import type {Readable} from 'svelte/store'
-import {AbiMap, SigningRequest} from 'eosio-signing-request'
-import {
-    ABIDef,
-    AnyAction,
-    API,
-    APIClient,
-    ChainId,
-    LinkChain,
-    PermissionLevel,
-    Transaction,
-    TransactionHeader,
-} from 'anchor-link'
+import type {Readable, Writable} from 'svelte/store'
 import type {TinroRouteMeta} from 'tinro'
+
+import {ABIDef, APIClient, PermissionLevel, TransactionHeader} from 'anchor-link'
+import {AbiMap, ResolvedTransaction, SigningRequest} from 'eosio-signing-request'
+
 import {ChainConfig, chainConfig} from '~/config'
-import {activeBlockchain, activeSession} from '~/store'
+import {activeSession} from '~/store'
 
 import zlib from 'pako'
 import {getClient} from '~/api-client'
 
-let chainId: ChainId
-activeBlockchain.subscribe((value) => (chainId = value.chainId))
-
+// The current route being passed in from the component
 export let currentRoute = writable<TinroRouteMeta | undefined>(undefined)
 
-let linkChain: LinkChain
-activeSession.subscribe(async (session) => {
-    if (session) {
-        linkChain = session.link.getChain(chainId)
+// The chain configuration that matches the current request
+export let currentChain: Writable<ChainConfig | undefined> = writable(undefined)
+let currentChainConfig: ChainConfig | undefined
+currentChain.subscribe((value) => (currentChainConfig = value))
+
+// The API client to fulfill the request
+export let apiClient: Readable<APIClient | undefined> = derived(currentChain, ($currentChain) => {
+    if ($currentChain) {
+        return getClient($currentChain.chainId)
     }
 })
 
-let apiClient: APIClient = getClient(
-    ChainId.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906')
-)
-
-const abiProvider = {
-    getAbi: async (account: any) => {
-        if (linkChain) {
-            return linkChain.getAbi(account)
+// The ABI Provider derived from the API Client to resolve requests
+export let abiProvider: Readable<any> = derived(apiClient, ($apiClient) => {
+    if ($apiClient) {
+        return {
+            getAbi: async (account: any) => {
+                return (await $apiClient.v1.chain.get_abi(account)).abi as ABIDef
+            },
         }
-        return (await apiClient.v1.chain.get_abi(account)).abi as ABIDef
-    },
-}
+    }
+})
 
+// The currently loaded request, derived from the current route
 export const currentRequest: Readable<SigningRequest | undefined> = derived(
     currentRoute,
     ($currentRoute) => {
         if ($currentRoute) {
             return SigningRequest.from(`esr:${$currentRoute.params.payload}`, {
-                abiProvider,
                 zlib,
             })
         }
     }
 )
 
+// Set the current chain based on the current request
+currentRequest.subscribe((request) => {
+    if (request) {
+        const id = request.getChainId()
+        if (!currentChainConfig || !currentChainConfig.chainId.equals(id)) {
+            currentChain.set(chainConfig(id))
+        }
+    }
+})
+
+// The ABIs required for the current request
 export const abis: Readable<AbiMap | undefined> = derived(
-    currentRequest,
-    ($currentRequest, set) => {
-        if ($currentRequest) {
-            $currentRequest.fetchAbis().then((abis) => set(abis))
+    [abiProvider, currentRequest],
+    ([$abiProvider, $currentRequest], set) => {
+        if ($currentRequest && currentChainConfig) {
+            $currentRequest.fetchAbis($abiProvider).then((abis) => set(abis))
         }
     }
 )
 
-export let currentChain: Readable<ChainConfig | undefined> = derived(
-    currentRequest,
-    ($currentRequest) => {
-        if ($currentRequest) {
-            return chainConfig($currentRequest.getChainId())
-        }
-    }
-)
-
-export let multichain: Readable<boolean> = derived(currentRequest, ($currentRequest) => {
+// Whether or not this is a multichain request
+export const multichain: Readable<boolean> = derived(currentRequest, ($currentRequest) => {
     if ($currentRequest) {
         return $currentRequest.isMultiChain()
     }
     return false
 })
 
-export const resolveTransaction = async (
-    set: (v: any) => void,
-    abis: any,
-    auth: any,
-    request: any
-) => {
-    const info: API.v1.GetInfoResponse = await apiClient.v1.chain.get_info()
-    const header: TransactionHeader = info.getTransactionHeader()
-    set(request.resolveTransaction(await abis, auth, header))
-}
-
-export const currentTransaction: Readable<Transaction> = derived(
-    [abis, activeBlockchain, activeSession, currentRequest],
-    ([$abis, $activeBlockchain, $activeSession, $currentRequest], set) => {
-        if ($abis && $activeBlockchain && $currentRequest) {
+// The current transaction resolved from the current request
+export const currentTransaction: Readable<ResolvedTransaction> = derived(
+    [abis, activeSession, apiClient, currentRequest],
+    ([$abis, $activeSession, $apiClient, $currentRequest], set) => {
+        if ($apiClient && $abis && $currentRequest) {
             // Create a dummy permission level for resolution without an active session
             let auth: PermissionLevel = PermissionLevel.from({
                 actor: 'test',
@@ -106,33 +92,11 @@ export const currentTransaction: Readable<Transaction> = derived(
                 auth = $activeSession.auth
             }
             // Resolve the transaction for the interface to display
-            resolveTransaction(set, $abis, auth, $currentRequest)
+            $apiClient.v1.chain.get_info().then((info: any) => {
+                const header: TransactionHeader = info.getTransactionHeader()
+                set($currentRequest.resolveTransaction($abis, auth, header))
+            })
         }
         return undefined
-    }
-)
-
-const templates = [
-    {
-        name: 'newaccount',
-        actions: ['eosio::newaccount', 'eosio::buyrambytes'],
-    },
-]
-
-export const currentTemplate: Readable<string> = derived(
-    currentTransaction,
-    ($currentTransaction: any) => {
-        if ($currentTransaction) {
-            const actions = $currentTransaction.actions.map(
-                (action: AnyAction) => `${action.account}::${action.name}`
-            )
-            const matching = templates.find(
-                (template) => JSON.stringify(template.actions) === JSON.stringify(actions)
-            )
-            if (matching) {
-                return matching.name
-            }
-        }
-        return 'default'
     }
 )
