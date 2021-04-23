@@ -1,5 +1,6 @@
 <script lang="ts">
     import ButtonLogin from '~/components/elements/button/login.svelte'
+    import Page from '~/components/layout/page.svelte'
 </script>
 
 <style lang="scss">
@@ -17,10 +18,12 @@
     }
 </style>
 
-<div class="login">
-    <header>
-        <h1>Welcome to Greymass Wallet</h1>
-        <p>Please login to continue</p>
-    </header>
-    <ButtonLogin>Login with Anchor</ButtonLogin>
-</div>
+<Page>
+    <div class="login">
+        <header>
+            <h1>Welcome to Greymass Wallet</h1>
+            <p>Please login to continue</p>
+        </header>
+        <ButtonLogin>Login with Anchor</ButtonLogin>
+    </div>
+</Page>
