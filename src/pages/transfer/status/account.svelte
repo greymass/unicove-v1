@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {Name} from 'anchor-link'
     import Completed from '~/pages/transfer/status/template/completed.svelte'
+    import {transferData, Step} from '~/pages/transfer/transfer'
 
     export let toAccount: Name
 </script>
@@ -12,6 +13,11 @@
     }
 </style>
 
-<Completed header="Account">
+<Completed
+    header="Recipient"
+    changeStep={() => {
+        $transferData.step = Step.Recipient
+    }}
+>
     <span>{toAccount}</span>
 </Completed>

@@ -3,18 +3,17 @@
     import type {Token} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
-    import Input from '~/components/elements/input.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
     import Form from '~/components/elements/form.svelte'
 
     import {transferData} from '~/pages/transfer/transfer'
     import {txFee} from '~/pages/transfer/fio'
-    import FieldContainer from '~/pages/transfer/fieldContainer.svelte'
     import StatusToken from '~/pages/transfer/status/token.svelte'
     import StatusAddress from '~/pages/transfer/status/address.svelte'
     import StatusAccount from '~/pages/transfer/status/account.svelte'
     import StatusQuantity from '~/pages/transfer/status/quantity.svelte'
+    import StatusMemo from '~/pages/transfer/status/memo.svelte'
     import StatusFee from '~/pages/transfer/status/fee.svelte'
 
     export let token: Token
@@ -55,18 +54,8 @@
     {#if $transferData.quantity && $txFee}
         <StatusFee txFee={$txFee} quantity={$transferData.quantity} />
     {/if}
-
     {#if $activeBlockchain && $activeBlockchain.id !== 'fio'}
-        <FieldContainer
-            label="Memo"
-            secondLabel="(Optional)"
-            placeholder="Add"
-            value={memo}
-            valid
-            optional
-        >
-            <Input name="memo" bind:value={memo} />
-        </FieldContainer>
+        <StatusMemo memo={$transferData.memo} />
     {/if}
     <div class="button-container">
         <Button primary size="large" formValidation on:action={confirmTransaction}>

@@ -17,7 +17,7 @@
     export let balance: Balance
     export let token: Token
 
-    let amount: string = String($transferData.quantity || '')
+    let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
 
     function confirmChange() {

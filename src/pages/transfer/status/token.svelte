@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {Token} from '~/stores/tokens'
     import Completed from '~/pages/transfer/status/template/completed.svelte'
+    import {router} from 'tinro'
 
     export let token: Token
 </script>
@@ -17,7 +18,7 @@
     }
 </style>
 
-<Completed header="Token">
+<Completed header="Token" changeStep={() => router.goto('/transfer')}>
     <span>{token.name}</span>
     <img alt={String(token.name)} src={token.logo} />
 </Completed>

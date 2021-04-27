@@ -22,6 +22,7 @@
     import TransferRecipient from '~/pages/transfer/step/recipient.svelte'
     import TransferAmount from '~/pages/transfer/step/amount.svelte'
     import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
+    import TransferMemo from '~/pages/transfer/step/memo.svelte'
 
     export let meta: TinroRouteMeta | undefined = undefined
 
@@ -108,7 +109,7 @@
                     from: $activeSession!.auth.actor,
                     to: $transferData.toAccount,
                     quantity: $transferData.quantity,
-                    memo: $transferData.memo,
+                    memo: $transferData.memo || '',
                 })
                 break
             }
@@ -137,18 +138,20 @@
 <style>
 </style>
 
-<Page title="Transfer Tokens" subtitle={`Step ${$transferData.step + 1} of 3`}>
+<Page title="Transfer Tokens">
     <div class="container">
         {#if $balance && $token}
             {#if $transferData.step === Step.Recipient}
                 <TransferRecipient balance={$balance} token={$token} />
             {/if}
-
             {#if $transferData.step === Step.Amount}
                 <TransferAmount balance={$balance} token={$token} />
             {/if}
             {#if $transferData.step === Step.Confirm && $quantity}
                 <TransferConfirm token={$token} {handleTransfer} />
+            {/if}
+            {#if $transferData.step === Step.Memo}
+                <TransferMemo token={$token} />
             {/if}
         {:else}
             No balance of this token to transfer!

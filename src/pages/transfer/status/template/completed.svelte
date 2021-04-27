@@ -1,8 +1,10 @@
 <script lang="ts">
     import Container from '~/pages/transfer/status/template/container.svelte'
+    import StatusChange from '~/pages/transfer/status/template/change.svelte'
 
     export let header: string
     export let subheader: string | undefined = undefined
+    export let changeStep: (() => void) | undefined = undefined
 </script>
 
 <style type="scss">
@@ -13,7 +15,6 @@
             display: block;
             margin: 5px 0;
             font-weight: bold;
-            line-height: 32px;
         }
     }
 
@@ -29,6 +30,9 @@
         <h3>{header}</h3>
         {#if subheader}
             <p>{subheader}</p>
+        {/if}
+        {#if changeStep}
+            <StatusChange {changeStep} />
         {/if}
     </div>
 

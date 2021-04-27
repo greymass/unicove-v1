@@ -1,10 +1,8 @@
 <script lang="ts">
-    import type {PublicKey} from 'anchor-link'
-    import {activeBlockchain} from '~/store'
     import Completed from '~/pages/transfer/status/template/completed.svelte'
     import {Step, transferData} from '../transfer'
 
-    export let toAddress: PublicKey
+    export let memo: string | undefined
 </script>
 
 <style type="scss">
@@ -14,10 +12,10 @@
 </style>
 
 <Completed
-    header="Recipient"
+    header="Memo"
     changeStep={() => {
-        $transferData.step = Step.Recipient
+        $transferData.step = Step.Memo
     }}
 >
-    <span>{toAddress.toLegacyString($activeBlockchain.coreTokenSymbol.name)}</span>
+    <span>{memo ? memo : '(Optional)'}</span>
 </Completed>
