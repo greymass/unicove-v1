@@ -1,8 +1,9 @@
 <script lang="ts">
     import {activeSession, preferences} from '~/store'
-    import AccountSidebar from './account/sidebar.svelte'
-    import Header from './header.svelte'
-    import Navigation from './navigation/index.svelte'
+
+    import AccountSidebar from '~/components/layout/account/sidebar.svelte'
+    import Header from '~/components/layout/header.svelte'
+    import Navigation from '~/components/layout/navigation/index.svelte'
 
     /** Title of the page. */
     export let title: string = ''
@@ -37,10 +38,24 @@
 
     .main {
         flex-grow: 1;
-        padding: 30px;
-        height: 100vh;
         min-height: 100vh;
         width: 100%;
+        overflow: auto;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .controls,
+    .title {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex: 1;
     }
 
     .darkmode {
@@ -62,12 +77,12 @@
     }
 
     .content {
-        margin: 45px;
+        margin: 80px 45px 0;
     }
 
     @media only screen and (max-width: 600px) {
         .content {
-            margin: 55px 8px;
+            margin: 80px 10px 0;
         }
     }
 </style>
@@ -88,7 +103,16 @@
 
     <div class="main">
         <div class="content">
-            <Header {title} {subtitle} />
+            <div class="header">
+                <div class="title">
+                    <Header {title} {subtitle} />
+                </div>
+                {#if $$slots.controls}
+                    <div class="controls">
+                        <slot name="controls" />
+                    </div>
+                {/if}
+            </div>
             <slot />
         </div>
     </div>

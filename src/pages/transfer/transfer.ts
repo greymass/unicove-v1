@@ -1,4 +1,6 @@
-import type {Name, PublicKey} from '@greymass/eosio'
+import {writable} from 'svelte/store'
+
+import type {Asset, Name, PublicKey} from '@greymass/eosio'
 
 export const enum Step {
     Recipient,
@@ -8,9 +10,11 @@ export const enum Step {
 
 export interface TransferData {
     step: Step
-    amount?: string
+    quantity?: Asset
     displaySuccessTx?: string
     memo?: string
     toAccount?: Name | undefined
     toAddress?: PublicKey | undefined
 }
+
+export const transferData = writable<TransferData>({step: Step.Recipient})

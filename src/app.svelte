@@ -1,14 +1,14 @@
 <script lang="ts">
     import {Route, router} from 'tinro'
+
     import {activeSession, appReady} from '~/store'
     import {isRelease} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
 
-    import Dashboard from '~/pages/dashboard.svelte'
     import Login from '~/pages/login.svelte'
     import Request from '~/pages/request/index.svelte'
-    import TransferSelect from '~/pages/transferSelect/index.svelte'
+    import TransferSelect from '~/pages/transfer/select.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
@@ -82,7 +82,7 @@
     }
 
     main {
-        height: 100vh;
+        min-height: 100vh;
     }
 </style>
 
@@ -100,11 +100,8 @@
             <Route path="/transfer">
                 <TransferSelect />
             </Route>
-            <Route path="/transfer/:token" let:meta>
+            <Route path="/transfer/:contract/:token" let:meta>
                 <Transfer {meta} />
-            </Route>
-            <Route path="/dashboard">
-                <Dashboard />
             </Route>
             <Route path="/request/:payload">
                 <Request />

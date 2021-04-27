@@ -1,95 +1,66 @@
 <script>
-    import {router} from 'tinro'
-    import {Asset} from '@greymass/eosio'
+    import {derived} from 'svelte/store'
+    import type {Readable} from 'svelte/store'
 
-    import Page from '~/components/layout/page.svelte'
     import {activeSession, activeBlockchain, currentAccount} from '~/store'
-    import {tokenBalancesTicker} from '~/token-balances-ticker'
+    import {balances, fetchBalances} from '~/stores/balances'
+    import {getToken} from '~/stores/tokens'
     import {priceTicker} from '~/price-ticker'
 
+    import Page from '~/components/layout/page.svelte'
     import Button from '~/components/elements/button.svelte'
+    import Icon from '~/components/elements/icon.svelte'
 
-    $: tokenBalances =
-        $activeSession &&
-        tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
-            console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
-        })
+    import TokenTable from '~/pages/tokens/table.svelte'
 
-    $: price = priceTicker($activeBlockchain).catch((error) => {
+    const price = priceTicker($activeBlockchain).catch((error) => {
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
     })
 
-    $: coreTokenUsdValue = ($currentAccount?.core_liquid_balance?.value || 0) * ($price || 0)
-    $: totalUsdValue = ((tokenBalances && $tokenBalances?.totalUsdValue) || 0) + coreTokenUsdValue
-    $: bloksAccountUrl = `https://www.${
-        $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
-    }bloks.io/account/${String($currentAccount?.account_name)}`
+    let totalUsdValue: Readable<number> = derived(
+        [activeSession, balances, price],
+        ([$activeSession, $balances, $price]) => {
+            let value = 0
+            if ($activeSession && $balances && $price) {
+                $balances.records
+                    .filter((record) => record.account.equals($activeSession.auth.actor))
+                    .map((record) => {
+                        const token = getToken(record.tokenKey)
+                        if (token && token.price) {
+                            value += record.quantity.value * token.price
+                        }
+                    })
+            }
+            return value
+        }
+    )
+
+    function fiatFormat(value: number) {
+        const fiatSymbol = '$'
+        const fiatName = 'USD'
+        return `${fiatSymbol}${value.toFixed(4)} ${fiatName}`
+    }
+
+    function refresh() {
+        if ($activeSession) {
+            fetchBalances($activeSession, true)
+        }
+    }
 </script>
 
 <style type="scss">
-    @media only screen and (min-width: 601px) {
+    :global(.darkmode) {
         .container {
-            margin: auto;
-        }
-    }
-    .container {
-        width: 100%;
-        table {
-            width: 100%;
-            tr {
-                th {
-                    height: 30px;
-                    width: 30%;
-                    font-family: Inter;
-                    font-style: normal;
-                    font-weight: 600;
-                    font-size: 12px;
-                    line-height: 12px;
-                    text-align: left;
-                    letter-spacing: 0.1px;
-                    text-transform: uppercase;
-                    color: var(--dark-grey);
-                }
-
-                @media only screen and (max-width: 600px) {
-                    td {
-                        width: 80px;
-                    }
-                }
-
-                td {
-                    width: 120px;
-                    padding: 24px 0;
-                    border-bottom: 1px solid var(--divider-grey);
-                    text-align: center;
-
-                    @media only screen and (min-width: 601px) {
-                        &:first-child {
-                            width: 40px;
-                        }
-                    }
-
-                    @media only screen and (max-width: 600px) {
-                        &:first-child {
-                            width: 80px;
-                        }
-                    }
-
-                    &:first-child {
-                        border: none;
-                        padding: 0;
-                        height: 30px;
-                        width: 30px;
-
-                        img {
-                            width: 32px;
-                            vertical-align: middle;
-                        }
-                    }
+            @media only screen and (max-width: 600px) {
+                .buttons-container {
+                    background: var(--darkmode-black);
+                    border-top: 1px solid var(--darkmode-grey);
                 }
             }
         }
+    }
 
+    .container {
         @media only screen and (min-width: 600px) {
             .buttons-container {
                 display: flex;
@@ -106,90 +77,58 @@
         }
 
         @media only screen and (max-width: 600px) {
+            padding-bottom: 140px;
             .buttons-container {
+                background: white;
+                border-top: 1px solid var(--divider-grey);
                 display: flex;
                 flex-direction: column;
-                padding: 20px 0;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 5px 20px;
+                z-index: 1000;
 
                 .button-container {
                     display: flex;
                     flex-direction: column;
                     width: 100%;
-                    padding: 10px;
+                    padding: 10px 0;
                 }
             }
         }
     }
+
+    .options {
+        text-align: right;
+    }
 </style>
 
-<Page
-    title="Account"
-    subtitle={`${String($currentAccount?.account_name) || '_____'} - total value $ ${
-        totalUsdValue.toFixed(2) || '___'
-    }`}
->
-    <div class="container">
-        <table>
-            <tr>
-                <th colspan="2"> Token </th>
-                <th> Balance </th>
-                <th> Price </th>
-                <th> Value </th>
-            </tr>
-            <tr
-                on:click={() =>
-                    router.goto(
-                        `/transfer/${$activeBlockchain?.coreTokenSymbol?.name?.toLowerCase()}`
-                    )}
-            >
-                <td>
-                    <img
-                        alt="logo icon"
-                        src={`https://www.bloks.io/img/chains/${$activeBlockchain?.coreTokenSymbol?.name?.toLowerCase()}.png`}
-                    />
-                </td>
-                <td>
-                    {$activeBlockchain?.coreTokenSymbol?.name}
-                </td>
-                <td>
-                    {$currentAccount?.core_liquid_balance?.value}
-                </td>
-                <td>
-                    {#if $price}
-                        {Asset.from($price, '2,USD')}
-                    {/if}
-                </td>
-                <td>
-                    {coreTokenUsdValue.toFixed(2)} USD
-                </td>
-            </tr>
-            {#each Object.values((tokenBalances && $tokenBalances?.tokens) || {}) as token}
-                <tr on:click={() => router.goto(`/transfer/${token.name?.toLowerCase()}`)}>
-                    <td>
-                        <img alt="logo icon" src={token.logo} />
-                    </td>
-                    <td>
-                        {token.name}
-                    </td>
-                    <td>
-                        {token.balance.value}
-                    </td>
-                    <td>
-                        {token.price}
-                    </td>
-                    <td>
-                        {String(token.usdValue)}
-                    </td>
-                </tr>
-            {/each}
-        </table>
-        <div class="buttons-container">
-            <div class="button-container">
-                <Button href="/transfer" size="large">Create new transfer</Button>
-            </div>
-            <div class="button-container">
-                <Button href={bloksAccountUrl} size="large">View on block explorer</Button>
+<Page title="Balances" subtitle={`Total ~${fiatFormat($totalUsdValue)}`}>
+    <span slot="controls">
+        <div class="options">
+            <Button on:action={refresh}>
+                <Icon name="refresh-cw" />
+            </Button>
+        </div>
+    </span>
+    {#if $balances}
+        <div class="container">
+            <TokenTable {balances} />
+            <div class="buttons-container">
+                <div class="button-container">
+                    <Button href="/transfer" size="large">Create new transfer</Button>
+                </div>
+                <div class="button-container">
+                    <Button
+                        href={`https://www.${
+                            $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
+                        }bloks.io/account/${String($currentAccount?.account_name)}`}
+                        size="large">View on block explorer</Button
+                    >
+                </div>
             </div>
         </div>
-    </div>
+    {/if}
 </Page>

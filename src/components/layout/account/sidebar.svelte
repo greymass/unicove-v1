@@ -30,8 +30,13 @@
         }
     }
 
-    :global(.darkmode) aside {
-        background-color: var(--darkmode-dark-grey);
+    :global(.darkmode) {
+        aside {
+            background-color: var(--darkmode-dark-grey);
+        }
+        .header {
+            border-bottom: 1px solid var(--darkmode-grey);
+        }
     }
 
     aside {

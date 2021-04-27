@@ -1,45 +1,32 @@
 <script lang="ts">
     import type {Readable} from 'svelte/store'
-
-    import {Asset} from 'anchor-link'
-    import {onMount} from 'svelte'
-    import {writable} from 'svelte/store'
     import type {TinroRouteMeta} from 'tinro'
-
-    import {Step} from './types'
-
-    import {activeBlockchain, activeSession, currentAccount} from '~/store'
-    import {txFee, syncTxFee, stopSyncTxFee, fetchTxFee} from './fio'
+    import {onMount} from 'svelte'
+    import {get, derived, writable} from 'svelte/store'
+    import {Asset, Name} from 'anchor-link'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
-
-    import {transferData} from './transferData'
-    import {tokenBalancesTicker} from '~/token-balances-ticker'
-    import type {TokenBalance, TokenBalances} from '~/token-balances-ticker'
-
-    import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import type {Token, TokenKeyParams} from '~/stores/tokens'
+    import {getToken, makeTokenKey} from '~/stores/tokens'
+    import type {Balance} from '~/stores/balances'
+    import {balances, getBalance, makeBalanceKey} from '~/stores/balances'
 
     import Button from '~/components/elements/button.svelte'
-
-    import TransferSummary from './summary.svelte'
-    import TransferRecipient from './recipient.svelte'
-    import TransferAmount from './amount.svelte'
-    import TransferConfirm from './confirm.svelte'
-
     import Modal from '~/components/elements/modal.svelte'
     import Page from '~/components/layout/page.svelte'
+    import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
+
+    import {transferData, Step} from '~/pages/transfer/transfer'
+    import {txFee, syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/transfer/fio'
+    import TransferRecipient from '~/pages/transfer/step/recipient.svelte'
+    import TransferAmount from '~/pages/transfer/step/amount.svelte'
+    import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
 
     export let meta: TinroRouteMeta | undefined = undefined
 
-    let balance: Asset = Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
     let successTx: string | undefined = undefined
     let displaySuccessTx = writable<boolean>(false)
-
-    let previousChain: string | undefined = undefined
-    let tokenBalance: TokenBalance | undefined = undefined
-    let quantity: Asset | undefined = undefined
-    let transferContract: string = 'eosio.token'
-    let tokenBalances: Readable<TokenBalances | undefined> | undefined
 
     onMount(() => {
         syncTxFee()
@@ -50,78 +37,80 @@
         }
     })
 
-    $: transferContract =
-        (tokenBalance && tokenBalance.contract) || String($activeBlockchain.coreTokenContract)
-
-    $: {
-        tokenBalances =
-            $activeSession &&
-            tokenBalancesTicker($activeSession, $activeBlockchain).catch((error) => {
-                console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
-            })
-    }
-
-    $: {
-        const chainToken = $activeBlockchain?.coreTokenSymbol?.name
-
-        if (!meta || meta.params.token.toUpperCase() === chainToken) {
-            balance =
-                $currentAccount?.core_liquid_balance ||
-                Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-        } else if (tokenBalances && $tokenBalances?.tokens) {
-            const tokenName: string = meta.params.token.toUpperCase()
-            tokenBalance = tokenBalances && $tokenBalances?.tokens[tokenName]
-
-            if (tokenBalance && tokenBalance.balance) {
-                balance = tokenBalance.balance
+    const token: Readable<Token | undefined> = derived(
+        [activeSession, balances, currentAccount],
+        ([$activeSession, $balances, $currentAccount]) => {
+            if (meta && $activeSession && $balances && $currentAccount) {
+                const params: TokenKeyParams = {
+                    chainId: $activeBlockchain.chainId,
+                    contract: Name.from(meta.params.contract),
+                    name: Name.from(meta.params.token),
+                }
+                const key = makeTokenKey(params)
+                return getToken(key)
             }
         }
-    }
+    )
 
-    $: if ($activeBlockchain.id !== previousChain) {
-        resetData()
-
-        previousChain = $activeBlockchain.id
-    }
-
-    $: {
-        const parsed: number = parseFloat($transferData.amount || '')
-
-        if (parsed) {
-            quantity = Asset.fromFloat(
-                parsed,
-                (tokenBalance && tokenBalance.symbol) || $activeBlockchain.coreTokenSymbol
-            )
+    const tokenContract: Readable<Name> = derived([token], ([$token]) => {
+        if ($token) {
+            return Name.from($token.contract)
         }
+        return Name.from($activeBlockchain.coreTokenContract)
+    })
+
+    const balance: Readable<Balance | undefined> = derived(
+        [activeSession, token],
+        ([$activeSession, $token]) => {
+            if ($activeSession && $token) {
+                return getBalance(makeBalanceKey($token, $activeSession.auth.actor))
+            }
+        }
+    )
+
+    const quantity: Readable<Asset | undefined> = derived([transferData], ([$transferData]) => {
+        if ($transferData && $transferData.quantity) {
+            return $transferData.quantity
+        }
+    })
+
+    let previousActor: string | undefined = undefined
+    $: if ($activeSession && String($activeSession.auth.actor) !== previousActor) {
+        resetData()
+        previousActor = String($activeSession.auth.actor)
     }
 
     function resetData() {
         transferData.set({
             step: Step.Recipient,
         })
-
-        quantity = undefined
-
         fetchTxFee()
     }
 
     function getActionData() {
-        let data: Transfer | FIOTransfer = Transfer.from({
-            from: $activeSession!.auth.actor,
-            to: $transferData.toAccount,
-            quantity,
-            memo: $transferData.memo,
-        })
+        let data: Transfer | FIOTransfer | undefined
 
-        switch (String(transferContract)) {
+        switch (String($tokenContract)) {
             case 'fio.token': {
                 data = FIOTransfer.from({
-                    payee_public_key: $transferData.toAddress,
-                    amount: quantity && quantity.units,
+                    payee_public_key: $transferData.toAddress!.toLegacyString(
+                        $activeBlockchain.coreTokenSymbol.name
+                    ),
+                    amount: quantity && $quantity!.units,
                     max_fee: $txFee!.units,
                     actor: $activeSession!.auth.actor,
                     tpid: 'tpid@greymass',
                 })
+                break
+            }
+            default: {
+                data = Transfer.from({
+                    from: $activeSession!.auth.actor,
+                    to: $transferData.toAccount,
+                    quantity: $transferData.quantity,
+                    memo: $transferData.memo,
+                })
+                break
             }
         }
         return data
@@ -132,7 +121,7 @@
             .transact({
                 action: {
                     authorization: [$activeSession!.auth],
-                    account: transferContract,
+                    account: get(tokenContract),
                     name: $activeBlockchain.coreTokenTransfer,
                     data: getActionData(),
                 },
@@ -148,24 +137,21 @@
 <style>
 </style>
 
-<Page title="Create Transfer" subtitle={`Step of ${$transferData.step + 1} of 3`}>
+<Page title="Transfer Tokens" subtitle={`Step ${$transferData.step + 1} of 3`}>
     <div class="container">
-        {#if quantity && $txFee}
-            <TransferSummary txFee={$txFee} {quantity} />
-        {/if}
+        {#if $balance && $token}
+            {#if $transferData.step === Step.Recipient}
+                <TransferRecipient balance={$balance} token={$token} />
+            {/if}
 
-        <br />
-
-        {#if $transferData.step === Step.Recipient}
-            <TransferRecipient {balance} />
-        {/if}
-
-        {#if $transferData.step === Step.Amount}
-            <TransferAmount {balance} />
-        {/if}
-
-        {#if $transferData.step === Step.Confirm}
-            <TransferConfirm {balance} {quantity} {handleTransfer} />
+            {#if $transferData.step === Step.Amount}
+                <TransferAmount balance={$balance} token={$token} />
+            {/if}
+            {#if $transferData.step === Step.Confirm && $quantity}
+                <TransferConfirm token={$token} {handleTransfer} />
+            {/if}
+        {:else}
+            No balance of this token to transfer!
         {/if}
 
         {#if $displaySuccessTx}
