@@ -1,17 +1,11 @@
 <script>
     import {router} from 'tinro'
-    import {derived} from 'svelte/store'
-    import type {Readable} from 'svelte/store'
 
-    import {tokens} from '~/stores/tokens'
-    import type {TokenRecord} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
+    import type {Token} from '~/stores/tokens'
 
     export let balance: Balance
-
-    let token: Readable<TokenRecord | undefined> = derived([tokens], ([$tokens]) =>
-        $tokens.records.find((t) => t.key === balance.tokenKey)
-    )
+    export let token: Token | undefined
 </script>
 
 <style type="scss">
@@ -51,23 +45,23 @@
     }
 </style>
 
-{#if $token}
+{#if token}
     <tr
         on:click={() => {
-            if ($token) {
+            if (token) {
                 router.goto(
-                    `/transfer/${String($token.contract).toLowerCase()}/${String(
-                        $token.name
+                    `/transfer/${String(token.contract).toLowerCase()}/${String(
+                        token.name
                     ).toLowerCase()}`
                 )
             }
         }}
     >
         <td>
-            <img alt={String($token.name)} src={$token.logo} />
+            <img alt={String(token.name)} src={token.logo} />
         </td>
         <td>
-            {$token.name}
+            {token.name}
         </td>
         <td>
             {balance.quantity.value}
