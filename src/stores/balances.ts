@@ -29,17 +29,18 @@ export const balancesStore: Writable<BalancesStore> = writable(initialBalances)
 
 export const balances = readable<BalancesStore>(initialBalances, (set) => {
     // Set the value to equal the balances store
-    balancesStore.subscribe((store) => set(store))
+    const unsubscribeBalances = balancesStore.subscribe((store) => set(store))
 
     // Update on a set interval
     const interval = setInterval(() => fetchBalances(get(activeSession)), 30000)
 
     // Subscribe to changes to the active session and update on change
-    const unsubscribe = activeSession.subscribe((session) => fetchBalances(session))
+    const unsubscribeSession = activeSession.subscribe((session) => fetchBalances(session))
 
-    // Return callback w/ interval clear + unsubscribe
+    // Return callback w/ interval clear + unsubscribes
     return () => {
-        unsubscribe()
+        unsubscribeBalances()
+        unsubscribeSession()
         clearInterval(interval)
     }
 })
