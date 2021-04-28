@@ -86,7 +86,13 @@
     }
 </style>
 
-<svelte:head />
+<svelte:head>
+    <script
+        async
+        defer
+        data-domain={isRelease ? 'wallet.greymass.com' : 'wallet-staging.greymass.com'}
+        src="https://stats.greymass.com/js/plausible.js"></script>
+</svelte:head>
 <main>
     {#if !$appReady}
         Loading...
