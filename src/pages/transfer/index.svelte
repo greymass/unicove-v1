@@ -11,6 +11,7 @@
     import {getToken, makeTokenKey} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
     import {balances, getBalance, makeBalanceKey} from '~/stores/balances'
+    import {tokens} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
     import Modal from '~/components/elements/modal.svelte'
@@ -31,7 +32,6 @@
 
     onMount(() => {
         syncTxFee()
-
         return () => {
             // on unmount
             stopSyncTxFee()
@@ -39,16 +39,16 @@
     })
 
     const token: Readable<Token | undefined> = derived(
-        [activeSession, balances, currentAccount],
-        ([$activeSession, $balances, $currentAccount]) => {
-            if (meta && $activeSession && $balances && $currentAccount) {
+        [activeSession, tokens],
+        ([$activeSession, $tokens]) => {
+            if (meta && $activeSession && $tokens) {
                 const params: TokenKeyParams = {
                     chainId: $activeBlockchain.chainId,
                     contract: Name.from(meta.params.contract),
                     name: Name.from(meta.params.token),
                 }
                 const key = makeTokenKey(params)
-                return getToken(key)
+                return $tokens.find((t) => t.key === key)
             }
         }
     )
