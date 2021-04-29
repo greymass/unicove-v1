@@ -1,11 +1,10 @@
-import {Asset, Serializer} from '@greymass/eosio'
+import {Serializer} from '@greymass/eosio'
 import {readable, derived, flatten, ReadableResult} from 'svelte-result-store'
 
 import {DelphiOracleDatapoint, DelphiOraclePair} from '~/abi-types'
 import {getClient} from '~/api-client'
 import {ChainConfig, ChainFeatures} from '~/config'
 import {cachedRead} from '~/db'
-import {Token, updateTokenPrice} from '~/stores/tokens'
 
 /** How often to update prices.  */
 const UPDATE_INTERVAL = 1 * 60 * 1000 // 1 minute
@@ -134,16 +133,6 @@ export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResu
                 // all prices are zero on testnets
                 return 0
             } else if ($datapoint && $pair) {
-                const symbol = Asset.Symbol.from($pair.base_symbol)
-                const token: Token = {
-                    chainId: chain.chainId,
-                    contract: $pair.base_contract,
-                    symbol,
-                    name: symbol.name,
-                }
-                const price =
-                    $datapoint.median.toNumber() / Math.pow(10, $pair.quoted_precision.toNumber())
-                updateTokenPrice(token, price)
                 return (
                     $datapoint.median.toNumber() / Math.pow(10, $pair.quoted_precision.toNumber())
                 )

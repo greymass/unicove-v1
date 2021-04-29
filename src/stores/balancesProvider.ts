@@ -1,0 +1,110 @@
+import type {LinkSession} from 'anchor-link'
+import {Asset} from 'anchor-link'
+import {get, writable} from 'svelte/store'
+import type {Writable} from 'svelte/store'
+
+import {chainConfig} from '~/config'
+import {activeSession} from '~/store'
+import {makeTokenKey, Token} from '~/stores/tokens'
+
+import {Balance, createBalanceFromToken} from '~/stores/balances'
+
+interface RawTokenBalance {
+    currency: string
+    amount: number
+    usd_value: number
+    decimals: number
+    contract: string
+    metadata: {
+        logo?: string
+    }
+}
+
+export const isLoading: Writable<boolean> = writable(false)
+
+export const balancesProvider: Writable<Balance[]> = writable([], () => {
+    // Update on a set interval
+    const interval = setInterval(() => {
+        const session = get(activeSession)
+        if (session) {
+            updateBalances(session)
+        }
+    }, 30000)
+
+    // Subscribe to changes to the active session and update on change
+    const unsubscribe = activeSession.subscribe((session) => {
+        if (session) {
+            updateBalances(session)
+        }
+    })
+
+    return () => {
+        unsubscribe()
+        clearInterval(interval)
+    }
+})
+
+export const tokensProvider: Writable<Token[]> = writable([])
+
+export async function updateBalances(session: LinkSession) {
+    isLoading.set(true)
+    const data = await fetchData(session)
+    const balances = parseTokenBalances(session, data)
+    balancesProvider.set(balances)
+    const tokens = parseTokens(session, data)
+    tokensProvider.set(tokens)
+    isLoading.set(false)
+}
+
+async function fetchData(session: LinkSession) {
+    const chain = chainConfig(session.chainId)
+    const apiUrl = `https://www.api.bloks.io${chain.id === 'eos' ? '' : `/${chain.id}`}/account/${
+        session.auth.actor
+    }?type=getAccountTokens&coreSymbol=${chain.coreTokenSymbol}`
+
+    const apiResponse = await fetch(apiUrl).catch((error) => {
+        console.log('An error occured while fetching token balances:', {error})
+    })
+
+    const jsonBody =
+        apiResponse &&
+        (await apiResponse.json().catch((error) => {
+            console.log('An error occured while parsing the token balances response body:', {
+                error,
+            })
+        }))
+
+    return jsonBody.tokens
+}
+
+function parseTokenInfo(session: LinkSession, balance: RawTokenBalance): Token {
+    const chain = chainConfig(session.chainId)
+    const symbol: Asset.Symbol = Asset.Symbol.from(`${balance.decimals},${balance.currency}`)
+    const key = makeTokenKey({
+        chainId: chain.chainId,
+        contract: balance.contract,
+        name: symbol.name,
+    })
+    return {
+        key,
+        chainId: chain.chainId,
+        contract: balance.contract,
+        symbol: symbol,
+        name: symbol.name,
+        price: balance.usd_value / balance.amount,
+        logo: balance.metadata?.logo,
+    }
+}
+
+function parseTokens(session: LinkSession, balances: RawTokenBalance[]) {
+    return balances.map((balance) => parseTokenInfo(session, balance))
+}
+
+function parseTokenBalances(session: LinkSession, balances: RawTokenBalance[]) {
+    return balances.map((balance) => {
+        const symbol: Asset.Symbol = Asset.Symbol.from(`${balance.decimals},${balance.currency}`)
+        const token = parseTokenInfo(session, balance)
+        const asset = Asset.from(balance.amount || 0, symbol)
+        return createBalanceFromToken(session, token, asset)
+    })
+}

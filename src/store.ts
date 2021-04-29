@@ -4,7 +4,6 @@ import {loadAccount} from './account-cache'
 import type {SessionLike} from './auth'
 import {chainConfig, chains} from './config'
 import {Preferences} from './preferences'
-import {addCoreTokenBalance} from './stores/balances'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
@@ -52,10 +51,6 @@ export const currentAccount = derived<typeof activeSession, API.v1.AccountObject
                 if (assets) {
                     account!.core_liquid_balance = assets[0]!
                 }
-            }
-
-            if (account?.core_liquid_balance) {
-                addCoreTokenBalance(session, account.core_liquid_balance)
             }
 
             set(account)

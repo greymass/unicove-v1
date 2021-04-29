@@ -23,7 +23,7 @@
         [activeSession, balances, currentAccount, query],
         ([$activeSession, $balances, $currentAccount, $query]) => {
             if ($activeSession && $balances && $currentAccount) {
-                return $balances.records.filter((b) => {
+                return $balances.filter((b) => {
                     const matchesChain = b.chainId.equals($activeSession.chainId)
                     const matchesAccount = b.account.equals($activeSession.auth.actor)
                     let matchesQuery = true
@@ -40,7 +40,7 @@
     const records: Readable<Record[]> = derived([matching, tokens], ([$matching, $tokens]) => {
         if ($matching) {
             return $matching.map((balance) => {
-                const token = $tokens.records.find((t) => t.key === balance.tokenKey)
+                const token = $tokens.find((t) => t.key === balance.tokenKey)
                 const record: Record = {
                     balance,
                     token,

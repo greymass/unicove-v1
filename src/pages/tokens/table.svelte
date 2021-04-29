@@ -3,17 +3,17 @@
     import type {Readable} from 'svelte/store'
 
     import {activeSession} from '~/store'
-    import type {Balance, BalancesStore} from '~/stores/balances'
+    import type {Balance} from '~/stores/balances'
 
     import TokenRow from '~/pages/tokens/row.svelte'
 
-    export let balances: Readable<BalancesStore | undefined>
+    export let balances: Readable<Balance[] | undefined>
 
     const records: Readable<Balance[] | undefined> = derived(
         [activeSession, balances],
         ([$activeSession, $balances]) => {
             if ($activeSession && $balances) {
-                return $balances.records.filter(
+                return $balances.filter(
                     (b) =>
                         b.chainId.equals($activeSession.chainId) &&
                         b.account.equals($activeSession.auth.actor)

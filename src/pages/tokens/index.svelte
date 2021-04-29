@@ -12,6 +12,7 @@
     import Icon from '~/components/elements/icon.svelte'
 
     import TokenTable from '~/pages/tokens/table.svelte'
+    import {isLoading} from '~/stores/balancesProvider'
 
     const price = priceTicker($activeBlockchain).catch((error) => {
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
@@ -22,7 +23,7 @@
         ([$activeSession, $balances, $price]) => {
             let value = 0
             if ($activeSession && $balances && $price) {
-                $balances.records
+                $balances
                     .filter((record) => record.account.equals($activeSession.auth.actor))
                     .map((record) => {
                         const token = getToken(record.tokenKey)
@@ -109,7 +110,7 @@
     <span slot="controls">
         <div class="options">
             <Button on:action={refresh}>
-                <Icon name="refresh-cw" />
+                <Icon loading={$isLoading} name="refresh-cw" />
             </Button>
         </div>
     </span>

@@ -3,16 +3,16 @@
     import type {Readable} from 'svelte/store'
 
     import {tokens} from '~/stores/tokens'
-    import type {TokenRecord} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
+    import type {Token} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
 
     export let balance: Balance
 
-    let token: Readable<TokenRecord | undefined> = derived([tokens], ([$tokens]) =>
-        $tokens.records.find((t) => t.key === balance.tokenKey)
+    let token: Readable<Token | undefined> = derived([tokens], ([$tokens]) =>
+        $tokens.find((t) => t.key === balance.tokenKey)
     )
 
     function fiatFormat(value: number) {
@@ -68,24 +68,30 @@
     }
 </style>
 
-{#if $token}
-    <tr>
-        <td>
+<tr>
+    <td>
+        {#if $token}
             <img alt={String($token.name)} src={$token.logo} />
-        </td>
-        <td>
+        {/if}
+    </td>
+    <td>
+        {#if $token}
             {$token.name}
-        </td>
-        <td>
-            {String(balance.quantity).split(' ')[0]}
-        </td>
-        <td class="mobile-hidden">
-            {#if $token.price}
-                <p>{fiatFormat($token.price * balance.quantity.value)}</p>
-                <p>{fiatFormat($token.price)}/{balance.quantity.symbol.name}</p>
-            {/if}
-        </td>
-        <td>
+        {:else}
+            {balance.quantity.symbol.name}
+        {/if}
+    </td>
+    <td>
+        {String(balance.quantity).split(' ')[0]}
+    </td>
+    <td class="mobile-hidden">
+        {#if $token && $token.price}
+            <p>{fiatFormat($token.price * balance.quantity.value)}</p>
+            <p>{fiatFormat($token.price)}/{balance.quantity.symbol.name}</p>
+        {/if}
+    </td>
+    <td>
+        {#if $token}
             <Button
                 href={`/transfer/${String($token.contract).toLowerCase()}/${String(
                     $token.name
@@ -93,6 +99,6 @@
             >
                 <Icon name="send" />
             </Button>
-        </td>
-    </tr>
-{/if}
+        {/if}
+    </td>
+</tr>
