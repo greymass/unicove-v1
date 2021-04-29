@@ -6,11 +6,11 @@
     import {Asset, Name} from 'anchor-link'
 
     import {FIOTransfer, Transfer} from '~/abi-types'
-    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import {activeBlockchain, activeSession} from '~/store'
     import type {Token, TokenKeyParams} from '~/stores/tokens'
-    import {getToken, makeTokenKey} from '~/stores/tokens'
+    import {makeTokenKey} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
-    import {balances, getBalance, makeBalanceKey} from '~/stores/balances'
+    import {getBalance, makeBalanceKey} from '~/stores/balances'
     import {tokens} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'

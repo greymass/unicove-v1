@@ -5,7 +5,7 @@ import type {Readable, Writable} from 'svelte/store'
 
 import {chainConfig} from '~/config'
 import {activeBlockchain, activeSession} from '~/store'
-import {balancesProvider, tokensProvider} from './balancesProvider'
+import {balancesProvider} from './balancesProvider'
 import {priceTicker} from '~/price-ticker'
 
 export interface Token {
