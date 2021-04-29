@@ -29,7 +29,7 @@ export const balances: Readable<Balance[]> = derived(
             )
         }
         // Push balances in as received by the balance provider
-        records.push(...$balancesProvider)
+        records.push(...$balancesProvider.balances)
         set(records)
     },
     initialBalances

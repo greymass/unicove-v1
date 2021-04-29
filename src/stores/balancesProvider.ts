@@ -22,7 +22,17 @@ interface RawTokenBalance {
 
 export const isLoading: Writable<boolean> = writable(false)
 
-export const balancesProvider: Writable<Balance[]> = writable([], () => {
+interface BalancesProvider {
+    balances: Balance[]
+    tokens: Token[]
+}
+
+const initialBalances: BalancesProvider = {
+    balances: [],
+    tokens: [],
+}
+
+export const balancesProvider: Writable<BalancesProvider> = writable(initialBalances, () => {
     // Update on a set interval
     const interval = setInterval(() => {
         const session = get(activeSession)
@@ -44,15 +54,15 @@ export const balancesProvider: Writable<Balance[]> = writable([], () => {
     }
 })
 
-export const tokensProvider: Writable<Token[]> = writable([])
-
 export async function updateBalances(session: LinkSession) {
     isLoading.set(true)
     const data = await fetchData(session)
     const balances = parseTokenBalances(session, data)
-    balancesProvider.set(balances)
     const tokens = parseTokens(session, data)
-    tokensProvider.set(tokens)
+    balancesProvider.set({
+        balances,
+        tokens,
+    })
     isLoading.set(false)
 }
 

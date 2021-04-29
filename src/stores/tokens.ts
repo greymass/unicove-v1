@@ -5,7 +5,7 @@ import type {Readable, Writable} from 'svelte/store'
 
 import {chainConfig} from '~/config'
 import {activeBlockchain, activeSession} from '~/store'
-import {tokensProvider} from './balancesProvider'
+import {balancesProvider, tokensProvider} from './balancesProvider'
 import {priceTicker} from '~/price-ticker'
 
 export interface Token {
@@ -29,8 +29,8 @@ const initialTokens: Token[] = []
 export const coreTokenPrice: Writable<number> = writable(0)
 
 export const tokens: Readable<Token[]> = derived(
-    [activeBlockchain, activeSession, coreTokenPrice, tokensProvider],
-    ([$activeBlockchain, $activeSession, $coreTokenPrice, $tokensProvider], set) => {
+    [activeBlockchain, activeSession, coreTokenPrice, balancesProvider],
+    ([$activeBlockchain, $activeSession, $coreTokenPrice, $balancesProvider], set) => {
         const prices = priceTicker($activeBlockchain)
         const unsubscribe = prices.subscribe((ticker) => coreTokenPrice.set(Number(ticker.value)))
 
@@ -42,7 +42,7 @@ export const tokens: Readable<Token[]> = derived(
         }
 
         // Push tokens in as received by the balance provider
-        records.push(...$tokensProvider)
+        records.push(...$balancesProvider.tokens)
 
         set(records)
         return () => {
