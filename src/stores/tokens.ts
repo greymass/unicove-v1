@@ -31,7 +31,6 @@ export const coreTokenPrice: Writable<number> = writable(0)
 export const tokens: Readable<Token[]> = derived(
     [activeBlockchain, activeSession, coreTokenPrice, tokensProvider],
     ([$activeBlockchain, $activeSession, $coreTokenPrice, $tokensProvider], set) => {
-        // const ticker =
         const prices = priceTicker($activeBlockchain)
         const unsubscribe = prices.subscribe((ticker) => coreTokenPrice.set(Number(ticker.value)))
 
