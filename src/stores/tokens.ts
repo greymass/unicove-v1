@@ -1,12 +1,11 @@
 import type {Asset} from 'anchor-link'
 import type {ChainId, NameType} from 'anchor-link'
-import {derived, get, writable} from 'svelte/store'
-import type {Readable, Writable} from 'svelte/store'
+import {derived, get} from 'svelte/store'
+import type {Readable} from 'svelte/store'
 
 import {chainConfig} from '~/config'
-import {activeBlockchain, activeSession} from '~/store'
+import {activePriceTicker, activeSession} from '~/store'
 import {balancesProvider} from './balancesProvider'
-import {priceTicker} from '~/price-ticker'
 
 export interface Token {
     key: string
@@ -26,28 +25,20 @@ export interface TokenKeyParams {
 
 const initialTokens: Token[] = []
 
-export const coreTokenPrice: Writable<number> = writable(0)
-
 export const tokens: Readable<Token[]> = derived(
-    [activeBlockchain, activeSession, coreTokenPrice, balancesProvider],
-    ([$activeBlockchain, $activeSession, $coreTokenPrice, $balancesProvider], set) => {
-        const prices = priceTicker($activeBlockchain)
-        const unsubscribe = prices.subscribe((ticker) => coreTokenPrice.set(Number(ticker.value)))
-
+    [activePriceTicker, activeSession, balancesProvider],
+    ([$activePriceTicker, $activeSession, $balancesProvider], set) => {
         const records = []
 
         // Push any core balance information in from the current account
-        if ($activeSession) {
-            records.push(createTokenFromChainId($activeSession.chainId, $coreTokenPrice))
+        if ($activeSession && $activePriceTicker) {
+            records.push(createTokenFromChainId($activeSession.chainId, $activePriceTicker))
         }
 
         // Push tokens in as received by the balance provider
         records.push(...$balancesProvider.tokens)
 
         set(records)
-        return () => {
-            unsubscribe()
-        }
     },
     initialTokens
 )
