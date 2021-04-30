@@ -67,11 +67,6 @@ export function createBalanceFromToken(
     return record
 }
 
-export function getBalance(key: string) {
-    const existing = get(balances)
-    return existing.find((t) => t.key === key)
-}
-
 export async function fetchBalances(session: LinkSession | undefined, refresh = false) {
     if (session) {
         // Refresh the active sessions account

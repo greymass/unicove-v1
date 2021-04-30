@@ -8,10 +8,9 @@
     import {FIOTransfer, Transfer} from '~/abi-types'
     import {activeBlockchain, activeSession} from '~/store'
     import type {Token, TokenKeyParams} from '~/stores/tokens'
-    import {makeTokenKey} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
-    import {getBalance, makeBalanceKey} from '~/stores/balances'
-    import {tokens} from '~/stores/tokens'
+    import {balances, makeBalanceKey} from '~/stores/balances'
+    import {tokens, makeTokenKey} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
     import Modal from '~/components/elements/modal.svelte'
@@ -41,6 +40,7 @@
     const token: Readable<Token | undefined> = derived(
         [activeSession, tokens],
         ([$activeSession, $tokens]) => {
+            // console.log(meta, $activeSession, $tokens)
             if (meta && $activeSession && $tokens) {
                 const params: TokenKeyParams = {
                     chainId: $activeBlockchain.chainId,
@@ -48,6 +48,8 @@
                     name: Name.from(meta.params.token),
                 }
                 const key = makeTokenKey(params)
+                console.log(key)
+                console.log($tokens.find((t) => t.key === key))
                 return $tokens.find((t) => t.key === key)
             }
         }
@@ -64,7 +66,10 @@
         [activeSession, token],
         ([$activeSession, $token]) => {
             if ($activeSession && $token) {
-                return getBalance(makeBalanceKey($token, $activeSession.auth.actor))
+                console.log($activeSession, $token)
+                const key = makeBalanceKey($token, $activeSession.auth.actor)
+                console.log(key)
+                return $balances.find((b) => (b.key = key))
             }
         }
     )
