@@ -69,9 +69,6 @@
 </script>
 
 <style type="scss">
-    :global(.darkmode) .button {
-        background-color: var(--darkmode-grey);
-    }
     .button {
         --spacing: 4px; // between items in button
         --radius: 8px; // corner radius of button

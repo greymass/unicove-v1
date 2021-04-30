@@ -30,15 +30,6 @@
         }
     }
 
-    :global(.darkmode) {
-        aside {
-            background-color: var(--darkmode-dark-grey);
-        }
-        .header {
-            border-bottom: 1px solid var(--darkmode-grey);
-        }
-    }
-
     aside {
         display: none;
         position: absolute;
@@ -51,14 +42,14 @@
         overflow-x: hidden;
         overflow-y: scroll;
         background-color: var(--main-grey);
-        border-color: darkgray;
+        border-color: var(--main-grey);
         border-right-width: 2px;
         transition: left 0.3s ease-in-out;
         z-index: 1001;
     }
 
     .header {
-        border-bottom: 1px solid var(--divider-grey);
+        border-bottom: 1px solid var(--dark-grey);
         color: var(--dark-grey);
         margin: 24px;
         padding-bottom: 21px;

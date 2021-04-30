@@ -23,7 +23,7 @@
         font-size: 24px;
         line-height: 24px;
         letter-spacing: -0.47px;
-        color: var(--light-black);
+        color: var(--main-black);
         margin-top: 0.25em;
     }
     .service,

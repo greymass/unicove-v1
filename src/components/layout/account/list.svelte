@@ -67,11 +67,6 @@
 <style type="scss">
     $borderRadius: 8px;
 
-    :global(.darkmode) .list .network .accounts li.active {
-        background-color: var(--darkmode-grey);
-        color: var(--darkmode-white);
-    }
-
     .list {
         margin: 10px;
         .network {
@@ -104,9 +99,9 @@
                     user-select: none;
                     text-decoration: none;
                     &.active {
-                        background-color: white;
+                        background-color: var(--background-highlight);
+                        color: var(--main-black);
                         border-radius: $borderRadius;
-                        color: var(--light-black);
                         font-weight: 600;
                         > .icon,
                         > .control {
@@ -148,10 +143,10 @@
         margin: 0 26px;
         text-align: center;
         :global(.segment) {
-            background: #fff;
+            background: var(--background-highlight);
         }
         .circular-icon {
-            background: #f7f7fc;
+            background: var(--main-grey);
             border-radius: 50%;
             margin: 0 auto;
             position: relative;
@@ -174,7 +169,7 @@
             line-height: 14px;
             letter-spacing: 0.01px;
 
-            color: #585d6e;
+            color: var(--main-black);
             margin-top: 15px;
         }
         p {

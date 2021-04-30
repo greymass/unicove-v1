@@ -9,15 +9,6 @@
 </script>
 
 <style type="scss">
-    :global(.darkmode) tr {
-        border-bottom: 1px solid var(--darkmode-grey);
-        &:first-child {
-            border-top: 1px solid var(--darkmode-grey);
-        }
-        &:hover {
-            background-color: var(--darkmode-grey);
-        }
-    }
     tr {
         &:hover {
             background-color: var(--main-grey);

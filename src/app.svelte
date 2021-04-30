@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Route, router} from 'tinro'
 
-    import {activeSession, appReady} from '~/store'
+    import {activeSession, appReady, preferences} from '~/store'
     import {isRelease} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
@@ -13,6 +13,8 @@
     import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
+
+    $: document.body.classList.toggle('darkmode', $preferences.darkmode)
 
     $: needLogin =
         $activeSession === undefined &&
@@ -58,27 +60,38 @@
     }
 
     :root {
+        --main-white: #fff;
+        --main-black: #585d6e;
+        --main-blue: #2d8eff;
+        --main-grey: #f7f7fc;
+        --main-red: #ff931e;
+
+        --background-highlight: #fff;
+
         --dark-grey: #b7c1cb;
         --divider-grey: #e0e6ee;
         --light-black: #2c3e50;
         --light-blue: #e0eeff;
         --light-grey: #9898b5;
         --light-red: rgba(255, 146, 30, 0.1);
-        --main-black: #585d6e;
-        --main-blue: #2d8eff;
-        --main-grey: #f7f7fc;
-        --main-red: #ff931e;
+
         --success-green: #4bca81;
         --error-red: #ff0033;
 
-        --darkmode-blue: #0a84ff;
-        --darkmode-dark-grey: #2c2c2e;
-        --darkmode-grey: #3a3a3c;
-        --darkmode-light-grey: #8e8e93;
-        --darkmode-white: #eef1f5;
-        --darkmode-black: #1c1c1e;
-
         --mobile-breakpoint: 600px;
+    }
+
+    body.darkmode {
+        --main-white: #1c1c1e;
+        --main-black: #eef1f5;
+        --main-blue: #0a84ff;
+        --main-grey: #2c2c2e;
+
+        --background-highlight: #3a3a3c;
+
+        --light-blue: #3a3a3c;
+        --dark-grey: #8e8e93;
+        --divider-grey: #8e8e93;
     }
 
     main {

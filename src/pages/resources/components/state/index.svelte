@@ -15,13 +15,6 @@
         height: 32px;
         width: 32px;
     }
-    :global(.darkmode) .state {
-        background: var(--darkmode-dark-grey);
-        color: var(--darkmode-blue);
-        :global(h3) {
-            color: var(--darkmode-white);
-        }
-    }
     .state {
         position: relative;
         display: flex;
@@ -59,7 +52,7 @@
 
             letter-spacing: -0.47px;
 
-            color: var(--light-black);
+            color: var(--main-black);
         }
         :global(h3 > span) {
             font-weight: normal;

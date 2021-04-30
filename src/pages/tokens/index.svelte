@@ -50,17 +50,6 @@
 </script>
 
 <style type="scss">
-    :global(.darkmode) {
-        .container {
-            @media only screen and (max-width: 600px) {
-                .buttons-container {
-                    background: var(--darkmode-black);
-                    border-top: 1px solid var(--darkmode-grey);
-                }
-            }
-        }
-    }
-
     .container {
         @media only screen and (min-width: 600px) {
             .buttons-container {
@@ -80,8 +69,8 @@
         @media only screen and (max-width: 600px) {
             padding-bottom: 140px;
             .buttons-container {
-                background: white;
-                border-top: 1px solid var(--divider-grey);
+                background: var(--main-white);
+                border-top: 1px solid var(--main-grey);
                 display: flex;
                 flex-direction: column;
                 position: fixed;

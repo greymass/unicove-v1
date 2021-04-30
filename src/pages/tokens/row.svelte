@@ -23,15 +23,11 @@
 </script>
 
 <style type="scss">
-    :global(.darkmode) tr td {
-        border-bottom: 1px solid var(--darkmode-grey);
-    }
-
     tr {
         td {
             white-space: nowrap;
-            // overflow: hidden;
-            // text-overflow: ellipsis;
+            overflow: hidden;
+            text-overflow: ellipsis;
             text-overflow: clip;
             text-align: right;
             &:first-child,

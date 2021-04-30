@@ -47,7 +47,6 @@
         top: 12px;
         left: 12px;
         padding: 12px;
-        color: gray;
         cursor: pointer;
     }
 </style>

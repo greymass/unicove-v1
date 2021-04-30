@@ -20,12 +20,6 @@
 </script>
 
 <style type="scss">
-    :global(.darkmode) .container {
-        border-bottom: 1px solid var(--darkmode-grey);
-        &:first-child {
-            border-top: 1px solid var(--darkmode-grey);
-        }
-    }
     .container {
         display: flex;
         min-height: 60px;

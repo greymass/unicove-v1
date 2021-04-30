@@ -26,19 +26,6 @@
 </script>
 
 <style type="scss">
-    :global(.darkmode) .navigation {
-        background-color: var(--darkmode-dark-grey);
-        .title {
-            color: var(--darkmode-light-grey);
-        }
-        .items .item {
-            color: var(--darkmode-blue);
-            &.active {
-                background-color: var(--darkmode-grey);
-                color: var(--darkmode-white);
-            }
-        }
-    }
     .navigation {
         align-self: stretch;
         background-color: var(--main-grey);
@@ -61,6 +48,7 @@
             .items {
                 max-width: 100%;
                 .item {
+                    color: var(--main-blue);
                     padding: 0 10px;
                     .icon {
                         flex-grow: 0;
@@ -99,7 +87,7 @@
                 margin: 12px auto;
                 text-decoration: none;
                 &.active {
-                    background-color: white;
+                    background-color: var(--background-highlight);
                     color: var(--main-black);
                 }
                 .name {
