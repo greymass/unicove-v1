@@ -1,6 +1,6 @@
 import type {AccountName, ChainId, LinkSession, Name} from 'anchor-link'
 import type {Asset} from 'anchor-link'
-import {derived, get} from 'svelte/store'
+import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 
 import {activeSession, currentAccount} from '~/store'
