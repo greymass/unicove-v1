@@ -8,6 +8,7 @@
 
     import Login from '~/pages/login.svelte'
     import Dashboard from '~/pages/dashboard/index.svelte'
+    import Earn from '~/pages/earn/index.svelte'
     import Request from '~/pages/request/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
@@ -173,6 +174,9 @@
         <Route>
             <Route path="/">
                 <Dashboard />
+            </Route>
+            <Route path="/earn">
+                <Earn />
             </Route>
             <Route path="/transfer">
                 <Transfer />
