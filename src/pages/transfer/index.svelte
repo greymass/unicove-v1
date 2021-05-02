@@ -40,7 +40,6 @@
     const token: Readable<Token | undefined> = derived(
         [activeSession, tokens],
         ([$activeSession, $tokens]) => {
-            // console.log(meta, $activeSession, $tokens)
             if (meta && $activeSession && $tokens) {
                 const params: TokenKeyParams = {
                     chainId: $activeBlockchain.chainId,
@@ -48,8 +47,6 @@
                     name: Name.from(meta.params.token),
                 }
                 const key = makeTokenKey(params)
-                console.log(key)
-                console.log($tokens.find((t) => t.key === key))
                 return $tokens.find((t) => t.key === key)
             }
         }
@@ -66,9 +63,7 @@
         [activeSession, token],
         ([$activeSession, $token]) => {
             if ($activeSession && $token) {
-                console.log($activeSession, $token)
                 const key = makeBalanceKey($token, $activeSession.auth.actor)
-                console.log(key)
                 return $balances.find((b) => (b.key = key))
             }
         }

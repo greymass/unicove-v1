@@ -31,7 +31,7 @@ export const tokens: Readable<Token[]> = derived(
         const records = []
 
         // Push any core balance information in from the current account
-        if ($activeSession && $activePriceTicker) {
+        if ($activeSession) {
             records.push(createTokenFromChainId($activeSession.chainId, $activePriceTicker))
         }
 
