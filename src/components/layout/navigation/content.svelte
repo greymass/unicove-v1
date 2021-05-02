@@ -12,10 +12,12 @@
     const dispatch = createEventDispatcher<{collapse: boolean}>()
 
     $: currentPath = $router.path
+    $: expandAdvanced = $preferences.expandNavbarAdvanced
 
     export let expand = true
 
-    export let items: NavigationItem[] = []
+    export let primaryNavigation: NavigationItem[] = []
+    export let advancedNavigation: NavigationItem[] = []
 
     const pathMatches = (item: NavigationItem): boolean => {
         if (item.exactPath) {
@@ -80,6 +82,7 @@
             .item {
                 border-radius: 4px;
                 color: var(--main-blue);
+                cursor: pointer;
                 display: flex;
                 font-size: 13px;
                 line-height: 32px;
@@ -89,6 +92,9 @@
                 &.active {
                     background-color: var(--background-highlight);
                     color: var(--main-black);
+                }
+                &.advanced {
+                    padding-left: 2em;
                 }
                 .name {
                     display: none;
@@ -119,7 +125,7 @@
         {/if}
     </div>
     <div class="items">
-        {#each items as item}
+        {#each primaryNavigation as item}
             <a href={item.path} class="item" class:active={pathMatches(item)}>
                 <span class="icon">
                     <Icon name={item.icon} />
@@ -127,6 +133,29 @@
                 <span class="name">{item.name}</span>
             </a>
         {/each}
+        <div
+            class="item"
+            on:click={() => {
+                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
+                preferences.expandNavbarAdvanced = !expandAdvanced
+                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
+            }}
+        >
+            <span class="icon">
+                <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
+            </span>
+            <span class="name">Advanced</span>
+        </div>
+        {#if expandAdvanced}
+            {#each advancedNavigation as item}
+                <a href={item.path} class="item advanced" class:active={pathMatches(item)}>
+                    <span class="icon">
+                        <Icon name={item.icon} />
+                    </span>
+                    <span class="name">{item.name}</span>
+                </a>
+            {/each}
+        {/if}
     </div>
     <!-- <div class="footer">
         <h2>Support</h2>
