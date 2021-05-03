@@ -3,15 +3,23 @@
 </script>
 
 <script lang="ts">
-    import {icons} from 'feather-icons'
+    import {onMount} from 'svelte'
 
     export let name: string = 'help-circle'
     export let loading: boolean = false
     export let size: IconSize = 'regular'
 
-    if (!icons[name]) {
-        name = 'help-circle'
-    }
+    let icons: typeof import('feather-icons').icons | undefined
+
+    onMount(() => {
+        import('feather-icons')
+            .then((mod) => {
+                icons = mod.icons
+            })
+            .catch((error) => {
+                console.warn('Unable to load feather-icons', error)
+            })
+    })
 </script>
 
 <style type="scss">
@@ -63,5 +71,7 @@
 </style>
 
 <span class={`icon ${size}`} class:loading>
-    {@html icons[name].toSvg()}
+    {#if icons}
+        {@html (icons[name] || icons['help-circle']).toSvg()}
+    {/if}
 </span>
