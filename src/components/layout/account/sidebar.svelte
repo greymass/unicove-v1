@@ -1,28 +1,61 @@
 <script>
-    import List from './list.svelte'
+    import {activeSession, preferences} from '~/store'
+    import {activate} from '~/auth'
 
-    import xBlueIcon from '@/images/x-blue.svg'
+    import type {SessionLike} from '~/auth'
+    import List from './list.svelte'
+    import Icon from '~/components/elements/icon.svelte'
 
     export let open = false
+
+    function onSelect(session: SessionLike) {
+        activate(session)
+        open = false
+    }
 </script>
 
-<style>
-    aside {
-        height: 100%;
-        max-width: 300px;
+<style type="scss">
+    .account-button {
+        color: var(--main-black);
+        cursor: pointer;
+        font-size: 14px;
         position: absolute;
-        right: -100%;
-        transition: left 0.3s ease-in-out;
-        width: 50%;
+        right: 0;
         top: 0;
-        background-color: var(--main-grey);
-        border-color: darkgray;
-        border-right-width: 2px;
+        padding: 30px;
+        .icon {
+            color: var(--main-blue);
+            line-height: 14px;
+            margin-right: 10px;
+        }
+    }
+
+    aside {
         display: none;
+        position: absolute;
+        top: 0;
+        right: -100%;
+        height: 100%;
+        max-height: 100vh;
+        width: 268px;
+        max-width: 300px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        background-color: var(--main-grey);
+        border-color: var(--main-grey);
+        border-right-width: 2px;
+        transition: left 0.3s ease-in-out;
+        z-index: 1001;
     }
 
     .header {
-        margin: 18px;
+        border-bottom: 1px solid var(--dark-grey);
+        color: var(--dark-grey);
+        margin: 24px;
+        padding-bottom: 21px;
+        .icon {
+            color: var(--main-blue);
+        }
     }
 
     .header a {
@@ -30,30 +63,44 @@
         margin-right: 5px;
         margin-bottom: -10px;
     }
-
-    .header h2 {
-        color: var(--dark-grey);
-        font-size: 14px;
-        font-weight: normal;
-        display: inline-block;
-    }
-
     .open {
         display: block;
         right: 0;
     }
 </style>
 
+<div class="account-button">
+    {#if preferences.darkmode}
+        <span class="icon" on:click={() => (preferences.darkmode = false)}>
+            <Icon name="sun" />
+        </span>
+    {:else}
+        <span class="icon" on:click={() => (preferences.darkmode = true)}>
+            <Icon name="moon" />
+        </span>
+    {/if}
+    <span class="accounts" on:click={() => (open = true)}>
+        <span class="icon">
+            <Icon name="user" />
+        </span>
+        <span class="text">
+            {#if $activeSession}
+                {$activeSession?.auth.actor}
+            {:else}
+                Login
+            {/if}
+        </span>
+    </span>
+</div>
+
 <aside class:open>
     <div class="header">
         <!-- svelte-ignore a11y-missing-attribute -->
-        <a on:click={() => (open = false)}>
-            <img src={xBlueIcon} />
+        <a class="icon" on:click={() => (open = false)}>
+            <Icon name="x" />
         </a>
-        <h2>Accounts</h2>
-        <br />
-        <hr />
+        Accounts
     </div>
 
-    <List />
+    <List {onSelect} />
 </aside>

@@ -1,136 +1,232 @@
 <script lang="ts">
-    import type {ChainId} from 'anchor-link'
-    import type {SessionLike} from '../../../auth'
-    import {sessionEquals, activate, login, logout} from '../../../auth'
-    import {chains} from '../../../config'
+    import {ChainId} from 'anchor-link'
+    import {derived} from 'svelte/store'
+    import type {Readable} from 'svelte/store'
 
-    import {activeSession, availableSessions} from '../../../store'
+    import type {SessionLike} from '~/auth'
+    import {sessionEquals, login, logout} from '~/auth'
+    import {chains, chainConfig} from '~/config'
+    import {activeSession, availableSessions} from '~/store'
+
+    import Button from '~/components/elements/button.svelte'
+    import ButtonLogin from '~/components/elements/button/login.svelte'
+    import Icon from '~/components/elements/icon.svelte'
+    import Segment from '~/components/elements/segment.svelte'
+    import Text from '~/components/elements/text.svelte'
 
     $: isActive = (session: SessionLike) => sessionEquals(session, $activeSession!)
 
-    function chainName(chainId: ChainId) {
-        return chains.find((c) => c.chainId === String(chainId))!.name
-    }
+    export let onSelect: (session: SessionLike) => void
 
     function handleAdd() {
-        login().catch((error) => {
+        login().catch((error: any) => {
             // TODO: some sort of modal or toast for error messages like these
             console.warn('unable to add account', error)
         })
     }
 
-    // re-sort accounts since link keeps them in last used order
-    $: sortedSessions = $availableSessions.sort((a, b) => {
-        return String(a.auth.actor).localeCompare(String(b.auth.actor))
+    interface SessionGroup {
+        chainId: string
+        name: string
+        sessions: SessionLike[]
+    }
+
+    const getGroupings = (chainIds: string[]) =>
+        chainIds
+            .map((chainId) => {
+                const config = chainConfig(ChainId.from(chainId))
+                return {
+                    chainId,
+                    name: config.name,
+                    sessions: $availableSessions.filter((s) => String(s.chainId) === chainId),
+                }
+            })
+            .sort((a: SessionGroup, b: SessionGroup) => a.name.localeCompare(b.name))
+
+    const groupings: Readable<SessionGroup[]> = derived(availableSessions, ($availableSessions) => {
+        if ($availableSessions) {
+            const chainIds = [
+                ...new Set($availableSessions.map((session) => String(session.chainId))),
+            ]
+            return getGroupings(chainIds)
+        }
+        return []
     })
+
+    export let collapsed: any = {}
+
+    function toggle(chainId: string) {
+        if (collapsed[chainId] !== true) {
+            collapsed[chainId] = true
+        } else {
+            collapsed[chainId] = false
+        }
+    }
 </script>
 
-<style>
+<style type="scss">
+    $borderRadius: 8px;
+
     .list {
         margin: 10px;
+        .network {
+            .header {
+                color: var(--dark-grey);
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                font-size: 12px;
+                font-weight: 600;
+                line-height: 12px;
+                padding: 6px 10px;
+                margin-top: 26px;
+                user-select: none;
+            }
+            .accounts {
+                list-style-type: none;
+                padding: 0 16px;
+                &.collapsed {
+                    display: none;
+                }
+                li {
+                    cursor: pointer;
+                    color: var(--main-blue);
+                    display: flex;
+                    font-size: 13px;
+                    font-weight: 500;
+                    line-height: 33px;
+                    margin: 10px 0;
+                    user-select: none;
+                    text-decoration: none;
+                    &.active {
+                        background-color: var(--background-highlight);
+                        color: var(--main-black);
+                        border-radius: $borderRadius;
+                        font-weight: 600;
+                        > .icon,
+                        > .control {
+                            color: var(--main-blue);
+                        }
+                        .control {
+                            display: flex;
+                        }
+                    }
+                    > div {
+                        order: 0;
+                        flex: 0 1 auto;
+                        &.icon {
+                            color: var(--main-blue);
+                            padding: 0 8px;
+                        }
+                        &.account {
+                            flex: 1 1 auto;
+                            padding: 0 2px;
+                        }
+                        &.control {
+                            display: none;
+                            align-items: center;
+                            justify-content: center;
+                            margin: 0 10px;
+                        }
+                    }
+                }
+            }
+        }
+        :global(.button) {
+            width: 100%;
+            line-height: 1em;
+            margin-top: 2em;
+        }
     }
 
-    ul {
-        list-style-type: none;
-        padding: 10px;
-    }
-
-    button {
-        background-color: transparent;
-        border: none;
-        color: var(--main-blue);
-        font-size: 20px;
-        font-weight: bold;
-        margin-left: 10px;
-    }
-    li:hover button {
-        opacity: 0.5;
-    }
-    li button:hover {
-        opacity: 1;
-    }
-
-    li {
-        padding: 15px;
-        margin-top: 10px;
-    }
-
-    li a {
-        color: var(--main-blue);
-        margin-bottom: 10px;
-        text-decoration: none;
-        font-weight: normal;
-    }
-
-    li.active {
-        background-color: white;
-        border-radius: 3px;
-    }
-
-    li.active a {
-        color: var(--light-black);
-    }
-
-    li.add-account {
-        background-color: var(--light-blue);
-        cursor: pointer;
-        margin-top: 20px;
+    .login {
+        margin: 0 26px;
         text-align: center;
-    }
+        :global(.segment) {
+            background: var(--background-highlight);
+        }
+        .circular-icon {
+            background: var(--main-grey);
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+            height: 48px;
+            width: 48px;
+            :global(.icon) {
+                position: absolute;
+                top: 12px;
+                left: 12px;
+                right: 12px;
+                height: 24px;
+                width: 24px;
+            }
+        }
+        h3 {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 14px;
+            letter-spacing: 0.01px;
 
-    button:hover,
-    button:active,
-    button:visited,
-    button:focus {
-        border: none;
-        outline: none;
-    }
+            color: var(--main-black);
+            margin-top: 15px;
+        }
+        p {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 10px;
+            line-height: 14px;
+            letter-spacing: 0.01px;
 
-    button .dropdown-options {
-        background-color: white;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        display: none;
-        min-width: 100px;
-        padding: 0 16px;
-        position: absolute;
-        right: 0;
-        z-index: 1;
-    }
-
-    button .dropdown-options a {
-        color: var(--main-blue);
-        display: block;
-        font-size: 12px;
-        font-weight: normal;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    button:hover .dropdown-options {
-        display: block;
+            color: #9898b5;
+            margin: 7px 0 11px;
+        }
     }
 </style>
 
-<div class="list">
-    <ul>
-        {#each sortedSessions as session}
-            <li class:active={isActive(session)}>
-                <a href="#select-account" on:click|preventDefault={() => activate(session)}>
-                    {session.auth.actor}@{session.auth.permission}
-                </a>
-                <button>
-                    ...
-                    <div class="dropdown-options">
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <a on:click={() => activate(session)}> Select </a>
-                        <!-- svelte-ignore a11y-missing-attribute -->
-                        <a on:click={() => logout(session)}> Remove </a>
-                    </div>
-                </button>
-            </li>
+{#if $activeSession}
+    <div class="list">
+        {#each $groupings as group}
+            <div class="network">
+                <div class="header" on:click={() => toggle(group.chainId)}>
+                    <Text>{group.name} ({group.sessions.length})</Text>
+                    <Icon name={collapsed[group.chainId] ? 'chevron-right' : 'chevron-down'} />
+                </div>
+                <ul class="accounts" class:collapsed={collapsed[group.chainId]}>
+                    {#each group.sessions as session}
+                        <li class:active={isActive(session)}>
+                            <div class="icon" on:click={() => onSelect(session)}>
+                                <Icon name={isActive(session) ? 'user-check' : 'user'} />
+                            </div>
+                            <div class="account" on:click={() => onSelect(session)}>
+                                {session.auth.actor}
+                            </div>
+                            <div class="control" on:click={() => logout(session)}>
+                                <Icon name="log-out" size="large" />
+                            </div>
+                        </li>
+                    {/each}
+                </ul>
+            </div>
         {/each}
-        <li class="add-account">
-            <a on:click|preventDefault={handleAdd} href="#add-account"> Add account </a>
-        </li>
-    </ul>
-</div>
+        <Button primary on:action={handleAdd}>Add another Account</Button>
+    </div>
+{:else}
+    <div class="login">
+        <Segment>
+            <div class="circular-icon">
+                <Icon size="medium" name="user-check" />
+            </div>
+            <h3>Supported blockchains</h3>
+            <p>
+                {chains
+                    .filter((chain) => !chain.testnet)
+                    .map((chain) => chain.name)
+                    .join(', ')}
+            </p>
+            <ButtonLogin>Login</ButtonLogin>
+        </Segment>
+    </div>
+{/if}

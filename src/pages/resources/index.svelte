@@ -1,30 +1,65 @@
 <script lang="ts">
-    import {currentAccount} from '~/store'
+    import {Route} from 'tinro'
 
     import Page from '~/components/layout/page.svelte'
-    import ResourcesNavigation from './components/navigation.svelte'
 
-    // force type to be unwrapped since we cannot use typescript inside svelte templates
-    $: account = $currentAccount!
+    import ResourcesOverview from '~/pages/resources/pages/index.svelte'
+    import ResourcesOverviewCpu from '~/pages/resources/pages/cpu.svelte'
+    import ResourcesOverviewNet from '~/pages/resources/pages/net.svelte'
+    import ResourcesRAMBuy from '~/pages/resources/pages/ram/buy.svelte'
+    import ResourcesRAMSell from '~/pages/resources/pages/ram/sell.svelte'
+    import ResourcesCPUFuel from '~/pages/resources/pages/cpu/fuel.svelte'
+    import ResourcesCPUPowerUp from '~/pages/resources/pages/cpu/powerup.svelte'
+    import ResourcesCPUREX from '~/pages/resources/pages/cpu/rex.svelte'
+    import ResourcesNETFuel from '~/pages/resources/pages/net/fuel.svelte'
+    import ResourcesNETPowerUp from '~/pages/resources/pages/net/powerup.svelte'
+    import ResourcesNETREX from '~/pages/resources/pages/net/rex.svelte'
+    import ResourcesCPUStaking from '~/pages/resources/pages/cpu/staking.svelte'
+    import ResourcesNETStaking from '~/pages/resources/pages/net/staking.svelte'
 </script>
 
-<Page title="Resources">
-    <ResourcesNavigation />
-    {#if account}
-        Available Resources
-        <ul>
-            <li>
-                CPU: {(1 - account.cpu_limit.used.toNumber() / account.cpu_limit.max.toNumber()) *
-                    100}% ({account.cpu_limit.used} of {account.cpu_limit.max})
-            </li>
-            <li>
-                NET: {(1 - account.net_limit.used.toNumber() / account.net_limit.max.toNumber()) *
-                    100}% ({account.net_limit.used} of {account.net_limit.max})
-            </li>
-            <li>
-                RAM: {(1 - account.ram_usage.toNumber() / account.ram_quota.toNumber()) * 100}% ({account.ram_usage}
-                of {account.ram_quota})
-            </li>
-        </ul>
-    {/if}
+<Page title="Network Resources">
+    <Route path="/">
+        <ResourcesOverview />
+    </Route>
+    <!-- CPU -->
+    <Route path="/cpu">
+        <ResourcesOverviewCpu />
+    </Route>
+    <Route path="/cpu/fuel">
+        <ResourcesCPUFuel />
+    </Route>
+    <Route path="/cpu/powerup">
+        <ResourcesCPUPowerUp />
+    </Route>
+    <Route path="/cpu/rex">
+        <ResourcesCPUREX />
+    </Route>
+    <!-- NET -->
+    <Route path="/net">
+        <ResourcesOverviewNet />
+    </Route>
+    <Route path="/net/fuel">
+        <ResourcesNETFuel />
+    </Route>
+    <Route path="/net/powerup">
+        <ResourcesNETPowerUp />
+    </Route>
+    <Route path="/net/rex">
+        <ResourcesNETREX />
+    </Route>
+    <!-- RAM -->
+    <Route path="/ram/buy">
+        <ResourcesRAMBuy />
+    </Route>
+    <Route path="/ram/sell">
+        <ResourcesRAMSell />
+    </Route>
+    <!-- Staking -->
+    <Route path="/cpu/stake">
+        <ResourcesCPUStaking />
+    </Route>
+    <Route path="/net/stake">
+        <ResourcesNETStaking />
+    </Route>
 </Page>

@@ -8,6 +8,15 @@ export class Preferences implements Readable<Preferences> {
     /** Whether the side navigation bar is expanded. */
     @Setting({default: false}) expandNavbar!: boolean
 
+    /** Whether the side navigation bar advanced section is expanded. */
+    @Setting({default: false}) expandNavbarAdvanced!: boolean
+
+    /** Dark mode */
+    @Setting({
+        default: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+    })
+    darkmode!: boolean
+
     /** Preferences singleton. */
     static shared = new Preferences()
 

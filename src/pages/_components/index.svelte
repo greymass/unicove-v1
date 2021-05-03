@@ -1,9 +1,25 @@
 <script lang="ts">
-    import {Route, active} from 'tinro'
+    import {Route} from 'tinro'
 
     import Buttons from './buttons.svelte'
+    import Forms from './forms.svelte'
+    import Icons from './icons.svelte'
+    import Inputs from './inputs.svelte'
+    import Progress from './progress.svelte'
+    import Modals from './modals.svelte'
+    import Segments from './segments.svelte'
 
-    const routes = [{name: 'Buttons', path: 'buttons', component: Buttons}]
+    import Nav from '~/components/elements/nav.svelte'
+
+    const routes = [
+        {name: 'Buttons', path: 'buttons', component: Buttons},
+        {name: 'Forms', path: 'forms', component: Forms},
+        {name: 'Icons', path: 'icons', component: Icons},
+        {name: 'Inputs', path: 'inputs', component: Inputs},
+        {name: 'Progress Bar', path: 'progress', component: Progress},
+        {name: 'Modals', path: 'modals', component: Modals},
+        {name: 'Segments', path: 'segment', component: Segments},
+    ]
 </script>
 
 <style type="scss">
@@ -11,42 +27,13 @@
         font-size: 24px;
         font-weight: bold;
         letter-spacing: -0.47px;
+        margin-bottom: 16px;
     }
     header {
         display: flex;
         flex-direction: column;
-        gap: 16px;
         padding: 16px;
         background-color: var(--main-grey);
-    }
-    nav {
-        ul {
-            gap: 8px;
-            display: inline-flex;
-            flex-wrap: wrap;
-        }
-        a {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--main-blue);
-            border-radius: 8px;
-            display: block;
-            line-height: 32px;
-            background: white;
-            padding: 0 10px;
-            text-decoration: none;
-            border: 1px solid var(--main-grey);
-            &:hover {
-                border-color: var(--light-blue);
-            }
-            &:active {
-                border-color: var(--main-blue);
-            }
-        }
-        :global(a.active) {
-            background: var(--main-blue);
-            color: white;
-        }
     }
     hr {
         margin: 0;
@@ -76,27 +63,11 @@
 <Route path="/*">
     <header>
         <h1>Component library 🦄</h1>
-        <nav>
-            <ul>
-                <li>
-                    <a href={`/_components`} use:active exact>All</a>
-                </li>
-                {#each routes as route}
-                    <li>
-                        <a href={`/_components/${route.path}`} use:active>{route.name}</a>
-                    </li>
-                {/each}
-            </ul>
-        </nav>
+        <Nav {routes} home="Overview" />
     </header>
     <hr />
     <section>
-        {#each routes as route}
-            <Route path={`/${route.path}`}>
-                <svelte:component this={route.component} />
-            </Route>
-        {/each}
-        <Route fallback>
+        <Route path="/">
             {#each routes as route}
                 <div class="component">
                     <h2>{route.name}</h2>
@@ -105,5 +76,14 @@
                 </div>
             {/each}
         </Route>
+        {#each routes as route}
+            <Route path={`/${route.path}`}>
+                <div class="component">
+                    <h2>{route.name}</h2>
+                    <hr />
+                    <svelte:component this={route.component} />
+                </div>
+            </Route>
+        {/each}
     </section>
 </Route>

@@ -11,22 +11,30 @@
         "buffer": false
     },
     "dependencies": {
-        "anchor-link": "^3.0.0-rc",
-        "anchor-link-browser-transport": "^3.0.0-rc",
+        "@greymass/eosio": "^0.4.2",
+        "@greymass/eosio-resources": "0.6.3",
+        "@types/feather-icons": "^4.7.0",
+        "anchor-link": "^3.1.0",
+        "anchor-link-browser-transport": "^3.0.0",
+        "feather-icons": "^4.28.0",
         "idb": "^6.0.0",
         "inter-ui": "^3.15.0",
-        "tinro": "^0.5.6"
+        "pako": "^2.0.3",
+        "svelte-qrcode": "^1.0.0",
+        "svelte-result-store": "^1.0.6",
+        "tinro": "^0.6.0"
     },
     "devDependencies": {
         "@snowpack/plugin-svelte": "^3.4.0",
         "@snowpack/plugin-typescript": "^1.1.1",
         "@snowpack/plugin-webpack": "^2.2.0",
+        "@types/pako": "^1.0.1",
         "@types/snowpack-env": "^2.3.2",
         "@typescript-eslint/eslint-plugin": "^4.10.0",
         "@typescript-eslint/parser": "^4.10.0",
         "autoprefixer": "^10.1.0",
         "eslint": "^7.15.0",
-        "eslint-config-prettier": "^7.0.0",
+        "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-prettier": "^3.3.0",
         "eslint-plugin-svelte3": "^3.0.0",
         "postcss": "^8.2.1",
@@ -34,8 +42,8 @@
         "prettier-plugin-svelte": "^2.1.0",
         "sass": "^1.30.0",
         "snowpack": "^3.0.5",
-        "svelte": "^3.31.0",
-        "svelte-check": "^1.1.27",
+        "svelte": "^3.35.0",
+        "svelte-check": "^1.1.33",
         "svelte-preprocess": "^4.6.1",
         "typescript": "^4.1.3"
     }

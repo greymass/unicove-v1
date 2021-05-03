@@ -1,74 +1,101 @@
 <script lang="ts">
-    import AccountSidebar from './account/sidebar.svelte'
-    import Navigation from './navigation/index.svelte'
-    import Footer from './footer.svelte'
-
     import {activeSession} from '~/store'
 
-    import blueUserIcon from '@/images/user-blue.svg'
-    import greyUserIcon from '@/images/user-grey.svg'
+    import AccountSidebar from '~/components/layout/account/sidebar.svelte'
+    import Header from '~/components/layout/header.svelte'
+    import Navigation from '~/components/layout/navigation/index.svelte'
 
     /** Title of the page. */
-    export let title: string
+    export let title: string = ''
+    export let subtitle: string = ''
 
     let accountSidebar = false
+    let navigationSidebar = false
 </script>
 
-<style>
+<style type="scss">
     .layout {
         display: flex;
-        height: 100%;
+        flex: 1;
+        height: 100vh;
+        background: var(--main-white);
+        color: var(--main-black);
     }
 
-    .account-button {
+    .dimmer {
+        display: none;
         position: absolute;
-        right: 0;
+        height: 100vh;
+        width: 100vw;
+        left: 0;
         top: 0;
-        padding: 30px;
-    }
-
-    .account-button a {
-        color: var(--light-grey);
-        font-size: 12px;
-        cursor: pointer;
+        z-index: 1000 !important;
+        background-color: rgba(0, 0, 0, 0.5);
+        &.active {
+            display: block;
+        }
     }
 
     .main {
         flex-grow: 1;
-        padding: 30px;
-        min-height: 90vh;
+        min-height: 100vh;
+        width: 100%;
+        overflow: auto;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .controls,
+    .title {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex: 1;
     }
 
     .content {
-        margin: 45px;
-        min-height: 60vh;
+        margin: 80px 45px 0;
     }
 
-    .content h1 {
-        margin-bottom: 20px;
+    @media only screen and (max-width: 600px) {
+        .content {
+            margin: 80px 10px 0;
+        }
     }
 </style>
 
-<section>
-    <div class="layout">
-        <Navigation />
-        <AccountSidebar bind:open={accountSidebar} />
+<div class="layout">
+    {#if $activeSession}
+        <Navigation bind:open={navigationSidebar} />
+    {/if}
+    <AccountSidebar bind:open={accountSidebar} />
+    <div
+        class="dimmer"
+        class:active={accountSidebar || navigationSidebar}
+        on:click={() => {
+            accountSidebar = false
+            navigationSidebar = false
+        }}
+    />
 
-        <div class="account-button">
-            <!-- FIXME: this should be a button component -->
-            <!-- svelte-ignore a11y-missing-attribute -->
-            <a on:click={() => (accountSidebar = true)}>
-                <img src={accountSidebar ? greyUserIcon : blueUserIcon} />
-                &nbsp;
-                {$activeSession?.auth.actor}
-            </a>
-        </div>
-        <div class="main">
-            <div class="content">
-                <h1>{title}</h1>
-                <slot />
+    <div class="main">
+        <div class="content">
+            <div class="header">
+                <div class="title">
+                    <Header {title} {subtitle} />
+                </div>
+                {#if $$slots.controls}
+                    <div class="controls">
+                        <slot name="controls" />
+                    </div>
+                {/if}
             </div>
-            <Footer />
+            <slot />
         </div>
     </div>
-</section>
+</div>

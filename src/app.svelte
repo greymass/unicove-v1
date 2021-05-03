@@ -1,30 +1,30 @@
 <script lang="ts">
     import {Route, router} from 'tinro'
-    import {activeSession, appReady} from '~/store'
-    import {version, isRelease} from '~/config'
+
+    import {activeSession, appReady, preferences} from '~/store'
+    import {isRelease} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
 
-    import Dashboard from '~/pages/dashboard.svelte'
     import Login from '~/pages/login.svelte'
-    import Transfer from '~/pages/transfer.svelte'
+    import Request from '~/pages/request/index.svelte'
+    import TransferSelect from '~/pages/transfer/select.svelte'
+    import Transfer from '~/pages/transfer/index.svelte'
+    import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
-    import ResourcesFuel from '~/pages/resources/fuel.svelte'
-    import ResourcesPowerUp from '~/pages/resources/powerup.svelte'
-    import ResourcesRex from '~/pages/resources/rex.svelte'
-    import ResourcesStaked from '~/pages/resources/staking.svelte'
     import Components from './pages/_components/index.svelte'
 
-    $: needLogin = $activeSession === null && !$router.path.startsWith('/_components')
+    $: document.body.classList.toggle('darkmode', $preferences.darkmode)
+
+    $: needLogin =
+        $activeSession === undefined &&
+        !$router.path.startsWith('/_components') &&
+        !$router.path.startsWith('/request')
 </script>
 
 <style lang="scss" global>
     @import './style/reset.scss';
     @import './style/global.scss';
-
-    main {
-        height: 100%;
-    }
 
     #greymass-wallet-version {
         font-size: 0.2em;
@@ -35,18 +35,78 @@
         pointer-events: none;
     }
 
-    :global(:root) {
+    html {
+        height: 100%;
+        overflow: auto;
+    }
+    body {
+        height: 100%;
+    }
+
+    label,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    tr,
+    td {
+        color: var(--main-black);
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    :root {
+        --main-white: #fff;
+        --main-black: #585d6e;
         --main-blue: #2d8eff;
         --main-grey: #f7f7fc;
-        --main-black: #585d6e;
-        --light-black: #2c3e50;
-        --light-grey: #9898b5;
+        --main-red: #ff931e;
+
+        --background-highlight: #fff;
+
         --dark-grey: #b7c1cb;
+        --divider-grey: #e0e6ee;
+        --light-black: #2c3e50;
         --light-blue: #e0eeff;
+        --light-grey: #9898b5;
+        --light-red: rgba(255, 146, 30, 0.1);
+
+        --success-green: #4bca81;
+        --error-red: #ff0033;
+
+        --mobile-breakpoint: 600px;
+    }
+
+    body.darkmode {
+        --main-white: #1c1c1e;
+        --main-black: #eef1f5;
+        --main-blue: #0a84ff;
+        --main-grey: #2c2c2e;
+
+        --background-highlight: #3a3a3c;
+
+        --light-blue: #3a3a3c;
+        --dark-grey: #8e8e93;
+        --divider-grey: #8e8e93;
+    }
+
+    main {
+        min-height: 100vh;
     }
 </style>
 
-<svelte:head />
+<svelte:head>
+    <script
+        async
+        defer
+        data-domain={isRelease ? 'wallet.greymass.com' : 'wallet-staging.greymass.com'}
+        src="https://stats.greymass.com/js/plausible.exclusions.js"
+        data-exclude="/account/*, /request/*"></script>
+</svelte:head>
 <main>
     {#if !$appReady}
         Loading...
@@ -55,27 +115,19 @@
     {:else}
         <Route>
             <Route path="/">
-                <Dashboard />
+                <Tokens />
             </Route>
             <Route path="/transfer">
-                <Transfer />
+                <TransferSelect />
             </Route>
-            <Route path="/resources/*" firstmatch>
-                <Route path="/">
-                    <Resources />
-                </Route>
-                <Route path="/fuel">
-                    <ResourcesFuel />
-                </Route>
-                <Route path="/powerup">
-                    <ResourcesPowerUp />
-                </Route>
-                <Route path="/rex">
-                    <ResourcesRex />
-                </Route>
-                <Route path="/staking">
-                    <ResourcesStaked />
-                </Route>
+            <Route path="/transfer/:contract/:token" let:meta>
+                <Transfer {meta} />
+            </Route>
+            <Route path="/request/:payload">
+                <Request />
+            </Route>
+            <Route path="/resources/*">
+                <Resources />
             </Route>
             <Route fallback>
                 <Page title="Page not found">
@@ -91,7 +143,3 @@
         </Route>
     {/if}
 </main>
-
-{#if !isRelease}
-    <div id="greymass-wallet-version">Version {version}</div>
-{/if}

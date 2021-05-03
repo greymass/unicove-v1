@@ -1,5 +1,6 @@
+import type {Readable} from 'svelte/store'
 import {API, Name} from 'anchor-link'
-import {Readable, writable} from 'svelte/store'
+import {writable} from 'svelte/store'
 import type {NameType, ChainId} from 'anchor-link'
 
 import {dbPromise} from './db'
@@ -8,7 +9,7 @@ import {getClient} from './api-client'
 /** How old a cached account is before we update it */
 const maxAge = 60 * 1000 // ms
 
-interface AccountResponse {
+export interface AccountResponse {
     /** The account object for the requested account. */
     account?: API.v1.AccountObject
     /** Whether the account is being updated in the background.  */
@@ -33,7 +34,12 @@ export async function storeAccount(account: API.v1.AccountObject, chainId: Chain
     )
 }
 
-export async function loadAccount(name: Name, chainId: ChainId, set: (v: AccountResponse) => void) {
+export async function loadAccount(
+    name: Name,
+    chainId: ChainId,
+    set: (v: AccountResponse) => void,
+    refresh = false
+) {
     const key = accountKey(name, chainId)
     let db = await dbPromise
     let row = await db.get('account-cache', key)
@@ -43,7 +49,7 @@ export async function loadAccount(name: Name, chainId: ChainId, set: (v: Account
         stale = age > maxAge
         set({account: API.v1.AccountObject.from(row.account), stale})
     }
-    if (stale) {
+    if (stale || refresh) {
         const account = await getClient(chainId).v1.chain.get_account(name)
         await storeAccount(account, chainId)
         set({account: account, stale: false})
@@ -51,9 +57,14 @@ export async function loadAccount(name: Name, chainId: ChainId, set: (v: Account
 }
 
 /** Get an account, can be used to fetch other accounts than the logged in users. */
-export function getAccount(name: NameType, chainId: ChainId): Readable<AccountResponse> {
+export function getAccount(
+    name: NameType,
+    chainId: ChainId,
+    refresh = false
+): Readable<AccountResponse> {
     const store = writable<AccountResponse>({stale: true})
-    loadAccount(Name.from(name), chainId, store.set).catch((error) => {
+    loadAccount(Name.from(name), chainId, store.set, refresh).catch((error) => {
+        console.log('error', error)
         store.update((account) => ({...account, error}))
     })
     return store
