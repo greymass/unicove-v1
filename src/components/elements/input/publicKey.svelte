@@ -2,6 +2,7 @@
     import InputLabelled from '~/components/elements/input/labelled.svelte'
 
     import {validatePresence} from './validators/presence'
+    import {validatePublicKey} from './validators/publicKey'
 
     export let name: string = ''
     export let value: string = ''
@@ -14,6 +15,7 @@
     const validate = async (value: string) => {
         try {
             validatePresence(value)
+            validatePublicKey(value)
         } catch (errorObject) {
             errorMessage = errorObject.message
             valid = false

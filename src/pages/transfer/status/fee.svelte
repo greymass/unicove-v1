@@ -2,6 +2,7 @@
     import {Asset} from 'anchor-link'
 
     import {activeBlockchain} from '~/store'
+    import Completed from '~/pages/transfer/status/template/completed.svelte'
 
     export let txFee: Asset | undefined = undefined
     export let quantity: Asset | undefined = undefined
@@ -20,32 +21,16 @@
 </script>
 
 <style type="scss">
-    table {
-        margin: 20px 0;
-
-        td {
-            padding: 5px;
-        }
-    }
-
-    @media only screen and (max-width: 600px) {
-        table {
-            margin: 20px auto;
-        }
+    span {
+        line-height: 32px;
+        vertical-align: middle;
     }
 </style>
 
-<table>
-    <tr>
-        <td>Sending:</td>
-        <td>{quantity}</td>
-    </tr>
-    <tr>
-        <td>Fee:</td>
-        <td>{txFee}</td>
-    </tr>
-    <tr>
-        <td>Total:</td>
-        <td>{total}</td>
-    </tr>
-</table>
+<Completed header="Network Fee">
+    <span>{txFee}</span>
+</Completed>
+
+<Completed header="Total">
+    <span>{total}</span>
+</Completed>

@@ -81,15 +81,15 @@
 
 <style type="scss">
     input {
-        background: #f5f6f8;
-        border: 1px solid #e4e6ea;
+        background: var(--main-white);
+        border: 1px solid var(--main-blue);
         border-radius: 12px;
-        color: #9898b5;
+        color: var(--main-black);
         font-size: 14px;
         padding: 10px 12px;
         &:focus {
-            border: 1px solid #2d8eff;
-            color: var(--light-grey);
+            border: 1px solid var(--main-blue);
+            color: var(--main-black);
             outline: none;
         }
 

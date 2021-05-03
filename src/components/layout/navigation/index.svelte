@@ -22,6 +22,9 @@
             name: 'Transfer',
             path: '/transfer',
         },
+    ]
+
+    const advancedNavigation: NavigationItem[] = [
         {
             icon: 'battery-charging',
             name: 'Resources',
@@ -47,7 +50,6 @@
         top: 12px;
         left: 12px;
         padding: 12px;
-        color: gray;
         cursor: pointer;
     }
 </style>
@@ -55,7 +57,8 @@
 <MediaQuery query="(max-width: 999px)" let:matches>
     <aside class:open>
         <NavigationContent
-            items={primaryNavigation}
+            {primaryNavigation}
+            {advancedNavigation}
             expand={true}
             on:collapse={() => (open = false)}
         />
@@ -67,7 +70,8 @@
         </span>
     {:else}
         <NavigationContent
-            items={primaryNavigation}
+            {primaryNavigation}
+            {advancedNavigation}
             {expand}
             on:collapse={() => (preferences.expandNavbar = false)}
         />

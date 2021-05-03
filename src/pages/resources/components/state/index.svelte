@@ -32,7 +32,6 @@
                 font-size: 16px;
                 line-height: 16px;
                 letter-spacing: -0.26px;
-                background: var(--main-grey);
                 padding: 0.25em;
                 text-align: right;
                 &:first-child {
@@ -53,7 +52,7 @@
 
             letter-spacing: -0.47px;
 
-            color: var(--light-black);
+            color: var(--main-black);
         }
         :global(h3 > span) {
             font-weight: normal;

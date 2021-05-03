@@ -1,21 +1,22 @@
 <script lang="ts">
+    import {PublicKey, Name} from '@greymass/eosio'
     import type {Writable} from 'svelte/store'
-
-    import {Asset, PublicKey, Name} from '@greymass/eosio'
     import {writable} from 'svelte/store'
 
-    import {transferData} from './transferData'
-
     import {activeBlockchain, activeSession} from '~/store'
-
-    import {Step} from './types'
+    import type {Balance} from '~/stores/balances'
+    import type {Token} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
     import InputAccountLookup from '~/components/elements/input/account/lookup.svelte'
-    import InputAddress from '~/components/elements/input/address.svelte'
+    import InputPublicKey from '~/components/elements/input/publicKey.svelte'
     import Form from '~/components/elements/form.svelte'
 
-    export let balance: Asset
+    import {transferData, Step} from '~/pages/transfer/transfer'
+    import StatusToken from '~/pages/transfer/status/token.svelte'
+
+    export let balance: Balance
+    export let token: Token
 
     let loading: Writable<boolean> = writable<boolean>(false)
     let toAddress: string = String($transferData.toAddress || '')
@@ -32,29 +33,22 @@
 </script>
 
 <style type="scss">
-    .container {
-        display: flex;
-        flex-direction: column;
-        border-top: 1px solid var(--divider-grey);
-    }
 </style>
 
 <div class="container">
-    <div class="field-container">
+    {#if balance && token}
+        <StatusToken {token} />
         <Form on:submit={confirmChange}>
             {#if $activeBlockchain && $activeBlockchain.id === 'fio'}
-                <InputAddress
+                <InputPublicKey
                     bind:value={toAddress}
                     focus
                     fluid
                     name="to"
-                    placeholder="recipient public key..."
+                    placeholder="Recipient public key..."
                 />
                 <Button size="large" fluid formValidation on:action={confirmChange}>
-                    Send {balance.symbol.name}
-                    {#if toAddress}
-                        to {toAddress}
-                    {/if}
+                    Send {token.name}
                 </Button>
             {:else}
                 <InputAccountLookup
@@ -63,7 +57,7 @@
                     focus
                     fluid
                     name="to"
-                    placeholder="recipient account name..."
+                    placeholder="Recipient account name..."
                     activeSession={$activeSession}
                 />
                 <Button
@@ -74,12 +68,14 @@
                     formValidation
                     on:action={confirmChange}
                 >
-                    Send {balance.symbol.name}
+                    Send {token.name}
                     {#if toAccount}
                         to {toAccount}
                     {/if}
                 </Button>
             {/if}
         </Form>
-    </div>
+    {:else}
+        No balance for this token to send!
+    {/if}
 </div>

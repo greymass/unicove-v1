@@ -14,7 +14,6 @@
 
     export let errorMessage: string | undefined = undefined
     export let isValid = (value: string) => {
-        console.log(value)
         try {
             validatePresence(value)
             validateAccountLength(value)

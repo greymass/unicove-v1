@@ -4,8 +4,7 @@
 </script>
 
 <style>
-    h2 {
-        margin-top: 30px;
+    h1 {
         font-family: Inter;
         font-style: normal;
         font-weight: bold;
@@ -28,9 +27,9 @@
     }
 </style>
 
-<h2>
+<h1>
     {title}
-</h2>
+</h1>
 <h3>
     {subtitle}
 </h3>

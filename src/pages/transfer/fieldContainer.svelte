@@ -1,6 +1,6 @@
 <script lang="ts">
     import Icon from '~/components/elements/icon.svelte'
-    import StatusIcon from './fieldContainer/statusIcon.svelte'
+    import StatusIcon from '~/pages/transfer/fieldContainer/statusIcon.svelte'
 
     export let label: string
     export let secondLabel: string | undefined = undefined
@@ -24,6 +24,9 @@
         display: flex;
         min-height: 60px;
         border-bottom: 1px solid var(--divider-grey);
+        &:first-child {
+            border-top: 1px solid var(--divider-grey);
+        }
 
         .label-container {
             padding: 10px 3px;

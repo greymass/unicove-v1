@@ -1,12 +1,17 @@
 <script lang="ts">
     import {ChainId} from 'anchor-link'
+    import {derived} from 'svelte/store'
+    import type {Readable} from 'svelte/store'
+
     import type {SessionLike} from '~/auth'
     import {sessionEquals, login, logout} from '~/auth'
-    import {chainConfig} from '~/config'
+    import {chains, chainConfig} from '~/config'
     import {activeSession, availableSessions} from '~/store'
 
     import Button from '~/components/elements/button.svelte'
+    import ButtonLogin from '~/components/elements/button/login.svelte'
     import Icon from '~/components/elements/icon.svelte'
+    import Segment from '~/components/elements/segment.svelte'
     import Text from '~/components/elements/text.svelte'
 
     $: isActive = (session: SessionLike) => sessionEquals(session, $activeSession!)
@@ -20,26 +25,33 @@
         })
     }
 
-    const chainIds: string[] = [
-        ...new Set($availableSessions.map((session) => String(session.chainId))),
-    ]
-
     interface SessionGroup {
         chainId: string
         name: string
         sessions: SessionLike[]
     }
 
-    const groupings: SessionGroup[] = chainIds
-        .map((chainId) => {
-            const config = chainConfig(ChainId.from(chainId))
-            return {
-                chainId,
-                name: config.name,
-                sessions: $availableSessions.filter((s) => String(s.chainId) === chainId),
-            }
-        })
-        .sort((a: SessionGroup, b: SessionGroup) => a.name.localeCompare(b.name))
+    const getGroupings = (chainIds: string[]) =>
+        chainIds
+            .map((chainId) => {
+                const config = chainConfig(ChainId.from(chainId))
+                return {
+                    chainId,
+                    name: config.name,
+                    sessions: $availableSessions.filter((s) => String(s.chainId) === chainId),
+                }
+            })
+            .sort((a: SessionGroup, b: SessionGroup) => a.name.localeCompare(b.name))
+
+    const groupings: Readable<SessionGroup[]> = derived(availableSessions, ($availableSessions) => {
+        if ($availableSessions) {
+            const chainIds = [
+                ...new Set($availableSessions.map((session) => String(session.chainId))),
+            ]
+            return getGroupings(chainIds)
+        }
+        return []
+    })
 
     export let collapsed: any = {}
 
@@ -87,9 +99,9 @@
                     user-select: none;
                     text-decoration: none;
                     &.active {
-                        background-color: white;
+                        background-color: var(--background-highlight);
+                        color: var(--main-black);
                         border-radius: $borderRadius;
-                        color: var(--light-black);
                         font-weight: 600;
                         > .icon,
                         > .control {
@@ -126,31 +138,95 @@
             margin-top: 2em;
         }
     }
+
+    .login {
+        margin: 0 26px;
+        text-align: center;
+        :global(.segment) {
+            background: var(--background-highlight);
+        }
+        .circular-icon {
+            background: var(--main-grey);
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+            height: 48px;
+            width: 48px;
+            :global(.icon) {
+                position: absolute;
+                top: 12px;
+                left: 12px;
+                right: 12px;
+                height: 24px;
+                width: 24px;
+            }
+        }
+        h3 {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 14px;
+            letter-spacing: 0.01px;
+
+            color: var(--main-black);
+            margin-top: 15px;
+        }
+        p {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 10px;
+            line-height: 14px;
+            letter-spacing: 0.01px;
+
+            color: #9898b5;
+            margin: 7px 0 11px;
+        }
+    }
 </style>
 
-<div class="list">
-    {#each groupings as group}
-        <div class="network">
-            <div class="header" on:click={() => toggle(group.chainId)}>
-                <Text>{group.name} ({group.sessions.length})</Text>
-                <Icon name={collapsed[group.chainId] ? 'chevron-right' : 'chevron-down'} />
+{#if $activeSession}
+    <div class="list">
+        {#each $groupings as group}
+            <div class="network">
+                <div class="header" on:click={() => toggle(group.chainId)}>
+                    <Text>{group.name} ({group.sessions.length})</Text>
+                    <Icon name={collapsed[group.chainId] ? 'chevron-right' : 'chevron-down'} />
+                </div>
+                <ul class="accounts" class:collapsed={collapsed[group.chainId]}>
+                    {#each group.sessions as session}
+                        <li class:active={isActive(session)}>
+                            <div class="icon" on:click={() => onSelect(session)}>
+                                <Icon name={isActive(session) ? 'user-check' : 'user'} />
+                            </div>
+                            <div class="account" on:click={() => onSelect(session)}>
+                                {session.auth.actor}
+                            </div>
+                            <div class="control" on:click={() => logout(session)}>
+                                <Icon name="log-out" size="large" />
+                            </div>
+                        </li>
+                    {/each}
+                </ul>
             </div>
-            <ul class="accounts" class:collapsed={collapsed[group.chainId]}>
-                {#each group.sessions as session}
-                    <li class:active={isActive(session)}>
-                        <div class="icon" on:click={() => onSelect(session)}>
-                            <Icon name={isActive(session) ? 'user-check' : 'user'} />
-                        </div>
-                        <div class="account" on:click={() => onSelect(session)}>
-                            {session.auth.actor}
-                        </div>
-                        <div class="control" on:click={() => logout(session)}>
-                            <Icon name="log-out" size="large" />
-                        </div>
-                    </li>
-                {/each}
-            </ul>
-        </div>
-    {/each}
-    <Button primary on:action={handleAdd}>Add another Account</Button>
-</div>
+        {/each}
+        <Button primary on:action={handleAdd}>Add another Account</Button>
+    </div>
+{:else}
+    <div class="login">
+        <Segment>
+            <div class="circular-icon">
+                <Icon size="medium" name="user-check" />
+            </div>
+            <h3>Supported blockchains</h3>
+            <p>
+                {chains
+                    .filter((chain) => !chain.testnet)
+                    .map((chain) => chain.name)
+                    .join(', ')}
+            </p>
+            <ButtonLogin>Login</ButtonLogin>
+        </Segment>
+    </div>
+{/if}

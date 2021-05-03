@@ -1,5 +1,5 @@
 <script>
-    import {activeSession} from '~/store'
+    import {activeSession, preferences} from '~/store'
     import {activate} from '~/auth'
 
     import type {SessionLike} from '~/auth'
@@ -42,14 +42,14 @@
         overflow-x: hidden;
         overflow-y: scroll;
         background-color: var(--main-grey);
-        border-color: darkgray;
+        border-color: var(--main-grey);
         border-right-width: 2px;
         transition: left 0.3s ease-in-out;
         z-index: 1001;
     }
 
     .header {
-        border-bottom: 1px solid var(--divider-grey);
+        border-bottom: 1px solid var(--dark-grey);
         color: var(--dark-grey);
         margin: 24px;
         padding-bottom: 21px;
@@ -69,12 +69,27 @@
     }
 </style>
 
-<div class="account-button" on:click={() => (open = true)}>
-    <span class="icon">
-        <Icon name="user" />
-    </span>
-    <span class="text">
-        {$activeSession?.auth.actor}
+<div class="account-button">
+    {#if preferences.darkmode}
+        <span class="icon" on:click={() => (preferences.darkmode = false)}>
+            <Icon name="sun" />
+        </span>
+    {:else}
+        <span class="icon" on:click={() => (preferences.darkmode = true)}>
+            <Icon name="moon" />
+        </span>
+    {/if}
+    <span class="accounts" on:click={() => (open = true)}>
+        <span class="icon">
+            <Icon name="user" />
+        </span>
+        <span class="text">
+            {#if $activeSession}
+                {$activeSession?.auth.actor}
+            {:else}
+                Login
+            {/if}
+        </span>
     </span>
 </div>
 

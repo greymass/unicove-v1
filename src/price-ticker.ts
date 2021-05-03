@@ -1,12 +1,10 @@
 import {Serializer} from '@greymass/eosio'
-
 import {readable, derived, flatten, ReadableResult} from 'svelte-result-store'
 
 import {DelphiOracleDatapoint, DelphiOraclePair} from '~/abi-types'
-
-import {ChainConfig, ChainFeatures} from './config'
-import {getClient} from './api-client'
-import {cachedRead} from './db'
+import {getClient} from '~/api-client'
+import {ChainConfig, ChainFeatures} from '~/config'
+import {cachedRead} from '~/db'
 
 /** How often to update prices.  */
 const UPDATE_INTERVAL = 1 * 60 * 1000 // 1 minute
