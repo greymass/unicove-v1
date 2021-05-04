@@ -9,7 +9,7 @@
     import type {Token} from '~/stores/tokens'
 
     import Page from '~/components/layout/page.svelte'
-    import Row from '~/pages/transfer/selectRow.svelte'
+    import Row from './select-row.svelte'
     import Input from '~/components/elements/input.svelte'
 
     let query: Writable<string> = writable('')

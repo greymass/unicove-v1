@@ -12,7 +12,7 @@
     import Icon from '~/components/elements/icon.svelte'
 
     import TokenTable from '~/pages/tokens/table.svelte'
-    import {isLoading} from '~/stores/balancesProvider'
+    import {isLoading} from '~/stores/balances-provider'
 
     const price = priceTicker($activeBlockchain).catch((error) => {
         console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)

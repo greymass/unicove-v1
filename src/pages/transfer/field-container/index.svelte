@@ -1,6 +1,6 @@
 <script lang="ts">
     import Icon from '~/components/elements/icon.svelte'
-    import StatusIcon from '~/pages/transfer/fieldContainer/statusIcon.svelte'
+    import StatusIcon from './status-icon.svelte'
 
     export let label: string
     export let secondLabel: string | undefined = undefined
