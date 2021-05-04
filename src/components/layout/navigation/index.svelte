@@ -1,11 +1,14 @@
 <script lang="ts">
     import type {NavigationItem} from '~/ui-types'
 
-    import {preferences} from '~/store'
+    import {activeBlockchain, preferences} from '~/store'
 
     import Icon from '~/components/elements/icon.svelte'
     import MediaQuery from '~/components/utils/media-query.svelte'
     import NavigationContent from '~/components/layout/navigation/content.svelte'
+    import {ChainFeatures} from '~/config'
+    import type {Readable} from 'svelte/store'
+    import {derived} from 'svelte/store'
 
     export let open = false
     $: expand = $preferences.expandNavbar
@@ -24,13 +27,33 @@
         },
     ]
 
-    const advancedNavigation: NavigationItem[] = [
-        {
-            icon: 'battery-charging',
-            name: 'Resources',
-            path: '/resources',
-        },
-    ]
+    const advancedNavigation: Readable<NavigationItem[]> = derived(
+        [activeBlockchain],
+        ([$activeBlockchain]) => {
+            // List of supported features required to activate the resources section
+            const resourceFeatures = [
+                ChainFeatures.Staking,
+                ChainFeatures.REX,
+                ChainFeatures.PowerUp,
+            ]
+            // Items to include in the advanced section
+            const items: NavigationItem[] = []
+            if ($activeBlockchain) {
+                if (
+                    Array.from($activeBlockchain.chainFeatures).some((r) =>
+                        resourceFeatures.includes(r)
+                    )
+                ) {
+                    items.push({
+                        icon: 'battery-charging',
+                        name: 'Resources',
+                        path: '/resources',
+                    })
+                }
+            }
+            return items
+        }
+    )
 </script>
 
 <style type="scss">
@@ -58,7 +81,7 @@
     <aside class:open>
         <NavigationContent
             {primaryNavigation}
-            {advancedNavigation}
+            advancedNavigation={$advancedNavigation}
             expand={true}
             on:collapse={() => (open = false)}
         />
@@ -71,7 +94,7 @@
     {:else}
         <NavigationContent
             {primaryNavigation}
-            {advancedNavigation}
+            advancedNavigation={$advancedNavigation}
             {expand}
             on:collapse={() => (preferences.expandNavbar = false)}
         />

@@ -133,28 +133,30 @@
                 <span class="name">{item.name}</span>
             </a>
         {/each}
-        <div
-            class="item"
-            on:click={() => {
-                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
-                preferences.expandNavbarAdvanced = !expandAdvanced
-                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
-            }}
-        >
-            <span class="icon">
-                <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
-            </span>
-            <span class="name">Advanced</span>
-        </div>
-        {#if expandAdvanced}
-            {#each advancedNavigation as item}
-                <a href={item.path} class="item advanced" class:active={pathMatches(item)}>
-                    <span class="icon">
-                        <Icon name={item.icon} />
-                    </span>
-                    <span class="name">{item.name}</span>
-                </a>
-            {/each}
+        {#if advancedNavigation.length > 0}
+            <div
+                class="item"
+                on:click={() => {
+                    console.log($preferences.expandNavbarAdvanced, expandAdvanced)
+                    preferences.expandNavbarAdvanced = !expandAdvanced
+                    console.log($preferences.expandNavbarAdvanced, expandAdvanced)
+                }}
+            >
+                <span class="icon">
+                    <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
+                </span>
+                <span class="name">Advanced</span>
+            </div>
+            {#if expandAdvanced}
+                {#each advancedNavigation as item}
+                    <a href={item.path} class="item advanced" class:active={pathMatches(item)}>
+                        <span class="icon">
+                            <Icon name={item.icon} />
+                        </span>
+                        <span class="name">{item.name}</span>
+                    </a>
+                {/each}
+            {/if}
         {/if}
     </div>
     <!-- <div class="footer">
