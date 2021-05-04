@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "dev": "snowpack dev",
+        "dev": "make dev",
         "build": "make build",
         "check": "make check",
         "format": "make format"
@@ -9,6 +9,10 @@
     "browser": {
         "crypto": false,
         "buffer": false
+    },
+    "browserslist": ">0.75%, not ie 11, not UCAndroid >0, not OperaMini all",
+    "resolutions": {
+        "acorn": "8.0.1"
     },
     "dependencies": {
         "@greymass/eosio": "^0.4.2",
@@ -41,7 +45,7 @@
         "prettier": "^2.2.1",
         "prettier-plugin-svelte": "^2.1.0",
         "sass": "^1.30.0",
-        "snowpack": "^3.0.5",
+        "snowpack": "3.0.x",
         "svelte": "^3.35.0",
         "svelte-check": "^1.1.33",
         "svelte-preprocess": "^4.6.1",
