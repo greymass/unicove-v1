@@ -134,14 +134,7 @@
             </a>
         {/each}
         {#if advancedNavigation.length > 0}
-            <div
-                class="item"
-                on:click={() => {
-                    console.log($preferences.expandNavbarAdvanced, expandAdvanced)
-                    preferences.expandNavbarAdvanced = !expandAdvanced
-                    console.log($preferences.expandNavbarAdvanced, expandAdvanced)
-                }}
-            >
+            <div class="item" on:click={() => (preferences.expandNavbarAdvanced = !expandAdvanced)}>
                 <span class="icon">
                     <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
                 </span>
