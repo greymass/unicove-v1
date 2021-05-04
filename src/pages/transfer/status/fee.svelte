@@ -15,7 +15,7 @@
             txFee &&
             Asset.fromUnits(
                 quantity.units.toNumber() + txFee.units.toNumber(),
-                $activeBlockchain.coreTokenSymbol
+                $activeBlockchain!.coreTokenSymbol
             )
     }
 </script>

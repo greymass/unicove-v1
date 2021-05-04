@@ -14,8 +14,8 @@
     import TokenTable from '~/pages/tokens/table.svelte'
     import {isLoading} from '~/stores/balances-provider'
 
-    const price = priceTicker($activeBlockchain).catch((error) => {
-        console.warn(`Unable to load price on ${$activeBlockchain.id}`, error)
+    const price = priceTicker($activeBlockchain!).catch((error) => {
+        console.warn(`Unable to load price on ${$activeBlockchain!.id}`, error)
     })
 
     let totalUsdValue: Readable<number> = derived(
@@ -113,7 +113,7 @@
                 <div class="button-container">
                     <Button
                         href={`https://www.${
-                            $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain.id}.`
+                            $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain?.id}.`
                         }bloks.io/account/${String($currentAccount?.account_name)}`}
                         size="large">View on block explorer</Button
                     >

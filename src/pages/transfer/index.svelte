@@ -42,7 +42,7 @@
         ([$activeSession, $tokens]) => {
             if (meta && $activeSession && $tokens) {
                 const params: TokenKeyParams = {
-                    chainId: $activeBlockchain.chainId,
+                    chainId: $activeBlockchain!.chainId,
                     contract: Name.from(meta.params.contract),
                     name: Name.from(meta.params.token),
                 }
@@ -56,7 +56,7 @@
         if ($token) {
             return Name.from($token.contract)
         }
-        return Name.from($activeBlockchain.coreTokenContract)
+        return Name.from($activeBlockchain!.coreTokenContract)
     })
 
     const balance: Readable<Balance | undefined> = derived(
@@ -95,7 +95,7 @@
             case 'fio.token': {
                 data = FIOTransfer.from({
                     payee_public_key: $transferData.toAddress!.toLegacyString(
-                        $activeBlockchain.coreTokenSymbol.name
+                        $activeBlockchain!.coreTokenSymbol.name
                     ),
                     amount: quantity && $quantity!.units,
                     max_fee: $txFee!.units,
@@ -123,7 +123,7 @@
                 action: {
                     authorization: [$activeSession!.auth],
                     account: get(tokenContract),
-                    name: $activeBlockchain.coreTokenTransfer,
+                    name: $activeBlockchain!.coreTokenTransfer,
                     data: getActionData(),
                 },
             })
@@ -157,7 +157,7 @@
             No balance of this token to transfer!
         {/if}
 
-        {#if $displaySuccessTx}
+        {#if $displaySuccessTx && $activeBlockchain}
             <Modal display={displaySuccessTx}>
                 <TransactionNotificationSuccess
                     activeBlockchain={$activeBlockchain}

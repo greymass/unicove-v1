@@ -19,5 +19,5 @@
         $transferData.step = Step.Recipient
     }}
 >
-    <span>{toAddress.toLegacyString($activeBlockchain.coreTokenSymbol.name)}</span>
+    <span>{toAddress.toLegacyString($activeBlockchain?.coreTokenSymbol.name)}</span>
 </Completed>
