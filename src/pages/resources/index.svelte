@@ -1,5 +1,10 @@
 <script lang="ts">
     import {Route} from 'tinro'
+    import type {Readable} from 'svelte/store'
+    import {derived} from 'svelte/store'
+
+    import {activeBlockchain} from '~/store'
+    import {resourceFeatures} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
 
@@ -16,50 +21,63 @@
     import ResourcesNETREX from '~/pages/resources/pages/net/rex.svelte'
     import ResourcesCPUStaking from '~/pages/resources/pages/cpu/staking.svelte'
     import ResourcesNETStaking from '~/pages/resources/pages/net/staking.svelte'
+
+    const enabled: Readable<boolean> = derived(activeBlockchain, ($activeBlockchain) => {
+        if ($activeBlockchain) {
+            return Array.from($activeBlockchain.chainFeatures).some((r) =>
+                resourceFeatures.includes(r)
+            )
+        }
+        return false
+    })
 </script>
 
 <Page title="Network Resources">
-    <Route path="/">
-        <ResourcesOverview />
-    </Route>
-    <!-- CPU -->
-    <Route path="/cpu">
-        <ResourcesOverviewCpu />
-    </Route>
-    <Route path="/cpu/fuel">
-        <ResourcesCPUFuel />
-    </Route>
-    <Route path="/cpu/powerup">
-        <ResourcesCPUPowerUp />
-    </Route>
-    <Route path="/cpu/rex">
-        <ResourcesCPUREX />
-    </Route>
-    <!-- NET -->
-    <Route path="/net">
-        <ResourcesOverviewNet />
-    </Route>
-    <Route path="/net/fuel">
-        <ResourcesNETFuel />
-    </Route>
-    <Route path="/net/powerup">
-        <ResourcesNETPowerUp />
-    </Route>
-    <Route path="/net/rex">
-        <ResourcesNETREX />
-    </Route>
-    <!-- RAM -->
-    <Route path="/ram/buy">
-        <ResourcesRAMBuy />
-    </Route>
-    <Route path="/ram/sell">
-        <ResourcesRAMSell />
-    </Route>
-    <!-- Staking -->
-    <Route path="/cpu/stake">
-        <ResourcesCPUStaking />
-    </Route>
-    <Route path="/net/stake">
-        <ResourcesNETStaking />
-    </Route>
+    {#if $enabled}
+        <Route path="/">
+            <ResourcesOverview />
+        </Route>
+        <!-- CPU -->
+        <Route path="/cpu">
+            <ResourcesOverviewCpu />
+        </Route>
+        <Route path="/cpu/fuel">
+            <ResourcesCPUFuel />
+        </Route>
+        <Route path="/cpu/powerup">
+            <ResourcesCPUPowerUp />
+        </Route>
+        <Route path="/cpu/rex">
+            <ResourcesCPUREX />
+        </Route>
+        <!-- NET -->
+        <Route path="/net">
+            <ResourcesOverviewNet />
+        </Route>
+        <Route path="/net/fuel">
+            <ResourcesNETFuel />
+        </Route>
+        <Route path="/net/powerup">
+            <ResourcesNETPowerUp />
+        </Route>
+        <Route path="/net/rex">
+            <ResourcesNETREX />
+        </Route>
+        <!-- RAM -->
+        <Route path="/ram/buy">
+            <ResourcesRAMBuy />
+        </Route>
+        <Route path="/ram/sell">
+            <ResourcesRAMSell />
+        </Route>
+        <!-- Staking -->
+        <Route path="/cpu/stake">
+            <ResourcesCPUStaking />
+        </Route>
+        <Route path="/net/stake">
+            <ResourcesNETStaking />
+        </Route>
+    {:else}
+        Resource management not available on the {$activeBlockchain.name} blockchain.
+    {/if}
 </Page>
