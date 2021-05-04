@@ -15,10 +15,6 @@
 
 {#if $currentAccount}
     <ResourceStateRAM showExtra>
-        <Button href="/resources">
-            <Icon name="arrow-left" />
-            <Text>Back to Resources</Text>
-        </Button>
         <Button primary href="/resources/ram/sell">
             <Icon name="hard-drive" />
             <Text>Sell RAM</Text>
