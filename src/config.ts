@@ -60,6 +60,8 @@ export interface ChainConfig {
     nodeUrl: string
     /** True if network is a testnet. */
     testnet: boolean
+    /** Account to use for resource sampling */
+    resourceSampleAccount?: string
     /** Bloks url  */
     bloksUrl: string
 }
@@ -166,6 +168,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'WAX',
         nodeUrl: 'https://wax.greymass.com',
+        resourceSampleAccount: 'teamgreymass',
         testnet: false,
         bloksUrl: 'https://wax.bloks.io',
     },

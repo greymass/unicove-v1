@@ -87,3 +87,12 @@ function fetchBalance(session: LinkSession) {
         session.auth.actor
     )
 }
+
+export const currentAccountBalance: Readable<Asset | undefined> = derived(
+    currentAccount,
+    ($currentAccount) => {
+        if ($currentAccount) {
+            return $currentAccount.core_liquid_balance
+        }
+    }
+)

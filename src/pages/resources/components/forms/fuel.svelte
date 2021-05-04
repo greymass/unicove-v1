@@ -209,7 +209,7 @@
 {#await loading}
     <p>Hang on, fetching balances and stuff...</p>
 {:then _}
-    {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Fuel)}
+    {#if $activeBlockchain?.chainFeatures.has(ChainFeatures.Fuel)}
         {#each quotas as quota}
             <div class="quota">
                 <p class="name">

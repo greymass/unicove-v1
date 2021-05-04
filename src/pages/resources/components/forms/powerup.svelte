@@ -1,7 +1,10 @@
 <script lang="ts">
     import {Asset} from '@greymass/eosio'
+    import type {Readable, Writable} from 'svelte/store'
+    import {derived, writable} from 'svelte/store'
 
-    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import {PowerUp} from '~/abi-types'
+    import {activeBlockchain, activeSession, currentAccountBalance} from '~/store'
     import {ChainFeatures} from '~/config'
 
     import {powerupPrice, sampleUsage, statePowerUp} from '~/pages/resources/resources'
@@ -12,43 +15,36 @@
     import Input from '~/components/elements/input.svelte'
     import Segment from '~/components/elements/segment.svelte'
 
-    import {PowerUp} from '~/abi-types'
-
     export let resource: string = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
 
-    $: loading = $currentAccount
-
-    let amount: string = '0'
-    let cost = Number($powerupPrice) * Number(amount)
+    let amount: Writable<string> = writable('0')
     let error: string | undefined
 
-    $: balance =
-        $currentAccount?.core_liquid_balance ||
-        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-
-    $: {
-        cost = Number($powerupPrice.value) * Number(amount)
-    }
+    const cost: Readable<Asset | undefined> = derived(
+        [activeBlockchain, amount, powerupPrice],
+        ([$activeBlockchain, $amount, $powerupPrice]) => {
+            if ($activeBlockchain && $powerupPrice) {
+                return Asset.from(
+                    Number($powerupPrice.value) * Number($amount),
+                    $activeBlockchain.coreTokenSymbol
+                )
+            }
+        }
+    )
 
     async function powerup() {
         try {
             let cpu_frac = 0
             let net_frac = 0
-            if (!$statePowerUp) {
-                throw new Error('PowerUp state not loaded.')
-            }
-            if (!$sampleUsage) {
-                throw new Error('Usage sample required.')
-            }
             switch (resource) {
                 case 'net': {
-                    net_frac = $statePowerUp.net.frac_by_kb($sampleUsage, Number(amount))
+                    net_frac = $statePowerUp!.net.frac_by_kb($sampleUsage!, Number(amount))
                     break
                 }
                 default:
                 case 'cpu': {
-                    cpu_frac = $statePowerUp.cpu.frac_by_ms($sampleUsage, Number(amount))
+                    cpu_frac = $statePowerUp!.cpu.frac_by_ms($sampleUsage!, Number(amount))
                     break
                 }
             }
@@ -64,7 +60,7 @@
                             days: 1,
                             net_frac,
                             cpu_frac,
-                            max_payment: Asset.from(cost, '4,EOS'),
+                            max_payment: $cost!,
                         }),
                     },
                 ],
@@ -80,22 +76,18 @@
 
 <h2 class="header">Rent {resource.toUpperCase()} from PowerUp</h2>
 <Segment color="white">
-    {#await loading}
-        <p>Hang on, fetching balances and stuff...</p>
-    {:then _}
-        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)}
-            <Form on:submit={powerup}>
-                <p>Amount of {unit} to rent.</p>
-                <Input focus fluid name="amount" bind:value={amount} />
-                <ErrorMessage errorMessage={error} />
-                <Button fluid size="large" formValidation on:action={powerup}
-                    >Rent {Number(amount)}
-                    {unit} for {Asset.from(cost, $activeBlockchain.coreTokenSymbol)}</Button
-                >
-                <p>Account Balance: {balance}</p>
-            </Form>
-        {:else}
-            <p>This feature is unavailable on this blockchain.</p>
-        {/if}
-    {/await}
+    {#if $activeBlockchain?.chainFeatures.has(ChainFeatures.PowerUp)}
+        <Form on:submit={powerup}>
+            <p>Amount of {unit} to rent.</p>
+            <Input focus fluid name="amount" bind:value={$amount} />
+            <ErrorMessage errorMessage={error} />
+            <Button fluid size="large" formValidation on:action={powerup}
+                >Rent {Number($amount)}
+                {unit} for {$cost}</Button
+            >
+            <p>Account Balance: {$currentAccountBalance}</p>
+        </Form>
+    {:else}
+        <p>This feature is unavailable on this blockchain.</p>
+    {/if}
 </Segment>

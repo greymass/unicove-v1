@@ -1,58 +1,50 @@
-import {derived, readable, writable} from 'svelte/store'
-import type {ChainId} from 'anchor-link'
+import {derived, Readable, writable} from 'svelte/store'
 import {API, Asset} from '@greymass/eosio'
 import {Resources, SampleUsage, PowerUpState, RAMState, REXState} from '@greymass/eosio-resources'
 import {activeBlockchain} from '~/store'
 
 import {getClient} from '../../api-client'
+import {ChainConfig, ChainFeatures, resourceFeatures} from '~/config'
 
-let chainId: ChainId
-activeBlockchain.subscribe((value) => (chainId = value.chainId))
-
-const getResourceClient = () => {
-    const api = getClient(chainId)
-    return new Resources({api})
+const getResourceClient = (chain: ChainConfig) => {
+    const api = getClient(chain)
+    const options: any = {api}
+    if (chain.resourceSampleAccount) {
+        options.sampleAccount = chain.resourceSampleAccount
+    }
+    return new Resources(options)
 }
 
+export const getSampleUsage = async (set: (v: any) => void, chain: ChainConfig) =>
+    getResourceClient(chain)
+        .getSampledUsage()
+        .then((v) => set(v))
+        .catch((e) => {
+            // TODO: We should probably have some sort of error catcher for stuff like this?
+            console.error(e)
+            // Set to undefined, which is the same as uninitialized
+            set(undefined)
+        })
+
 // The AccountResponse representation of the sample account
-export const sampleUsage = readable<SampleUsage | undefined>(undefined, (set) => {
-    // Update on a set interval
-    const interval = setInterval(
-        () =>
-            getResourceClient()
-                .getSampledUsage()
-                .then((v) => set(v))
-                .catch((e) => {
-                    // TODO: We should probably have some sort of error catcher for stuff like this?
-                    console.error(e)
-                    // Set to undefined, which is the same as uninitialized
-                    set(undefined)
-                }),
-        30000
-    )
-
-    // Subscribe to changes to the active blockchain and update on change
-    const unsubscribe = activeBlockchain.subscribe(() =>
-        getResourceClient()
-            .getSampledUsage()
-            .then((v) => set(v))
-            .catch((e) => {
-                // TODO: We should probably have some sort of error catcher for stuff like this?
-                console.error(e)
-                // Set to undefined, which is the same as uninitialized
-                set(undefined)
-            })
-    )
-
-    // Return callback w/ interval clear + unsubscribe
-    return () => {
-        unsubscribe()
-        clearInterval(interval)
+export const sampleUsage: Readable<SampleUsage | undefined> = derived(
+    [activeBlockchain],
+    ([$activeBlockchain], set) => {
+        if (
+            $activeBlockchain &&
+            Array.from($activeBlockchain.chainFeatures).some((r) => resourceFeatures.includes(r))
+        ) {
+            const interval = setInterval(() => getSampleUsage(set, $activeBlockchain), 30000)
+            getSampleUsage(set, $activeBlockchain)
+            return () => {
+                clearInterval(interval)
+            }
+        }
     }
-})
+)
 
-export const getInfo = async (set: (v: any) => void) =>
-    getClient(chainId)
+export const getInfo = async (set: (v: any) => void, chain: ChainConfig) =>
+    getClient(chain)
         .v1.chain.get_info()
         .then((result) => set(result))
         .catch((e) => {
@@ -62,12 +54,17 @@ export const getInfo = async (set: (v: any) => void) =>
             set(undefined)
         })
 
-export const info = readable<API.v1.GetInfoResponse | undefined>(undefined, (set) => {
-    getInfo(set)
-})
+export const info: Readable<API.v1.GetInfoResponse | undefined> = derived(
+    [activeBlockchain],
+    ([$activeBlockchain], set) => {
+        if ($activeBlockchain) {
+            getInfo(set, $activeBlockchain)
+        }
+    }
+)
 
-export const getPowerUpState = async (set: (v: any) => void) =>
-    getResourceClient()
+export const getPowerUpState = async (set: (v: any) => void, chain: ChainConfig) =>
+    getResourceClient(chain)
         .v1.powerup.get_state()
         .then((result) => set(result))
         .catch((e) => {
@@ -78,19 +75,15 @@ export const getPowerUpState = async (set: (v: any) => void) =>
         })
 
 // The state of the PowerUp system
-export const statePowerUp = readable<PowerUpState | undefined>(undefined, (set) => {
-    // Update on a set interval
-    const interval = setInterval(() => getPowerUpState(set), 30000)
-
-    // Subscribe to changes to the active blockchain and update on change
-    const unsubscribe = activeBlockchain.subscribe(() => getPowerUpState(set))
-
-    // Return callback w/ interval clear + unsubscribe
-    return () => {
-        unsubscribe()
-        clearInterval(interval)
+export const statePowerUp: Readable<PowerUpState | undefined> = derived(
+    [activeBlockchain],
+    ([$activeBlockchain], set) => {
+        if ($activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)) {
+            getPowerUpState(set, $activeBlockchain)
+            return () => setInterval(() => getPowerUpState(set, $activeBlockchain), 30000)
+        }
     }
-})
+)
 
 // Rent 1ms of the networks CPU
 export const msToRent = writable<number>(1)
@@ -118,8 +111,8 @@ export const stakingPrice = derived([msToRent, sampleUsage], ([$msToRent, $sampl
     return Asset.from(0, '4,EOS')
 })
 
-export const getREXState = async (set: (v: any) => void) =>
-    getResourceClient()
+export const getREXState = async (set: (v: any) => void, chain: ChainConfig) =>
+    getResourceClient(chain)
         .v1.rex.get_state()
         .then((result) => set(result))
         .catch((e) => {
@@ -130,48 +123,40 @@ export const getREXState = async (set: (v: any) => void) =>
         })
 
 // The state of the REX system
-export const stateREX = readable<REXState | undefined>(undefined, (set) => {
-    // Update on a set interval
-    const interval = setInterval(() => getREXState(set), 30000)
-
-    // Subscribe to changes to the active blockchain and update on change
-    const unsubscribe = activeBlockchain.subscribe(() => getREXState(set))
-
-    // Return callback w/ interval clear + unsubscribe
-    return () => {
-        unsubscribe()
-        clearInterval(interval)
+export const stateREX: Readable<REXState | undefined> = derived(
+    [activeBlockchain],
+    ([$activeBlockchain], set) => {
+        if ($activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.REX)) {
+            getREXState(set, $activeBlockchain)
+            return () => setInterval(() => getREXState(set, $activeBlockchain), 30000)
+        }
     }
-})
+)
 
 // The price of CPU in the REX system
 export const rexPrice = derived(
     [msToRent, sampleUsage, stateREX],
     ([$msToRent, $sampleUsage, $stateREX]) => {
         if ($msToRent && $sampleUsage && $stateREX) {
-            return Asset.from($stateREX.price_per($sampleUsage, $msToRent * 1000), '4,EOS')
+            return Asset.from($stateREX.price_per($sampleUsage, $msToRent * 30000), '4,EOS')
         }
         return Asset.from(0, '4,EOS')
     }
 )
 
 // The state of the REX system
-export const stateRAM = readable<RAMState | undefined>(undefined, (set) => {
-    // Update on a set interval
-    const interval = setInterval(() => getRAMState(set), 30000)
-
-    // Subscribe to changes to the active blockchain and update on change
-    const unsubscribe = activeBlockchain.subscribe(() => getRAMState(set))
-
-    // Return callback w/ interval clear + unsubscribe
-    return () => {
-        unsubscribe()
-        clearInterval(interval)
+export const stateRAM: Readable<RAMState | undefined> = derived(
+    [activeBlockchain],
+    ([$activeBlockchain], set) => {
+        if ($activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.BuyRAM)) {
+            getRAMState(set, $activeBlockchain)
+            return () => setInterval(() => getRAMState(set, $activeBlockchain), 30000)
+        }
     }
-})
+)
 
-export const getRAMState = async (set: (v: any) => void) =>
-    getResourceClient()
+export const getRAMState = async (set: (v: any) => void, chain: ChainConfig) =>
+    getResourceClient(chain)
         .v1.ram.get_state()
         .then((result) => set(result))
         .catch((e) => {

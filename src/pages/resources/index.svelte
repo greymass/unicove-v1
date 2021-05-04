@@ -32,52 +32,54 @@
     })
 </script>
 
-<Page title="Network Resources">
-    {#if $enabled}
-        <Route path="/">
-            <ResourcesOverview />
-        </Route>
-        <!-- CPU -->
-        <Route path="/cpu">
-            <ResourcesOverviewCpu />
-        </Route>
-        <Route path="/cpu/fuel">
-            <ResourcesCPUFuel />
-        </Route>
-        <Route path="/cpu/powerup">
-            <ResourcesCPUPowerUp />
-        </Route>
-        <Route path="/cpu/rex">
-            <ResourcesCPUREX />
-        </Route>
-        <!-- NET -->
-        <Route path="/net">
-            <ResourcesOverviewNet />
-        </Route>
-        <Route path="/net/fuel">
-            <ResourcesNETFuel />
-        </Route>
-        <Route path="/net/powerup">
-            <ResourcesNETPowerUp />
-        </Route>
-        <Route path="/net/rex">
-            <ResourcesNETREX />
-        </Route>
-        <!-- RAM -->
-        <Route path="/ram/buy">
-            <ResourcesRAMBuy />
-        </Route>
-        <Route path="/ram/sell">
-            <ResourcesRAMSell />
-        </Route>
-        <!-- Staking -->
-        <Route path="/cpu/stake">
-            <ResourcesCPUStaking />
-        </Route>
-        <Route path="/net/stake">
-            <ResourcesNETStaking />
-        </Route>
-    {:else}
-        Resource management not available on the {$activeBlockchain.name} blockchain.
-    {/if}
-</Page>
+{#if $activeBlockchain}
+    <Page title={`${$activeBlockchain.name} Network Resources`}>
+        {#if $enabled}
+            <Route path="/">
+                <ResourcesOverview />
+            </Route>
+            <!-- CPU -->
+            <Route path="/cpu">
+                <ResourcesOverviewCpu />
+            </Route>
+            <Route path="/cpu/fuel">
+                <ResourcesCPUFuel />
+            </Route>
+            <Route path="/cpu/powerup">
+                <ResourcesCPUPowerUp />
+            </Route>
+            <Route path="/cpu/rex">
+                <ResourcesCPUREX />
+            </Route>
+            <!-- NET -->
+            <Route path="/net">
+                <ResourcesOverviewNet />
+            </Route>
+            <Route path="/net/fuel">
+                <ResourcesNETFuel />
+            </Route>
+            <Route path="/net/powerup">
+                <ResourcesNETPowerUp />
+            </Route>
+            <Route path="/net/rex">
+                <ResourcesNETREX />
+            </Route>
+            <!-- RAM -->
+            <Route path="/ram/buy">
+                <ResourcesRAMBuy />
+            </Route>
+            <Route path="/ram/sell">
+                <ResourcesRAMSell />
+            </Route>
+            <!-- Staking -->
+            <Route path="/cpu/stake">
+                <ResourcesCPUStaking />
+            </Route>
+            <Route path="/net/stake">
+                <ResourcesNETStaking />
+            </Route>
+        {:else}
+            Resource management not available on the {$activeBlockchain.name} blockchain.
+        {/if}
+    </Page>
+{/if}
