@@ -60,6 +60,9 @@
                         display: flex;
                         flex-grow: 1;
                     }
+                    &.advanced {
+                        padding-left: 2em;
+                    }
                 }
             }
         }
@@ -92,9 +95,6 @@
                 &.active {
                     background-color: var(--background-highlight);
                     color: var(--main-black);
-                }
-                &.advanced {
-                    padding-left: 2em;
                 }
                 .name {
                     display: none;
