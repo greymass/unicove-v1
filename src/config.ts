@@ -33,6 +33,14 @@ export enum ChainFeatures {
     DelphiOracle,
 }
 
+// List of features involving resources
+export const resourceFeatures = [
+    ChainFeatures.Fuel,
+    ChainFeatures.Staking,
+    ChainFeatures.REX,
+    ChainFeatures.PowerUp,
+]
+
 export interface ChainConfig {
     /** Short identifier. */
     id: string

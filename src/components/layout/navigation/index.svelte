@@ -1,4 +1,7 @@
 <script lang="ts">
+    import type {Readable} from 'svelte/store'
+    import {derived} from 'svelte/store'
+
     import type {NavigationItem} from '~/ui-types'
 
     import {activeBlockchain, preferences} from '~/store'
@@ -6,9 +9,7 @@
     import Icon from '~/components/elements/icon.svelte'
     import MediaQuery from '~/components/utils/media-query.svelte'
     import NavigationContent from '~/components/layout/navigation/content.svelte'
-    import {ChainFeatures} from '~/config'
-    import type {Readable} from 'svelte/store'
-    import {derived} from 'svelte/store'
+    import {resourceFeatures} from '~/config'
 
     export let open = false
     $: expand = $preferences.expandNavbar
@@ -30,12 +31,6 @@
     const advancedNavigation: Readable<NavigationItem[]> = derived(
         [activeBlockchain],
         ([$activeBlockchain]) => {
-            // List of supported features required to activate the resources section
-            const resourceFeatures = [
-                ChainFeatures.Staking,
-                ChainFeatures.REX,
-                ChainFeatures.PowerUp,
-            ]
             // Items to include in the advanced section
             const items: NavigationItem[] = []
             if ($activeBlockchain) {
