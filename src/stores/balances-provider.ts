@@ -3,7 +3,7 @@ import {Asset} from 'anchor-link'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 
-import {BalanceProviders, ChainConfig, chainConfig} from '~/config'
+import {BalanceProviders, chainConfig} from '~/config'
 import {activeSession} from '~/store'
 import {makeTokenKey, Token} from '~/stores/tokens'
 
