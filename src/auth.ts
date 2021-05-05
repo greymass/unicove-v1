@@ -7,7 +7,9 @@ import {getClient} from './api-client'
 import {appId, chains} from './config'
 import {activeSession, availableSessions} from './store'
 
-const transport = new Transport()
+const transport = new Transport({
+    requestStatus: false,
+})
 const link = new Link({
     chains: chains.map((chain) => ({chainId: chain.chainId, nodeUrl: getClient(chain)})),
     transport,
