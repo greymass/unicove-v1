@@ -41,6 +41,12 @@ export const resourceFeatures = [
     ChainFeatures.PowerUp,
 ]
 
+// Available Balance Providers
+export enum BalanceProviders {
+    // https://www.api.bloks.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
+    Bloks,
+}
+
 export interface ChainConfig {
     /** Short identifier. */
     id: string
@@ -64,6 +70,8 @@ export interface ChainConfig {
     resourceSampleAccount?: string
     /** Bloks url  */
     bloksUrl: string
+    /** Available Balance Providers */
+    balanceProviders?: Set<BalanceProviders>
 }
 
 /** Supported chains. */
@@ -88,6 +96,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://eos.greymass.com',
         testnet: false,
         bloksUrl: 'https://bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'fio',
@@ -100,6 +109,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://fio.greymass.com',
         testnet: false,
         bloksUrl: 'https://fio.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'fio-testnet',
@@ -132,6 +142,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://jungle3.greymass.com',
         testnet: true,
         bloksUrl: 'https://jungle3.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'telos',
@@ -151,6 +162,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://telos.greymass.com',
         testnet: false,
         bloksUrl: 'https://telos.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'wax',

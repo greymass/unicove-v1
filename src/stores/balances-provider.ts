@@ -3,7 +3,7 @@ import {Asset} from 'anchor-link'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 
-import {chainConfig} from '~/config'
+import {BalanceProviders, ChainConfig, chainConfig} from '~/config'
 import {activeSession} from '~/store'
 import {makeTokenKey, Token} from '~/stores/tokens'
 
@@ -56,13 +56,16 @@ export const balancesProvider: Writable<BalancesProvider> = writable(initialBala
 
 export async function updateBalances(session: LinkSession) {
     isLoading.set(true)
-    const data = await fetchData(session)
-    const balances = parseTokenBalances(session, data)
-    const tokens = parseTokens(session, data)
-    balancesProvider.set({
-        balances,
-        tokens,
-    })
+    const chain = chainConfig(session.chainId)
+    if (chain.balanceProviders?.has(BalanceProviders.Bloks)) {
+        const data = await fetchData(session)
+        const balances = parseTokenBalances(session, data)
+        const tokens = parseTokens(session, data)
+        balancesProvider.set({
+            balances,
+            tokens,
+        })
+    }
     isLoading.set(false)
 }
 
