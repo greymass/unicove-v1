@@ -6,7 +6,7 @@ import type {Readable} from 'svelte/store'
 import {activeSession, currentAccount} from '~/store'
 import {createTokenFromChainId, makeTokenKey, Token} from '~/stores/tokens'
 import {balancesProvider, updateBalances} from './balances-provider'
-import {getAccount} from '~/account-cache'
+import {updateAccount} from './account-provider'
 
 export interface Balance {
     key: string
@@ -69,8 +69,8 @@ export function createBalanceFromToken(
 
 export async function fetchBalances(session: LinkSession | undefined, refresh = false) {
     if (session) {
-        // Refresh the active sessions account
-        getAccount(session.auth.actor, session.chainId, refresh)
+        // Refresh the sessions account data
+        updateAccount(session.auth.actor, session.chainId, refresh)
         // Refresh balances from the balance provider
         updateBalances(session)
     }

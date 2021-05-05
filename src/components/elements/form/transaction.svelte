@@ -4,7 +4,7 @@
     import type {Name} from '@greymass/eosio'
 
     import {activeSession, currentAccount} from '~/store'
-    import {getAccount} from '~/account-cache'
+    import {getAccount} from '~/stores/account-provider'
     import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'

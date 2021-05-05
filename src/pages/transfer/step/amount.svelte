@@ -13,8 +13,9 @@
     import StatusAccount from '~/pages/transfer/status/account.svelte'
     import StatusBalance from '~/pages/transfer/status/balance.svelte'
     import StatusToken from '~/pages/transfer/status/token.svelte'
+    import type {Readable} from 'svelte/store'
 
-    export let balance: Balance
+    export let balance: Readable<Balance | undefined>
     export let token: Token
 
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
@@ -43,18 +44,20 @@
     {#if $transferData.toAccount}
         <StatusAccount toAccount={$transferData.toAccount} />
     {/if}
-    <StatusBalance {balance} />
-    <Form on:submit={confirmChange}>
-        <InputAsset
-            bind:valid={amountValid}
-            bind:value={amount}
-            focus
-            fluid
-            name="amount"
-            placeholder="amount to be transfered.."
-            balance={balance.quantity}
-        />
-    </Form>
+    {#if $balance}
+        <StatusBalance {balance} />
+        <Form on:submit={confirmChange}>
+            <InputAsset
+                bind:valid={amountValid}
+                bind:value={amount}
+                focus
+                fluid
+                name="amount"
+                placeholder="amount to be transfered.."
+                balance={$balance.quantity}
+            />
+        </Form>
+    {/if}
     <Button
         fluid
         primary

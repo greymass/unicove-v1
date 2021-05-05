@@ -1,6 +1,6 @@
 <script lang="ts">
     import {PublicKey, Name} from '@greymass/eosio'
-    import type {Writable} from 'svelte/store'
+    import type {Readable, Writable} from 'svelte/store'
     import {writable} from 'svelte/store'
 
     import {activeBlockchain, activeSession} from '~/store'
@@ -15,7 +15,7 @@
     import {transferData, Step} from '~/pages/transfer/transfer'
     import StatusToken from '~/pages/transfer/status/token.svelte'
 
-    export let balance: Balance
+    export let balance: Readable<Balance | undefined>
     export let token: Token
 
     let loading: Writable<boolean> = writable<boolean>(false)

@@ -9,7 +9,7 @@
     import {activeBlockchain, activeSession} from '~/store'
     import type {Token, TokenKeyParams} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
-    import {balances, makeBalanceKey} from '~/stores/balances'
+    import {balances, fetchBalances, makeBalanceKey} from '~/stores/balances'
     import {tokens, makeTokenKey} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
@@ -60,11 +60,11 @@
     })
 
     const balance: Readable<Balance | undefined> = derived(
-        [activeSession, token],
-        ([$activeSession, $token]) => {
-            if ($activeSession && $token) {
-                const key = makeBalanceKey($token, $activeSession.auth.actor)
-                return $balances.find((b) => (b.key = key))
+        [activeSession, balances, token],
+        ([$activeSession, $currentBalances, $token]) => {
+            if ($token) {
+                const key = makeBalanceKey($token, $activeSession!.auth.actor)
+                return $currentBalances.find((b) => b.key === key)
             }
         }
     )
@@ -131,6 +131,7 @@
                 successTx = result?.payload?.tx
                 $displaySuccessTx = true
                 resetData()
+                fetchBalances($activeSession)
             })
     }
 </script>
@@ -142,10 +143,10 @@
     <div class="container">
         {#if $balance && $token}
             {#if $transferData.step === Step.Recipient}
-                <TransferRecipient balance={$balance} token={$token} />
+                <TransferRecipient {balance} token={$token} />
             {/if}
             {#if $transferData.step === Step.Amount}
-                <TransferAmount balance={$balance} token={$token} />
+                <TransferAmount {balance} token={$token} />
             {/if}
             {#if $transferData.step === Step.Confirm && $quantity}
                 <TransferConfirm token={$token} {handleTransfer} />
