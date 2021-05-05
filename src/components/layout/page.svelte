@@ -9,6 +9,9 @@
     export let title: string = ''
     export let subtitle: string = ''
 
+    /** Whether or not to show the left navigation */
+    export let displayNavigation = true
+
     let accountSidebar = false
     let navigationSidebar = false
 </script>
@@ -70,7 +73,7 @@
 </style>
 
 <div class="layout">
-    {#if $activeSession}
+    {#if displayNavigation && $activeSession}
         <Navigation bind:open={navigationSidebar} />
     {/if}
     <AccountSidebar bind:open={accountSidebar} />
@@ -86,9 +89,11 @@
     <div class="main">
         <div class="content">
             <div class="header">
-                <div class="title">
-                    <Header {title} {subtitle} />
-                </div>
+                {#if title}
+                    <div class="title">
+                        <Header {title} {subtitle} />
+                    </div>
+                {/if}
                 {#if $$slots.controls}
                     <div class="controls">
                         <slot name="controls" />
