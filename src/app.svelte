@@ -91,7 +91,7 @@
 
         --light-blue: #3a3a3c;
         --dark-grey: #8e8e93;
-        --divider-grey: #8e8e93;
+        --divider-grey: #3a3a3c;
     }
 
     main {
