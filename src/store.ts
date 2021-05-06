@@ -50,3 +50,24 @@ export const currentAccountBalance: Readable<Asset | undefined> = derived(
         }
     }
 )
+
+const systemDarkMode = writable<boolean>(
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+)
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+        systemDarkMode.set(event.matches)
+    })
+}
+
+/** If dark mode is enabled. */
+export const darkMode = derived(
+    [systemDarkMode, preferences],
+    ([$systemDarkMode, $preferences]) => {
+        if ($preferences.darkmode !== null) {
+            return $preferences.darkmode
+        } else {
+            return $systemDarkMode
+        }
+    }
+)

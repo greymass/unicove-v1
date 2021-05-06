@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Route, router} from 'tinro'
 
-    import {activeSession, appReady, preferences} from '~/store'
+    import {activeSession, appReady, darkMode} from '~/store'
     import {isRelease} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
@@ -13,7 +13,7 @@
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
 
-    $: document.body.classList.toggle('darkmode', $preferences.darkmode)
+    $: document.body.classList.toggle('darkmode', $darkMode)
 
     $: needLogin =
         $activeSession === undefined &&
