@@ -1,5 +1,5 @@
 <script>
-    import {activeSession, preferences} from '~/store'
+    import {activeSession, preferences, darkMode} from '~/store'
     import {activate} from '~/auth'
 
     import type {SessionLike} from '~/auth'
@@ -11,6 +11,10 @@
     function onSelect(session: SessionLike) {
         activate(session)
         open = false
+    }
+
+    function setDarkMode(state: boolean, event: MouseEvent) {
+        preferences.darkmode = event.shiftKey ? null : state
     }
 </script>
 
@@ -70,12 +74,12 @@
 </style>
 
 <div class="account-button">
-    {#if preferences.darkmode}
-        <span class="icon" on:click={() => (preferences.darkmode = false)}>
+    {#if $darkMode}
+        <span class="icon" on:click={(event) => setDarkMode(false, event)}>
             <Icon name="sun" />
         </span>
     {:else}
-        <span class="icon" on:click={() => (preferences.darkmode = true)}>
+        <span class="icon" on:click={(event) => setDarkMode(true, event)}>
             <Icon name="moon" />
         </span>
     {/if}
