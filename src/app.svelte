@@ -94,6 +94,10 @@
         --divider-grey: #3a3a3c;
     }
 
+    body {
+        background: var(--main-white);
+    }
+
     main {
         min-height: 100vh;
     }

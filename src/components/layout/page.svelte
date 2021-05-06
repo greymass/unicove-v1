@@ -41,9 +41,14 @@
 
     .main {
         flex-grow: 1;
+        padding-top: 80px;
         min-height: 100vh;
         width: 100%;
         overflow: auto;
+        .content {
+            margin: 0 auto;
+            max-width: 48rem;
+        }
     }
 
     .header {
@@ -59,16 +64,6 @@
         flex-direction: column;
         flex-basis: 100%;
         flex: 1;
-    }
-
-    .content {
-        margin: 80px 45px 0;
-    }
-
-    @media only screen and (max-width: 600px) {
-        .content {
-            margin: 80px 10px 0;
-        }
     }
 </style>
 
