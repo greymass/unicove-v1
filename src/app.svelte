@@ -13,6 +13,7 @@
     import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
+    import Loading from './pages/loading.svelte'
 
     $: document.body.classList.toggle('darkmode', $darkMode)
 
@@ -109,7 +110,7 @@
 </svelte:head>
 <main>
     {#if !$appReady}
-        Loading...
+        <Loading />
     {:else if needLogin}
         <Login />
     {:else}
