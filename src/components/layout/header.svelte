@@ -22,8 +22,6 @@
         line-height: 19px;
         letter-spacing: -0.26px;
         color: var(--dark-grey);
-
-        margin-bottom: 30px;
     }
 </style>
 
