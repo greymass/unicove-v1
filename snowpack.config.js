@@ -1,7 +1,15 @@
-const currentBranch = process.env['SNOWPACK_PUBLIC_BRANCH']
-const isProductionBuild = currentBranch === 'dev' || currentBranch === 'deploy'
+if (!process.env['BRANCH']) {
+    process.env['BRANCH'] = 'HEAD'
+}
+const isProductionBuild = process.env['BRANCH'] === 'dev' || process.env['BRANCH'] === 'deploy'
 if (!process.env['NODE_ENV']) {
     process.env['NODE_ENV'] = isProductionBuild ? 'production' : 'development'
+}
+
+// env vars to forward to snowpack (included in js bundle)
+const forwardEnv = ['BRANCH', 'REV']
+for (const key of forwardEnv) {
+    process.env[`SNOWPACK_PUBLIC_${key}`] = process.env[key]
 }
 
 /** @type { import("snowpack").SnowpackUserConfig } */
