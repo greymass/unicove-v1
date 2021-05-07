@@ -19,6 +19,14 @@
     export let primaryNavigation: NavigationItem[] = []
     export let advancedNavigation: NavigationItem[] = []
 
+    function handleHamburger() {
+        if (expand) {
+            dispatch('collapse', false)
+        } else {
+            preferences.expandNavbar = true
+        }
+    }
+
     const pathMatches = (item: NavigationItem): boolean => {
         if (item.exactPath) {
             return currentPath === item.path
@@ -28,139 +36,134 @@
 </script>
 
 <style type="scss">
-    .navigation {
-        align-self: stretch;
+    nav {
+        transition: 300ms ease-in-out;
+        transition-property: width, min-width;
         background-color: var(--main-grey);
-        display: flex;
-        flex-direction: column;
-        width: 97px;
-        min-width: 97px;
-        max-width: 97px;
         padding: 26px;
+        width: 268px;
+        min-width: 268px;
         height: 100%;
-        border-right-width: 2px;
-        align-items: center;
-        > * {
-            width: 100%;
-        }
-        &.expanded {
-            width: 268px;
-            min-width: 268px;
-            max-width: 268px;
-            .items {
-                max-width: 100%;
-                .item {
-                    color: var(--main-blue);
-                    padding: 0 10px;
-                    .icon {
-                        flex-grow: 0;
-                        margin-right: 12px;
-                    }
-                    .name {
-                        display: flex;
-                        flex-grow: 1;
-                    }
+        header {
+            color: var(--dark-grey);
+            font-weight: 600;
+            height: 46px;
+            display: flex;
+            overflow: hidden;
+            .title {
+                transition: 200ms all ease-out;
+                flex-grow: 1;
+                white-space: nowrap;
+                margin-right: 1em;
+                margin-top: 2px;
+                .version {
+                    font-family: Inter;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 10px;
+                    line-height: 250%;
+                    letter-spacing: -0.04px;
                 }
             }
-        }
-        .title {
-            color: var(--dark-grey);
-            font-size: 12px;
-            display: inline-block;
-            padding-bottom: 24px;
-            margin-bottom: 24px;
-            text-align: center;
-            border-bottom: 1px solid gray;
-            span {
-                padding: 12px;
-                cursor: pointer;
-            }
-        }
-        .items {
-            flex-grow: 1;
-            max-width: 32px;
-            .item {
-                border-radius: 4px;
+            .button {
                 color: var(--main-blue);
                 cursor: pointer;
-                display: flex;
-                font-size: 13px;
-                line-height: 32px;
-                min-height: 32px;
-                margin: 12px auto;
-                text-decoration: none;
+            }
+            border-bottom: 1px solid var(--divider-grey);
+        }
+
+        ul {
+            margin-top: 26px;
+            li {
+                border-radius: 8px;
+                a {
+                    color: var(--main-blue);
+                    display: flex;
+                    text-decoration: none;
+                    height: 32px;
+                    align-items: center;
+                    font-weight: 500;
+                }
+                margin-bottom: 8px;
+                &:hover {
+                    background-color: var(--background-highlight-hover);
+                }
                 &.active {
                     background-color: var(--background-highlight);
-                    color: var(--main-black);
-                }
-                &.advanced {
-                    padding-left: 2em;
-                }
-                .name {
-                    display: none;
+                    border-radius: 8px;
+                    a {
+                        color: var(--main-black);
+                    }
                 }
                 .icon {
-                    flex-grow: 1;
-                    text-align: center;
+                    padding: 0 10px;
+                }
+                .name {
+                    padding-left: 5px;
+                }
+            }
+        }
+
+        &.collapsed {
+            width: 97px;
+            min-width: 97px;
+            header {
+                justify-content: center;
+            }
+            ul li a {
+                justify-content: center;
+                .name {
+                    display: none;
                 }
             }
         }
     }
 </style>
 
-<div class="navigation" class:expanded={expand}>
-    <div class="title">
+<nav class:collapsed={!expand}>
+    <header>
         {#if expand}
-            Greymass Wallet
-            {#if !isRelease}
-                - {version}
-            {/if}
-            <span on:click={() => dispatch('collapse', false)}>
-                <Icon name="x" />
-            </span>
-        {:else}
-            <span on:click={() => (preferences.expandNavbar = true)}>
-                <Icon name="menu" />
-            </span>
+            <div class="title">
+                <div>Greymass Wallet</div>
+                {#if !isRelease}
+                    <div class="version">
+                        {version}
+                    </div>
+                {/if}
+            </div>
         {/if}
-    </div>
-    <div class="items">
+        <span class="button" on:click={handleHamburger}>
+            {#if expand}
+                <Icon name="x" />
+            {:else}
+                <Icon name="menu" />
+            {/if}
+        </span>
+    </header>
+    <ul>
         {#each primaryNavigation as item}
-            <a href={item.path} class="item" class:active={pathMatches(item)}>
-                <span class="icon">
-                    <Icon name={item.icon} />
-                </span>
-                <span class="name">{item.name}</span>
-            </a>
-        {/each}
-        <div
-            class="item"
-            on:click={() => {
-                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
-                preferences.expandNavbarAdvanced = !expandAdvanced
-                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
-            }}
-        >
-            <span class="icon">
-                <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
-            </span>
-            <span class="name">Advanced</span>
-        </div>
-        {#if expandAdvanced}
-            {#each advancedNavigation as item}
-                <a href={item.path} class="item advanced" class:active={pathMatches(item)}>
+            <li class:active={pathMatches(item)}>
+                <a href={item.path}>
                     <span class="icon">
                         <Icon name={item.icon} />
                     </span>
                     <span class="name">{item.name}</span>
                 </a>
-            {/each}
-        {/if}
-    </div>
-    <!-- <div class="footer">
-        <h2>Support</h2>
-        <a href="#feedback"> Feedback </a>
-        <br />
-        <a href="#about" class="info-icon"> About </a>
-    </div> -->
-</div>
+            </li>
+        {/each}
+        <li>
+            <ul>
+                {#each advancedNavigation as item}
+                    <li class:active={pathMatches(item)}>
+                        <a href={item.path}>
+                            <span class="icon">
+                                <Icon name={item.icon} />
+                            </span>
+                            <span class="name">{item.name}</span>
+                        </a>
+                    </li>
+                {/each}
+            </ul>
+        </li>
+    </ul>
+</nav>
