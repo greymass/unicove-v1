@@ -10,6 +10,8 @@
     import Icon from '~/components/elements/icon.svelte'
 
     export let balance: Balance
+    export let name: string = ''
+    export let transferable: boolean = true
 
     let token: Readable<Token | undefined> = derived([tokens], ([$tokens]) =>
         $tokens.find((t) => t.key === balance.tokenKey)
@@ -71,7 +73,9 @@
         {/if}
     </td>
     <td>
-        {#if $token}
+        {#if name}
+            {name}
+        {:else if $token}
             {$token.name}
         {:else}
             {balance.quantity.symbol.name}
@@ -87,7 +91,7 @@
         {/if}
     </td>
     <td>
-        {#if $token}
+        {#if $token && transferable}
             <Button
                 href={`/transfer/${String($token.contract).toLowerCase()}/${String(
                     $token.name

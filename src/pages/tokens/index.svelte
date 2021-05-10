@@ -2,29 +2,87 @@
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
-    import {activeSession, activeBlockchain, currentAccount} from '~/store'
+    import {getClient} from '~/api-client'
+    import {DelegatedBandwidth} from '~/abi-types'
+    import {ChainFeatures} from '~/config'
+
+    import {activeSession, activeBlockchain, currentAccount, activePriceTicker} from '~/store'
     import {balances, fetchBalances} from '~/stores/balances'
+    import {isLoading} from '~/stores/balances-provider'
     import {getToken} from '~/stores/tokens'
-    import {priceTicker} from '~/price-ticker'
+    import {stateREX} from '~/pages/resources/resources'
 
     import Page from '~/components/layout/page.svelte'
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
 
     import TokenTable from '~/pages/tokens/table.svelte'
-    import {isLoading} from '~/stores/balances-provider'
 
-    const price = priceTicker($activeBlockchain!).catch((error) => {
-        console.warn(`Unable to load price on ${$activeBlockchain!.id}`, error)
-    })
+    interface Delegations {
+        rows: DelegatedBandwidth[]
+    }
+
+    const delegations: Readable<Delegations> = derived(
+        [activeBlockchain, currentAccount],
+        ([$activeBlockchain, $currentAccount], set) => {
+            if (
+                $activeBlockchain &&
+                $activeBlockchain.chainFeatures.has(ChainFeatures.Staking) &&
+                $currentAccount
+            ) {
+                getClient($activeBlockchain.chainId)
+                    .v1.chain.get_table_rows({
+                        code: 'eosio',
+                        table: 'delband',
+                        scope: $currentAccount.account_name,
+                        type: DelegatedBandwidth,
+                    })
+                    .then((result) => {
+                        set(result)
+                    })
+                    .catch((err) => {
+                        console.log('error retrieving delegations', err)
+                        set({rows: []})
+                    })
+            }
+        }
+    )
+
+    const delegatedTokens = derived(
+        [currentAccount, delegations],
+        ([$currentAccount, $delegations]) => {
+            let delegated = 0
+            if ($currentAccount && $delegations && $delegations.rows.length > 0) {
+                $delegations.rows
+                    .filter((record) => record.from.equals($currentAccount.account_name))
+                    .forEach((record) => {
+                        delegated += record.cpu_weight.value
+                        delegated += record.net_weight.value
+                    })
+            }
+            return delegated
+        }
+    )
+
+    const rexTokens: Readable<number> = derived(
+        [currentAccount, stateREX],
+        ([$currentAccount, $stateREX]) => {
+            if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
+                return $stateREX.value * $currentAccount.rex_info.rex_balance.value
+            }
+            return 0
+        }
+    )
 
     let totalUsdValue: Readable<number> = derived(
-        [activeSession, balances, price],
-        ([$activeSession, $balances, $price]) => {
+        [balances, currentAccount, delegatedTokens, activePriceTicker, rexTokens],
+        ([$balances, $currentAccount, $delegated, $price, $rex]) => {
             let value = 0
-            if ($activeSession && $balances && $price) {
+            if ($currentAccount && $price !== undefined) {
+                value += $rex * $price
+                value += $delegated * $price
                 $balances
-                    .filter((record) => record.account.equals($activeSession.auth.actor))
+                    .filter((record) => record.account.equals($currentAccount.account_name))
                     .map((record) => {
                         const token = getToken(record.tokenKey)
                         if (token && token.price) {
@@ -55,8 +113,6 @@
             .buttons-container {
                 display: flex;
                 flex-direction: row;
-                padding: 20px 0;
-
                 .button-container {
                     display: flex;
                     flex-direction: column;
@@ -105,7 +161,7 @@
     </span>
     {#if $balances}
         <div class="container">
-            <TokenTable {balances} />
+            <TokenTable {balances} {rexTokens} {delegatedTokens} />
             <div class="buttons-container">
                 <div class="button-container">
                     <Button href="/transfer" size="large">Create new transfer</Button>
