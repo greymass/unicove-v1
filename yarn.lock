@@ -889,10 +889,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@greymass/eosio-resources@0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@greymass/eosio-resources/-/eosio-resources-0.6.3.tgz#8aa044562022e2f96a7776e9e588d06bea1092a3"
-  integrity sha512-U3/Jf0iZvKYEW8YlFuuHD5QH2NdeRvmxPGS7mLQQpCNzLZLkfJist5GoMwwexeaZojtlIM1yluDIGgc6jzx2sw==
+"@greymass/eosio-resources@0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@greymass/eosio-resources/-/eosio-resources-0.6.4.tgz#eabb4a5a031cb0627efff0a16b15ae85a6aab407"
+  integrity sha512-hWmBB66dp+7byYbfGfbn4RS9B6xaIhi/BTVcwdQXGi36BK3agE+k8BmpLk8FWT0ot0JUhXDUDbd4asM15jX8hw==
   dependencies:
     "@greymass/eosio" "^0.4.2"
     bn.js "^4.11.9"
