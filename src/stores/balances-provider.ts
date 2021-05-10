@@ -75,19 +75,24 @@ async function fetchData(session: LinkSession) {
         session.auth.actor
     }?type=getAccountTokens&coreSymbol=${chain.coreTokenSymbol}`
 
-    const apiResponse = await fetch(apiUrl).catch((error) => {
-        console.log('An error occured while fetching token balances:', {error})
-    })
-
-    const jsonBody =
-        apiResponse &&
-        (await apiResponse.json().catch((error) => {
-            console.log('An error occured while parsing the token balances response body:', {
-                error,
-            })
-        }))
-
-    return jsonBody.tokens
+    return await fetch(apiUrl)
+        .then(async (response) => {
+            const jsonBody =
+                response &&
+                (await response.json().catch((error) => {
+                    console.log(
+                        'An error occured while parsing the token balances response body:',
+                        {
+                            error,
+                        }
+                    )
+                }))
+            return jsonBody.tokens
+        })
+        .catch((error) => {
+            console.log('An error occured while fetching token balances:', {error})
+            return []
+        })
 }
 
 function parseTokenInfo(session: LinkSession, balance: RawTokenBalance): Token {
