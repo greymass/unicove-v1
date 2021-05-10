@@ -4,7 +4,7 @@ import {derived, get} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 
 import {chainConfig} from '~/config'
-import {activePriceTicker, activeSession} from '~/store'
+import {activeBlockchain, activePriceTicker, activeSession} from '~/store'
 import {balancesProvider} from './balances-provider'
 
 export interface Token {
@@ -48,6 +48,27 @@ export function makeTokenKey(token: TokenKeyParams): string {
         .join('-')
         .toLowerCase()
 }
+
+export const systemTokenKey: Readable<string> = derived(activeBlockchain, ($activeBlockchain) => {
+    if ($activeBlockchain) {
+        const params: TokenKeyParams = {
+            chainId: $activeBlockchain.chainId,
+            contract: $activeBlockchain.coreTokenContract,
+            name: $activeBlockchain.coreTokenSymbol.name,
+        }
+        return makeTokenKey(params)
+    }
+    return ''
+})
+
+export const systemToken: Readable<Token | undefined> = derived(
+    activeBlockchain,
+    ($activeBlockchain) => {
+        if ($activeBlockchain) {
+            return createTokenFromChainId($activeBlockchain.chainId)
+        }
+    }
+)
 
 export function createTokenFromChainId(
     chainId: ChainId,
