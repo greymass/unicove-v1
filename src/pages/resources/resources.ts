@@ -34,8 +34,8 @@ export const sampleUsage: Readable<SampleUsage | undefined> = derived(
             $activeBlockchain &&
             Array.from($activeBlockchain.chainFeatures).some((r) => resourceFeatures.includes(r))
         ) {
-            const interval = setInterval(() => getSampleUsage(set, $activeBlockchain), 30000)
             getSampleUsage(set, $activeBlockchain)
+            const interval = setInterval(() => getSampleUsage(set, $activeBlockchain), 30000)
             return () => {
                 clearInterval(interval)
             }
@@ -80,7 +80,10 @@ export const statePowerUp: Readable<PowerUpState | undefined> = derived(
     ([$activeBlockchain], set) => {
         if ($activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)) {
             getPowerUpState(set, $activeBlockchain)
-            return () => setInterval(() => getPowerUpState(set, $activeBlockchain), 30000)
+            const interval = setInterval(() => getPowerUpState(set, $activeBlockchain), 30000)
+            return () => {
+                clearInterval(interval)
+            }
         }
     }
 )
@@ -128,7 +131,10 @@ export const stateREX: Readable<REXState | undefined> = derived(
     ([$activeBlockchain], set) => {
         if ($activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.REX)) {
             getREXState(set, $activeBlockchain)
-            return () => setInterval(() => getREXState(set, $activeBlockchain), 30000)
+            const interval = setInterval(() => getREXState(set, $activeBlockchain), 30000)
+            return () => {
+                clearInterval(interval)
+            }
         }
     }
 )
@@ -150,7 +156,10 @@ export const stateRAM: Readable<RAMState | undefined> = derived(
     ([$activeBlockchain], set) => {
         if ($activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.BuyRAM)) {
             getRAMState(set, $activeBlockchain)
-            return () => setInterval(() => getRAMState(set, $activeBlockchain), 30000)
+            const interval = setInterval(() => getRAMState(set, $activeBlockchain), 30000)
+            return () => {
+                clearInterval(interval)
+            }
         }
     }
 )
