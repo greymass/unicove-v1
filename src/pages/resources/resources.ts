@@ -89,7 +89,12 @@ export const statePowerUp: Readable<PowerUpState | undefined> = derived(
 )
 
 // Rent 1ms of the networks CPU
-export const msToRent = writable<number>(1)
+export const msToRent: Readable<number> = derived(activeBlockchain, ($activeBlockchain) => {
+    if ($activeBlockchain.resourceSampleMilliseconds) {
+        return $activeBlockchain.resourceSampleMilliseconds
+    }
+    return 1
+})
 
 export const powerupPrice = derived(
     [msToRent, sampleUsage, statePowerUp, info],
