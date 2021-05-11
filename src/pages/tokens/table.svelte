@@ -77,14 +77,14 @@
 
 <style type="scss">
     table {
+        margin-top: 1.5em;
         table-layout: fixed;
         width: 100%;
         white-space: nowrap;
         thead tr {
             th {
+                font-weight: bold;
                 white-space: nowrap;
-                // overflow: hidden;
-                // text-overflow: ellipsis;
                 text-overflow: clip;
                 text-align: right;
                 &:first-child,
