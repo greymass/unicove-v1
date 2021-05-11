@@ -162,6 +162,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
+        resourceSampleAccount: 'greymassfuel',
         resourceSampleMilliseconds: 1000,
         testnet: false,
         bloksUrl: 'https://telos.bloks.io',
