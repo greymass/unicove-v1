@@ -21,6 +21,7 @@
     import ResourcesNETREX from '~/pages/resources/pages/net/rex.svelte'
     import ResourcesCPUStaking from '~/pages/resources/pages/cpu/staking.svelte'
     import ResourcesNETStaking from '~/pages/resources/pages/net/staking.svelte'
+    import Button from '~/components/elements/button.svelte'
 
     const enabled: Readable<boolean> = derived(activeBlockchain, ($activeBlockchain) => {
         if ($activeBlockchain) {
@@ -79,7 +80,8 @@
                 <ResourcesNETStaking />
             </Route>
         {:else}
-            Resource management not available on the {$activeBlockchain.name} blockchain.
+            <p>Resource management not available on the {$activeBlockchain.name} blockchain.</p>
+            <Button href="/">Back to Dashboard</Button>
         {/if}
     </Page>
 {/if}
