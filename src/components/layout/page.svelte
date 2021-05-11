@@ -48,10 +48,12 @@
         .content {
             margin: 0 auto;
             max-width: 48rem;
+            padding: 0 15px;
         }
     }
 
     .header {
+        align-items: center;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
