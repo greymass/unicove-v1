@@ -68,6 +68,8 @@ export interface ChainConfig {
     testnet: boolean
     /** Account to use for resource sampling */
     resourceSampleAccount?: string
+    /** The number of milliseconds to base sample prices on */
+    resourceSampleMilliseconds?: number
     /** Bloks url  */
     bloksUrl: string
     /** Available Balance Providers */
@@ -160,6 +162,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
+        resourceSampleMilliseconds: 1000,
         testnet: false,
         bloksUrl: 'https://telos.bloks.io',
         balanceProviders: new Set([BalanceProviders.Bloks]),

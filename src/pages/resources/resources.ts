@@ -109,15 +109,22 @@ export const powerupPrice = derived(
     }
 )
 
-export const stakingPrice = derived([msToRent, sampleUsage], ([$msToRent, $sampleUsage]) => {
-    if ($msToRent && $sampleUsage) {
-        const {account} = $sampleUsage
-        const cpu_weight = Number(account.total_resources.cpu_weight.units)
-        const cpu_limit = Number(account.cpu_limit.max.value)
-        return Asset.fromUnits(cpu_weight / cpu_limit, '4,EOS')
+export const stakingPrice = derived(
+    [activeBlockchain, msToRent, sampleUsage],
+    ([$activeBlockchain, $msToRent, $sampleUsage]) => {
+        if ($msToRent && $sampleUsage) {
+            const {account} = $sampleUsage
+            const cpu_weight = Number(account.total_resources.cpu_weight.units)
+            const cpu_limit = Number(account.cpu_limit.max.value)
+            let price = cpu_weight / cpu_limit
+            if ($activeBlockchain.resourceSampleMilliseconds) {
+                price *= $activeBlockchain.resourceSampleMilliseconds
+            }
+            return Asset.fromUnits(price, $activeBlockchain.coreTokenSymbol)
+        }
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
-    return Asset.from(0, '4,EOS')
-})
+)
 
 export const getREXState = async (set: (v: any) => void, chain: ChainConfig) =>
     getResourceClient(chain)
