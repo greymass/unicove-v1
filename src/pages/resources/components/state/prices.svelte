@@ -116,7 +116,13 @@
                 <div class="offer">
                     <div class="service">REX</div>
                     <div class="price">{$rexPrice.value.toFixed($rexPrice.symbol.precision)}</div>
-                    <div class="pair">{$token} per {unit}</div>
+                    <div class="pair">
+                        {$token} per
+                        {#if $activeBlockchain.resourceSampleMilliseconds}
+                            {$activeBlockchain.resourceSampleMilliseconds}
+                        {/if}
+                        {unit}
+                    </div>
                     <div class="term">Usable each day for <br />the next 30 days.</div>
                     <Button primary href="/resources/{resource}/rex">Rent via REX</Button>
                 </div>
@@ -131,7 +137,13 @@
                             $stakingPrice.symbol.precision
                         )}
                     </div>
-                    <div class="pair">{$token} per {unit}</div>
+                    <div class="pair">
+                        {$token} per
+                        {#if $activeBlockchain.resourceSampleMilliseconds}
+                            {$activeBlockchain.resourceSampleMilliseconds}
+                        {/if}
+                        {unit}
+                    </div>
                     <div class="term">Usable each day until <br />they are unstaked.</div>
                     <Button primary href="/resources/{resource}/stake">Stake Tokens</Button>
                 </div>
