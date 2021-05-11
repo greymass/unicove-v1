@@ -63,30 +63,6 @@
             table-layout: fixed;
             width: 100%;
             white-space: nowrap;
-            tr {
-                th {
-                    cursor: pointer;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    text-align: right;
-                    font-family: Inter;
-                    font-style: normal;
-                    font-weight: 600;
-                    font-size: 12px;
-                    line-height: 2em;
-                    letter-spacing: 0.1px;
-                    text-transform: uppercase;
-                    color: var(--dark-grey);
-                    &:first-child {
-                        width: 64px;
-                        text-align: center;
-                    }
-                    &:nth-child(2) {
-                        text-align: left;
-                    }
-                }
-            }
         }
     }
 </style>
@@ -95,13 +71,6 @@
     <div class="container">
         <Input on:changed={updateQuery} name="query" focus fluid placeholder="Search tokens..." />
         <table>
-            <thead>
-                <tr>
-                    <th />
-                    <th>Token</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
             <tbody>
                 {#if $records}
                     {#each $records as record}
