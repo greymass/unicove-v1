@@ -8,7 +8,6 @@
 
     import Login from '~/pages/login.svelte'
     import Request from '~/pages/request/index.svelte'
-    import TransferSelect from '~/pages/transfer/select.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
@@ -122,7 +121,7 @@
                 <Tokens />
             </Route>
             <Route path="/transfer">
-                <TransferSelect />
+                <Transfer />
             </Route>
             <Route path="/transfer/:contract/:token" let:meta>
                 <Transfer {meta} />

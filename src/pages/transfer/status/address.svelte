@@ -5,6 +5,14 @@
     import {Step, transferData} from '../transfer'
 
     export let toAddress: PublicKey
+
+    function changeRecipient() {
+        transferData.update((data) => ({
+            ...data,
+            step: Step.Recipient,
+            backStep: data.step,
+        }))
+    }
 </script>
 
 <style type="scss">
@@ -13,11 +21,6 @@
     }
 </style>
 
-<Completed
-    header="Recipient"
-    changeStep={() => {
-        $transferData.step = Step.Recipient
-    }}
->
+<Completed header="Recipient" changeStep={changeRecipient}>
     <span>{toAddress.toLegacyString($activeBlockchain?.coreTokenSymbol.name)}</span>
 </Completed>

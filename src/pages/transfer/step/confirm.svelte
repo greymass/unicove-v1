@@ -1,6 +1,5 @@
 <script lang="ts">
     import {activeBlockchain} from '~/store'
-    import type {Token} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
@@ -9,25 +8,27 @@
 
     import {transferData} from '~/pages/transfer/transfer'
     import {txFee} from '~/pages/transfer/fio'
-    import StatusToken from '~/pages/transfer/status/token.svelte'
     import StatusAddress from '~/pages/transfer/status/address.svelte'
     import StatusAccount from '~/pages/transfer/status/account.svelte'
     import StatusQuantity from '~/pages/transfer/status/quantity.svelte'
     import StatusMemo from '~/pages/transfer/status/memo.svelte'
     import StatusFee from '~/pages/transfer/status/fee.svelte'
 
-    export let token: Token
-
     export let handleTransfer: () => Promise<void>
 
     let memo: string | undefined = $transferData.memo
+
+    function handleKeydown(event: KeyboardEvent) {
+        if (event.key === 'Enter') {
+            confirmTransaction()
+        }
+    }
 
     async function confirmTransaction() {
         transferData.update((data) => ({
             ...data,
             memo,
         }))
-
         handleTransfer()
     }
 </script>
@@ -40,8 +41,8 @@
     }
 </style>
 
+<svelte:window on:keydown={handleKeydown} />
 <Form>
-    <StatusToken {token} />
     {#if $transferData.toAddress}
         <StatusAddress toAddress={$transferData.toAddress} />
     {/if}

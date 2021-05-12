@@ -5,7 +5,7 @@ import type {Readable} from 'svelte/store'
 
 import {activeSession, currentAccount} from '~/store'
 import {createTokenFromChainId, makeTokenKey, Token} from '~/stores/tokens'
-import {balancesProvider, updateBalances} from './balances-provider'
+import {balancesProvider, updateBalances} from '~/stores/balances-provider'
 import {updateAccount} from './account-provider'
 
 export interface Balance {

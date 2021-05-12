@@ -13,7 +13,6 @@
     import Form from '~/components/elements/form.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
-    import StatusToken from '~/pages/transfer/status/token.svelte'
 
     export let balance: Readable<Balance | undefined>
     export let token: Token
@@ -27,7 +26,8 @@
             ...data,
             toAccount: toAccount && toAccount.length > 0 ? Name.from(toAccount) : undefined,
             toAddress: toAddress && toAddress.length > 0 ? PublicKey.from(toAddress) : undefined,
-            step: Step.Amount,
+            step: data.backStep || Step.Amount,
+            backStep: undefined,
         }))
     }
 </script>
@@ -37,7 +37,6 @@
 
 <div class="container">
     {#if balance && token}
-        <StatusToken {token} />
         <Form on:submit={confirmChange}>
             {#if $activeBlockchain && $activeBlockchain.id === 'fio'}
                 <InputPublicKey
@@ -45,7 +44,7 @@
                     focus
                     fluid
                     name="to"
-                    placeholder="Recipient public key..."
+                    placeholder="Enter a public key..."
                 />
                 <Button size="large" fluid formValidation on:action={confirmChange}>
                     Send {token.name}
@@ -57,7 +56,7 @@
                     focus
                     fluid
                     name="to"
-                    placeholder="Recipient account name..."
+                    placeholder="Enter an account name..."
                     activeSession={$activeSession}
                 />
                 <Button
@@ -68,10 +67,7 @@
                     formValidation
                     on:action={confirmChange}
                 >
-                    Send {token.name}
-                    {#if toAccount}
-                        to {toAccount}
-                    {/if}
+                    Next
                 </Button>
             {/if}
         </Form>

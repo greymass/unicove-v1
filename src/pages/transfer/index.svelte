@@ -11,6 +11,7 @@
     import type {Balance} from '~/stores/balances'
     import {balances, fetchBalances, makeBalanceKey} from '~/stores/balances'
     import {tokens, makeTokenKey} from '~/stores/tokens'
+    import {systemTokenKey} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
     import Modal from '~/components/elements/modal.svelte'
@@ -23,6 +24,7 @@
     import TransferAmount from '~/pages/transfer/step/amount.svelte'
     import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
     import TransferMemo from '~/pages/transfer/step/memo.svelte'
+    import TransferToken from '~/pages/transfer/step/token.svelte'
 
     export let meta: TinroRouteMeta | undefined = undefined
 
@@ -38,16 +40,25 @@
     })
 
     const token: Readable<Token | undefined> = derived(
-        [activeSession, tokens],
-        ([$activeSession, $tokens]) => {
-            if (meta && $activeSession && $tokens) {
-                const params: TokenKeyParams = {
-                    chainId: $activeBlockchain!.chainId,
-                    contract: Name.from(meta.params.contract),
-                    name: Name.from(meta.params.token),
+        [activeSession, systemTokenKey, transferData, tokens],
+        ([$activeSession, $systemTokenKey, $transferData, $tokens]) => {
+            if ($activeSession && $systemTokenKey && $tokens) {
+                // If this transfer session data has a token key, use it first
+                if ($transferData.tokenKey) {
+                    return $tokens.find((t) => t.key === $transferData.tokenKey)
                 }
-                const key = makeTokenKey(params)
-                return $tokens.find((t) => t.key === key)
+                // If the URL has a token key, use it second
+                if (meta) {
+                    const params: TokenKeyParams = {
+                        chainId: $activeBlockchain!.chainId,
+                        contract: Name.from(meta.params.contract),
+                        name: Name.from(meta.params.token),
+                    }
+                    const key = makeTokenKey(params)
+                    return $tokens.find((t) => t.key === key)
+                }
+                // Otherwise return the system token key
+                return $tokens.find((t) => t.key === $systemTokenKey)
             }
         }
     )
@@ -136,12 +147,21 @@
     }
 </script>
 
-<style>
+<style type="scss">
+    :global(form) {
+        margin: 1em 0;
+    }
+    :global(form input) {
+        margin: 2em 0;
+    }
 </style>
 
-<Page title="Transfer Tokens">
+<Page title="Send tokens">
     <div class="container">
         {#if $balance && $token}
+            {#if $transferData.step === Step.Token}
+                <TransferToken />
+            {/if}
             {#if $transferData.step === Step.Recipient}
                 <TransferRecipient {balance} token={$token} />
             {/if}
@@ -149,10 +169,10 @@
                 <TransferAmount {balance} token={$token} />
             {/if}
             {#if $transferData.step === Step.Confirm && $quantity}
-                <TransferConfirm token={$token} {handleTransfer} />
+                <TransferConfirm {handleTransfer} />
             {/if}
             {#if $transferData.step === Step.Memo}
-                <TransferMemo token={$token} />
+                <TransferMemo />
             {/if}
         {:else}
             No balance of this token to transfer!
@@ -168,7 +188,7 @@
         {/if}
 
         {#if $transferData.step > 0}
-            <Button fluid on:action={resetData}>Reset Transfer</Button>
+            <Button fluid on:action={resetData}>Cancel</Button>
         {/if}
     </div>
 </Page>

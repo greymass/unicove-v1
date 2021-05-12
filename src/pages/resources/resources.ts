@@ -1,4 +1,4 @@
-import {derived, Readable, writable} from 'svelte/store'
+import {derived, Readable} from 'svelte/store'
 import {API, Asset} from '@greymass/eosio'
 import {Resources, SampleUsage, PowerUpState, RAMState, REXState} from '@greymass/eosio-resources'
 import {activeBlockchain} from '~/store'

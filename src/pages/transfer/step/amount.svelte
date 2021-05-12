@@ -9,10 +9,7 @@
     import Form from '~/components/elements/form.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
-    import StatusAddress from '~/pages/transfer/status/address.svelte'
-    import StatusAccount from '~/pages/transfer/status/account.svelte'
     import StatusBalance from '~/pages/transfer/status/balance.svelte'
-    import StatusToken from '~/pages/transfer/status/token.svelte'
     import type {Readable} from 'svelte/store'
 
     export let balance: Readable<Balance | undefined>
@@ -25,27 +22,17 @@
         transferData.update((data) => ({
             ...data,
             quantity: Asset.from(Number(amount), token.symbol),
-            step: Step.Confirm,
+            step: data.backStep || Step.Confirm,
+            backStep: undefined,
         }))
     }
 </script>
 
 <style type="scss">
-    :global(form) {
-        margin: 1em 0;
-    }
 </style>
 
 <div class="container">
-    <StatusToken {token} />
-    {#if $transferData.toAddress}
-        <StatusAddress toAddress={$transferData.toAddress} />
-    {/if}
-    {#if $transferData.toAccount}
-        <StatusAccount toAccount={$transferData.toAccount} />
-    {/if}
     {#if $balance}
-        <StatusBalance {balance} />
         <Form on:submit={confirmChange}>
             <InputAsset
                 bind:valid={amountValid}
@@ -53,9 +40,10 @@
                 focus
                 fluid
                 name="amount"
-                placeholder="amount to be transfered.."
+                placeholder={`Enter the amount of tokens to send to ${$transferData.toAccount}`}
                 balance={$balance.quantity}
             />
+            <StatusBalance {token} {balance} />
         </Form>
     {/if}
     <Button
@@ -66,10 +54,6 @@
         formValidation
         on:action={confirmChange}
     >
-        Send {amount}
-        {token.name}
-        {#if $transferData.toAccount}
-            to {$transferData.toAccount}
-        {/if}
+        Continue
     </Button>
 </div>

@@ -1,26 +1,20 @@
 <script lang="ts">
-    import type {Readable} from 'svelte/store'
-    import type {Balance} from '~/stores/balances'
-    import type {Token} from '~/stores/tokens'
-
     import Button from '~/components/elements/button.svelte'
     import {Step, transferData} from '~/pages/transfer/transfer'
     import StatusContainer from '~/pages/transfer/status/template/container.svelte'
+    import Icon from '~/components/elements/icon.svelte'
 
-    export let token: Token
-    export let balance: Readable<Balance | undefined>
-
-    function changeToken() {
+    function changeRecipient() {
         transferData.update((data) => ({
             ...data,
             step: Step.Token,
-            backStep: Step.Amount,
+            backStep: data.step,
         }))
     }
 </script>
 
 <style type="scss">
-    .token {
+    .avatar {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -29,19 +23,15 @@
         border-radius: 50%;
         vertical-align: middle;
         margin-right: 10px;
-        img {
-            height: 32px;
-            width: 32px;
-        }
     }
 
-    .token:before {
+    .avatar:before {
         content: '';
         float: left;
         width: auto;
     }
 
-    .balance .quantity {
+    .recipient .account {
         color: var(--main-black);
         font-family: Inter;
         font-style: normal;
@@ -60,16 +50,21 @@
 </style>
 
 <StatusContainer>
-    <div class="token">
-        <img alt={String(token.name)} src={token.logo} />
+    <div class="avatar">
+        <Icon name="user" size="huge" />
     </div>
-    {#if $balance}
-        <div class="balance">
-            <div class="quantity">{$balance.quantity}</div>
-            <div>{$balance.account}</div>
+    <div class="recipient">
+        Send tokens to...
+        <div class="account">
+            {#if $transferData.toAddress}
+                {$transferData.toAddress}
+            {/if}
+            {#if $transferData.toAccount}
+                {$transferData.toAccount}
+            {/if}
         </div>
-    {/if}
+    </div>
     <div class="control">
-        <Button on:action={changeToken}>Change</Button>
+        <Button on:action={changeRecipient}>Change</Button>
     </div>
 </StatusContainer>
