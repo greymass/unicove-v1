@@ -62,6 +62,7 @@
         --main-white: #fff;
         --main-black: #585d6e;
         --main-blue: #2d8eff;
+        --main-green: #26c64b;
         --main-grey: #f7f7fc;
         --main-red: #ff931e;
 
