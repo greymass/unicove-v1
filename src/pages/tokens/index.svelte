@@ -151,7 +151,7 @@
     }
 </style>
 
-<Page title="Balances" subtitle={`Total ~${fiatFormat($totalUsdValue)}`}>
+<Page title="Balances" subtitle={`Est. ${fiatFormat($totalUsdValue)}`}>
     <span slot="controls">
         <div class="options">
             <Button on:action={refresh}>

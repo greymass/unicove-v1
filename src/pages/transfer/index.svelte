@@ -105,11 +105,11 @@
         <div class="options">
             <Button
                 primary={$transferData.step !== Step.Receive}
-                on:action={() => ($transferData.step = Step.Recipient)}>Send Tokens</Button
+                on:action={() => ($transferData.step = Step.Recipient)}>Send</Button
             >
             <Button
                 primary={$transferData.step === Step.Receive}
-                on:action={() => ($transferData.step = Step.Receive)}>Receive Tokens</Button
+                on:action={() => ($transferData.step = Step.Receive)}>Receive</Button
             >
         </div>
     </span>

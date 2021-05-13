@@ -76,67 +76,28 @@
 </script>
 
 <style type="scss">
-    table {
-        margin-top: 1.5em;
-        table-layout: fixed;
-        width: 100%;
-        white-space: nowrap;
-        thead tr {
-            th {
-                font-weight: bold;
-                white-space: nowrap;
-                text-overflow: clip;
-                text-align: right;
-                &:first-child,
-                &:last-child {
-                    text-align: center;
-                    width: 64px;
-                }
-                &:nth-child(2) {
-                    text-align: left;
-                }
-            }
-        }
-    }
-    @media only screen and (max-width: 600px) {
-        .mobile-hidden {
-            display: none;
-        }
+    .records {
+        margin: 1.5em 0;
     }
 </style>
 
-<table>
-    <thead>
-        <tr>
-            <th />
-            <th>Token</th>
-            <th>Balance</th>
-            <th class="mobile-hidden">Value</th>
-            <th />
-        </tr>
-    </thead>
-    <tbody>
-        {#if $systemTokenBalance}
-            <TokenRow balance={$systemTokenBalance} />
-        {/if}
-        {#if $stakedBalance && $systemToken}
-            <TokenRow
-                balance={$stakedBalance}
-                name={`${$systemToken.name} (Staked)`}
-                transferable={false}
-            />
-        {/if}
-        {#if $rexBalance && $systemToken}
-            <TokenRow
-                balance={$rexBalance}
-                name={`${$systemToken.name} (REX)`}
-                transferable={false}
-            />
-        {/if}
-        {#if $records}
-            {#each $records as balance}
-                <TokenRow {balance} />
-            {/each}
-        {/if}
-    </tbody>
-</table>
+<div class="records">
+    {#if $systemTokenBalance}
+        <TokenRow balance={$systemTokenBalance} />
+    {/if}
+    {#if $stakedBalance && $systemToken}
+        <TokenRow
+            balance={$stakedBalance}
+            name={`${$systemToken.name} (Staked)`}
+            transferable={false}
+        />
+    {/if}
+    {#if $rexBalance && $systemToken}
+        <TokenRow balance={$rexBalance} name={`${$systemToken.name} (REX)`} transferable={false} />
+    {/if}
+    {#if $records}
+        {#each $records as balance}
+            <TokenRow {balance} />
+        {/each}
+    {/if}
+</div>
