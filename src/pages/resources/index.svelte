@@ -34,7 +34,7 @@
 </script>
 
 {#if $activeBlockchain}
-    <Page title={`${$activeBlockchain.name} Network Resources`}>
+    <Page title="Network Resources">
         {#if $enabled}
             <Route path="/">
                 <ResourcesOverview />

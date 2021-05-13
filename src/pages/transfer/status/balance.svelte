@@ -5,7 +5,7 @@
 
     import Button from '~/components/elements/button.svelte'
     import {Step, transferData} from '~/pages/transfer/transfer'
-    import StatusContainer from '~/pages/transfer/status/template/container.svelte'
+    import FormBalance from '~/components/elements/form/balance.svelte'
 
     export let token: Token
     export let balance: Readable<Balance | undefined>
@@ -20,37 +20,6 @@
 </script>
 
 <style type="scss">
-    .token {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background-color: var(--main-grey);
-        padding: 6px;
-        border-radius: 50%;
-        vertical-align: middle;
-        margin-right: 10px;
-        img {
-            height: 32px;
-            width: 32px;
-        }
-    }
-
-    .token:before {
-        content: '';
-        float: left;
-        width: auto;
-    }
-
-    .balance .quantity {
-        color: var(--main-black);
-        font-family: Inter;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 28px;
-        letter-spacing: -0.26px;
-        vertical-align: middle;
-    }
     .control {
         margin-left: auto;
         :global(.button) {
@@ -59,17 +28,8 @@
     }
 </style>
 
-<StatusContainer>
-    <div class="token">
-        <img alt={String(token.name)} src={token.logo} />
-    </div>
-    {#if $balance}
-        <div class="balance">
-            <div class="quantity">{$balance.quantity}</div>
-            <div>{$balance.account}</div>
-        </div>
-    {/if}
+<FormBalance {token} {balance}>
     <div class="control">
         <Button on:action={changeToken}>Change</Button>
     </div>
-</StatusContainer>
+</FormBalance>

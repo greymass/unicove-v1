@@ -77,3 +77,14 @@ export async function fetchBalances(session: LinkSession | undefined, refresh = 
         updateBalances(session)
     }
 }
+
+export const systemTokenBalance: Readable<Balance | undefined> = derived(
+    [activeBlockchain, balances],
+    ([$activeBlockchain, $balances]) => {
+        if ($activeBlockchain) {
+            const token = createTokenFromChainId($activeBlockchain.chainId)
+            console.log(token)
+            return $balances.find((b) => b.tokenKey === token.key)
+        }
+    }
+)

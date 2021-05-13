@@ -1,38 +1,32 @@
 <script lang="ts">
     import type {AnyAction} from 'anchor-link'
-    import {Asset} from '@greymass/eosio'
+    import {Asset} from 'anchor-link'
+    import {getContext} from 'svelte'
     import type {Readable, Writable} from 'svelte/store'
     import {derived, writable} from 'svelte/store'
 
     import {REXDeposit, REXRentCPU, REXRentNET} from '~/abi-types'
-    import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {ChainFeatures} from '~/config'
-
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import {systemToken} from '~/stores/tokens'
+    import {systemTokenBalance} from '~/stores/balances'
     import {rexPrice} from '~/pages/resources/resources'
 
+    import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
-    import ErrorMessage from '~/components/elements/input/errorMessage.svelte'
     import Form from '~/components/elements/form.svelte'
+    import FormBalance from '~/components/elements/form/balance.svelte'
     import Input from '~/components/elements/input.svelte'
+    import InputErrorMessage from '~/components/elements/input/errorMessage.svelte'
     import Segment from '~/components/elements/segment.svelte'
+
+    const context: FormTransaction = getContext('transaction')
 
     export let resource = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
 
-    let amount: Writable<string> = writable('0')
+    let amount: Writable<string> = writable('')
     let error: string | undefined
-
-    const balance: Readable<Asset | undefined> = derived(
-        [activeBlockchain, currentAccount],
-        ([$activeBlockchain, $currentAccount]) => {
-            if ($currentAccount) {
-                return $currentAccount.core_liquid_balance
-            }
-            if ($activeBlockchain) {
-                return Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
-            }
-        }
-    )
 
     const cost: Readable<Asset | undefined> = derived(
         [activeBlockchain, amount, rexPrice],
@@ -46,6 +40,22 @@
         }
     )
 
+    // Create a derived store of the field we expect to be modified
+    export const field = derived([currentAccount], ([$currentAccount]) => {
+        if ($currentAccount && $currentAccount.self_delegated_bandwidth) {
+            switch (resource) {
+                case 'net': {
+                    return $currentAccount.net_limit.max
+                }
+                case 'cpu':
+                default: {
+                    return $currentAccount.cpu_limit.max
+                }
+            }
+        }
+        return undefined
+    })
+
     function cpu() {
         return {
             authorization: [$activeSession!.auth],
@@ -54,7 +64,7 @@
             data: REXRentCPU.from({
                 from: $activeSession!.auth.actor,
                 receiver: $activeSession!.auth.actor,
-                loan_payment: cost,
+                loan_payment: $cost,
                 loan_fund: Asset.fromUnits(0, $activeBlockchain!.coreTokenSymbol),
             }),
         }
@@ -68,7 +78,7 @@
             data: REXRentNET.from({
                 from: $activeSession!.auth.actor,
                 receiver: $activeSession!.auth.actor,
-                loan_payment: cost,
+                loan_payment: $cost,
                 loan_fund: Asset.fromUnits(0, $activeBlockchain!.coreTokenSymbol),
             }),
         }
@@ -82,7 +92,7 @@
                 name: 'deposit',
                 data: REXDeposit.from({
                     owner: $activeSession!.auth.actor,
-                    amount: cost,
+                    amount: $cost,
                 }),
             },
         ]
@@ -93,9 +103,18 @@
             actions.push(net())
         }
         try {
-            await $activeSession!.transact({
+            const result = await $activeSession!.transact({
                 actions,
             })
+            // If the context exists and this is part of a FormTransaction
+            if (context) {
+                // Pass the transaction ID to the parent
+                const txid = String(result.transaction.id)
+                context.setTransaction(txid)
+
+                // Await an update on the field expected for this transaction
+                context.awaitAccountUpdate(field)
+            }
         } catch (e) {
             error = String(e)
         }
@@ -105,17 +124,25 @@
 <style>
 </style>
 
-<h2 class="header">Rent {resource.toUpperCase()} from REX...</h2>
 <Segment color="white">
     {#if $activeBlockchain?.chainFeatures.has(ChainFeatures.REX)}
         <Form on:submit={rex}>
-            <p>Amount of {unit} to rent.</p>
-            <Input focus fluid name="amount" bind:value={$amount} />
-            <ErrorMessage errorMessage={error} />
+            <p>Amount of {unit} to rent from REX.</p>
+            <Input
+                focus
+                fluid
+                inputmode="decimal"
+                name="amount"
+                placeholder={`number of ${unit}`}
+                bind:value={$amount}
+            />
+            {#if $systemToken}
+                <FormBalance token={$systemToken} balance={systemTokenBalance} />
+            {/if}
+            <InputErrorMessage errorMessage={error} />
             <Button fluid size="large" formValidation on:action={rex}
                 >Rent {Number($amount)} {unit} for {$cost}</Button
             >
-            <p>Account Balance: {$balance}</p>
         </Form>
     {:else}
         <p>This feature is unavailable on this blockchain.</p>
