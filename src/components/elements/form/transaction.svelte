@@ -67,9 +67,33 @@
 
 <style type="scss">
     :global(.segment) {
+        border: 1px solid var(--divider-grey);
+        margin-top: 1em;
+        .header {
+            padding-top: 3em;
+            text-align: center;
+            :global(.icon) {
+                color: var(--main-green);
+            }
+            h2 {
+                padding: 1em 0;
+                font-family: Inter;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 24px;
+                line-height: 29px;
+                letter-spacing: -0.47px;
+                color: var(--main-black);
+            }
+        }
+        p.txid a {
+            color: var(--main-blue);
+            text-decoration: none;
+        }
         p.txid,
         div.success,
         div.error {
+            color: var(--main-black);
             max-width: 70vw;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -105,7 +129,10 @@
 
 {#if $transaction_id}
     <Segment>
-        <h2>Transaction Submitted</h2>
+        <div class="header">
+            <Icon size="massive" name="check-circle" />
+            <h2>Transaction sent</h2>
+        </div>
         <p class="txid">
             <a href="https://bloks.io/transaction/{$transaction_id}" target="_new">
                 {$transaction_id}
@@ -130,7 +157,13 @@
                 <p>Account data updated!</p>
             </div>
         {/if}
-        <Button fluid on:action={context.clear} primary size="large">Close</Button>
+        <div class="controls">
+            {#if $$slots.controls}
+                <slot name="controls" />
+            {:else}
+                <Button fluid on:action={context.clear} primary size="large">Close</Button>
+            {/if}
+        </div>
     </Segment>
 {:else}
     <Form>
