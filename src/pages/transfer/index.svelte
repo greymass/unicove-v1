@@ -17,6 +17,7 @@
     import Button from '~/components/elements/button.svelte'
     import TransactionForm from '~/components/elements/form/transaction.svelte'
     import Page from '~/components/layout/page.svelte'
+    import Segment from '~/components/elements/segment.svelte'
 
     import TransferRecipient from '~/pages/transfer/step/recipient.svelte'
     import TransferAmount from '~/pages/transfer/step/amount.svelte'
@@ -88,33 +89,42 @@
     :global(form input) {
         margin: 2em 0;
     }
+    .controls {
+        padding: 1em;
+        text-align: center;
+    }
 </style>
 
 <Page title="Send tokens">
     <TransactionForm>
-        <div class="container">
-            {#if $balance && $token}
-                {#if $transferData.step === Step.Token}
-                    <TransferToken />
+        <Segment color="white">
+            <div class="container">
+                {#if $balance && $token}
+                    {#if $transferData.step === Step.Token}
+                        <TransferToken />
+                    {/if}
+                    {#if $transferData.step === Step.Recipient}
+                        <TransferRecipient {balance} token={$token} />
+                    {/if}
+                    {#if $transferData.step === Step.Amount}
+                        <TransferAmount {balance} token={$token} />
+                    {/if}
+                    {#if $transferData.step === Step.Confirm && $quantity}
+                        <TransferConfirm {balance} {token} {resetData} />
+                    {/if}
+                    {#if $transferData.step === Step.Memo}
+                        <TransferMemo />
+                    {/if}
+                {:else}
+                    No balance of this token to transfer!
                 {/if}
-                {#if $transferData.step === Step.Recipient}
-                    <TransferRecipient {balance} token={$token} />
-                {/if}
-                {#if $transferData.step === Step.Amount}
-                    <TransferAmount {balance} token={$token} />
-                {/if}
-                {#if $transferData.step === Step.Confirm && $quantity}
-                    <TransferConfirm {balance} {token} {resetData} />
-                {/if}
-                {#if $transferData.step === Step.Memo}
-                    <TransferMemo />
-                {/if}
-            {:else}
-                No balance of this token to transfer!
-            {/if}
-            {#if $transferData.step > 0}
-                <Button fluid on:action={resetData}>Cancel</Button>
-            {/if}
-        </div>
+            </div>
+        </Segment>
+        {#if $transferData.step > 0}
+            <div class="controls">
+                <Button on:action={resetData}>Reset Transfer</Button>
+                <Button href="/">Cancel Transfer</Button>
+            </div>
+        {/if}
     </TransactionForm>
 </Page>
