@@ -8,6 +8,7 @@ export const enum Step {
     Amount,
     Confirm,
     Memo,
+    Receive,
 }
 
 export interface TransferData {

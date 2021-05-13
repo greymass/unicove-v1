@@ -23,6 +23,7 @@
     import TransferAmount from '~/pages/transfer/step/amount.svelte'
     import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
     import TransferMemo from '~/pages/transfer/step/memo.svelte'
+    import TransferReceive from '~/pages/transfer/step/receive.svelte'
     import TransferToken from '~/pages/transfer/step/token.svelte'
 
     export let meta: TinroRouteMeta | undefined = undefined
@@ -94,9 +95,24 @@
         padding: 1em;
         text-align: center;
     }
+    .options {
+        text-align: right;
+    }
 </style>
 
-<Page title="Send tokens">
+<Page title={$transferData.step === Step.Receive ? 'Receive tokens' : 'Send tokens'}>
+    <span slot="controls">
+        <div class="options">
+            <Button
+                primary={$transferData.step !== Step.Receive}
+                on:action={() => ($transferData.step = Step.Recipient)}>Send Tokens</Button
+            >
+            <Button
+                primary={$transferData.step === Step.Receive}
+                on:action={() => ($transferData.step = Step.Receive)}>Receive Tokens</Button
+            >
+        </div>
+    </span>
     <TransactionForm>
         <Segment color="white">
             <div class="container">
@@ -116,12 +132,15 @@
                     {#if $transferData.step === Step.Memo}
                         <TransferMemo />
                     {/if}
+                    {#if $transferData.step === Step.Receive}
+                        <TransferReceive />
+                    {/if}
                 {:else}
                     No balance of this token to transfer!
                 {/if}
             </div>
         </Segment>
-        {#if $transferData.step > 0}
+        {#if $transferData.step !== Step.Receive}
             <div class="controls">
                 <Button on:action={resetData}>Reset Transfer</Button>
                 <Button href="/">Cancel Transfer</Button>
