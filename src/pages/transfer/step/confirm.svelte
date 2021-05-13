@@ -100,7 +100,7 @@
     .button-container {
         display: flex;
         flex-direction: column;
-        margin: 20px 0;
+        margin: 20px 0 0;
     }
 </style>
 
