@@ -28,6 +28,7 @@
     export let meta: TinroRouteMeta | undefined = undefined
 
     onMount(() => {
+        resetData()
         syncTxFee()
         return () => {
             stopSyncTxFee()
