@@ -34,19 +34,8 @@
 </script>
 
 <style type="scss">
-    aside {
-        top: 0;
-        transition: left 0.3s ease-in-out;
-        position: absolute;
-        height: 100%;
-        display: none;
-        z-index: 2001;
-        &.open {
-            display: block;
-        }
-    }
-    .icon {
-        position: absolute;
+    .hamburger {
+        position: fixed;
         top: 12px;
         left: 12px;
         padding: 12px;
@@ -55,25 +44,23 @@
 </style>
 
 <MediaQuery query="(max-width: 999px)" let:matches>
-    <aside class:open>
+    {#if !matches || open}
         <NavigationContent
             {primaryNavigation}
             {advancedNavigation}
-            expand={true}
-            on:collapse={() => (open = false)}
+            expand={matches || expand}
+            floating={matches}
+            on:collapse={() => {
+                if (matches) {
+                    open = false
+                } else {
+                    preferences.expandNavbar = false
+                }
+            }}
         />
-    </aside>
-
-    {#if matches}
-        <span class="icon" on:click={() => (open = !open)}>
+    {:else}
+        <span class="hamburger" on:click={() => (open = !open)}>
             <Icon name="menu" size="large" />
         </span>
-    {:else}
-        <NavigationContent
-            {primaryNavigation}
-            {advancedNavigation}
-            {expand}
-            on:collapse={() => (preferences.expandNavbar = false)}
-        />
     {/if}
 </MediaQuery>

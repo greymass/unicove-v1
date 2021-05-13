@@ -15,6 +15,7 @@
     $: expandAdvanced = $preferences.expandNavbarAdvanced
 
     export let expand = true
+    export let floating = false
 
     export let primaryNavigation: NavigationItem[] = []
     export let advancedNavigation: NavigationItem[] = []
@@ -117,10 +118,15 @@
                 }
             }
         }
+
+        &.floating {
+            position: fixed;
+            z-index: 2001;
+        }
     }
 </style>
 
-<nav class:collapsed={!expand}>
+<nav class:collapsed={!expand} class:floating>
     <header>
         {#if expand}
             <div class="title">
