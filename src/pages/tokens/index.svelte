@@ -164,14 +164,14 @@
             <TokenTable {balances} {rexTokens} {delegatedTokens} />
             <div class="buttons-container">
                 <div class="button-container">
-                    <Button href="/transfer" size="large">Create new transfer</Button>
+                    <Button href="/transfer" size="large">Send tokens</Button>
                 </div>
                 <div class="button-container">
                     <Button
                         href={`https://www.${
                             $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain?.id}.`
                         }bloks.io/account/${String($currentAccount?.account_name)}`}
-                        size="large">View on block explorer</Button
+                        size="large">View account on explorer</Button
                     >
                 </div>
             </div>

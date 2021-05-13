@@ -23,7 +23,7 @@
         },
         {
             icon: 'arrow-right',
-            name: 'Transfer',
+            name: 'Send & Receive',
             path: '/transfer',
         },
     ]
