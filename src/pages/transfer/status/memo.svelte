@@ -12,7 +12,7 @@
 </style>
 
 <Completed
-    header="Memo"
+    header="Transation Memo"
     changeStep={() => {
         $transferData.step = Step.Memo
     }}

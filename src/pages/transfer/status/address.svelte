@@ -21,6 +21,6 @@
     }
 </style>
 
-<Completed header="Recipient" changeStep={changeRecipient}>
+<Completed header="Receiving Address" changeStep={changeRecipient}>
     <span>{toAddress.toLegacyString($activeBlockchain?.coreTokenSymbol.name)}</span>
 </Completed>

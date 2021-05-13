@@ -21,6 +21,6 @@
     }
 </style>
 
-<Completed header="Quantity" changeStep={changeAmount}>
+<Completed header="Tokens" changeStep={changeAmount}>
     <span>{quantity}</span>
 </Completed>

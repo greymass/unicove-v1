@@ -102,10 +102,16 @@
         flex-direction: column;
         margin: 20px 0 0;
     }
+    h2 {
+        text-align: center;
+        font-size: 1.75em;
+        line-height: 2em;
+    }
 </style>
 
 <svelte:window on:keydown={handleKeydown} />
 <Form>
+    <h2>Review and Sign</h2>
     {#if $transferData.toAddress}
         <StatusAddress toAddress={$transferData.toAddress} />
     {/if}

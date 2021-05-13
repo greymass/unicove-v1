@@ -21,6 +21,6 @@
     }
 </style>
 
-<Completed header="Recipient" changeStep={changeRecipient}>
+<Completed header="Receiving Account" changeStep={changeRecipient}>
     <span>{toAccount}</span>
 </Completed>
