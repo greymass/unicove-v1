@@ -67,7 +67,6 @@
 
 <style type="scss">
     :global(.segment) {
-        border: 1px solid var(--divider-grey);
         margin-top: 1em;
         .header {
             padding-top: 3em;
