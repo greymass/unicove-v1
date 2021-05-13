@@ -1,5 +1,10 @@
 <script lang="ts">
     import {activeBlockchain, currentAccount} from '~/store'
+
+    import Button from '~/components/elements/button.svelte'
+    import Icon from '~/components/elements/icon.svelte'
+    import Text from '~/components/elements/text.svelte'
+    import Clipboard from '~/components/elements/clipboard.svelte'
 </script>
 
 <style type="scss">
@@ -12,6 +17,7 @@
     }
     h2 {
         font-size: 2em;
+        margin-bottom: 1em;
     }
 </style>
 
@@ -21,5 +27,11 @@
             To receive tokens on {$activeBlockchain.name}, send them directly to your account name:
         </h4>
         <h2>{$currentAccount.account_name}</h2>
+        <Clipboard text={$currentAccount.account_name} let:copy>
+            <Button on:action={copy} primary>
+                <Icon name="clipboard" />
+                <Text>Copy to clipboard</Text>
+            </Button>
+        </Clipboard>
     </div>
 {/if}
