@@ -135,7 +135,6 @@
         :global(.button) {
             width: 100%;
             line-height: 1em;
-            margin-top: 2em;
         }
     }
 
@@ -188,6 +187,7 @@
 
 {#if $activeSession}
     <div class="list">
+        <Button primary on:action={handleAdd}>Add another Account</Button>
         {#each $groupings as group}
             <div class="network">
                 <div class="header" on:click={() => toggle(group.chainId)}>
@@ -211,7 +211,6 @@
                 </ul>
             </div>
         {/each}
-        <Button primary on:action={handleAdd}>Add another Account</Button>
     </div>
 {:else}
     <div class="login">
