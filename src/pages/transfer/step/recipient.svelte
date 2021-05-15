@@ -46,9 +46,6 @@
                     name="to"
                     placeholder="Enter a public key..."
                 />
-                <Button size="large" fluid formValidation on:action={confirmChange}>
-                    Send {token.name}
-                </Button>
             {:else}
                 <InputAccountLookup
                     bind:loading
@@ -59,17 +56,10 @@
                     placeholder="Enter an account name..."
                     activeSession={$activeSession}
                 />
-                <Button
-                    primary
-                    {loading}
-                    size="large"
-                    fluid
-                    formValidation
-                    on:action={confirmChange}
-                >
-                    Next
-                </Button>
             {/if}
+            <Button primary {loading} size="large" fluid formValidation on:action={confirmChange}>
+                Next
+            </Button>
         </Form>
     {:else}
         No balance for this token to send!
