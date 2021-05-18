@@ -17,13 +17,7 @@
 </script>
 
 <style type="scss">
-    .layout {
-        display: flex;
-        flex: 1;
-        height: 100vh;
-        background: var(--main-white);
-        color: var(--main-black);
-    }
+    $menubar_height: 71px;
 
     .dimmer {
         display: none;
@@ -39,65 +33,83 @@
         }
     }
 
-    .main {
-        flex-grow: 1;
-        padding-top: 80px;
+    .grid {
+        display: grid;
+        grid-template-columns: 268px auto;
+        grid-template-rows: $menubar_height minmax(0, auto);
+        grid-template-areas:
+            'leftbar header'
+            'leftbar main';
+    }
+
+    .page-header {
+        grid-area: header;
+    }
+
+    .page-leftbar {
         min-height: 100vh;
-        width: 100%;
-        overflow: auto;
+        grid-area: leftbar;
+    }
+
+    .page-main {
+        min-height: calc(100vh - #{$menubar_height});
+        grid-area: main;
         .content {
-            margin: 0 auto;
-            max-width: 48rem;
-            padding: 0 15px;
+            padding: 0 30px;
         }
     }
 
-    .header {
-        align-items: center;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        width: 100%;
-    }
-
-    .controls,
-    .title {
-        display: flex;
-        flex-direction: column;
-        flex-basis: 100%;
-        flex: 1;
+    @media only screen and (max-width: 600px) {
+        .grid {
+            grid-template-rows: $menubar_height auto;
+            grid-template-columns: 100vw;
+            grid-template-areas:
+                'header'
+                'main';
+        }
+        .page-leftbar {
+            min-height: auto;
+        }
+        .page-main {
+            .content {
+                padding: 0 10px;
+            }
+        }
     }
 </style>
 
-<div class="layout">
-    {#if displayNavigation && $activeSession}
-        <Navigation bind:open={navigationSidebar} />
-    {/if}
-    <AccountSidebar bind:open={accountSidebar} />
-    <div
-        class="dimmer"
-        class:active={accountSidebar || navigationSidebar}
-        on:click={() => {
-            accountSidebar = false
-            navigationSidebar = false
-        }}
-    />
-
-    <div class="main">
-        <div class="content">
-            <div class="header">
-                {#if title}
-                    <div class="title">
-                        <Header {title} {subtitle} />
-                    </div>
-                {/if}
-                {#if $$slots.controls}
-                    <div class="controls">
-                        <slot name="controls" />
-                    </div>
-                {/if}
+<div
+    class="dimmer"
+    class:active={accountSidebar || navigationSidebar}
+    on:click={() => {
+        accountSidebar = false
+        navigationSidebar = false
+    }}
+/>
+<div class="grid">
+    <aside class="page-leftbar">
+        {#if displayNavigation && $activeSession}
+            <Navigation bind:open={navigationSidebar} />
+        {/if}
+    </aside>
+    <header class="page-header">
+        {#if $$slots.controls}
+            <div class="controls">
+                <slot name="controls" />
             </div>
+        {/if}
+        <AccountSidebar bind:open={accountSidebar} />
+    </header>
+    <main class="page-main">
+        <div class="header">
+            {#if title}
+                <div class="title">
+                    <Header {title} {subtitle} />
+                </div>
+            {/if}
+        </div>
+        <div class="content">
             <slot />
         </div>
-    </div>
+    </main>
 </div>
