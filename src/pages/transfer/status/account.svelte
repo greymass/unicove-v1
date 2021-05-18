@@ -4,6 +4,7 @@
     import {transferData, Step} from '~/pages/transfer/transfer'
 
     export let toAccount: Name
+    export let editable: boolean = false
 
     function changeRecipient() {
         transferData.update((data) => ({
@@ -12,6 +13,8 @@
             backStep: data.step,
         }))
     }
+
+    const changeStep = editable ? changeRecipient : undefined
 </script>
 
 <style type="scss">
@@ -21,6 +24,6 @@
     }
 </style>
 
-<Completed header="Receiving Account" changeStep={changeRecipient}>
+<Completed header="Receiving Account" {changeStep}>
     <span>{toAccount}</span>
 </Completed>

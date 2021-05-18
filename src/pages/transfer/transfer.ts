@@ -8,6 +8,9 @@ export const enum Step {
     Amount,
     Confirm,
     Memo,
+    Sending,
+    Sent,
+    Failed,
     Receive,
 }
 

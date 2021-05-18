@@ -30,10 +30,10 @@
             placeholder="Enter an optional memo to include with this transfer"
         />
         <Button primary size="large" fluid formValidation on:action={confirmChange}>
-            {#if memo}
-                Set Memo
+            {#if $transferData.backStep}
+                Done
             {:else}
-                Continue without Memo
+                Next
             {/if}
         </Button>
     </Form>

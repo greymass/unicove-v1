@@ -67,8 +67,9 @@
 
 <style type="scss">
     .container {
+        margin-top: 16px;
         table {
-            margin-top: 30px;
+            margin-top: 16px;
             table-layout: fixed;
             width: 100%;
             white-space: nowrap;

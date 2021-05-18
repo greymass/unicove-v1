@@ -26,24 +26,77 @@
             backStep: undefined,
         }))
     }
+
+    function maxBalance() {
+        if ($balance) {
+            amount = String($balance.quantity.value)
+            amountValid = true
+        }
+    }
 </script>
 
 <style type="scss">
+    .balance {
+        margin-bottom: 32px;
+    }
+    .controls {
+        display: flex;
+        padding: 1em;
+        .actions {
+            cursor: pointer;
+            margin-left: auto;
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            color: var(--main-blue);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .value {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 10px;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            color: var(--main-black);
+        }
+    }
 </style>
 
 <div class="container">
     {#if $balance}
         <Form on:submit={confirmChange}>
+            <div class="balance">
+                <StatusBalance {token} {balance} />
+            </div>
             <InputAsset
                 bind:valid={amountValid}
                 bind:value={amount}
                 focus
                 fluid
                 name="amount"
-                placeholder={`Enter the amount of tokens to send to ${$transferData.toAccount}`}
+                placeholder={`Enter amount of tokens`}
                 balance={$balance.quantity}
             />
-            <StatusBalance {token} {balance} />
+            <div class="controls">
+                {#if token && token.price}
+                    <div class="value">≈ $ {(Number(amount) * token.price).toFixed(2)} USD</div>
+                {/if}
+                <div class="actions">
+                    <span on:click={maxBalance}>Entire Balance</span>
+                </div>
+            </div>
         </Form>
     {/if}
     <Button
@@ -54,6 +107,10 @@
         formValidation
         on:action={confirmChange}
     >
-        Continue
+        {#if $transferData.backStep}
+            Done
+        {:else}
+            Continue
+        {/if}
     </Button>
 </div>

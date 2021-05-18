@@ -44,7 +44,7 @@
                     focus
                     fluid
                     name="to"
-                    placeholder="Enter a public key..."
+                    placeholder="Enter public key"
                 />
             {:else}
                 <InputAccountLookup
@@ -53,12 +53,16 @@
                     focus
                     fluid
                     name="to"
-                    placeholder="Enter an account name..."
+                    placeholder="Enter account name"
                     activeSession={$activeSession}
                 />
             {/if}
             <Button primary {loading} size="large" fluid formValidation on:action={confirmChange}>
-                Next
+                {#if $transferData.backStep}
+                    Done
+                {:else}
+                    Next
+                {/if}
             </Button>
         </Form>
     {:else}

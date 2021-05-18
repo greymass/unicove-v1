@@ -4,6 +4,7 @@
     import {transferData, Step} from '../transfer'
 
     export let quantity: Asset
+    export let editable: boolean = false
 
     function changeAmount() {
         transferData.update((data) => ({
@@ -12,6 +13,8 @@
             backStep: data.step,
         }))
     }
+
+    const changeStep = editable ? changeAmount : undefined
 </script>
 
 <style type="scss">
@@ -21,6 +24,6 @@
     }
 </style>
 
-<Completed header="Tokens" changeStep={changeAmount}>
+<Completed header="Token Quantity" {changeStep}>
     <span>{quantity}</span>
 </Completed>

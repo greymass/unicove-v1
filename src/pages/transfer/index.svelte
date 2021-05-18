@@ -3,7 +3,7 @@
     import type {TinroRouteMeta} from 'tinro'
     import {onMount} from 'svelte'
     import {derived} from 'svelte/store'
-    import {Asset, Name} from 'anchor-link'
+    import {Name} from 'anchor-link'
 
     import {activeBlockchain, activeSession} from '~/store'
     import type {Token, TokenKeyParams} from '~/stores/tokens'
@@ -14,17 +14,12 @@
     import {transferData, Step} from '~/pages/transfer/transfer'
     import {syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/transfer/fio'
 
-    import Button from '~/components/elements/button.svelte'
+    import Icon from '~/components/elements/icon.svelte'
+    import Text from '~/components/elements/text.svelte'
     import TransactionForm from '~/components/elements/form/transaction.svelte'
     import Page from '~/components/layout/page.svelte'
-    import Segment from '~/components/elements/segment.svelte'
 
-    import TransferRecipient from '~/pages/transfer/step/recipient.svelte'
-    import TransferAmount from '~/pages/transfer/step/amount.svelte'
-    import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
-    import TransferMemo from '~/pages/transfer/step/memo.svelte'
-    import TransferReceive from '~/pages/transfer/step/receive.svelte'
-    import TransferToken from '~/pages/transfer/step/token.svelte'
+    import TransferMain from '~/pages/transfer/main.svelte'
 
     export let meta: TinroRouteMeta | undefined = undefined
 
@@ -70,81 +65,89 @@
         }
     )
 
-    const quantity: Readable<Asset | undefined> = derived([transferData], ([$transferData]) => {
-        if ($transferData && $transferData.quantity) {
-            return $transferData.quantity
-        }
-    })
-
     function resetData() {
         transferData.set({
             step: Step.Recipient,
         })
         fetchTxFee()
     }
+
+    function retryCallback() {
+        // Upon retry, move back to the confirm step to allow the user to retry
+        $transferData.step = Step.Confirm
+    }
+
+    function resetCallback() {
+        // Upon retry, move back to the confirm step to allow the user to retry
+        $transferData.step = Step.Recipient
+    }
 </script>
 
 <style type="scss">
-    :global(form) {
-        margin: 1em 0;
-    }
-    :global(form input) {
-        margin: 2em 0;
-    }
-    .controls {
-        padding: 1em;
-        text-align: center;
+    .container {
+        border: 1px solid var(--light-blue);
+        border-radius: 20px;
+        padding: 26px;
     }
     .options {
+        display: inline-flex;
+        padding: 15px 30px;
         text-align: right;
+        .toggle {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            padding: 15px;
+            cursor: pointer;
+            color: var(--main-blue);
+            opacity: 0.3;
+            &.active {
+                opacity: 1;
+            }
+            :global(.icon) {
+                margin-right: 0.5em;
+            }
+        }
+    }
+    @media only screen and (max-width: 600px) {
+        .container {
+            border: none;
+            padding: 12px;
+        }
     }
 </style>
 
-<Page title={$transferData.step === Step.Receive ? 'Receive tokens' : 'Send tokens'}>
+<Page>
     <span slot="controls">
         <div class="options">
-            <Button
-                primary={$transferData.step !== Step.Receive}
-                on:action={() => ($transferData.step = Step.Recipient)}>Send</Button
+            <span
+                class="toggle"
+                class:active={$transferData.step !== Step.Receive}
+                on:click={() => ($transferData.step = Step.Recipient)}
             >
-            <Button
-                primary={$transferData.step === Step.Receive}
-                on:action={() => ($transferData.step = Step.Receive)}>Receive</Button
+                <Icon name="arrow-up" />
+                <Text>Send</Text>
+            </span>
+            <span
+                class="toggle"
+                class:active={$transferData.step === Step.Receive}
+                on:click={() => ($transferData.step = Step.Receive)}
             >
+                <Icon name="arrow-down" />
+                <Text>Receive</Text>
+            </span>
         </div>
     </span>
-    <TransactionForm>
-        <Segment color="white">
-            <div class="container">
-                {#if $balance && $token}
-                    {#if $transferData.step === Step.Token}
-                        <TransferToken />
-                    {/if}
-                    {#if $transferData.step === Step.Recipient}
-                        <TransferRecipient {balance} token={$token} />
-                    {/if}
-                    {#if $transferData.step === Step.Amount}
-                        <TransferAmount {balance} token={$token} />
-                    {/if}
-                    {#if $transferData.step === Step.Confirm && $quantity}
-                        <TransferConfirm {balance} {token} {resetData} />
-                    {/if}
-                    {#if $transferData.step === Step.Memo}
-                        <TransferMemo />
-                    {/if}
-                    {#if $transferData.step === Step.Receive}
-                        <TransferReceive />
-                    {/if}
-                {:else}
-                    No balance of this token to transfer!
-                {/if}
-            </div>
-        </Segment>
-        {#if $transferData.step !== Step.Receive}
-            <div class="controls">
-                <Button on:action={resetData}>Reset Transfer</Button>
-                <Button href="/">Cancel Transfer</Button>
-            </div>
-        {/if}
+    <TransactionForm {resetCallback} {retryCallback} completeAction="New transfer">
+        <div class="container">
+            <TransferMain {balance} {token} {resetData} />
+        </div>
     </TransactionForm>
 </Page>

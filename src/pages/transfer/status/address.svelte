@@ -5,6 +5,7 @@
     import {Step, transferData} from '../transfer'
 
     export let toAddress: PublicKey
+    export let editable: boolean = false
 
     function changeRecipient() {
         transferData.update((data) => ({
@@ -13,6 +14,8 @@
             backStep: data.step,
         }))
     }
+
+    const changeStep = editable ? changeRecipient : undefined
 </script>
 
 <style type="scss">
@@ -21,6 +24,6 @@
     }
 </style>
 
-<Completed header="Receiving Address" changeStep={changeRecipient}>
+<Completed header="Receiving Address" {changeStep}>
     <span>{toAddress.toLegacyString($activeBlockchain?.coreTokenSymbol.name)}</span>
 </Completed>
