@@ -39,9 +39,6 @@
         height: 100%;
         overflow: auto;
     }
-    body {
-        height: 100%;
-    }
 
     label,
     p,
@@ -99,6 +96,8 @@
 
     body {
         background: var(--main-white);
+        color: var(--main-black);
+        height: 100%;
     }
 
     main {
