@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {Readable} from 'svelte/store'
-    import {derived, readable} from 'svelte/store'
+    import {derived} from 'svelte/store'
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
     import {tokens} from '~/stores/tokens'
