@@ -109,12 +109,10 @@
             filter: contrast(150%) brightness(105%);
         }
         &.disabled {
-            background-color: var(--light-red);
-            border-color: var(--main-red);
-            color: var(--main-red);
+            color: var(--always-white);
             pointer-events: none;
             cursor: default;
-            opacity: 0.5;
+            opacity: 0.3;
             cursor: not-allowed;
             pointer-events: all !important;
         }
