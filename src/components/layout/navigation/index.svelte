@@ -65,7 +65,7 @@
     {#if !matches || open}
         <NavigationContent
             {primaryNavigation}
-            {advancedNavigation}
+            advancedNavigation={$advancedNavigation}
             expand={matches || expand}
             floating={matches}
             on:collapse={() => {
