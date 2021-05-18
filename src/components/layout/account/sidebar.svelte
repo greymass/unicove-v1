@@ -71,6 +71,11 @@
         display: block;
         right: 0;
     }
+    @media only screen and (max-width: 600px) {
+        .account-button .accounts .text {
+            display: none;
+        }
+    }
 </style>
 
 <div class="account-button">
