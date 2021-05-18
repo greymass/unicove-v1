@@ -9,7 +9,6 @@
         flex-direction: column;
         justify-items: center;
         align-content: center;
-        height: 100vh;
         align-items: center;
         p {
             margin: 2em;

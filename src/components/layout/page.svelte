@@ -40,6 +40,13 @@
         grid-template-areas:
             'leftbar header'
             'leftbar main';
+        &.withoutsidebar {
+            grid-template-rows: $menubar_height auto;
+            grid-template-columns: 100vw;
+            grid-template-areas:
+                'header'
+                'main';
+        }
     }
 
     .page-header {
@@ -90,12 +97,12 @@
         navigationSidebar = false
     }}
 />
-<div class="grid">
-    <aside class="page-leftbar">
-        {#if displayNavigation && $activeSession}
+<div class="grid" class:withoutsidebar={!displayNavigation || !$activeSession}>
+    {#if displayNavigation && $activeSession}
+        <aside class="page-leftbar">
             <Navigation bind:open={navigationSidebar} />
-        {/if}
-    </aside>
+        </aside>
+    {/if}
     <header class="page-header">
         {#if $$slots.submenu}
             <div class="submenu">
