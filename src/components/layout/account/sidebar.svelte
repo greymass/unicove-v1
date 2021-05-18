@@ -72,8 +72,13 @@
         right: 0;
     }
     @media only screen and (max-width: 600px) {
-        .account-button .accounts .text {
-            display: none;
+        .account-button .accounts {
+            .icon {
+                margin-right: 0;
+            }
+            .text {
+                display: none;
+            }
         }
     }
 </style>

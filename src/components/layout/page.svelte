@@ -54,6 +54,7 @@
     .page-main {
         min-height: calc(100vh - #{$menubar_height});
         grid-area: main;
+        .header,
         .content {
             padding: 0 30px;
         }
@@ -96,9 +97,9 @@
         {/if}
     </aside>
     <header class="page-header">
-        {#if $$slots.controls}
-            <div class="controls">
-                <slot name="controls" />
+        {#if $$slots.submenu}
+            <div class="submenu">
+                <slot name="submenu" />
             </div>
         {/if}
         <AccountSidebar bind:open={accountSidebar} />
@@ -108,6 +109,11 @@
             {#if title}
                 <div class="title">
                     <Header {title} {subtitle} />
+                </div>
+            {/if}
+            {#if $$slots.controls}
+                <div class="controls">
+                    <slot name="controls" />
                 </div>
             {/if}
         </div>

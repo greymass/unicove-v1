@@ -152,7 +152,7 @@
 </style>
 
 <Page title="Balances" subtitle={`Est. ${fiatFormat($totalUsdValue)}`}>
-    <span slot="controls">
+    <span slot="header">
         <div class="options">
             <Button on:action={refresh}>
                 <Icon loading={$isLoading} name="refresh-cw" />

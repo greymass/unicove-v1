@@ -12,20 +12,21 @@
         text-align: center;
     }
     h2,
-    h4 {
+    p {
         line-height: 2em;
     }
     h2 {
         font-size: 2em;
-        margin-bottom: 1em;
+        margin: 0.5em 0;
+    }
+    p {
+        color: var(--light-grey);
+        margin-top: 1em;
     }
 </style>
 
 {#if $currentAccount}
     <div class="container">
-        <h4>
-            To receive tokens on {$activeBlockchain.name}, send them directly to your account name:
-        </h4>
         <h2>{$currentAccount.account_name}</h2>
         <Clipboard text={$currentAccount.account_name} let:copy>
             <Button on:action={copy} primary>
@@ -33,5 +34,9 @@
                 <Text>Copy to clipboard</Text>
             </Button>
         </Clipboard>
+        <p>
+            To receive tokens on {$activeBlockchain.name}, send them directly to your account name
+            as shown above.
+        </p>
     </div>
 {/if}

@@ -55,8 +55,8 @@
     .hamburger {
         color: var(--main-black);
         position: fixed;
-        top: 12px;
-        left: 12px;
+        top: 16px;
+        left: 16px;
         padding: 12px;
         cursor: pointer;
     }

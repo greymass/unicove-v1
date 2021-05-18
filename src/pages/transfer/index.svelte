@@ -125,7 +125,7 @@
 </style>
 
 <Page>
-    <span slot="controls">
+    <span slot="submenu">
         <div class="options">
             <span
                 class="toggle"

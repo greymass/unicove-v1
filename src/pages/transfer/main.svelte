@@ -165,10 +165,15 @@
 </style>
 
 <div class="container">
-    {#if [Step.Recipient, Step.Amount, Step.Confirm].includes($transferData.step)}
+    {#if ![Step.Sending].includes($transferData.step)}
         <div class="header">
             {$transferData.step === Step.Receive ? 'Receive tokens' : 'Send tokens'}
         </div>
+        {#if $transferData.step === Step.Receive}
+            <div class="subheader">Use your account name</div>
+        {/if}
+    {/if}
+    {#if [Step.Recipient, Step.Amount, Step.Confirm].includes($transferData.step)}
         {#if $transferData.step === Step.Recipient}
             <div class="subheader">Add recipient</div>
         {/if}
