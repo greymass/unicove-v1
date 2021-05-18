@@ -59,13 +59,16 @@
         }
     }
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 999px) {
         .grid {
             grid-template-rows: $menubar_height auto;
             grid-template-columns: 100vw;
             grid-template-areas:
                 'header'
                 'main';
+        }
+        .page-header {
+            margin-left: 2em;
         }
         .page-leftbar {
             min-height: auto;

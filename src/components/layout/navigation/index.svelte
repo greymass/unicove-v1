@@ -53,6 +53,7 @@
 
 <style type="scss">
     .hamburger {
+        color: var(--main-black);
         position: fixed;
         top: 12px;
         left: 12px;

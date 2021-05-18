@@ -12,7 +12,7 @@
     const dispatch = createEventDispatcher<{collapse: boolean}>()
 
     $: currentPath = $router.path
-    $: expandAdvanced = $preferences.expandNavbarAdvanced
+    // $: expandAdvanced = $preferences.expandNavbarAdvanced
 
     export let expand = true
     export let floating = false
@@ -69,6 +69,7 @@
             .button {
                 color: var(--main-blue);
                 cursor: pointer;
+                display: none;
             }
             border-bottom: 1px solid var(--divider-grey);
         }
@@ -105,23 +106,25 @@
             }
         }
 
-        &.collapsed {
-            width: 97px;
-            min-width: 97px;
-            header {
-                justify-content: center;
-            }
-            ul li a {
-                justify-content: center;
-                .name {
-                    display: none;
-                }
-            }
-        }
+        // &.collapsed {
+        //     width: 97px;
+        //     min-width: 97px;
+        //     header {
+        //         justify-content: center;
+        //     }
+        //     ul li a {
+        //         justify-content: center;
+        //         .name {
+        //             display: none;
+        //         }
+        //     }
+        // }
 
         &.floating {
             position: fixed;
             z-index: 2001;
+            top: 0;
+            left: 0;
         }
     }
 </style>
