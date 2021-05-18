@@ -13,6 +13,7 @@ export class Account implements Readable<Account> {
     /** Core symbol chain account is on uses. */
     readonly coreLiquidBalance: Asset
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static load(name: NameType) {
         // TODO
     }
