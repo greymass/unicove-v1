@@ -5,8 +5,10 @@ export interface Form {
 
 export interface FormTransaction {
     awaitAccountUpdate: (account: any) => void
-    setTransaction: (id: string) => void
     clear: () => void
+    retryTransaction: () => void
+    setTransaction: (id: string) => void
+    setTransactionError: (error: any) => void
 }
 
 export interface InputResponse {
