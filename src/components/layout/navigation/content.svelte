@@ -45,33 +45,6 @@
         width: 268px;
         min-width: 268px;
         height: 100%;
-<<<<<<< HEAD
-        border-right-width: 2px;
-        align-items: center;
-        > * {
-            width: 100%;
-        }
-        &.expanded {
-            width: 268px;
-            min-width: 268px;
-            max-width: 268px;
-            .items {
-                max-width: 100%;
-                .item {
-                    color: var(--main-blue);
-                    padding: 0 10px;
-                    .icon {
-                        flex-grow: 0;
-                        margin-right: 12px;
-                    }
-                    .name {
-                        display: flex;
-                        flex-grow: 1;
-                    }
-                    &.advanced {
-                        padding-left: 2em;
-                    }
-=======
         header {
             color: var(--dark-grey);
             font-weight: 600;
@@ -91,7 +64,6 @@
                     font-size: 10px;
                     line-height: 250%;
                     letter-spacing: -0.04px;
->>>>>>> abecd81... Polish navigation style
                 }
             }
             .button {
@@ -124,12 +96,9 @@
                         color: var(--main-black);
                     }
                 }
-<<<<<<< HEAD
-=======
                 .icon {
                     padding: 0 10px;
                 }
->>>>>>> abecd81... Polish navigation style
                 .name {
                     padding-left: 5px;
                 }
@@ -157,7 +126,7 @@
     }
 </style>
 
-<nav class:collapsed={!expand} class:floating>
+<nav class:floating>
     <header>
         {#if expand}
             <div class="title">
