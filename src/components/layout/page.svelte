@@ -87,6 +87,7 @@
         }
         .page-leftbar {
             min-height: auto;
+            position: absolute;
         }
         .page-main {
             .content {
