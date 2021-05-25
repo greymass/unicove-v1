@@ -21,11 +21,13 @@
 
     .dimmer {
         display: none;
-        position: absolute;
+        position: fixed;
         height: 100vh;
         width: 100vw;
-        left: 0;
         top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         z-index: 1000 !important;
         background-color: rgba(0, 0, 0, 0.5);
         &.active {
@@ -47,6 +49,10 @@
                 'header'
                 'main';
         }
+        &.navigation {
+            max-height: 100vh;
+            overflow: hidden;
+        }
     }
 
     .page-header {
@@ -56,6 +62,7 @@
     .page-leftbar {
         min-height: 100vh;
         grid-area: leftbar;
+        position: fixed;
     }
 
     .page-main {
@@ -90,19 +97,23 @@
 </style>
 
 <div
-    class="dimmer"
-    class:active={accountSidebar || navigationSidebar}
-    on:click={() => {
-        accountSidebar = false
-        navigationSidebar = false
-    }}
-/>
-<div class="grid" class:withoutsidebar={!displayNavigation || !$activeSession}>
+    class="grid"
+    class:navigation={accountSidebar || navigationSidebar}
+    class:withoutsidebar={!displayNavigation || !$activeSession}
+>
     {#if displayNavigation && $activeSession}
         <aside class="page-leftbar">
             <Navigation bind:open={navigationSidebar} />
         </aside>
     {/if}
+    <div
+        class="dimmer"
+        class:active={accountSidebar || navigationSidebar}
+        on:click={() => {
+            accountSidebar = false
+            navigationSidebar = false
+        }}
+    />
     <header class="page-header">
         {#if $$slots.submenu}
             <div class="submenu">
