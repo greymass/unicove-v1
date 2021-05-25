@@ -1,4 +1,10 @@
 <script lang="ts">
+    import type {Readable} from 'svelte/store'
+    import {derived} from 'svelte/store'
+
+    import {ChainFeatures} from '~/config'
+    import {activeBlockchain} from '~/store'
+
     import {powerupPrice, rexPrice, stakingPrice} from '~/pages/resources/resources'
 
     import Button from '~/components/elements/button.svelte'
@@ -7,6 +13,30 @@
 
     export let resource = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
+
+    const hasPowerUp: Readable<boolean | undefined> = derived(
+        activeBlockchain,
+        ($activeBlockchain) => {
+            return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)
+        }
+    )
+
+    const hasREX: Readable<boolean | undefined> = derived(activeBlockchain, ($activeBlockchain) => {
+        return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.REX)
+    })
+
+    const hasStaking: Readable<boolean | undefined> = derived(
+        activeBlockchain,
+        ($activeBlockchain) => {
+            return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)
+        }
+    )
+
+    const token = derived(activeBlockchain, ($activeBlockchain) => {
+        if ($activeBlockchain) {
+            return String($activeBlockchain.coreTokenSymbol.name)
+        }
+    })
 </script>
 
 <style type="scss">
@@ -68,36 +98,56 @@
                 <Button primary href="/resources/{resource}/fuel">Rent via Fuel</Button>
             </div>
         </Segment> -->
-        <Segment>
-            <div class="offer">
-                <div class="service">PowerUp</div>
-                <div class="price">
-                    {$powerupPrice.value.toFixed($powerupPrice.symbol.precision)}
+        {#if $hasPowerUp}
+            <Segment>
+                <div class="offer">
+                    <div class="service">PowerUp</div>
+                    <div class="price">
+                        {$powerupPrice.value.toFixed($powerupPrice.symbol.precision)}
+                    </div>
+                    <div class="pair">{$token} per {unit}</div>
+                    <div class="term">Usable for up to <br /> 24 hours.</div>
+                    <Button primary href="/resources/{resource}/powerup">Rent via PowerUp</Button>
                 </div>
-                <div class="pair">EOS per {unit}</div>
-                <div class="term">Usable for up to <br /> 24 hours.</div>
-                <Button primary href="/resources/{resource}/powerup">Rent via PowerUp</Button>
-            </div>
-        </Segment>
-        <Segment>
-            <div class="offer">
-                <div class="service">REX</div>
-                <div class="price">{$rexPrice.value.toFixed($rexPrice.symbol.precision)}</div>
-                <div class="pair">EOS per {unit}</div>
-                <div class="term">Usable each day for <br />the next 30 days.</div>
-                <Button primary href="/resources/{resource}/rex">Rent via REX</Button>
-            </div>
-        </Segment>
-        <Segment>
-            <div class="offer">
-                <div class="service">Staking</div>
-                <div class="price">
-                    {(Number($stakingPrice.value) * 1000).toFixed($stakingPrice.symbol.precision)}
+            </Segment>
+        {/if}
+        {#if $hasREX}
+            <Segment>
+                <div class="offer">
+                    <div class="service">REX</div>
+                    <div class="price">{$rexPrice.value.toFixed($rexPrice.symbol.precision)}</div>
+                    <div class="pair">
+                        {$token} per
+                        {#if $activeBlockchain.resourceSampleMilliseconds}
+                            {$activeBlockchain.resourceSampleMilliseconds}
+                        {/if}
+                        {unit}
+                    </div>
+                    <div class="term">Usable each day for <br />the next 30 days.</div>
+                    <Button primary href="/resources/{resource}/rex">Rent via REX</Button>
                 </div>
-                <div class="pair">EOS per {unit}</div>
-                <div class="term">Usable each day until <br />they are unstaked.</div>
-                <Button primary href="/resources/{resource}/stake">Stake Tokens</Button>
-            </div>
-        </Segment>
+            </Segment>
+        {/if}
+        {#if $hasStaking}
+            <Segment>
+                <div class="offer">
+                    <div class="service">Staking</div>
+                    <div class="price">
+                        {(Number($stakingPrice.value) * 1000).toFixed(
+                            $stakingPrice.symbol.precision
+                        )}
+                    </div>
+                    <div class="pair">
+                        {$token} per
+                        {#if $activeBlockchain.resourceSampleMilliseconds}
+                            {$activeBlockchain.resourceSampleMilliseconds}
+                        {/if}
+                        {unit}
+                    </div>
+                    <div class="term">Usable each day until <br />they are unstaked.</div>
+                    <Button primary href="/resources/{resource}/stake">Stake Tokens</Button>
+                </div>
+            </Segment>
+        {/if}
     </SegmentGroup>
 </div>

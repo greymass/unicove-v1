@@ -82,7 +82,7 @@
 <style type="scss">
     input {
         background: var(--main-white);
-        border: 1px solid var(--main-blue);
+        border: 1px solid var(--divider-grey);
         border-radius: 12px;
         color: var(--main-black);
         font-size: 14px;

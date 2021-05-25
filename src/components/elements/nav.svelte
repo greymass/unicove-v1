@@ -24,7 +24,7 @@
             border-radius: 8px;
             display: block;
             line-height: 32px;
-            background: white;
+            background: var(--main-white);
             padding: 0 10px;
             text-decoration: none;
             border: 1px solid var(--main-grey);
@@ -37,7 +37,7 @@
         }
         :global(a.active) {
             background: var(--main-blue);
-            color: white;
+            color: var(--main-white);
         }
     }
 </style>

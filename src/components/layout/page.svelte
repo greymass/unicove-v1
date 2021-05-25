@@ -9,26 +9,25 @@
     export let title: string = ''
     export let subtitle: string = ''
 
+    /** Whether or not to show the left navigation */
+    export let displayNavigation = true
+
     let accountSidebar = false
     let navigationSidebar = false
 </script>
 
 <style type="scss">
-    .layout {
-        display: flex;
-        flex: 1;
-        height: 100vh;
-        background: var(--main-white);
-        color: var(--main-black);
-    }
+    $menubar_height: 71px;
 
     .dimmer {
         display: none;
-        position: absolute;
+        position: fixed;
         height: 100vh;
         width: 100vw;
-        left: 0;
         top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         z-index: 1000 !important;
         background-color: rgba(0, 0, 0, 0.5);
         &.active {
@@ -36,44 +35,78 @@
         }
     }
 
-    .main {
-        flex-grow: 1;
+    .grid {
+        display: grid;
+        grid-template-columns: 268px auto;
+        grid-template-rows: $menubar_height minmax(0, auto);
+        grid-template-areas:
+            'leftbar header'
+            'leftbar main';
+        &.withoutsidebar {
+            grid-template-rows: $menubar_height auto;
+            grid-template-columns: 100vw;
+            grid-template-areas:
+                'header'
+                'main';
+        }
+        &.navigation {
+            max-height: 100vh;
+            overflow: hidden;
+        }
+    }
+
+    .page-header {
+        grid-area: header;
+    }
+
+    .page-leftbar {
         min-height: 100vh;
-        width: 100%;
-        overflow: auto;
+        grid-area: leftbar;
+        position: fixed;
     }
 
-    .header {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        width: 100%;
-    }
-
-    .controls,
-    .title {
-        display: flex;
-        flex-direction: column;
-        flex-basis: 100%;
-        flex: 1;
-    }
-
-    .content {
-        margin: 80px 45px 0;
-    }
-
-    @media only screen and (max-width: 600px) {
+    .page-main {
+        min-height: calc(100vh - #{$menubar_height});
+        grid-area: main;
+        .header,
         .content {
-            margin: 80px 10px 0;
+            padding: 0 30px;
+        }
+    }
+
+    @media only screen and (max-width: 999px) {
+        .grid {
+            grid-template-rows: $menubar_height auto;
+            grid-template-columns: 100vw;
+            grid-template-areas:
+                'header'
+                'main';
+        }
+        .page-header {
+            margin-left: 2em;
+        }
+        .page-leftbar {
+            min-height: auto;
+            position: absolute;
+        }
+        .page-main {
+            .content {
+                padding: 0 10px;
+            }
         }
     }
 </style>
 
-<div class="layout">
-    {#if $activeSession}
-        <Navigation bind:open={navigationSidebar} />
+<div
+    class="grid"
+    class:navigation={accountSidebar || navigationSidebar}
+    class:withoutsidebar={!displayNavigation || !$activeSession}
+>
+    {#if displayNavigation && $activeSession}
+        <aside class="page-leftbar">
+            <Navigation bind:open={navigationSidebar} />
+        </aside>
     {/if}
-    <AccountSidebar bind:open={accountSidebar} />
     <div
         class="dimmer"
         class:active={accountSidebar || navigationSidebar}
@@ -82,20 +115,29 @@
             navigationSidebar = false
         }}
     />
-
-    <div class="main">
-        <div class="content">
-            <div class="header">
+    <header class="page-header">
+        {#if $$slots.submenu}
+            <div class="submenu">
+                <slot name="submenu" />
+            </div>
+        {/if}
+        <AccountSidebar bind:open={accountSidebar} />
+    </header>
+    <main class="page-main">
+        <div class="header">
+            {#if title}
                 <div class="title">
                     <Header {title} {subtitle} />
                 </div>
-                {#if $$slots.controls}
-                    <div class="controls">
-                        <slot name="controls" />
-                    </div>
-                {/if}
-            </div>
+            {/if}
+            {#if $$slots.controls}
+                <div class="controls">
+                    <slot name="controls" />
+                </div>
+            {/if}
+        </div>
+        <div class="content">
             <slot />
         </div>
-    </div>
+    </main>
 </div>

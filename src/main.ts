@@ -3,6 +3,7 @@ import {init as initAuth} from './auth'
 import {Preferences} from './preferences'
 import {appReady} from './store'
 
+// app initialization we show a full-screen loading spinner until this resolves
 async function init() {
     try {
         await Promise.all([initAuth(), Preferences.shared.initStorage()])
@@ -11,6 +12,7 @@ async function init() {
     }
 }
 
+// start initializing app
 init()
     .then(() => {
         appReady.set(true)
@@ -20,6 +22,10 @@ init()
         // TODO: error display UI
     })
 
+// remove loading placeholder before we render the app
+document.body.querySelector('main')?.remove()
+
+// render app
 const app = new App({
     target: document.body,
 })

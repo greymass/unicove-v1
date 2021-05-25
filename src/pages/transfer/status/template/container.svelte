@@ -5,10 +5,9 @@
     .container {
         display: flex;
         min-height: 60px;
+        padding: 10px 0;
         border-bottom: 1px solid var(--divider-grey);
-        &:first-child {
-            border-top: 1px solid var(--divider-grey);
-        }
+        border-top: 1px solid var(--divider-grey);
     }
 </style>
 

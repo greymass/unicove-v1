@@ -3,6 +3,17 @@
     import {Step, transferData} from '../transfer'
 
     export let memo: string | undefined
+    export let editable: boolean = false
+
+    function changeMemo() {
+        transferData.update((data) => ({
+            ...data,
+            step: Step.Memo,
+            backStep: data.step,
+        }))
+    }
+
+    const changeStep = editable ? changeMemo : undefined
 </script>
 
 <style type="scss">
@@ -11,11 +22,6 @@
     }
 </style>
 
-<Completed
-    header="Memo"
-    changeStep={() => {
-        $transferData.step = Step.Memo
-    }}
->
+<Completed header="Transation Memo" {changeStep}>
     <span>{memo ? memo : '(Optional)'}</span>
 </Completed>

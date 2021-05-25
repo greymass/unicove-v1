@@ -1,13 +1,18 @@
 <script lang="ts">
+    import Icon from '~/components/elements/icon.svelte'
     export let changeStep: () => void
 </script>
 
 <style type="scss">
-    span {
+    div {
         color: var(--main-blue);
         cursor: pointer;
-        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 </style>
 
-<span on:click={changeStep}>Change</span>
+<div on:click={changeStep}>
+    <Icon size="large" name="edit-2" />
+</div>

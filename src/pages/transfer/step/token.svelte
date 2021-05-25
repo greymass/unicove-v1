@@ -7,9 +7,8 @@
     import {tokens} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
-
-    import Page from '~/components/layout/page.svelte'
-    import Row from './select-row.svelte'
+    import {Step, transferData} from '~/pages/transfer/transfer'
+    import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
 
     let query: Writable<string> = writable('')
@@ -54,33 +53,45 @@
     function updateQuery({detail}: {detail: any}) {
         query.set(detail.value)
     }
+
+    function changeToken(token: Token) {
+        transferData.update((data) => ({
+            ...data,
+            step: data.backStep || Step.Recipient,
+            backStep: undefined,
+            quantity: undefined,
+            tokenKey: token.key,
+        }))
+    }
 </script>
 
 <style type="scss">
     .container {
+        margin-top: 16px;
         table {
-            margin-top: 30px;
+            margin-top: 16px;
             table-layout: fixed;
             width: 100%;
             white-space: nowrap;
             tr {
-                th {
+                &:hover {
+                    background-color: var(--main-grey);
+                }
+                td {
                     cursor: pointer;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     text-align: right;
-                    font-family: Inter;
-                    font-style: normal;
-                    font-weight: 600;
-                    font-size: 12px;
-                    line-height: 2em;
-                    letter-spacing: 0.1px;
-                    text-transform: uppercase;
-                    color: var(--dark-grey);
+                    width: 120px;
+                    padding: 16px 8px;
                     &:first-child {
                         width: 64px;
                         text-align: center;
+                        img {
+                            width: 32px;
+                            vertical-align: middle;
+                        }
                     }
                     &:nth-child(2) {
                         text-align: left;
@@ -91,24 +102,35 @@
     }
 </style>
 
-<Page title="Transfer Tokens" subtitle="Select a token to transfer">
-    <div class="container">
+<div class="container">
+    <Form>
         <Input on:changed={updateQuery} name="query" focus fluid placeholder="Search tokens..." />
-        <table>
-            <thead>
-                <tr>
-                    <th />
-                    <th>Token</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#if $records}
-                    {#each $records as record}
-                        <Row token={record.token} balance={record.balance} />
-                    {/each}
-                {/if}
-            </tbody>
-        </table>
-    </div>
-</Page>
+    </Form>
+    <table>
+        <tbody>
+            {#if $records}
+                {#each $records as record}
+                    {#if record.token}
+                        <tr
+                            on:click={() => {
+                                if (record.token) {
+                                    changeToken(record.token)
+                                }
+                            }}
+                        >
+                            <td>
+                                <img alt={String(record.token.name)} src={record.token.logo} />
+                            </td>
+                            <td>
+                                {record.token.name}
+                            </td>
+                            <td>
+                                {record.balance.quantity.value}
+                            </td>
+                        </tr>
+                    {/if}
+                {/each}
+            {/if}
+        </tbody>
+    </table>
+</div>

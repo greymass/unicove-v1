@@ -1,16 +1,35 @@
 <script lang="ts">
+    import type {Readable} from 'svelte/store'
     import type {Balance} from '~/stores/balances'
-    import Completed from '~/pages/transfer/status/template/completed.svelte'
+    import type {Token} from '~/stores/tokens'
 
-    export let balance: Balance
+    import Button from '~/components/elements/button.svelte'
+    import {Step, transferData} from '~/pages/transfer/transfer'
+    import FormBalance from '~/components/elements/form/balance.svelte'
+
+    export let token: Token
+    export let balance: Readable<Balance | undefined>
+
+    function changeToken() {
+        transferData.update((data) => ({
+            ...data,
+            step: Step.Token,
+            backStep: Step.Amount,
+        }))
+    }
 </script>
 
 <style type="scss">
-    span {
-        line-height: 32px;
+    .control {
+        margin-left: auto;
+        :global(.button) {
+            line-height: 24px;
+        }
     }
 </style>
 
-<Completed header="Available Balance">
-    <span>{balance.quantity}</span>
-</Completed>
+<FormBalance {token} {balance}>
+    <div class="control">
+        <Button on:action={changeToken}>Change</Button>
+    </div>
+</FormBalance>

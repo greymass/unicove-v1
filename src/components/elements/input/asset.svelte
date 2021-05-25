@@ -7,7 +7,7 @@
     import {validatePresence} from './validators/presence'
     import {validateBalance, validateIsNumber, validateNonZero} from './validators/asset'
 
-    export let symbol: Asset.Symbol = $activeBlockchain.coreTokenSymbol
+    export let symbol: Asset.Symbol = $activeBlockchain!.coreTokenSymbol
     export let name: string = ''
     export let value: string = ''
     export let allowZero: boolean = false

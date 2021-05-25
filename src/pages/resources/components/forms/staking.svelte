@@ -1,39 +1,58 @@
 <script lang="ts">
-    import {Asset, UInt64} from '@greymass/eosio'
+    import {Asset} from 'anchor-link'
+    import {getContext} from 'svelte'
+    import type {Readable, Writable} from 'svelte/store'
+    import {derived, writable} from 'svelte/store'
 
-    import {activeBlockchain, activeSession, currentAccount} from '~/store'
-    import {ChainFeatures} from '~/config'
     import {Stake} from '~/abi-types'
+    import {ChainFeatures} from '~/config'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import {systemToken} from '~/stores/tokens'
+    import {systemTokenBalance} from '~/stores/balances'
 
+    import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
-    import Segment from '~/components/elements/segment.svelte'
+    import FormBalance from '~/components/elements/form/balance.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
+    import InputErrorMessage from '~/components/elements/input/errorMessage.svelte'
+    import Segment from '~/components/elements/segment.svelte'
 
-    $: balance =
-        $currentAccount?.core_liquid_balance ||
-        Asset.fromUnits(0, $activeBlockchain.coreTokenSymbol)
+    const context: FormTransaction = getContext('transaction')
 
     export let resource = 'cpu'
+
     let error: string | undefined
-    let cpu: string = '0'
-    let net: string = '0'
+    let cpu: Writable<string> = writable('')
+    let net: Writable<string> = writable('')
 
-    let amountCPU = Asset.fromFloat(parseFloat(cpu), $activeBlockchain.coreTokenSymbol)
-    let amountNET = Asset.fromFloat(parseFloat(net), $activeBlockchain.coreTokenSymbol)
+    const amountCPU: Readable<Asset> = derived(cpu, ($cpu) => {
+        let amount = parseFloat($cpu)
+        if (isNaN(amount)) {
+            amount = 0
+        }
+        return Asset.fromFloat(amount, $activeBlockchain.coreTokenSymbol)
+    })
 
-    $: loading = $currentAccount
+    const amountNET: Readable<Asset> = derived(net, ($net) => {
+        let amount = parseFloat($net)
+        if (isNaN(amount)) {
+            amount = 0
+        }
+        return Asset.fromFloat(amount, $activeBlockchain.coreTokenSymbol)
+    })
 
-    $: {
-        let parsedCPU = parseFloat(cpu)
-        let parsedNET = parseFloat(net)
-        amountCPU = Asset.fromFloat(parsedCPU, $activeBlockchain.coreTokenSymbol)
-        amountNET = Asset.fromFloat(parsedNET, $activeBlockchain.coreTokenSymbol)
-    }
+    // Create a derived store of the field we expect to be modified
+    export const field = derived([currentAccount], ([$currentAccount]) => {
+        if ($currentAccount && $currentAccount.self_delegated_bandwidth) {
+            return $currentAccount.self_delegated_bandwidth.cpu_weight
+        }
+        return undefined
+    })
 
     async function stake() {
         try {
-            await $activeSession!.transact({
+            const result = await $activeSession!.transact({
                 actions: [
                     {
                         authorization: [$activeSession!.auth],
@@ -42,19 +61,23 @@
                         data: Stake.from({
                             from: $activeSession!.auth.actor,
                             receiver: $activeSession!.auth.actor,
-                            stake_net_quantity: amountNET,
-                            stake_cpu_quantity: amountCPU,
+                            stake_net_quantity: $amountNET,
+                            stake_cpu_quantity: $amountCPU,
                             transfer: false,
                         }),
                     },
                 ],
             })
-            // adjust balance to reflect staking operation
-            balance.units = UInt64.from(
-                balance.units.toNumber() -
-                    Asset.from(amountNET).units.toNumber() -
-                    Asset.from(amountCPU).units.toNumber()
-            )
+
+            // If the context exists and this is part of a FormTransaction
+            if (context) {
+                // Pass the transaction ID to the parent
+                const txid = String(result.transaction.id)
+                context.setTransaction(txid)
+
+                // Await an update on the field expected for this transaction
+                context.awaitAccountUpdate(field)
+            }
         } catch (e) {
             error = String(e)
         }
@@ -64,28 +87,39 @@
 <style>
 </style>
 
-<h2 class="header">Stake {resource.toUpperCase()} tokens to the network...</h2>
 <Segment color="white">
-    {#await loading}
-        <p>Hang on, fetching balances and stuff...</p>
-    {:then _}
-        {#if $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)}
-            <Form on:submit={stake}>
-                {#if resource === 'cpu'}
-                    <p>Amount of EOS to stake as CPU:</p>
-                    <InputAsset allowZero fluid name="cpu" bind:value={cpu} />
-                {/if}
-                {#if resource === 'net'}
-                    <p>Amount of EOS to stake as NET:</p>
-                    <InputAsset allowZero fluid name="net" bind:value={net} />
-                {/if}
-                <Button fluid size="large" formValidation on:action={stake}>Stake Tokens</Button>
-                {error}
-                <p>Account Balance: {balance}</p>
-            </Form>
-            <ul />
-        {:else}
-            <p>This feature is unavailable on this blockchain.</p>
-        {/if}
-    {/await}
+    {#if $activeBlockchain?.chainFeatures.has(ChainFeatures.Staking)}
+        <Form on:submit={stake}>
+            {#if resource === 'cpu'}
+                <p>Amount of {$activeBlockchain.coreTokenSymbol.name} to stake as CPU:</p>
+                <InputAsset
+                    allowZero
+                    focus
+                    fluid
+                    name="cpu"
+                    placeholder={`number of tokens`}
+                    bind:value={$cpu}
+                />
+            {/if}
+            {#if resource === 'net'}
+                <p>Amount of EOS to stake as NET:</p>
+                <InputAsset
+                    allowZero
+                    focus
+                    fluid
+                    name="net"
+                    placeholder={`number of tokens`}
+                    bind:value={$net}
+                />
+            {/if}
+            {#if $systemToken}
+                <FormBalance token={$systemToken} balance={systemTokenBalance} />
+            {/if}
+            <InputErrorMessage errorMessage={error} />
+            <Button fluid size="large" formValidation on:action={stake}>Stake Tokens</Button>
+        </Form>
+        <ul />
+    {:else}
+        <p>This feature is unavailable on this blockchain.</p>
+    {/if}
 </Segment>

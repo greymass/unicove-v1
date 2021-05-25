@@ -1,8 +1,8 @@
-import type {Readable} from 'svelte/store'
 import {dbPromise} from './db'
+import {ReadableObject} from './lib/readable-object'
 
 /** User preferences, persisted in user db. */
-export class Preferences implements Readable<Preferences> {
+export class Preferences extends ReadableObject<Preferences> {
     static settings: Record<string, {default: any}>
 
     /** Whether the side navigation bar is expanded. */
@@ -11,11 +11,9 @@ export class Preferences implements Readable<Preferences> {
     /** Whether the side navigation bar advanced section is expanded. */
     @Setting({default: false}) expandNavbarAdvanced!: boolean
 
-    /** Dark mode */
-    @Setting({
-        default: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
-    })
-    darkmode!: boolean
+    /** Dark mode override. */
+    @Setting({default: null})
+    darkmode!: boolean | null
 
     /** Preferences singleton. */
     static shared = new Preferences()
@@ -57,27 +55,6 @@ export class Preferences implements Readable<Preferences> {
     private async save(key: string, value: any) {
         const db = await dbPromise
         await db.put('preferences', value, key)
-    }
-
-    // Svelte Readable implementation
-
-    private subscribers: ((value: Preferences) => void)[] = []
-
-    subscribe(subscriber: (value: Preferences) => void) {
-        this.subscribers.push(subscriber)
-        subscriber(this)
-        return () => {
-            let idx = this.subscribers.indexOf(subscriber)
-            if (idx !== -1) {
-                this.subscribers.splice(idx, 1)
-            }
-        }
-    }
-
-    private didChange() {
-        for (const subscriber of this.subscribers) {
-            subscriber(this)
-        }
     }
 }
 

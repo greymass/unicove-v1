@@ -10,6 +10,7 @@
     import Segments from './segments.svelte'
 
     import Nav from '~/components/elements/nav.svelte'
+    import Page from '~/components/layout/page.svelte'
 
     const routes = [
         {name: 'Buttons', path: 'buttons', component: Buttons},
@@ -53,7 +54,6 @@
             hr {
                 margin: 8px -8px 16px;
                 border: 0;
-                background-color: #e0e6ee;
                 height: 1px;
             }
         }
@@ -65,25 +65,26 @@
         <h1>Component library 🦄</h1>
         <Nav {routes} home="Overview" />
     </header>
-    <hr />
-    <section>
-        <Route path="/">
-            {#each routes as route}
-                <div class="component">
-                    <h2>{route.name}</h2>
-                    <hr />
-                    <svelte:component this={route.component} />
-                </div>
-            {/each}
-        </Route>
-        {#each routes as route}
-            <Route path={`/${route.path}`}>
-                <div class="component">
-                    <h2>{route.name}</h2>
-                    <hr />
-                    <svelte:component this={route.component} />
-                </div>
+    <Page displayNavigation={false}>
+        <section>
+            <Route path="/">
+                {#each routes as route}
+                    <div class="component">
+                        <h2>{route.name}</h2>
+                        <hr />
+                        <svelte:component this={route.component} />
+                    </div>
+                {/each}
             </Route>
-        {/each}
-    </section>
+            {#each routes as route}
+                <Route path={`/${route.path}`}>
+                    <div class="component">
+                        <h2>{route.name}</h2>
+                        <hr />
+                        <svelte:component this={route.component} />
+                    </div>
+                </Route>
+            {/each}
+        </section>
+    </Page>
 </Route>

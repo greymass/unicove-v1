@@ -33,7 +33,7 @@
     }
 
     .icon {
-        --size: 1em;
+        --size: 16px;
 
         display: inline-flex;
         width: var(--size);
