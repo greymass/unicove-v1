@@ -1,4 +1,5 @@
 <script>
+    import {Asset} from 'anchor-link'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
@@ -9,14 +10,17 @@
     import {activeSession, activeBlockchain, currentAccount, activePriceTicker} from '~/store'
     import {balances, fetchBalances} from '~/stores/balances'
     import {isLoading} from '~/stores/balances-provider'
-    import {getToken} from '~/stores/tokens'
+    import {getToken, systemTokenKey} from '~/stores/tokens'
     import {stateREX} from '~/pages/resources/resources'
 
     import Page from '~/components/layout/page.svelte'
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
+    import Segment from '~/components/elements/segment.svelte'
+    import SegmentGroup from '~/components/elements/segment/group.svelte'
+    import TokenImage from '~/components/elements/image/token.svelte'
 
-    import TokenTable from '~/pages/tokens/table.svelte'
+    import TokenTable from '~/pages/dashboard/table.svelte'
 
     interface Delegations {
         rows: DelegatedBandwidth[]
@@ -74,7 +78,7 @@
         }
     )
 
-    let totalUsdValue: Readable<number> = derived(
+    const totalUsdValue: Readable<number> = derived(
         [balances, currentAccount, delegatedTokens, activePriceTicker, rexTokens],
         ([$balances, $currentAccount, $delegated, $price, $rex]) => {
             let value = 0
@@ -94,6 +98,31 @@
         }
     )
 
+    const totalSystemTokens: Readable<Asset> = derived(
+        [balances, currentAccount, delegatedTokens, rexTokens, systemTokenKey],
+        ([$balances, $currentAccount, $delegated, $rex, $systemTokenKey]) => {
+            let amount = 0
+            if ($currentAccount) {
+                $balances
+                    .filter(
+                        (record) =>
+                            record.account.equals($currentAccount.account_name) &&
+                            record.tokenKey === $systemTokenKey
+                    )
+                    .map((record) => {
+                        amount += record.quantity.value
+                    })
+            }
+            if ($delegated) {
+                amount += $delegated
+            }
+            if ($rex) {
+                amount += $rex
+            }
+            return Asset.from(amount, $activeBlockchain.coreTokenSymbol)
+        }
+    )
+
     function fiatFormat(value: number) {
         const fiatSymbol = '$'
         const fiatName = 'USD'
@@ -109,39 +138,77 @@
 
 <style type="scss">
     .container {
-        @media only screen and (min-width: 600px) {
-            .buttons-container {
-                display: flex;
-                flex-direction: row;
-                .button-container {
-                    display: flex;
-                    flex-direction: column;
-                    width: 50%;
-                    padding: 5px;
-                }
-            }
-        }
+        margin-top: 16px;
 
         @media only screen and (max-width: 600px) {
             padding-bottom: 140px;
-            .buttons-container {
-                background: var(--main-white);
-                border-top: 1px solid var(--main-grey);
-                display: flex;
-                flex-direction: column;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding: 5px 20px;
-                z-index: 1000;
+        }
+    }
 
-                .button-container {
-                    display: flex;
-                    flex-direction: column;
-                    width: 100%;
-                    padding: 10px 0;
-                }
+    h3 {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 22px;
+        /* identical to box height */
+
+        letter-spacing: -0.26px;
+        color: var(--main-black);
+        margin-top: 27px;
+    }
+
+    .balances {
+        .label {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            color: var(--dark-grey);
+        }
+        .amount {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 22px;
+            /* identical to box height */
+            margin: 6px 0;
+            letter-spacing: -0.26px;
+            color: var(--main-black);
+        }
+        .symbol {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 19px;
+            letter-spacing: -0.26px;
+            color: var(--main-black);
+        }
+        .image {
+            float: right;
+            padding: 7px;
+            border-radius: 50%;
+            :global(img) {
+                height: 46px;
+                width: 46px;
+            }
+        }
+        .icon {
+            float: right;
+            padding: 7px;
+            color: var(--always-white);
+            background: var(--main-green);
+            border-radius: 50%;
+            :global(.icon) {
+                height: 46px;
+                width: 46px;
             }
         }
     }
@@ -151,7 +218,7 @@
     }
 </style>
 
-<Page title="Balances" subtitle={`Est. ${fiatFormat($totalUsdValue)}`}>
+<Page title="Account" subtitle={String($activeSession?.auth.actor)}>
     <span slot="header">
         <div class="options">
             <Button on:action={refresh}>
@@ -161,20 +228,24 @@
     </span>
     {#if $balances}
         <div class="container">
-            <TokenTable {balances} {rexTokens} {delegatedTokens} />
-            <div class="buttons-container">
-                <div class="button-container">
-                    <Button href="/transfer" size="large">Send tokens</Button>
-                </div>
-                <div class="button-container">
-                    <Button
-                        href={`https://www.${
-                            $activeBlockchain?.id === 'eos' ? '' : `${$activeBlockchain?.id}.`
-                        }bloks.io/account/${String($currentAccount?.account_name)}`}
-                        size="large">View account on explorer</Button
-                    >
-                </div>
+            <div class="balances">
+                <SegmentGroup>
+                    <Segment>
+                        <div class="image"><TokenImage tokenKey={$systemTokenKey} /></div>
+                        <p class="label">Total EOS Balance</p>
+                        <p class="amount">{$totalSystemTokens.value}</p>
+                        <p class="symbol">{$totalSystemTokens.symbol.name}</p>
+                    </Segment>
+                    <Segment>
+                        <div class="icon"><Icon name="dollar-sign" /></div>
+                        <p class="label">Account Value</p>
+                        <p class="amount">{fiatFormat($totalUsdValue)}</p>
+                        <p class="symbol">USD</p>
+                    </Segment>
+                </SegmentGroup>
             </div>
+            <h3>Tokens</h3>
+            <TokenTable {balances} {rexTokens} {delegatedTokens} />
         </div>
     {/if}
 </Page>

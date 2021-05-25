@@ -8,7 +8,8 @@
     import type {Balance} from '~/stores/balances'
     import {systemToken, systemTokenKey} from '~/stores/tokens'
 
-    import TokenRow from '~/pages/tokens/row.svelte'
+    import TokenHeaderRow from '~/pages/dashboard/headerrow.svelte'
+    import TokenRow from '~/pages/dashboard/row.svelte'
 
     export let balances: Readable<Balance[] | undefined>
     export let delegatedTokens: Readable<number>
@@ -77,11 +78,13 @@
 
 <style type="scss">
     .records {
-        margin: 1.5em 0;
+        display: flex;
+        flex-direction: column;
     }
 </style>
 
 <div class="records">
+    <TokenHeaderRow />
     {#if $systemTokenBalance}
         <TokenRow balance={$systemTokenBalance} />
     {/if}

@@ -7,9 +7,9 @@
     import Page from '~/components/layout/page.svelte'
 
     import Login from '~/pages/login.svelte'
+    import Dashboard from '~/pages/dashboard/index.svelte'
     import Request from '~/pages/request/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
-    import Tokens from '~/pages/tokens/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
     import Loading from './pages/loading.svelte'
@@ -58,6 +58,7 @@
 
     :root {
         --main-white: #fff;
+        --always-white: var(--main-white);
         --main-black: #585d6e;
         --main-blue: #2d8eff;
         --main-green: #26c64b;
@@ -121,7 +122,7 @@
     {:else}
         <Route>
             <Route path="/">
-                <Tokens />
+                <Dashboard />
             </Route>
             <Route path="/transfer">
                 <Transfer />
