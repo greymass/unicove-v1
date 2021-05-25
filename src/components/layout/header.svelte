@@ -17,10 +17,10 @@
     h3 {
         font-family: Inter;
         font-style: normal;
-        font-weight: 500;
+        font-weight: normal;
         font-size: 16px;
         line-height: 19px;
-        letter-spacing: -0.26px;
+        letter-spacing: -0.18px;
         color: var(--dark-grey);
     }
 </style>

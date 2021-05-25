@@ -44,7 +44,7 @@
         padding: 26px;
         width: 268px;
         min-width: 268px;
-        height: 100%;
+        height: 100vh;
         header {
             color: var(--dark-grey);
             font-weight: 600;
