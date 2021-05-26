@@ -57,7 +57,8 @@ export const balancesProvider: Writable<BalancesProvider> = writable(initialBala
 export async function updateBalances(session: LinkSession) {
     isLoading.set(true)
     const chain = chainConfig(session.chainId)
-    if (chain.balanceProviders?.has(BalanceProviders.Bloks)) {
+    const {Bloks} = BalanceProviders
+    if (chain.balanceProviders?.has(Bloks)) {
         const data = await fetchData(session)
         const balances = parseTokenBalances(session, data)
         const tokens = parseTokens(session, data)
