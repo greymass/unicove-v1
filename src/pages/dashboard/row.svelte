@@ -30,9 +30,12 @@
         }
     })
 
-    function fiatFormat(value: number) {
-        const fiatSymbol = '$'
-        return `${fiatSymbol}${value.toFixed(4)}`
+    function fiatFormat(value: number, precision: number = 2) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: precision,
+        }).format(value)
     }
 
     function toggle() {
@@ -215,12 +218,12 @@
             <div class="quantity">{balance.quantity.value}</div>
             <div class="value">
                 {#if $token.price}
-                    {fiatFormat($token.price * balance.quantity.value)}
+                    {fiatFormat($token.price * balance.quantity.value, 2)}
                 {/if}
             </div>
             <div class="price">
                 {#if $token.price}
-                    {fiatFormat($token.price)}
+                    {fiatFormat($token.price, 4)}
                 {/if}
             </div>
             <div class="controls">
