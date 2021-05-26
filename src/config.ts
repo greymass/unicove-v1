@@ -42,7 +42,7 @@ export const resourceFeatures = [
 ]
 
 // Available Balance Providers
-export const enum BalanceProviders {
+export enum BalanceProviders {
     // https://www.api.bloks.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
     Bloks,
 }
