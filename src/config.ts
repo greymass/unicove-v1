@@ -12,6 +12,12 @@ export const appId = !isRelease ? `w.${branch}.gm` : 'wallet.gm'
 
 export const version = `${branch}-${rev}`
 
+// Available Balance Providers
+export enum BalanceProviders {
+    // https://www.api.bloks.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
+    Bloks,
+}
+
 export enum ChainFeatures {
     /** eosio.namebid https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/name_bidding.cpp */
     BidName,
@@ -40,12 +46,6 @@ export const resourceFeatures = [
     ChainFeatures.REX,
     ChainFeatures.PowerUp,
 ]
-
-// Available Balance Providers
-export enum BalanceProviders {
-    // https://www.api.bloks.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
-    Bloks,
-}
 
 export interface ChainConfig {
     /** Short identifier. */
