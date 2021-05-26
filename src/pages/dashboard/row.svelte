@@ -156,6 +156,12 @@
         }
     }
 
+    @media (hover: none) {
+        .container .row .controls :global(.button) {
+            display: block;
+        }
+    }
+
     @media only screen and (max-width: 600px) {
         .container {
             .row {
