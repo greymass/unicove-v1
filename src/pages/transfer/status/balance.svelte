@@ -3,6 +3,8 @@
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
 
+    import {tokens} from '~/stores/tokens'
+
     import Button from '~/components/elements/button.svelte'
     import {Step, transferData} from '~/pages/transfer/transfer'
     import FormBalance from '~/components/elements/form/balance.svelte'
@@ -30,6 +32,9 @@
 
 <FormBalance {token} {balance}>
     <div class="control">
-        <Button on:action={changeToken}>Change</Button>
+        <TokenSelector
+           selectedToken={token}
+           availableTokens={tokens}
+        />
     </div>
 </FormBalance>
