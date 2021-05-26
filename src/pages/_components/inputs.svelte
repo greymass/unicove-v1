@@ -1,5 +1,6 @@
 <script>
     import Input from '~/components/elements/input.svelte'
+    import TokenSelector from '~/components/elements/token/selector'
 
     let examples: any = {
         'example-on-changed': {
@@ -16,6 +17,25 @@
 
     const handleChange = ({detail}: {detail: any}) => {
         examples[detail.name] = detail
+    }
+
+    const selectableTokens = [
+      {
+        name: 'EOS',
+        icon: 'bloks.io/assets/eos',
+        balance: 5.2233,
+      },
+      {
+        name: 'IQ',
+        icon: 'bloks.io/assets/iq',
+        balance: 10,
+      },
+    ];
+
+    let selectedToken = selectableTokens[0];
+
+    const handleTokenSelect = (token) => {
+        selectedToken = token
     }
 </script>
 
@@ -60,4 +80,14 @@
     <Input name="example-is-valid" isValid={numberValidityCheck} on:changed={handleChange} />
     <p>Value: {examples['example-is-valid'].value}</p>
     <p>Is Valid: {examples['example-is-valid'].valid}</p>
+</div>
+<div>
+    <p>Token Selector</p>
+    <TokenSelector
+       {selectedToken}
+       selectableTokens={selectableTokens}
+       onTokenSelect={handleTokenSelect}
+    />
+
+    <p>Selected Token: {selectedToken.name}</p>
 </div>
