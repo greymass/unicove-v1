@@ -10,7 +10,7 @@
 <style type="scss">
     .hamburger {
         cursor: pointer;
-        color: var(--main-black);
+        color: var(--main-blue);
         padding: 16px;
         margin: 12px 6px;
     }
