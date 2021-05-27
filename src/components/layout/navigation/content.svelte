@@ -12,7 +12,7 @@
     const dispatch = createEventDispatcher<{collapse: boolean}>()
 
     $: currentPath = $router.path
-    // $: expandAdvanced = $preferences.expandNavbarAdvanced
+    $: expandAdvanced = $preferences.expandNavbarAdvanced
 
     export let expand = true
     export let floating = false
@@ -80,6 +80,7 @@
                 border-radius: 8px;
                 a {
                     color: var(--main-blue);
+                    cursor: pointer;
                     display: flex;
                     text-decoration: none;
                     height: 32px;
@@ -102,6 +103,31 @@
                 }
                 .name {
                     padding-left: 5px;
+                }
+                &.advanced {
+                    cursor: pointer;
+                    color: var(--dark-grey);
+                    font-family: Inter;
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 10px;
+                    line-height: 26px;
+                    letter-spacing: 0.1px;
+                    text-transform: uppercase;
+                    margin-top: 27px;
+                    .icon {
+                        float: right;
+                        padding: 0;
+                        :global(.icon) {
+                            vertical-align: middle;
+                        }
+                    }
+                    &:hover {
+                        color: var(--main-blue);
+                    }
+                }
+                ul {
+                    margin-top: 0;
                 }
             }
         }
@@ -160,19 +186,34 @@
                 </a>
             </li>
         {/each}
+        <li
+            class="advanced"
+            on:click={() => {
+                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
+                preferences.expandNavbarAdvanced = !expandAdvanced
+                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
+            }}
+        >
+            <span class="name">Advanced</span>
+            <span class="icon">
+                <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
+            </span>
+        </li>
         <li>
-            <ul>
-                {#each advancedNavigation as item}
-                    <li class:active={pathMatches(item)}>
-                        <a href={item.path}>
-                            <span class="icon">
-                                <Icon name={item.icon} />
-                            </span>
-                            <span class="name">{item.name}</span>
-                        </a>
-                    </li>
-                {/each}
-            </ul>
+            {#if $preferences.expandNavbarAdvanced}
+                <ul>
+                    {#each advancedNavigation as item}
+                        <li class:active={pathMatches(item)}>
+                            <a href={item.path}>
+                                <span class="icon">
+                                    <Icon name={item.icon} />
+                                </span>
+                                <span class="name">{item.name}</span>
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
         </li>
     </ul>
 </nav>
