@@ -124,9 +124,8 @@
     )
 
     function fiatFormat(value: number) {
-        const fiatSymbol = '$'
-        const fiatName = 'USD'
-        return `${fiatSymbol}${value.toFixed(4)} ${fiatName}`
+        const fiatSymbol = '$ '
+        return `${fiatSymbol}${value.toFixed(4)}`
     }
 
     function refresh() {
