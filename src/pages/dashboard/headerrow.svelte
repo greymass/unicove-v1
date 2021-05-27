@@ -43,11 +43,26 @@
         padding-left: 1em;
     }
 
+    @media only screen and (max-width: 999px) {
+        .token {
+            padding-left: 32px;
+        }
+        .quantity {
+            padding-right: 32px;
+        }
+    }
+
     @media only screen and (max-width: 600px) {
         .controls,
         .value,
         .price {
             display: none;
+        }
+        .token {
+            padding-left: 32px;
+        }
+        .quantity {
+            padding-right: 32px;
         }
     }
 </style>

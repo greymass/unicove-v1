@@ -2,8 +2,10 @@
     import {activeSession} from '~/store'
 
     import AccountSidebar from '~/components/layout/account/sidebar.svelte'
+    import AccountSidebarButton from '~/components/layout/account/button.svelte'
     import Header from '~/components/layout/header.svelte'
-    import Navigation from '~/components/layout/navigation/index.svelte'
+    import NavigationSidebar from '~/components/layout/navigation/index.svelte'
+    import NavigationSidebarButton from '~/components/layout/navigation/button.svelte'
 
     /** Title of the page. */
     export let title: string = ''
@@ -17,7 +19,9 @@
 </script>
 
 <style type="scss">
-    $menubar_height: 71px;
+    $grid_gap: 4em;
+    $navigation_width: 268px;
+    $menubar_height: 5.5em;
 
     .dimmer {
         display: none;
@@ -37,7 +41,9 @@
 
     .grid {
         display: grid;
-        grid-template-columns: 268px auto;
+        column-gap: $grid_gap;
+        row-gap: $grid_gap / 2;
+        grid-template-columns: $navigation_width auto 0;
         grid-template-rows: $menubar_height minmax(0, auto);
         grid-template-areas:
             'leftbar header'
@@ -48,29 +54,45 @@
             grid-template-areas:
                 'header'
                 'main';
+            .page-header {
+                left: 0;
+                right: 0;
+            }
         }
         &.navigation {
             max-height: 100vh;
             overflow: hidden;
         }
+        :global(.account-button) {
+            right: $grid_gap;
+        }
     }
 
     .page-header {
+        display: flex;
         grid-area: header;
+        position: fixed;
+        top: 0;
+        left: calc(#{$navigation_width} + #{$grid_gap});
+        right: $grid_gap;
+        height: $menubar_height;
+        background: var(--main-white);
+        border-bottom: 1px solid var(--divider-grey);
     }
 
     .page-leftbar {
         min-height: 100vh;
         grid-area: leftbar;
         position: fixed;
+        left: 0;
     }
 
     .page-main {
         min-height: calc(100vh - #{$menubar_height});
         grid-area: main;
-        .header,
-        .content {
-            padding: 0 30px;
+        > * {
+            margin: 0 auto;
+            max-width: 1200px;
         }
     }
 
@@ -82,16 +104,22 @@
                 'header'
                 'main';
         }
-        .page-header {
-            margin-left: 2em;
-        }
         .page-leftbar {
             min-height: auto;
             position: absolute;
         }
+        .page-header {
+            top: 0;
+            left: 0;
+            right: 0;
+        }
         .page-main {
+            min-height: calc(100vh - #{$menubar_height} - #{$grid_gap});
+            .header {
+                padding: 0 25px;
+            }
             .content {
-                padding: 0 10px;
+                padding: 0;
             }
         }
     }
@@ -102,11 +130,6 @@
     class:navigation={accountSidebar || navigationSidebar}
     class:withoutsidebar={!displayNavigation || !$activeSession}
 >
-    {#if displayNavigation && $activeSession}
-        <aside class="page-leftbar">
-            <Navigation bind:open={navigationSidebar} />
-        </aside>
-    {/if}
     <div
         class="dimmer"
         class:active={accountSidebar || navigationSidebar}
@@ -115,14 +138,24 @@
             navigationSidebar = false
         }}
     />
+
+    {#if displayNavigation && $activeSession}
+        <aside class="page-leftbar">
+            <NavigationSidebar bind:open={navigationSidebar} />
+        </aside>
+    {/if}
+
     <header class="page-header">
+        <NavigationSidebarButton bind:open={navigationSidebar} />
         {#if $$slots.submenu}
             <div class="submenu">
                 <slot name="submenu" />
             </div>
         {/if}
-        <AccountSidebar bind:open={accountSidebar} />
+        <AccountSidebarButton bind:open={accountSidebar} />
     </header>
+    <AccountSidebar bind:open={accountSidebar} />
+
     <main class="page-main">
         <div class="header">
             {#if title}

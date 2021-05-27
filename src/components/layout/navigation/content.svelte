@@ -121,7 +121,7 @@
         // }
 
         &.floating {
-            position: fixed;
+            position: absolute;
             z-index: 2001;
             top: 0;
             left: 0;
