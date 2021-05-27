@@ -100,6 +100,7 @@
       border-radius: 12px;
       width: 200px;
       border: 1px solid var(--divider-grey);
+      position: relative;
 
       .icon-container {
         padding: 5px;
@@ -116,17 +117,20 @@
         display: inline;
       }
 
-      .right-section {
+      .balance-container {
+        display: inline;
+        font-size: 12px;
         float: right;
-        width: 70px;
+        padding: 5px;
+        width: 60px;
+      }
 
-        .balance-container {
-          display: inline;
-        }
-
-        .arrow-container {
-          display: inline;
-        }
+      .arrow-container {
+        position: absolute;
+        right: 10px;
+        bottom: 0;
+        width: 20px;
+        padding: 10px;
       }
     }
 </style>
@@ -165,12 +169,10 @@
   <h2 class="name-text">
     {selectedToken.name}
   </h2>
-  <span class="right-section">
-    <span class="balance-container">
-          {selectedToken.balance}
-    </span>
-    <span class="arrow-container">
-        <Icon name="chevron-right" />
-    </span>
+  <span class="balance-container">
+     {selectedToken.balance}
   </span>
+  <div class="arrow-container">
+      <Icon name="chevron-right" />
+  </div>
 </div>
