@@ -10,6 +10,8 @@
     import Text from '~/components/elements/text.svelte'
     import TokenImage from '~/components/elements/image/token.svelte'
 
+    import Number from './number.svelte'
+
     export let balance: Balance
     export let name: string = ''
     export let transferable: boolean = true
@@ -45,7 +47,7 @@
 
 <style type="scss">
     .container {
-        &:nth-child(odd) {
+        &:nth-child(even) {
             background: var(--main-grey);
             .logo .wrapper {
                 background: var(--main-white);
@@ -92,13 +94,11 @@
             }
 
             .price,
-            .quantity,
             .value {
                 justify-content: flex-end;
             }
 
             .price,
-            .quantity,
             .token,
             .value {
                 font-family: Inter;
@@ -215,7 +215,9 @@
                     {/if}
                 </span>
             </div>
-            <div class="quantity">{balance.quantity.value}</div>
+            {#if balance.quantity}
+                <Number asset={balance.quantity} />
+            {/if}
             <div class="value">
                 {#if $token.price}
                     {fiatFormat($token.price * balance.quantity.value, 2)}
