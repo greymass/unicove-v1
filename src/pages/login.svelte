@@ -47,14 +47,10 @@
             letter-spacing: -0.09px;
             margin-bottom: 9px;
         }
-        p {
-            color: var(--light-grey);
-            font-family: Inter;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 10px;
-            line-height: 14px;
-            letter-spacing: 0.01px;
+        img {
+            margin: 0 7px 0 0;
+            width: 25px;
+            height: 25px;
         }
     }
     .info {
@@ -120,12 +116,9 @@
     </div>
     <div class="blockchains">
         <h3>Supported blockchains</h3>
-        <p>
-            {chains
-                .filter((chain) => !chain.testnet)
-                .map((chain) => chain.name)
-                .join(', ')}
-        </p>
+        {#each chains.filter((chain) => !chain.testnet) as chain}
+            <img alt={chain.name} src={`/images/chains/${chain.id}.svg`} />
+        {/each}
     </div>
     <div class="info">
         <SegmentGroup>
