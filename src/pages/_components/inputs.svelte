@@ -22,12 +22,12 @@
     const selectableTokens = [
       {
         name: 'EOS',
-        icon: 'bloks.io/assets/eos',
+        logo: 'https://www.bloks.io/img/chains/eos.png',
         balance: 5.2233,
       },
       {
-        name: 'IQ',
-        icon: 'bloks.io/assets/iq',
+        name: 'Telos',
+        logo: 'https://www.bloks.io/img/chains/telos.png',
         balance: 10,
       },
     ];

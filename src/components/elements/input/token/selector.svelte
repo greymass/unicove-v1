@@ -102,9 +102,16 @@
       border: 1px solid var(--divider-grey);
       position: relative;
 
-      .icon-container {
-        padding: 5px;
+      .logo-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 10px;
         margin-right: 5px;
+
+        img {
+          width: 18px;
+        }
       }
 
       .name-text {
@@ -115,20 +122,20 @@
         letter-spacing: -0.04px;
         color: var(--main-black);
         display: inline;
+        margin-left: 25px;
       }
 
       .balance-container {
         display: inline;
-        font-size: 12px;
         float: right;
         padding: 5px;
-        width: 60px;
+        width: 70px;
       }
 
       .arrow-container {
         position: absolute;
-        right: 10px;
-        bottom: 0;
+        right: 15px;
+        top: 1px;
         width: 20px;
         padding: 10px;
       }
@@ -163,8 +170,8 @@
 </Modal>
 
 <div on:click={() => $displayModal = true} class="selector-button">
-  <span class="icon-container">
-    <img src={selectedToken.icon}>
+  <span class="logo-container">
+    <img src={selectedToken.logo}>
   </span>
   <h2 class="name-text">
     {selectedToken.name}
@@ -173,6 +180,6 @@
      {selectedToken.balance}
   </span>
   <div class="arrow-container">
-      <Icon name="chevron-right" />
+      <Icon name="chevron-right" size="large" />
   </div>
 </div>
