@@ -4,7 +4,15 @@
 </script>
 
 <style type="scss">
+    .form,
+    .wrapper {
+        margin: 16px 0;
+    }
 </style>
 
-<ResourceStateNET showExtra />
-<ResourceStatePrices resource="net" />
+<div class="wrapper">
+    <ResourceStateNET showExtra />
+    <div class="form">
+        <ResourceStatePrices resource="net" />
+    </div>
+</div>

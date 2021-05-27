@@ -89,10 +89,9 @@
                 <FormBalance token={$systemToken} balance={systemTokenBalance} />
             {/if}
             <InputErrorMessage errorMessage={error} />
-            <Button fluid size="large" formValidation on:action={sellram}
+            <Button primary fluid size="large" formValidation on:action={sellram}
                 >Sell {$kb} kb for {$cost}</Button
             >
-            <p>Account Balance: {$currentAccountBalance}</p>
         </Form>
     {:else}
         <p>This feature is unavailable on this blockchain.</p>

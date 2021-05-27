@@ -4,7 +4,15 @@
 </script>
 
 <style type="scss">
+    .form,
+    .wrapper {
+        margin: 16px 0;
+    }
 </style>
 
-<ResourceStateCPU showExtra />
-<ResourceStatePrices resource="cpu" />
+<div class="wrapper">
+    <ResourceStateCPU showExtra />
+    <div class="form">
+        <ResourceStatePrices resource="cpu" />
+    </div>
+</div>

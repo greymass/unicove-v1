@@ -43,6 +43,9 @@
     * :global(.segment) {
         margin-top: 12px;
     }
+    h4 {
+        margin-bottom: 16px;
+    }
     .offer {
         text-align: center;
     }

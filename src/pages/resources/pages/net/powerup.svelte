@@ -5,9 +5,17 @@
 </script>
 
 <style>
+    .form,
+    .wrapper {
+        margin: 16px 0;
+    }
 </style>
 
-<ResourceStateNET showExtra />
-<FormTransaction>
-    <ResourcesSystemPowerUp resource="net" />
-</FormTransaction>
+<div class="wrapper">
+    <ResourceStateNET showExtra />
+    <div class="form">
+        <FormTransaction>
+            <ResourcesSystemPowerUp resource="net" />
+        </FormTransaction>
+    </div>
+</div>

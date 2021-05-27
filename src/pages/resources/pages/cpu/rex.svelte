@@ -5,9 +5,17 @@
 </script>
 
 <style>
+    .form,
+    .wrapper {
+        margin: 16px 0;
+    }
 </style>
 
-<ResourceStateCPU showExtra />
-<FormTransaction>
-    <ResourcesSystemREX resource="cpu" />
-</FormTransaction>
+<div class="wrapper">
+    <ResourceStateCPU showExtra />
+    <div class="form">
+        <FormTransaction>
+            <ResourcesSystemREX resource="cpu" />
+        </FormTransaction>
+    </div>
+</div>
