@@ -1,6 +1,6 @@
 <script>
     import Input from '~/components/elements/input.svelte'
-    import TokenSelector from '~/components/elements/token/selector'
+    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     let examples: any = {
         'example-on-changed': {
@@ -84,8 +84,8 @@
 <div>
     <p>Token Selector</p>
     <TokenSelector
-       {selectedToken}
-       selectableTokens={selectableTokens}
+       defaultToken={selectedToken}
+       tokens={selectableTokens}
        onTokenSelect={handleTokenSelect}
     />
 
