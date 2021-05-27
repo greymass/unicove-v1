@@ -102,7 +102,8 @@
       border: 1px solid var(--divider-grey);
 
       .icon-container {
-        padding: 5;
+        padding: 5px;
+        margin-right: 5px;
       }
 
       .name-text {
@@ -110,7 +111,6 @@
         font-style: normal;
         font-weight: 500;
         font-size: 14px;
-        line-height: 17px;
         letter-spacing: -0.04px;
         color: var(--main-black);
         display: inline;
@@ -118,11 +118,14 @@
 
       .right-section {
         float: right;
-
-        .arrow-container {
-        }
+        width: 70px;
 
         .balance-container {
+          display: inline;
+        }
+
+        .arrow-container {
+          display: inline;
         }
       }
     }
@@ -164,10 +167,10 @@
   </h2>
   <span class="right-section">
     <span class="balance-container">
-      {selectedToken.balance}
+          {selectedToken.balance}
     </span>
     <span class="arrow-container">
-      <Icon name="chevron-right" />
+        <Icon name="chevron-right" />
     </span>
   </span>
 </div>
