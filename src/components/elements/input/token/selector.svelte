@@ -101,6 +101,7 @@
       width: 200px;
       border: 1px solid var(--divider-grey);
       position: relative;
+      cursor: pointer;
 
       .logo-container {
         position: absolute;
@@ -155,13 +156,13 @@
                     }}
                 >
                     <td>
-                        <img alt={String(record.token.name)} src={record.token.logo} />
+                        <img alt={String(token.name)} src={token.logo} />
                     </td>
                     <td>
                         {token.name}
                     </td>
                     <td>
-                        {token.balance.quantity.value}
+                        {token.balance}
                     </td>
                 </tr>
             {/each}
