@@ -6,7 +6,7 @@
 
     import {Sellram} from '~/abi-types'
     import {ChainFeatures} from '~/config'
-    import {activeBlockchain, activeSession, currentAccount, currentAccountBalance} from '~/store'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {systemToken} from '~/stores/tokens'
     import {systemTokenBalance} from '~/stores/balances'
     import {stateRAM} from '~/pages/resources/resources'
