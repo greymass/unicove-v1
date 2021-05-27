@@ -6,6 +6,7 @@
     import Input from '~/components/elements/input.svelte'
     import Modal from '~/components/elements/modal.svelte'
     import Icon from '~/components/elements/icon.svelte'
+    import TokenSelectorRow from './selector/row.svelte'
 
     export let tokens;
     export let defaultToken;

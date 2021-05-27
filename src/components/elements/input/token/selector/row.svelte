@@ -1,10 +1,12 @@
 <script>
+  import Icon from '~/components/elements/icon.svelte'
+
   export let token;
   export let onClick;
   export let isTableRow;
 </script>
 
-<style>
+<style type="scss">
   .row {
     padding: 10px 12px;
     border-radius: 12px;
