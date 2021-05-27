@@ -1,6 +1,7 @@
 <script>
   export let token;
   export let onClick;
+  export let isTableRow;
 </script>
 
 <style>
@@ -52,11 +53,11 @@
   }
 </style>
 
-<div class="row" on:click={onClick}>
+<div class="row {isTableRow ? 'withBorder' : ''}" on:click={onClick}>
   <span class="logo-container">
     <img src={token.logo}>
   </span>
-  <h2 class="name-text">
+  <h2 class="name-text {isTableRow ? 'blueText' : ''}" >
     {token.name}
   </h2>
   <span class="balance-container">

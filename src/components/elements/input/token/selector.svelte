@@ -106,14 +106,21 @@
     <Form>
         <Input on:changed={updateQuery} name="query" focus fluid placeholder="Search tokens..." />
     </Form>
-    <div class="tokens-container">
+    <table>
+        <th>
+          <tc> Token </tc>
+          <tc> Balance </tc>
+        </th>
+
         {#each tokens as token}
+          <tr>
             <TokenSelectorRow
               onClick={() => changeToken(token)}
               token={token}
             />
+          </tr>
         {/each}
-    </div>
+    </table>
 </Modal>
 
 <TokenSelectorRow
