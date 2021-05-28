@@ -48,7 +48,6 @@
     // })
 
     function updateQuery({ detail }) : string {
-      console.log('updateQuery', {value: detail.value})
       query = detail.value
     }
 
@@ -62,8 +61,6 @@
 
     $: {
         filteredTokens = tokens.filter(token => {
-          console.log({query})
-          console.log({token})
           return query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
         })
     }
