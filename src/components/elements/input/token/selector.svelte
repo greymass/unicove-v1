@@ -5,7 +5,7 @@
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
     import Modal from '~/components/elements/modal.svelte'
-    import Icon from '~/components/elements/icon.svelte'
+
     import TokenSelectorRow from './selector/row.svelte'
 
     export let tokens;
@@ -47,19 +47,25 @@
     //     return []
     // })
 
-    function updateQuery(value) : string {
-      console.log({value})
-      query = value
+    function updateQuery({ detail }) : string {
+      console.log('updateQuery', {value: detail.value})
+      query = detail.value
     }
 
     function changeToken(token: Token) {
-        transferData.update((data) => ({
-            ...data,
-            step: data.backStep || Step.Recipient,
-            backStep: undefined,
-            quantity: undefined,
-            tokenKey: token.key,
-        }))
+      selectedToken(token)
+
+      onTokenSelect(token)
+    }
+
+    let filteredTokens = []
+
+    $: {
+        filteredTokens = tokens.filter(token => {
+          console.log({query})
+          console.log({token})
+          return query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
+        })
     }
 </script>
 
@@ -68,6 +74,7 @@
       text-align: left;
       margin: 10px 3px;
     }
+
     table {
         margin-top: 10px;
         table-layout: fixed;
@@ -85,6 +92,12 @@
           letter-spacing: 0.1px;
           text-transform: uppercase;
           padding: 5px;
+
+           h3 {
+            margin: 20px;
+            font-size: 12px;
+            text-align: center;
+           }
         }
 
         td {
@@ -106,17 +119,27 @@
           <th> Balance </th>
         </tr>
 
-        {#each tokens as token}
-          <tr>
-            <td colspan="3">
-              <TokenSelectorRow
-                onClick={() => changeToken(token)}
-                token={token}
-                isTableRow
-              />
-            </td>
-          </tr>
-        {/each}
+        {#if tokens.length > 0}
+            {#each filteredTokens as token}
+              <tr>
+                <td colspan="3">
+                  <TokenSelectorRow
+                    onClick={() => changeToken(token)}
+                    token={token}
+                    isTableRow
+                  />
+                </td>
+              </tr>
+            {/each}
+        {:else}
+            <tr>
+              <th colspan="3">
+                  <h3>
+                    No tokens found...
+                  </h3>
+              </th>
+            </tr>
+        {/if}
     </table>
 </Modal>
 
