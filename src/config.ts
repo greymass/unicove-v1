@@ -182,6 +182,28 @@ export const chains: ChainConfig[] = [
         balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
+        id: 'telos-testnet',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: ChainId.from('1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f'),
+        coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Telos (Testnet)',
+        nodeUrl: 'https://testnet.telos.net',
+        resourceSampleAccount: 'greymassfuel',
+        resourceSampleMilliseconds: 1000,
+        testnet: true,
+        bloksUrl: 'https://telos-test.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
         id: 'wax',
         chainFeatures: new Set([
             ChainFeatures.BidName,
