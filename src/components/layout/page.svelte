@@ -22,6 +22,7 @@
     $grid_gap: 4em;
     $navigation_width: 268px;
     $menubar_height: 5.5em;
+    $bottom_padding: 4em;
 
     .dimmer {
         display: none;
@@ -89,8 +90,8 @@
     }
 
     .page-main {
-        min-height: calc(100vh - #{$menubar_height});
-        padding-bottom: 4em;
+        min-height: calc(100vh - #{$menubar_height} - #{$bottom_padding});
+        padding-bottom: $bottom_padding;
         grid-area: main;
         > * {
             margin: 0 auto;
