@@ -33,7 +33,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 1000 !important;
+        z-index: 1001 !important;
         background-color: rgba(0, 0, 0, 0.5);
         &.active {
             display: block;
