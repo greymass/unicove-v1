@@ -1,9 +1,10 @@
 <script>
     import Icon from '~/components/elements/icon.svelte'
+    import type {Token} from '~/stores/tokens'
 
-    export let token
-    export let onClick
-    export let isTableRow
+    export let token: Token;
+    export let onClick: () => void;
+    export let isTableRow: boolean;
 </script>
 
 <style type="scss">
