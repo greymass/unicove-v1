@@ -4,7 +4,6 @@
 
     import Icon from '~/components/elements/icon.svelte'
 
-    import AccountButton from './button.svelte'
     import List from './list.svelte'
 
     export let open = false
@@ -53,7 +52,6 @@
     }
 </style>
 
-<AccountButton />
 <aside class:open>
     <div class="header">
         <!-- svelte-ignore a11y-missing-attribute -->
