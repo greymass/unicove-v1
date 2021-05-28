@@ -20,24 +20,24 @@
     }
 
     const selectableTokens = [
-      {
-        name: 'EOS',
-        logo: 'https://www.bloks.io/img/chains/eos.png',
-        balance: 5.2233,
-        precision: 4,
-      },
-      {
-        name: 'Telos',
-        logo: 'https://www.bloks.io/img/chains/telos.png',
-        balance: 10,
-        precision: 4,
-      },
-    ];
+        {
+            name: 'EOS',
+            logo: 'https://www.bloks.io/img/chains/eos.png',
+            balance: 5.2233,
+            precision: 4,
+        },
+        {
+            name: 'Telos',
+            logo: 'https://www.bloks.io/img/chains/telos.png',
+            balance: 10,
+            precision: 4,
+        },
+    ]
 
-    let selectedToken = selectableTokens[0];
+    let selectedToken = selectableTokens[0]
 
     const handleTokenSelect = (token) => {
-      selectedToken = token
+        selectedToken = token
     }
 </script>
 
@@ -86,9 +86,9 @@
 <div>
     <p>Token Selector</p>
     <TokenSelector
-       defaultToken={selectedToken}
-       tokens={selectableTokens}
-       onTokenSelect={handleTokenSelect}
+        defaultToken={selectedToken}
+        tokens={selectableTokens}
+        onTokenSelect={handleTokenSelect}
     />
 
     <p>Selected Token: {selectedToken.name}</p>

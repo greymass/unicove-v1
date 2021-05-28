@@ -32,9 +32,6 @@
 
 <FormBalance {token} {balance}>
     <div class="control">
-        <TokenSelector
-           selectedToken={token}
-           availableTokens={tokens}
-        />
+        <TokenSelector selectedToken={token} availableTokens={tokens} />
     </div>
 </FormBalance>

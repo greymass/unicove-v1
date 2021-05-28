@@ -9,31 +9,31 @@
 
     import TokenSelectorRow from './selector/row.svelte'
 
-    export let tokens;
-    export let defaultToken;
-    export let onTokenSelect;
+    export let tokens
+    export let defaultToken
+    export let onTokenSelect
 
-    let selectedToken = defaultToken;
+    let selectedToken = defaultToken
     let displayModal = writable<boolean>(true)
     let query: string = ''
 
-    function updateQuery({ detail }) : string {
-      query = detail.value
+    function updateQuery({detail}): string {
+        query = detail.value
     }
 
     function changeToken(token: Token) {
-      selectedToken = token
+        selectedToken = token
 
-      onTokenSelect(token)
+        onTokenSelect(token)
 
-      $displayModal = false
+        $displayModal = false
     }
 
     let filteredTokens = []
 
     $: {
-        filteredTokens = tokens.filter(token => {
-          return query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
+        filteredTokens = tokens.filter((token) => {
+            return query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
         })
     }
 </script>
@@ -49,8 +49,8 @@
     }
 
     h2 {
-      text-align: left;
-      margin: 10px 3px;
+        text-align: left;
+        margin: 10px 3px;
     }
 
     table {
@@ -60,71 +60,67 @@
         white-space: nowrap;
 
         th {
-          text-align: left;
-          color: var(--dark-grey);
-          font-family: Inter;
-          font-style: normal;
-          font-weight: 600;
-          font-size: 10px;
-          line-height: 12px;
-          letter-spacing: 0.1px;
-          text-transform: uppercase;
-          padding: 5px;
+            text-align: left;
+            color: var(--dark-grey);
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 10px;
+            line-height: 12px;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            padding: 5px;
 
-           h3 {
-            margin: 20px;
-            font-size: 12px;
-            text-align: center;
-           }
+            h3 {
+                margin: 20px;
+                font-size: 12px;
+                text-align: center;
+            }
         }
 
         td {
-          padding: 3px;
+            padding: 3px;
         }
     }
 </style>
 
 <Modal display={displayModal} hideCloseButton>
-    <div on:click={() => $displayModal = false } class="close-button">
+    <div on:click={() => ($displayModal = false)} class="close-button">
         <Icon name="x" />
     </div>
-    <h2>
-      Select Token
-    </h2>
+    <h2>Select Token</h2>
     <Form>
-        <Input on:changed={updateQuery} value={query} name="query" focus fluid placeholder="Search tokens..." />
+        <Input
+            on:changed={updateQuery}
+            value={query}
+            name="query"
+            focus
+            fluid
+            placeholder="Search tokens..."
+        />
     </Form>
     <table>
         <tr>
-          <th colspan="2"> Token </th>
-          <th> Balance </th>
+            <th colspan="2"> Token </th>
+            <th> Balance </th>
         </tr>
 
         {#if tokens.length > 0}
             {#each filteredTokens as token}
-              <tr>
-                <td colspan="3">
-                  <TokenSelectorRow
-                    onClick={() => changeToken(token)}
-                    token={token}
-                    isTableRow
-                  />
-                </td>
-              </tr>
+                <tr>
+                    <td colspan="3">
+                        <TokenSelectorRow onClick={() => changeToken(token)} {token} isTableRow />
+                    </td>
+                </tr>
             {/each}
         {:else}
             <tr>
-              <th colspan="3">
-                  <h3>
-                    No tokens found...
-                  </h3>
-              </th>
+                <th colspan="3">
+                    <h3>No tokens found...</h3>
+                </th>
             </tr>
         {/if}
     </table>
 </Modal>
 
-<TokenSelectorRow
-  onClick={() => $displayModal = true}
-  token={selectedToken}
-/>
+<TokenSelectorRow onClick={() => ($displayModal = true)} token={selectedToken} />
