@@ -11,7 +11,7 @@
     .row {
         padding: 10px 12px;
         border-radius: 12px;
-        max-width: 300px;
+        max-width: 400px;
         border: 1px solid var(--divider-grey);
         position: relative;
         cursor: pointer;
@@ -85,7 +85,7 @@
         {token.name}
     </h2>
     <span class="balance-container {isTableRow ? 'table' : ''}">
-        {token.balance && token.balance.toFixed(token.precision)}
+        {(token.balance && token.balance.toFixed(token.precision)) || 'N/A'}
     </span>
     <div class="arrow-container">
         <Icon name="chevron-right" size="large" />
