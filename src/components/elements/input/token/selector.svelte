@@ -15,7 +15,7 @@
     export let onTokenSelect: () => void;
 
     let selectedToken = defaultToken
-    let displayModal = writable<boolean>(true)
+    let displayModal = writable<boolean>(false)
     let query: string = '';
 
     function updateQuery({detail} : { detail: any }): void {
@@ -54,33 +54,38 @@
         margin: 10px 3px;
     }
 
-    table {
-        margin-top: 10px;
-        table-layout: fixed;
-        width: 100%;
-        white-space: nowrap;
+    .table-container {
+        max-height: 60vh;
+        overflow: scroll;
+        margin-top: 20px;
 
-        th {
-            text-align: left;
-            color: var(--dark-grey);
-            font-family: Inter;
-            font-style: normal;
-            font-weight: 600;
-            font-size: 10px;
-            line-height: 12px;
-            letter-spacing: 0.1px;
-            text-transform: uppercase;
-            padding: 5px;
+        table {
+            table-layout: fixed;
+            width: 100%;
+            white-space: nowrap;
 
-            h3 {
-                margin: 20px;
-                font-size: 12px;
-                text-align: center;
+            th {
+                text-align: left;
+                color: var(--dark-grey);
+                font-family: Inter;
+                font-style: normal;
+                font-weight: 600;
+                font-size: 10px;
+                line-height: 12px;
+                letter-spacing: 0.1px;
+                text-transform: uppercase;
+                padding: 5px;
+
+                h3 {
+                    margin: 20px;
+                    font-size: 12px;
+                    text-align: center;
+                }
             }
-        }
 
-        td {
-            padding: 3px;
+            td {
+                padding: 3px;
+            }
         }
     }
 </style>
@@ -100,28 +105,30 @@
             placeholder="Search tokens..."
         />
     </Form>
-    <table>
-        <tr>
-            <th colspan="2"> Token </th>
-            <th> Balance </th>
-        </tr>
-
-        {#if tokens.length > 0}
-            {#each filteredTokens as token}
-                <tr>
-                    <td colspan="3">
-                        <TokenSelectorRow onClick={() => changeToken(token)} {token} isTableRow />
-                    </td>
-                </tr>
-            {/each}
-        {:else}
+    <div class="table-container">
+        <table>
             <tr>
-                <th colspan="3">
-                    <h3>No tokens found...</h3>
-                </th>
+                <th colspan="2"> Token </th>
+                <th> Balance </th>
             </tr>
-        {/if}
-    </table>
+
+            {#if tokens.length > 0}
+                {#each filteredTokens as token}
+                    <tr>
+                        <td colspan="3">
+                            <TokenSelectorRow onClick={() => changeToken(token)} {token} isTableRow />
+                        </td>
+                    </tr>
+                {/each}
+            {:else}
+                <tr>
+                    <th colspan="3">
+                        <h3>No tokens found...</h3>
+                    </th>
+                </tr>
+            {/if}
+        </table>
+    </div>
 </Modal>
 
 <TokenSelectorRow onClick={() => ($displayModal = true)} token={selectedToken} />

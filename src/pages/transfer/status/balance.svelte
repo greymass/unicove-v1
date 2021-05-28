@@ -5,19 +5,15 @@
 
     import {tokens} from '~/stores/tokens'
 
-    import Button from '~/components/elements/button.svelte'
     import {Step, transferData} from '~/pages/transfer/transfer'
-    import FormBalance from '~/components/elements/form/balance.svelte'
+
+    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     export let token: Token
     export let balance: Readable<Balance | undefined>
 
-    function changeToken() {
-        transferData.update((data) => ({
-            ...data,
-            step: Step.Token,
-            backStep: Step.Amount,
-        }))
+    function changeToken(token) {
+        console.log({token})
     }
 </script>
 
@@ -30,8 +26,10 @@
     }
 </style>
 
-<FormBalance {token} {balance}>
-    <div class="control">
-        <TokenSelector selectedToken={token} availableTokens={tokens} />
-    </div>
-</FormBalance>
+<div class="control">
+    <TokenSelector
+      defaultToken={token}
+      tokens={$tokens}
+      onTokenSelect={changeToken}
+    />
+</div>
