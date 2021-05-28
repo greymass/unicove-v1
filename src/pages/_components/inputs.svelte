@@ -37,8 +37,7 @@
     let selectedToken = selectableTokens[0];
 
     const handleTokenSelect = (token) => {
-      console.log({selectedToken})
-        selectedToken = token
+      selectedToken = token
     }
 </script>
 

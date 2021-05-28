@@ -5,56 +5,28 @@
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
     import Modal from '~/components/elements/modal.svelte'
+    import Icon from '~/components/elements/icon.svelte'
 
     import TokenSelectorRow from './selector/row.svelte'
 
     export let tokens;
     export let defaultToken;
+    export let onTokenSelect;
 
     let selectedToken = defaultToken;
     let displayModal = writable<boolean>(true)
     let query: string = ''
-
-    // const matching: Readable<Balance[] | undefined> = derived(
-    //     [activeSession, balances, currentAccount, query],
-    //     ([$activeSession, $balances, $currentAccount, $query]) => {
-    //         if ($activeSession && $balances && $currentAccount) {
-    //             return $balances.filter((b) => {
-    //                 const matchesChain = b.chainId.equals($activeSession.chainId)
-    //                 const matchesAccount = b.account.equals($activeSession.auth.actor)
-    //                 let matchesQuery = true
-    //                 if ($query) {
-    //                     const [, , token] = b.tokenKey.split('-')
-    //                     matchesQuery = token.includes($query)
-    //                 }
-    //                 return matchesChain && matchesAccount && matchesQuery
-    //             })
-    //         }
-    //     }
-    // )
-    //
-    // const records: Readable<Record[]> = derived([matching, tokens], ([$matching, $tokens]) => {
-    //     if ($matching) {
-    //         return $matching.map((balance) => {
-    //             const token = $tokens.find((t) => t.key === balance.tokenKey)
-    //             const record: Record = {
-    //                 balance,
-    //                 token,
-    //             }
-    //             return record
-    //         })
-    //     }
-    //     return []
-    // })
 
     function updateQuery({ detail }) : string {
       query = detail.value
     }
 
     function changeToken(token: Token) {
-      selectedToken(token)
+      selectedToken = token
 
       onTokenSelect(token)
+
+      $displayModal = false
     }
 
     let filteredTokens = []
@@ -67,6 +39,15 @@
 </script>
 
 <style type="scss">
+    .close-button {
+        color: var(--main-blue);
+        cursor: pointer;
+        padding: 32px 22px;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
     h2 {
       text-align: left;
       margin: 10px 3px;
@@ -104,11 +85,14 @@
 </style>
 
 <Modal display={displayModal} hideCloseButton>
+    <div on:click={() => $displayModal = false } class="close-button">
+        <Icon name="x" />
+    </div>
     <h2>
       Select Token
     </h2>
     <Form>
-        <Input on:changed={updateQuery} name="query" focus fluid placeholder="Search tokens..." />
+        <Input on:changed={updateQuery} value={query} name="query" focus fluid placeholder="Search tokens..." />
     </Form>
     <table>
         <tr>
