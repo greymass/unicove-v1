@@ -2,10 +2,13 @@
     import ButtonLogin from '~/components/elements/button/login.svelte'
     import Page from '~/components/layout/page.svelte'
     import {chains} from '~/config'
+    import {preferences} from '~/store'
 
     import Icon from '~/components/elements/icon.svelte'
     import Segment from '~/components/elements/segment.svelte'
     import SegmentGroup from '~/components/elements/segment/group.svelte'
+
+    $: darkmode = $preferences.darkmode
 </script>
 
 <style lang="scss">
@@ -117,7 +120,10 @@
     <div class="blockchains">
         <h3>Supported blockchains</h3>
         {#each chains.filter((chain) => !chain.testnet) as chain}
-            <img alt={chain.name} src={`/images/chains/${chain.id}.svg`} />
+            <img
+                alt={chain.name}
+                src={`/images/chains/${chain.id}-${darkmode ? 'dark' : 'light'}.svg`}
+            />
         {/each}
     </div>
     <div class="info">
