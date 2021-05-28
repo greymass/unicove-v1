@@ -72,6 +72,7 @@
         display: flex;
         grid-area: header;
         position: fixed;
+        z-index: 1000;
         top: 0;
         left: calc(#{$navigation_width} + #{$grid_gap});
         right: $grid_gap;
@@ -89,6 +90,7 @@
 
     .page-main {
         min-height: calc(100vh - #{$menubar_height});
+        padding-bottom: 4em;
         grid-area: main;
         > * {
             margin: 0 auto;
