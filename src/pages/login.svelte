@@ -50,10 +50,23 @@
             letter-spacing: -0.09px;
             margin-bottom: 9px;
         }
-        img {
-            margin: 0 7px 0 0;
-            width: 25px;
-            height: 25px;
+        .blockchain {
+            display: inline-block;
+            margin: 13px 10px;
+            text-align: center;
+            p {
+                font-family: Inter;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 10px;
+                line-height: 14px;
+                letter-spacing: 0.01px;
+                margin-top: 4px;
+            }
+            img {
+                width: 40px;
+                height: 40px;
+            }
         }
     }
     .info {
@@ -120,10 +133,13 @@
     <div class="blockchains">
         <h3>Supported blockchains</h3>
         {#each chains.filter((chain) => !chain.testnet) as chain}
-            <img
-                alt={chain.name}
-                src={`/images/chains/${chain.id}-${darkmode ? 'dark' : 'light'}.svg`}
-            />
+            <div class="blockchain">
+                <img
+                    alt={chain.name}
+                    src={`/images/chains/${chain.id}-${darkmode ? 'dark' : 'light'}.svg`}
+                />
+                <p>{chain.name}</p>
+            </div>
         {/each}
     </div>
     <div class="info">
