@@ -45,6 +45,10 @@
       display: inline;
       margin-left: 25px;
       text-align: left;
+
+      &.blueText {
+        color: var(--main-blue)
+      }
     }
 
     .balance-container {
