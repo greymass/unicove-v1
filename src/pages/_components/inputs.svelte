@@ -24,11 +24,13 @@
         name: 'EOS',
         logo: 'https://www.bloks.io/img/chains/eos.png',
         balance: 5.2233,
+        precision: 4,
       },
       {
         name: 'Telos',
         logo: 'https://www.bloks.io/img/chains/telos.png',
         balance: 10,
+        precision: 4,
       },
     ];
 

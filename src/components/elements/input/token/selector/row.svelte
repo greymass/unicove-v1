@@ -10,10 +10,18 @@
   .row {
     padding: 10px 12px;
     border-radius: 12px;
-    width: 200px;
+    max-width: 300px;
     border: 1px solid var(--divider-grey);
     position: relative;
     cursor: pointer;
+
+    &:hover {
+       background-color: var(--main-grey);
+    }
+
+    &.table {
+      border: none;
+    }
 
     .logo-container {
       position: absolute;
@@ -36,6 +44,7 @@
       color: var(--main-black);
       display: inline;
       margin-left: 25px;
+      text-align: left;
     }
 
     .balance-container {
@@ -43,27 +52,35 @@
       float: right;
       padding: 5px;
       width: 70px;
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12px;
+
+      &.table {
+        padding: 2px;
+      }
     }
 
     .arrow-container {
       position: absolute;
       right: 15px;
-      top: 1px;
+      top: 0;
       width: 20px;
       padding: 10px;
     }
   }
 </style>
 
-<div class="row {isTableRow ? 'withBorder' : ''}" on:click={onClick}>
+<div class="row {isTableRow ? 'table' : ''}" on:click={onClick}>
   <span class="logo-container">
     <img src={token.logo}>
   </span>
   <h2 class="name-text {isTableRow ? 'blueText' : ''}" >
     {token.name}
   </h2>
-  <span class="balance-container">
-     {token.balance}
+  <span class="balance-container {isTableRow ? 'table' : ''}">
+     {token.balance.toFixed(token.precision)}
   </span>
   <div class="arrow-container">
       <Icon name="chevron-right" size="large" />

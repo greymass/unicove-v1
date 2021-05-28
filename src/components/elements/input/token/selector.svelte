@@ -12,7 +12,7 @@
     export let defaultToken;
 
     let selectedToken = defaultToken;
-    let displayModal = writable<boolean>(false)
+    let displayModal = writable<boolean>(true)
     let query: string = ''
 
     // const matching: Readable<Balance[] | undefined> = derived(
@@ -49,7 +49,7 @@
 
     function updateQuery(value) : string {
       console.log({value})
-      query.set(value)
+      query = value
     }
 
     function changeToken(token: Token) {
@@ -64,61 +64,57 @@
 </script>
 
 <style type="scss">
+    h2 {
+      text-align: left;
+      margin: 10px 3px;
+    }
     table {
-        margin-top: 16px;
+        margin-top: 10px;
         table-layout: fixed;
         width: 100%;
         white-space: nowrap;
-        tr {
-            &:hover {
-                background-color: var(--main-grey);
-            }
-            td {
-                cursor: pointer;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                text-align: right;
-                width: 80px;
-                padding: 16px 8px;
 
-                &:first-child {
-                    width: 64px;
-                    text-align: center;
-                    img {
-                        width: 32px;
-                        vertical-align: middle;
-                    }
-                }
-                &:nth-child(2) {
-                    text-align: left;
-                }
-                &:last-child {
-                  width: 30px;
-                  padding: 20px;
+        th {
+          text-align: left;
+          color: var(--dark-grey);
+          font-family: Inter;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 10px;
+          line-height: 12px;
+          letter-spacing: 0.1px;
+          text-transform: uppercase;
+          padding: 5px;
+        }
 
-                }
-            }
+        td {
+          padding: 3px;
         }
     }
 </style>
 
 <Modal display={displayModal} hideCloseButton>
+    <h2>
+      Select Token
+    </h2>
     <Form>
         <Input on:changed={updateQuery} name="query" focus fluid placeholder="Search tokens..." />
     </Form>
     <table>
-        <th>
-          <tc> Token </tc>
-          <tc> Balance </tc>
-        </th>
+        <tr>
+          <th colspan="2"> Token </th>
+          <th> Balance </th>
+        </tr>
 
         {#each tokens as token}
           <tr>
-            <TokenSelectorRow
-              onClick={() => changeToken(token)}
-              token={token}
-            />
+            <td colspan="3">
+              <TokenSelectorRow
+                onClick={() => changeToken(token)}
+                token={token}
+                isTableRow
+              />
+            </td>
           </tr>
         {/each}
     </table>
