@@ -120,7 +120,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('9,FIO'),
         coreTokenContract: Name.from('fio.token'),
         coreTokenTransfer: Name.from('trnsfiopubky'),
-        name: 'FIO Testnet',
+        name: 'FIO (Testnet)',
         nodeUrl: 'https://fiotestnet.greymass.com',
         testnet: true,
         bloksUrl: 'https://fio-test.bloks.io',
