@@ -122,9 +122,6 @@
                             vertical-align: middle;
                         }
                     }
-                    &:hover {
-                        color: var(--main-blue);
-                    }
                 }
                 ul {
                     margin-top: 0;
