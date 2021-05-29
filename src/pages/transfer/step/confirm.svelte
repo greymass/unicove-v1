@@ -37,12 +37,10 @@
   .memo-container {
     padding: 20px 8px 10px 8px;
 
-    .label-container {
-      span {
-        font-weight: bold;
-        margin: 5px;
-      }
-    }
+  span {
+    font-weight: bold;
+    margin-left: 8px;
+  }
 
     input {
       margin: 10px;
@@ -65,9 +63,9 @@
 {/if}
 {#if $activeBlockchain && $activeBlockchain.id !== 'fio'}
   <div class="memo-container">
-    <div class="label-container">
-        <span>Memo (Optional)</span>
-    </div>
+    <span>Memo (Optional)</span>
+    <br />
+    <br />
     <Input
         name="memo"
         focus
