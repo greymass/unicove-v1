@@ -12,7 +12,7 @@
       if (token.balance) {
         const tokenPrecision = token.balance.symbol.precision
         const unitValue = token.balance.units.value;
-        const fullTokenBalanceString = Number(unitValue).toFixed(tokenPrecision)
+        const fullTokenBalanceString = (Number(unitValue) / Math.pow(10, tokenPrecision)).toFixed(tokenPrecision)
 
         if (isTableRow) {
           formattedTokenBalance = fullTokenBalanceString.length > 8 ?

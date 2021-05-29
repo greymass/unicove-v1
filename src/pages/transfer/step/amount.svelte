@@ -20,11 +20,17 @@
     export let balance: Readable<Balance | undefined>
     export let token: Token
 
+    let tokensWithBalances: TokenWithBalance[] = []
+    let tokenWithBalance: TokenWithBalance | undefined = undefined
+
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
 
-    let tokensWithBalances: TokenWithBalance[] = []
-    let tokenWithBalance: TokenWithBalance | undefined = undefined
+    // $: {
+    //   console.log('updating transfer data')
+    //   amount = String(($transferData.quantity && $transferData.quantity.value) || '')
+    //   console.log({amount})
+    // }
 
     $: {
       tokensWithBalances = $tokens.map(token => {
@@ -39,7 +45,14 @@
     }
 
     function changeToken(token) {
-        console.log({token})
+        transferData.update((data) => ({
+            ...data,
+            quantity: undefined,
+            tokenKey: token.key,
+        }))
+
+        amount = ''
+        amountValid = false
     }
 
     function confirmChange() {
