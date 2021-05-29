@@ -27,15 +27,17 @@
     let amountValid: boolean = false
 
     $: {
-      tokensWithBalances = $tokens.map(token => {
-        const balance = $balances.find(balance => balance.tokenKey === token.key)
-        return {
-          ...token,
-          balance: balance.quantity,
-        }
-      });
+        tokensWithBalances = $tokens.map((token) => {
+            const balance = $balances.find((balance) => balance.tokenKey === token.key)
+            return {
+                ...token,
+                balance: balance.quantity,
+            }
+        })
 
-      tokenWithBalance = tokensWithBalances.find(tokenWithBalance => tokenWithBalance.name === token.name)
+        tokenWithBalance = tokensWithBalances.find(
+            (tokenWithBalance) => tokenWithBalance.name === token.name
+        )
     }
 
     function changeToken(token) {
@@ -110,9 +112,9 @@
         <Form on:submit={confirmChange}>
             <div class="token-selector">
                 <TokenSelector
-                  defaultToken={tokenWithBalance}
-                  tokens={tokensWithBalances}
-                  onTokenSelect={changeToken}
+                    defaultToken={tokenWithBalance}
+                    tokens={tokensWithBalances}
+                    onTokenSelect={changeToken}
                 />
             </div>
             <InputAsset

@@ -2,26 +2,29 @@
     import Icon from '~/components/elements/icon.svelte'
     import type {Token} from '~/stores/tokens'
 
-    export let token: Token;
-    export let onClick: () => void;
-    export let isTableRow: boolean;
+    export let token: Token
+    export let onClick: () => void
+    export let isTableRow: boolean
 
     let formattedTokenBalance: string | undefined = undefined
 
     $: {
-      if (token.balance) {
-        const tokenPrecision = token.balance.symbol.precision
-        const unitValue = token.balance.units.value;
-        const fullTokenBalanceString = (Number(unitValue) / Math.pow(10, tokenPrecision)).toFixed(tokenPrecision)
+        if (token.balance) {
+            const tokenPrecision = token.balance.symbol.precision
+            const unitValue = token.balance.units.value
+            const fullTokenBalanceString = (
+                Number(unitValue) / Math.pow(10, tokenPrecision)
+            ).toFixed(tokenPrecision)
 
-        if (isTableRow) {
-          formattedTokenBalance = fullTokenBalanceString.length > 8 ?
-              `${fullTokenBalanceString.substring(0,6)}..` :
-              fullTokenBalanceString
-        } else {
-          formattedTokenBalance = fullTokenBalanceString
+            if (isTableRow) {
+                formattedTokenBalance =
+                    fullTokenBalanceString.length > 8
+                        ? `${fullTokenBalanceString.substring(0, 6)}..`
+                        : fullTokenBalanceString
+            } else {
+                formattedTokenBalance = fullTokenBalanceString
+            }
         }
-      }
     }
 </script>
 
@@ -81,13 +84,13 @@
             font-size: 12px;
 
             &:not(.table) {
-               margin-right: 10px;
-               text-align: right;
-               width: 120px;
+                margin-right: 10px;
+                text-align: right;
+                width: 120px;
             }
 
             &.table {
-               padding: 2px;
+                padding: 2px;
             }
         }
 

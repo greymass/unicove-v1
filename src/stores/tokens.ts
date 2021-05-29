@@ -2,7 +2,7 @@ import type {Asset} from 'anchor-link'
 import type {ChainId, NameType} from 'anchor-link'
 import {derived, get} from 'svelte/store'
 import type {Readable} from 'svelte/store'
-import type {Balance} from "~/stores/balances";
+import type {Balance} from '~/stores/balances'
 
 import {chainConfig} from '~/config'
 import {activeBlockchain, activePriceTicker, activeSession} from '~/store'

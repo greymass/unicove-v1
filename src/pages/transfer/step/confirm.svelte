@@ -19,33 +19,33 @@
 
     function handleKeydown(event: KeyboardEvent) {
         if (event.key === 'Enter') {
-            handleConfirm();
+            handleConfirm()
         }
     }
 
     function handleConfirm() {
-       transferData.update((data) => ({
-          ...data,
-          memo,
-       }))
+        transferData.update((data) => ({
+            ...data,
+            memo,
+        }))
 
-       handleTransfer()
+        handleTransfer()
     }
 </script>
 
 <style type="scss">
-  .memo-container {
-    padding: 20px 8px 10px 8px;
+    .memo-container {
+        padding: 20px 8px 10px 8px;
 
-  span {
-    font-weight: bold;
-    margin-left: 8px;
-  }
+        span {
+            font-weight: bold;
+            margin-left: 8px;
+        }
 
-    input {
-      margin: 10px;
+        input {
+            margin: 10px;
+        }
     }
-  }
 </style>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -62,18 +62,12 @@
     <StatusFee txFee={$txFee} quantity={$transferData.quantity} />
 {/if}
 {#if $activeBlockchain && $activeBlockchain.id !== 'fio'}
-  <div class="memo-container">
-    <span>Memo (Optional)</span>
-    <br />
-    <br />
-    <Input
-        name="memo"
-        focus
-        fluid
-        bind:value={memo}
-        placeholder="Memo"
-    />
-  </div>
+    <div class="memo-container">
+        <span>Memo (Optional)</span>
+        <br />
+        <br />
+        <Input name="memo" focus fluid bind:value={memo} placeholder="Memo" />
+    </div>
 {/if}
 <Button fluid primary size="large" formValidation on:action={handleConfirm}>
     <Icon name="edit-3" />

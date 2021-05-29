@@ -10,15 +10,15 @@
 
     import TokenSelectorRow from './selector/row.svelte'
 
-    export let tokens: TokenWithBalance[];
-    export let defaultToken: TokenWithBalance;
-    export let onTokenSelect: () => void;
+    export let tokens: TokenWithBalance[]
+    export let defaultToken: TokenWithBalance
+    export let onTokenSelect: () => void
 
     let selectedToken = defaultToken
     let displayModal = writable<boolean>(false)
-    let query: string = '';
+    let query: string = ''
 
-    function updateQuery({detail} : { detail: any }): void {
+    function updateQuery({detail}: {detail: any}): void {
         query = detail.value
     }
 
@@ -116,7 +116,11 @@
                 {#each filteredTokens as token}
                     <tr>
                         <td colspan="3">
-                            <TokenSelectorRow onClick={() => changeToken(token)} {token} isTableRow />
+                            <TokenSelectorRow
+                                onClick={() => changeToken(token)}
+                                {token}
+                                isTableRow
+                            />
                         </td>
                     </tr>
                 {/each}
