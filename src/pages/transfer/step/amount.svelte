@@ -3,6 +3,8 @@
 
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
+    import type {Readable} from 'svelte/store'
+    import type {Balance} from '~/stores/balances'
 
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Button from '~/components/elements/button.svelte'
@@ -10,13 +12,42 @@
 
     import {transferData, Step} from '~/pages/transfer/transfer'
     import StatusBalance from '~/pages/transfer/status/balance.svelte'
-    import type {Readable} from 'svelte/store'
+
+    import {tokens} from '~/stores/tokens'
+    import {balances} from '~/stores/balances'
+
+    import {Step, transferData} from '~/pages/transfer/transfer'
+
+    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     export let balance: Readable<Balance | undefined>
     export let token: Token
 
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
+
+    interface TokenWithBalance extends Token {
+      balance: Balance
+    }
+
+    let tokensWithBalances: TokenWithBalance[] = []
+    let tokenWithBalance: TokenWithBalance | undefined = undefined
+
+    $: {
+      tokensWithBalances = $tokens.map(token => {
+        const balance = $balances.find(balance => balance.tokenKey === token.key)
+        return {
+          ...token,
+          balance: balance.quantity,
+        }
+      });
+
+      tokenWithBalance = tokensWithBalances.find(tokenWithBalance => tokenWithBalance.name === token.name)
+    }
+
+    function changeToken(token) {
+        console.log({token})
+    }
 
     function confirmChange() {
         transferData.update((data) => ({
@@ -36,7 +67,7 @@
 </script>
 
 <style type="scss">
-    .balance {
+    .token-selector {
         margin-bottom: 32px;
     }
     .controls {
@@ -77,8 +108,12 @@
 <div class="container">
     {#if $balance}
         <Form on:submit={confirmChange}>
-            <div class="balance">
-                <StatusBalance {token} {balance} />
+            <div class="token-selector">
+                <TokenSelector
+                  defaultToken={token}
+                  tokens={tokensWithBalances}
+                  onTokenSelect={changeToken}
+                />
             </div>
             <InputAsset
                 bind:valid={amountValid}
