@@ -34,6 +34,20 @@
 </script>
 
 <style type="scss">
+  .memo-container {
+    padding: 20px 8px 10px 8px;
+
+    .label-container {
+      span {
+        font-weight: bold;
+        margin: 5px;
+      }
+    }
+
+    input {
+      margin: 10px;
+    }
+  }
 </style>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -50,7 +64,10 @@
     <StatusFee txFee={$txFee} quantity={$transferData.quantity} />
 {/if}
 {#if $activeBlockchain && $activeBlockchain.id !== 'fio'}
-    <label>Memo (Optional)</label>
+  <div class="memo-container">
+    <div class="label-container">
+        <span>Memo (Optional)</span>
+    </div>
     <Input
         name="memo"
         focus
@@ -58,6 +75,7 @@
         bind:value={memo}
         placeholder="Memo"
     />
+  </div>
 {/if}
 <Button fluid primary size="large" formValidation on:action={handleConfirm}>
     <Icon name="edit-3" />
