@@ -11,7 +11,6 @@
     import StatusAddress from '~/pages/transfer/status/address.svelte'
     import StatusAccount from '~/pages/transfer/status/account.svelte'
     import StatusQuantity from '~/pages/transfer/status/quantity.svelte'
-    import StatusMemo from '~/pages/transfer/status/memo.svelte'
     import StatusFee from '~/pages/transfer/status/fee.svelte'
 
     export let handleTransfer: () => void

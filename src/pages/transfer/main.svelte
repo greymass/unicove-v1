@@ -18,7 +18,6 @@
     import TransferRecipient from '~/pages/transfer/step/recipient.svelte'
     import TransferAmount from '~/pages/transfer/step/amount.svelte'
     import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
-    import TransferMemo from '~/pages/transfer/step/memo.svelte'
     import TransferReceive from '~/pages/transfer/step/receive.svelte'
     import TransferSending from '~/pages/transfer/step/sending.svelte'
     import TransferToken from '~/pages/transfer/step/token.svelte'
@@ -211,9 +210,6 @@
         {/if}
         {#if $transferData.step === Step.Confirm && $transferData.quantity}
             <TransferConfirm {handleTransfer} />
-        {/if}
-        {#if $transferData.step === Step.Memo}
-            <TransferMemo />
         {/if}
         {#if $transferData.step === Step.Receive}
             <TransferReceive />
