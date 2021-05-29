@@ -20,7 +20,6 @@
     import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
     import TransferReceive from '~/pages/transfer/step/receive.svelte'
     import TransferSending from '~/pages/transfer/step/sending.svelte'
-    import TransferToken from '~/pages/transfer/step/token.svelte'
 
     export let balance: Readable<Balance | undefined>
     export let token: Readable<Token | undefined>
@@ -199,9 +198,6 @@
         <div class="subheader">Requesting signature from wallet</div>
     {/if}
     {#if $balance && $token}
-        {#if $transferData.step === Step.Token}
-            <TransferToken />
-        {/if}
         {#if $transferData.step === Step.Recipient}
             <TransferRecipient {balance} token={$token} />
         {/if}
