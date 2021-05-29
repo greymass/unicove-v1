@@ -4,6 +4,7 @@
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
+    import Input from '~/components/elements/input.svelte'
 
     import {transferData} from '~/pages/transfer/transfer'
     import {txFee} from '~/pages/transfer/fio'
@@ -15,10 +16,21 @@
 
     export let handleTransfer: () => void
 
+    let memo: string = ''
+
     function handleKeydown(event: KeyboardEvent) {
         if (event.key === 'Enter') {
-            handleTransfer()
+            handleConfirm();
         }
+    }
+
+    function handleConfirm() {
+       transferData.update((data) => ({
+          ...data,
+          memo,
+       }))
+
+       handleTransfer()
     }
 </script>
 
@@ -39,9 +51,16 @@
     <StatusFee txFee={$txFee} quantity={$transferData.quantity} />
 {/if}
 {#if $activeBlockchain && $activeBlockchain.id !== 'fio'}
-    <StatusMemo editable memo={$transferData.memo} />
+    <label>Memo (Optional)</label>
+    <Input
+        name="memo"
+        focus
+        fluid
+        bind:value={memo}
+        placeholder="Memo"
+    />
 {/if}
-<Button fluid primary size="large" formValidation on:action={handleTransfer}>
+<Button fluid primary size="large" formValidation on:action={handleConfirm}>
     <Icon name="edit-3" />
     <Text>Sign Transaction</Text>
 </Button>
