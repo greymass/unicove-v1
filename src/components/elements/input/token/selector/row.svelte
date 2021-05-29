@@ -8,15 +8,21 @@
 
     let formattedTokenBalance: string | undefined = undefined
 
-    // $: {
-    //   console.log({token})
-    //   if (token.balance) {
-    //     const precision = token.balance.symbol.precision
-    //     const unitValue = token.balance.units.value
-    //     console.log({unitValue})
-    //     formattedTokenBalance = unitValue.toFixed(precision)
-    //   }
-    // }
+    $: {
+      if (token.balance) {
+        const tokenPrecision = token.balance.symbol.precision
+        const unitValue = token.balance.units.value;
+        const fullTokenBalanceString = Number(unitValue).toFixed(tokenPrecision)
+
+        if (isTableRow) {
+          formattedTokenBalance = fullTokenBalanceString.length > 8 ?
+              `${fullTokenBalanceString.substring(0,6)}..` :
+              fullTokenBalanceString
+        } else {
+          formattedTokenBalance = fullTokenBalanceString
+        }
+      }
+    }
 </script>
 
 <style type="scss">
@@ -74,8 +80,14 @@
             font-weight: 500;
             font-size: 12px;
 
+            &:not(.table) {
+               margin-right: 10px;
+               text-align: right;
+               width: 120px;
+            }
+
             &.table {
-                padding: 2px;
+               padding: 2px;
             }
         }
 

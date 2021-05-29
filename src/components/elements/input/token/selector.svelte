@@ -1,7 +1,7 @@
 <script>
     import {derived, writable} from 'svelte/store'
     import type {Readable, Writable} from 'svelte/store'
-    import type {Token} from '~/stores/tokens'
+    import type {Token, TokenWithBalance} from '~/stores/tokens'
 
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
@@ -10,8 +10,8 @@
 
     import TokenSelectorRow from './selector/row.svelte'
 
-    export let tokens: Token[];
-    export let defaultToken: Token;
+    export let tokens: TokenWithBalance[];
+    export let defaultToken: TokenWithBalance;
     export let onTokenSelect: () => void;
 
     let selectedToken = defaultToken

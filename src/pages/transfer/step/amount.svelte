@@ -2,7 +2,7 @@
     import {Asset} from '@greymass/eosio'
 
     import type {Balance} from '~/stores/balances'
-    import type {Token} from '~/stores/tokens'
+    import type {Token, TokenWithBalance} from '~/stores/tokens'
     import type {Readable} from 'svelte/store'
     import type {Balance} from '~/stores/balances'
 
@@ -11,12 +11,9 @@
     import Form from '~/components/elements/form.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
-    import StatusBalance from '~/pages/transfer/status/balance.svelte'
 
     import {tokens} from '~/stores/tokens'
     import {balances} from '~/stores/balances'
-
-    import {Step, transferData} from '~/pages/transfer/transfer'
 
     import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
@@ -25,10 +22,6 @@
 
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
-
-    interface TokenWithBalance extends Token {
-      balance: Balance
-    }
 
     let tokensWithBalances: TokenWithBalance[] = []
     let tokenWithBalance: TokenWithBalance | undefined = undefined
@@ -110,7 +103,7 @@
         <Form on:submit={confirmChange}>
             <div class="token-selector">
                 <TokenSelector
-                  defaultToken={token}
+                  defaultToken={tokenWithBalance}
                   tokens={tokensWithBalances}
                   onTokenSelect={changeToken}
                 />
