@@ -26,12 +26,6 @@
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
 
-    // $: {
-    //   console.log('updating transfer data')
-    //   amount = String(($transferData.quantity && $transferData.quantity.value) || '')
-    //   console.log({amount})
-    // }
-
     $: {
       tokensWithBalances = $tokens.map(token => {
         const balance = $balances.find(balance => balance.tokenKey === token.key)
