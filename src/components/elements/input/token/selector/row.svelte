@@ -5,6 +5,18 @@
     export let token: Token;
     export let onClick: () => void;
     export let isTableRow: boolean;
+
+    let formattedTokenBalance: string | undefined = undefined
+
+    // $: {
+    //   console.log({token})
+    //   if (token.balance) {
+    //     const precision = token.balance.symbol.precision
+    //     const unitValue = token.balance.units.value
+    //     console.log({unitValue})
+    //     formattedTokenBalance = unitValue.toFixed(precision)
+    //   }
+    // }
 </script>
 
 <style type="scss">
@@ -85,7 +97,7 @@
         {token.name}
     </h2>
     <span class="balance-container {isTableRow ? 'table' : ''}">
-        {(token.balance && token.balance.toFixed(token.precision)) || 'N/A'}
+        {formattedTokenBalance || 'N/A'}
     </span>
     <div class="arrow-container">
         <Icon name="chevron-right" size="large" />

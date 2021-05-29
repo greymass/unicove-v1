@@ -36,6 +36,8 @@
         filteredTokens = tokens.filter((token) => {
             return query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
         })
+
+        console.log({filteredTokens})
     }
 </script>
 
