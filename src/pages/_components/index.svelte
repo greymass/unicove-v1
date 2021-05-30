@@ -8,6 +8,7 @@
     import Progress from './progress.svelte'
     import Modals from './modals.svelte'
     import Segments from './segments.svelte'
+    import TxFollower from './tx-follower.svelte'
 
     import Nav from '~/components/elements/nav.svelte'
     import Page from '~/components/layout/page.svelte'
@@ -65,26 +66,26 @@
         <h1>Component library 🦄</h1>
         <Nav {routes} home="Overview" />
     </header>
-    <Page displayNavigation={false}>
-        <section>
-            <Route path="/">
-                {#each routes as route}
-                    <div class="component">
-                        <h2>{route.name}</h2>
-                        <hr />
-                        <svelte:component this={route.component} />
-                    </div>
-                {/each}
-            </Route>
+    <section>
+        <Route path="/">
             {#each routes as route}
-                <Route path={`/${route.path}`}>
+                {#if !route.excludeFromAll}
                     <div class="component">
                         <h2>{route.name}</h2>
                         <hr />
                         <svelte:component this={route.component} />
                     </div>
-                </Route>
+                {/if}
             {/each}
-        </section>
-    </Page>
+        </Route>
+        {#each routes as route}
+            <Route path={`/${route.path}`}>
+                <div class="component">
+                    <h2>{route.name}</h2>
+                    <hr />
+                    <svelte:component this={route.component} />
+                </div>
+            </Route>
+        {/each}
+    </section>
 </Route>
