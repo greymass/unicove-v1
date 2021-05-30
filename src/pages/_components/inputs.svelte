@@ -24,12 +24,12 @@
 
     const selectableTokens = [
         {
-            name: 'EOS',
-            logo: 'https://www.bloks.io/img/chains/eos.png',
+            name: 'TLOS',
+            key: '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11-eosio.token-tlos'
         },
         {
-            name: 'Telos',
-            logo: 'https://www.bloks.io/img/chains/telos.png',
+            name: 'TLOSDAC',
+            key: '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11-telosdacdrop-tlosdac',
         },
     ]
 

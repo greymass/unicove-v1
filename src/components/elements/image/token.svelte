@@ -14,6 +14,8 @@
             return $tokens.find((t) => t.key === tokenKey)
         }
     })
+
+    console.log({token: $token })
 </script>
 
 {#if $token}
