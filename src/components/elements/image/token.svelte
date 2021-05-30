@@ -6,16 +6,16 @@
     import Image from '~/components/elements/image.svelte'
 
     export let tokenKey: string
+    export let width: string = "32"
+    export let height: string = "32"
 
     const token: Readable<Token | undefined> = derived([tokens], ([$tokens]) => {
         if ($tokens) {
             return $tokens.find((t) => t.key === tokenKey)
         }
     })
-
-    console.log({token: $token})
 </script>
 
 {#if $token}
-    <Image height="32" width="32" alt={String($token.name)} src={$token.logo} />
+    <Image height={height} width={width} alt={String($token.name)} src={$token.logo} />
 {/if}

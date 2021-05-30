@@ -10,8 +10,6 @@
     let srcToUse : string = src;
     let altToUse : string = alt;
 
-    console.log({srcToUse})
-
     function useImageFallback() {
         srcToUse = fallbackSrc
         altToUse = fallbackAlt

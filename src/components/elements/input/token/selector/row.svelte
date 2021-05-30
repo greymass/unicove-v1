@@ -1,5 +1,6 @@
 <script>
     import Icon from '~/components/elements/icon.svelte'
+    import TokenImage from '~/components/elements/image/token.svelte'
     import type {Token} from '~/stores/tokens'
 
     export let token: Token
@@ -51,10 +52,6 @@
             left: 0;
             padding: 10px;
             margin-right: 5px;
-
-            img {
-                width: 18px;
-            }
         }
 
         .name-text {
@@ -106,7 +103,7 @@
 
 <div class="row {isTableRow ? 'table' : ''}" on:click={onClick}>
     <span class="logo-container">
-        <img src={token.logo} />
+        <TokenImage width="18" height="18" tokenKey={token.key} />
     </span>
     <h2 class="name-text {isTableRow ? 'blueText' : ''}">
         {token.name}
