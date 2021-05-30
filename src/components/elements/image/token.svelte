@@ -3,6 +3,7 @@
     import {derived} from 'svelte/store'
     import type {Token} from '~/stores/tokens'
     import {tokens} from '~/stores/tokens'
+    import Image from '~/components/elements/image.svelte'
 
     export let tokenKey: string
 
@@ -11,15 +12,10 @@
             return $tokens.find((t) => t.key === tokenKey)
         }
     })
+
+    console.log({token: $token})
 </script>
 
-<style type="scss">
-    img {
-        height: 32px;
-        width: 32px;
-    }
-</style>
-
 {#if $token}
-    <img alt={String($token.name)} src={$token.logo} />
+    <Image height="32" width="32" alt={String($token.name)} src={$token.logo} />
 {/if}
