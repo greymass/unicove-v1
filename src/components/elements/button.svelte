@@ -10,6 +10,8 @@
 
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
+    /** Can be used in conjunction with href to set the <a target. */
+    export let target: string | undefined = undefined
     /** Whether the button is primary. */
     export let primary: boolean = false
     /** Button size. */
@@ -191,6 +193,7 @@
     class:fluid
     class:primary
     {href}
+    {target}
     role="button"
     tabindex="0"
 >
