@@ -11,8 +11,14 @@
     import Request from '~/pages/request/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
-    import Components from './pages/_components/index.svelte'
     import Loading from './pages/loading.svelte'
+
+    let Components: any
+    if (!isRelease) {
+        import('./pages/_components/index.svelte').then((component) => {
+            Components = component
+        })
+    }
 
     $: document.body.classList.toggle('darkmode', $darkMode)
 
@@ -142,11 +148,11 @@
                     <img src="/images/404.jpg" alt="404" />
                 </Page>
             </Route>
-            {#if !isRelease}
-                <Route path="/_components/*">
+            <Route path="/_components/*">
+                {#if Components}
                     <Components />
-                </Route>
-            {/if}
+                {/if}
+            </Route>
         </Route>
     {/if}
 </main>
