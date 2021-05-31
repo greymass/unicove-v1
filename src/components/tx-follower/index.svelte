@@ -57,6 +57,7 @@
             text-overflow: ellipsis;
             overflow: hidden;
             display: block;
+            color: var(--main-blue);
             &:visited {
                 color: var(--main-blue);
             }
