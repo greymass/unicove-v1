@@ -11,7 +11,6 @@
     import TxFollower from './tx-follower.svelte'
 
     import Nav from '~/components/elements/nav.svelte'
-    import Page from '~/components/layout/page.svelte'
 
     const routes = [
         {name: 'Buttons', path: 'buttons', component: Buttons},
@@ -21,6 +20,12 @@
         {name: 'Progress Bar', path: 'progress', component: Progress},
         {name: 'Modals', path: 'modals', component: Modals},
         {name: 'Segments', path: 'segment', component: Segments},
+        {
+            name: 'Transaction Follower',
+            path: 'txfollower',
+            component: TxFollower,
+            excludeFromAll: true,
+        },
     ]
 </script>
 
