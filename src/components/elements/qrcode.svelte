@@ -1,8 +1,21 @@
 <script lang="ts">
-    import QrCode from 'svelte-qrcode'
+    import {onMount} from 'svelte'
+
     import Icon from '~/components/elements/icon.svelte'
 
     export let data: string = ''
+
+    let QrCode: typeof import('svelte-qrcode') | undefined
+
+    onMount(() => {
+        import('svelte-qrcode')
+            .then((mod) => {
+                QrCode = mod.default
+            })
+            .catch((error) => {
+                console.warn('Unable to load svelte-qrcode', error)
+            })
+    })
 
     export let size: number = 250
 </script>
@@ -32,6 +45,8 @@
 </style>
 
 <div>
-    <QrCode value={String(data)} {size} />
+    {#if QrCode}
+        <QrCode value={String(data)} {size} />
+    {/if}
     <Icon size="huge" name="zoom-in" />
 </div>
