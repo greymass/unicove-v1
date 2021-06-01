@@ -51,7 +51,7 @@
             'leftbar main';
         &.withoutsidebar {
             grid-template-rows: $menubar_height auto;
-            grid-template-columns: 100vw;
+            grid-template-columns: 100%;
             grid-template-areas:
                 'header'
                 'main';
