@@ -1,7 +1,4 @@
 <script>
-    import type {Writable} from 'svelte/store'
-    import {writable} from 'svelte/store'
-
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'

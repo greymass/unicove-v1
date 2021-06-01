@@ -1,6 +1,6 @@
 <script lang="ts">
     import {PublicKey, Name} from '@greymass/eosio'
-    import type {Readable, Writable} from 'svelte/store'
+    import type {Readable} from 'svelte/store'
 
     import {activeBlockchain, activeSession} from '~/store'
     import type {Balance} from '~/stores/balances'
