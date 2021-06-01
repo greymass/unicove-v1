@@ -1,6 +1,7 @@
 <script>
     import {writable} from 'svelte/store'
 
+    import {activeBlockchain} from '~/store'
     import type {Token} from '~/stores/tokens'
     import {tokens} from '~/stores/tokens'
 
@@ -36,10 +37,12 @@
         filteredTokens =
             ($tokens &&
                 $tokens.filter((token) => {
-                    return (
-                        query.length === 0 ||
-                        String(token.name).toLowerCase().includes(query.toLowerCase())
-                    )
+                    const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
+                    const queryExists = query.length === 0
+                    const queryMatches = String(token.name)
+                        .toLowerCase()
+                        .includes(query.toLowerCase())
+                    return blockchainMatches && (queryExists || queryMatches)
                 })) ||
             []
     }
