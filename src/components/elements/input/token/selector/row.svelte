@@ -2,6 +2,10 @@
     import Icon from '~/components/elements/icon.svelte'
     import TokenImage from '~/components/elements/image/token.svelte'
     import type {Token} from '~/stores/tokens'
+    import type {Balance} from '~/stores/balances'
+
+    import {tokens} from '~/stores/tokens'
+    import {balances} from '~/stores/balances'
 
     export let token: Token
     export let onClick: () => void
@@ -9,20 +13,24 @@
 
     let formattedTokenBalance: string | undefined = undefined
 
-    $: {
-        if (token.balance) {
-            const tokenPrecision = token.balance.symbol.precision
-            const unitValue = token.balance.units.value
-            const fullTokenBalanceString = (
-                Number(unitValue) / Math.pow(10, tokenPrecision)
-            ).toFixed(tokenPrecision)
+    let balance
 
-            if (isTableRow) {
-                formattedTokenBalance = formatBalanceString(fullTokenBalanceString)
-            } else {
-                formattedTokenBalance = fullTokenBalanceString
-            }
+    $: {
+      balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)
+
+      if (balance) {
+        const tokenPrecision = balance.quantity.symbol.precision
+        const unitValue = balance.quantity.units.value
+        const fullTokenBalanceString = (
+            Number(unitValue) / Math.pow(10, tokenPrecision)
+        ).toFixed(tokenPrecision)
+
+        if (isTableRow) {
+            formattedTokenBalance = formatBalanceString(fullTokenBalanceString)
+        } else {
+            formattedTokenBalance = fullTokenBalanceString
         }
+      }
     }
 
     function formatBalanceString(balanceString) {

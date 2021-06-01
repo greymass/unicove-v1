@@ -3,6 +3,8 @@
     import type {Readable, Writable} from 'svelte/store'
     import type {Token, TokenWithBalance} from '~/stores/tokens'
 
+    import {tokens} from '~/stores/tokens'
+
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
     import Modal from '~/components/elements/modal.svelte'
@@ -10,7 +12,6 @@
 
     import TokenSelectorRow from './selector/row.svelte'
 
-    export let tokens: TokenWithBalance[]
     export let defaultToken: TokenWithBalance
     export let onTokenSelect: () => void
 
@@ -33,7 +34,7 @@
     let filteredTokens = []
 
     $: {
-        filteredTokens = tokens.filter((token) => {
+        filteredTokens = $tokens.filter((token) => {
             return query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
         })
     }
@@ -112,7 +113,7 @@
                 <th> Balance </th>
             </tr>
 
-            {#if tokens.length > 0}
+            {#if filteredTokens.length > 0}
                 {#each filteredTokens as token}
                     <tr>
                         <td colspan="3">

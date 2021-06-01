@@ -2,7 +2,7 @@
     import {Asset} from '@greymass/eosio'
 
     import type {Balance} from '~/stores/balances'
-    import type {Token, TokenWithBalance} from '~/stores/tokens'
+    import type {Token} from '~/stores/tokens'
     import type {Readable} from 'svelte/store'
     import type {Balance} from '~/stores/balances'
 
@@ -12,7 +12,6 @@
 
     import {transferData, Step} from '~/pages/transfer/transfer'
 
-    import {tokens} from '~/stores/tokens'
     import {balances} from '~/stores/balances'
 
     import TokenSelector from '~/components/elements/input/token/selector.svelte'
@@ -20,25 +19,8 @@
     export let balance: Readable<Balance | undefined>
     export let token: Token
 
-    let tokensWithBalances: TokenWithBalance[] = []
-    let tokenWithBalance: TokenWithBalance | undefined = undefined
-
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
-
-    $: {
-        tokensWithBalances = $tokens.map((token) => {
-            const balance = $balances.find((balance) => balance.tokenKey === token.key)
-            return {
-                ...token,
-                balance: balance.quantity,
-            }
-        })
-
-        tokenWithBalance = tokensWithBalances.find(
-            (tokenWithBalance) => tokenWithBalance.name === token.name
-        )
-    }
 
     function changeToken(token) {
         transferData.update((data) => ({
@@ -112,8 +94,7 @@
         <Form on:submit={confirmChange}>
             <div class="token-selector">
                 <TokenSelector
-                    defaultToken={tokenWithBalance}
-                    tokens={tokensWithBalances}
+                    defaultToken={token}
                     onTokenSelect={changeToken}
                 />
             </div>
