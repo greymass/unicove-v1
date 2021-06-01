@@ -1,6 +1,7 @@
 {
     "name": "Greymass Wallet",
     "short_name": "Greymass Wallet",
+    "start_url": "/",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -11,9 +12,15 @@
             "src": "/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
+        },
+        {
+            "src": "/android-maskable.png",
+            "sizes": "196x196",
+            "type": "image/png",
+            "purpose": "maskable"
         }
     ],
-    "theme_color": "e8e8e8",
-    "background_color": "e8e8e8",
-    "display": "standalone"
+    "theme_color": "#E8E8E8",
+    "background_color": "#5C8047",
+    "display": "minimal-ui"
 }
