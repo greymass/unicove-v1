@@ -3,9 +3,9 @@
 
     export let asset: Asset
 
-    let whole
-    let int
-    let dec
+    let whole: number
+    let int: string
+    let dec: string
 
     $: {
         whole = Math.floor(Number(asset.value)) || 0
