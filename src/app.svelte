@@ -5,12 +5,13 @@
     import {isRelease} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
-    import Lazy from '~/components/lazy.svelte'
 
     import Login from '~/pages/login.svelte'
     import Dashboard from '~/pages/dashboard/index.svelte'
+    import Request from '~/pages/request/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
+    import Components from './pages/_components/index.svelte'
     import Loading from './pages/loading.svelte'
 
     $: document.body.classList.toggle('darkmode', $darkMode)
@@ -130,7 +131,7 @@
                 <Transfer {meta} />
             </Route>
             <Route path="/request/:payload">
-                <Lazy component={() => import('~/pages/request/index.svelte')} />
+                <Request />
             </Route>
             <Route path="/resources/*">
                 <Resources />
@@ -143,7 +144,7 @@
             </Route>
             {#if !isRelease}
                 <Route path="/_components/*">
-                    <Lazy component={() => import('~/pages/_components/index.svelte')} />
+                    <Components />
                 </Route>
             {/if}
         </Route>
