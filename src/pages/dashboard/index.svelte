@@ -234,7 +234,7 @@
                 <SegmentGroup>
                     <Segment>
                         <div class="image"><TokenImage tokenKey={$systemTokenKey} /></div>
-                        <p class="label">Total EOS Balance</p>
+                        <p class="label">Total {$totalSystemTokens.symbol.name} Balance</p>
                         <p class="amount">{$totalSystemTokens.value}</p>
                         <p class="symbol">{$totalSystemTokens.symbol.name}</p>
                     </Segment>
