@@ -67,14 +67,14 @@
         }
     )
 
-    let currentSession: LinkSession
+    let currentSession: LinkSession | undefined = undefined
 
     $: {
-      if ($activeSession !== currentSession) {
-        resetData()
+        if ($activeSession !== currentSession) {
+            resetData()
 
-        currentSession = $activeSession
-      }
+            currentSession = $activeSession
+        }
     }
 
     function resetData() {
