@@ -1,9 +1,12 @@
 <script lang="ts">
     import type {Readable} from 'svelte/store'
     import type {TinroRouteMeta} from 'tinro'
+    import type {LinkSession} from 'anchor-link'
+
+    import {Name} from 'anchor-link'
     import {onMount} from 'svelte'
     import {derived} from 'svelte/store'
-    import {Name} from 'anchor-link'
+    import {router} from 'tinro'
 
     import {activeBlockchain, activeSession} from '~/store'
     import type {Token, TokenKeyParams} from '~/stores/tokens'
@@ -65,6 +68,16 @@
         }
     )
 
+    let currentSession: LinkSession | undefined = $activeSession
+
+    $: {
+        if ($activeSession !== currentSession) {
+            resetData()
+            router.goto('/transfer')
+            currentSession = $activeSession
+        }
+    }
+
     function resetData() {
         transferData.set({
             step: Step.Recipient,
@@ -88,6 +101,9 @@
         border: 1px solid var(--light-blue);
         border-radius: 20px;
         padding: 26px;
+        :global(.button) {
+            margin-top: 31px;
+        }
     }
     .options {
         display: inline-flex;

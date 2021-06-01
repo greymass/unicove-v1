@@ -3,20 +3,32 @@
 
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
+    import type {Readable} from 'svelte/store'
 
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
-    import StatusBalance from '~/pages/transfer/status/balance.svelte'
-    import type {Readable} from 'svelte/store'
+
+    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     export let balance: Readable<Balance | undefined>
     export let token: Token
 
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
+
+    function changeToken(token: Token) {
+        transferData.update((data) => ({
+            ...data,
+            quantity: undefined,
+            tokenKey: token.key,
+        }))
+
+        amount = ''
+        amountValid = false
+    }
 
     function confirmChange() {
         transferData.update((data) => ({
@@ -36,7 +48,7 @@
 </script>
 
 <style type="scss">
-    .balance {
+    .token-selector {
         margin-bottom: 32px;
     }
     .controls {
@@ -77,8 +89,8 @@
 <div class="container">
     {#if $balance}
         <Form on:submit={confirmChange}>
-            <div class="balance">
-                <StatusBalance {token} {balance} />
+            <div class="token-selector">
+                <TokenSelector defaultToken={token} onTokenSelect={changeToken} />
             </div>
             <InputAsset
                 bind:valid={amountValid}
