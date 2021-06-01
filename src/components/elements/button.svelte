@@ -64,15 +64,11 @@
     )
 
     function handleMousemove(event: MouseEvent) {
-        if (!isDisabled) {
-            hoverPos.set({x: event.offsetX, y: event.offsetY})
-        }
+        hoverPos.set({x: event.offsetX, y: event.offsetY})
     }
 
     function handleMouseenter(event: MouseEvent) {
-        if (!isDisabled) {
-            hoverPos.set({x: event.offsetX, y: event.offsetY}, {hard: true})
-        }
+        hoverPos.set({x: event.offsetX, y: event.offsetY}, {hard: true})
     }
 </script>
 
@@ -83,10 +79,10 @@
         --gradient-size: 200px; // size of hover effect
 
         position: relative;
-        font-size: 10px;
+        font-size: 14px;
         display: inline-flex;
-        font-weight: 700;
-        letter-spacing: 0.1px;
+        font-weight: 450;
+        letter-spacing: -0.04px;
         justify-content: center;
         background-color: var(--light-blue);
         border-radius: var(--radius);
@@ -149,7 +145,7 @@
             background: radial-gradient(circle closest-side, white, transparent);
             width: 0px;
             height: var(--gradient-size);
-            opacity: 0.45;
+            opacity: 0.15;
             mix-blend-mode: overlay;
         }
         &:hover:not(.disabled) .hover {
@@ -174,7 +170,7 @@
                 --gradient-size: 500px;
             }
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 550;
             letter-spacing: -0.18px;
             padding: 16px 32px;
         }
@@ -197,7 +193,9 @@
     role="button"
     tabindex="0"
 >
-    <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
+    {#if !isDisabled}
+        <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
+    {/if}
     <span class="content">
         {#if $loading}
             <Icon loading name="life-buoy" />
