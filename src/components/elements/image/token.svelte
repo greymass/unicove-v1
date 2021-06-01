@@ -3,8 +3,11 @@
     import {derived} from 'svelte/store'
     import type {Token} from '~/stores/tokens'
     import {tokens} from '~/stores/tokens'
+    import Image from '~/components/elements/image.svelte'
 
     export let tokenKey: string
+    export let width: string = '32'
+    export let height: string = '32'
 
     const token: Readable<Token | undefined> = derived([tokens], ([$tokens]) => {
         if ($tokens) {
@@ -13,13 +16,6 @@
     })
 </script>
 
-<style type="scss">
-    img {
-        height: 32px;
-        width: 32px;
-    }
-</style>
-
 {#if $token}
-    <img alt={String($token.name)} src={$token.logo} />
+    <Image {height} {width} alt={String($token.name)} src={$token.logo} />
 {/if}

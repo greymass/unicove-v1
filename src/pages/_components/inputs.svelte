@@ -1,5 +1,9 @@
 <script>
+    import type {Token} from '~/stores/tokens'
+    import {tokens} from '~/stores/tokens'
+
     import Input from '~/components/elements/input.svelte'
+    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     let examples: any = {
         'example-on-changed': {
@@ -16,6 +20,12 @@
 
     const handleChange = ({detail}: {detail: any}) => {
         examples[detail.name] = detail
+    }
+
+    let selectedToken = $tokens[0]
+
+    const handleTokenSelect = (token: Token) => {
+        selectedToken = token
     }
 </script>
 
@@ -60,4 +70,10 @@
     <Input name="example-is-valid" isValid={numberValidityCheck} on:changed={handleChange} />
     <p>Value: {examples['example-is-valid'].value}</p>
     <p>Is Valid: {examples['example-is-valid'].valid}</p>
+</div>
+<div>
+    <p>Token Selector</p>
+    <TokenSelector defaultToken={selectedToken} onTokenSelect={handleTokenSelect} />
+
+    <p>Selected Token: {selectedToken.name}</p>
 </div>

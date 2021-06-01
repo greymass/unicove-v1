@@ -3,9 +3,15 @@
 
     export let asset: Asset
 
-    const whole = Math.floor(Number(asset.value)) || 0
-    const int = new Intl.NumberFormat().format(whole)
-    const dec = (Number(asset.value) - whole).toFixed(asset.symbol.precision || 1).split('.')[1]
+    let whole: number
+    let int: string
+    let dec: string
+
+    $: {
+        whole = Math.floor(Number(asset.value)) || 0
+        int = new Intl.NumberFormat().format(whole)
+        dec = (Number(asset.value) - whole).toFixed(asset.symbol.precision || 1).split('.')[1]
+    }
 </script>
 
 <style type="scss">

@@ -1,12 +1,13 @@
-<script>
+<script lang="ts">
     import {derived, writable} from 'svelte/store'
+
     import type {Readable, Writable} from 'svelte/store'
+    import type {Balance} from '~/stores/balances'
+    import type {Token} from '~/stores/tokens'
 
     import {activeSession, currentAccount} from '~/store'
     import {balances} from '~/stores/balances'
     import {tokens} from '~/stores/tokens'
-    import type {Balance} from '~/stores/balances'
-    import type {Token} from '~/stores/tokens'
     import {Step, transferData} from '~/pages/transfer/transfer'
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
