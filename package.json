@@ -41,6 +41,7 @@
         "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-prettier": "^3.3.0",
         "eslint-plugin-svelte3": "^3.0.0",
+        "mime": "^2.5.2",
         "postcss": "^8.2.14",
         "prettier": "^2.2.1",
         "prettier-plugin-svelte": "^2.1.0",

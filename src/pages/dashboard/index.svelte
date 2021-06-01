@@ -224,7 +224,7 @@
     <span slot="header">
         <div class="options">
             <Button on:action={refresh}>
-                <Icon loading={$isLoading} name="refresh-cw" />
+                <Icon spin={$isLoading} name="refresh-cw" />
             </Button>
         </div>
     </span>

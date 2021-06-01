@@ -9,6 +9,7 @@
     import Modals from './modals.svelte'
     import Segments from './segments.svelte'
     import TxFollower from './tx-follower.svelte'
+    import QRCode from './qrcode.svelte'
 
     import Nav from '~/components/elements/nav.svelte'
 
@@ -19,6 +20,7 @@
         {name: 'Inputs', path: 'inputs', component: Inputs},
         {name: 'Progress Bar', path: 'progress', component: Progress},
         {name: 'Modals', path: 'modals', component: Modals},
+        {name: 'QR-Code', path: 'qrcode', component: QRCode},
         {name: 'Segments', path: 'segment', component: Segments},
         {
             name: 'Transaction Follower',

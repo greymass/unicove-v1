@@ -6,7 +6,7 @@
     import {onMount} from 'svelte'
 
     export let name: string = 'help-circle'
-    export let loading: boolean = false
+    export let spin: boolean = false
     export let size: IconSize = 'regular'
 
     let icons: typeof import('feather-icons').icons | undefined
@@ -24,11 +24,11 @@
 
 <style type="scss">
     @keyframes spin {
-        0% {
+        from {
             transform: rotate(0deg);
         }
-        100% {
-            transform: rotate(359deg);
+        to {
+            transform: rotate(360deg);
         }
     }
 
@@ -45,7 +45,7 @@
             height: 100%;
         }
 
-        &.loading {
+        &.spin {
             animation: spin 2s linear infinite;
         }
 
@@ -70,7 +70,7 @@
     }
 </style>
 
-<span class={`icon ${size}`} class:loading>
+<span class={`icon ${size}`} class:spin>
     {#if icons}
         {@html (icons[name] || icons['help-circle']).toSvg()}
     {/if}

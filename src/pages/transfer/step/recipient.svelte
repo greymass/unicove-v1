@@ -1,7 +1,6 @@
 <script lang="ts">
     import {PublicKey, Name} from '@greymass/eosio'
-    import type {Readable, Writable} from 'svelte/store'
-    import {writable} from 'svelte/store'
+    import type {Readable} from 'svelte/store'
 
     import {activeBlockchain, activeSession} from '~/store'
     import type {Balance} from '~/stores/balances'
@@ -13,11 +12,13 @@
     import Form from '~/components/elements/form.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
+    import Text from '~/components/elements/text.svelte'
+    import Icon from '~/components/elements/icon.svelte'
 
     export let balance: Readable<Balance | undefined>
     export let token: Token
 
-    let loading: Writable<boolean> = writable<boolean>(false)
+    let loading = false
     let toAddress: string = String($transferData.toAddress || '')
     let toAccount: string = String($transferData.toAccount || '')
 
@@ -57,11 +58,21 @@
                     activeSession={$activeSession}
                 />
             {/if}
-            <Button primary {loading} size="large" fluid formValidation on:action={confirmChange}>
+            <Button
+                primary
+                disabled={loading}
+                size="large"
+                fluid
+                formValidation
+                on:action={confirmChange}
+            >
+                {#if loading}
+                    <Icon spin name="life-buoy" />
+                {/if}
                 {#if $transferData.backStep}
-                    Done
+                    <Text>Done</Text>
                 {:else}
-                    Next
+                    <Text>Next</Text>
                 {/if}
             </Button>
         </Form>
