@@ -89,7 +89,7 @@
     :global(.segment) {
         .controls,
         .header {
-            padding-top: 3em;
+            padding: 51px 0 24px;
             text-align: center;
             :global(.icon) {
                 color: var(--main-green);
@@ -102,11 +102,10 @@
         p.txid,
         div.error {
             color: var(--main-black);
-            max-width: 70vw;
             overflow: hidden;
             text-overflow: ellipsis;
             text-align: center;
-            padding: 0 0 2em;
+            padding: 24px 0 0;
         }
     }
     .error {
