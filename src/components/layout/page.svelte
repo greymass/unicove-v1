@@ -159,7 +159,7 @@
     </header>
     <AccountSidebar bind:open={accountSidebar} />
 
-    <main class="page-main">
+    <div class="page-main">
         <div class="header">
             {#if title}
                 <div class="title">
@@ -175,5 +175,5 @@
         <div class="content">
             <slot />
         </div>
-    </main>
+    </div>
 </div>
