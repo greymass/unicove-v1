@@ -1,8 +1,7 @@
 <script>
-    import {derived, writable} from 'svelte/store'
-    import type {Readable, Writable} from 'svelte/store'
-    import type {Token, TokenWithBalance} from '~/stores/tokens'
+    import {writable} from 'svelte/store'
 
+    import type {Token} from '~/stores/tokens'
     import {tokens} from '~/stores/tokens'
 
     import Form from '~/components/elements/form.svelte'
@@ -12,8 +11,8 @@
 
     import TokenSelectorRow from './selector/row.svelte'
 
-    export let defaultToken: TokenWithBalance
-    export let onTokenSelect: () => void
+    export let defaultToken: Token
+    export let onTokenSelect: (token: Token) => void
 
     let selectedToken = defaultToken
     let displayModal = writable<boolean>(false)
@@ -31,14 +30,15 @@
         $displayModal = false
     }
 
-    let filteredTokens = []
+    let filteredTokens: Token[] = []
 
     $: {
         filteredTokens =
             ($tokens &&
                 $tokens.filter((token) => {
                     return (
-                        query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
+                        query.length === 0 ||
+                        String(token.name).toLowerCase().includes(query.toLowerCase())
                     )
                 })) ||
             []

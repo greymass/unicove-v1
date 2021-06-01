@@ -1,7 +1,5 @@
 <script>
-    import {Asset, Name} from '@greymass/eosio'
-    import {ChainId} from 'anchor-link'
-
+    import type {Token} from '~/stores/tokens'
     import {tokens} from '~/stores/tokens'
 
     import Input from '~/components/elements/input.svelte'
@@ -26,7 +24,7 @@
 
     let selectedToken = $tokens[0]
 
-    const handleTokenSelect = (token) => {
+    const handleTokenSelect = (token: Token) => {
         selectedToken = token
     }
 </script>

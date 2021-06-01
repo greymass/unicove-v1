@@ -41,10 +41,6 @@
             font-weight: bold;
             margin-left: 8px;
         }
-
-        input {
-            margin: 10px;
-        }
     }
 </style>
 

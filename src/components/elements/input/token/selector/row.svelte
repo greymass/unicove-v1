@@ -2,9 +2,7 @@
     import Icon from '~/components/elements/icon.svelte'
     import TokenImage from '~/components/elements/image/token.svelte'
     import type {Token} from '~/stores/tokens'
-    import type {Balance} from '~/stores/balances'
 
-    import {tokens} from '~/stores/tokens'
     import {balances} from '~/stores/balances'
 
     export let token: Token
@@ -33,7 +31,7 @@
         }
     }
 
-    function formatBalanceString(balanceString) {
+    function formatBalanceString(balanceString: string) {
         if (balanceString.length < 8) {
             return balanceString
         }

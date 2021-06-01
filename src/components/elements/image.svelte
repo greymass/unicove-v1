@@ -15,4 +15,4 @@
     }
 </script>
 
-<img src={srcToUse} {alt} on:error={useImageFallback} {width} {height} />
+<img src={srcToUse} alt={altToUse} on:error={useImageFallback} {width} {height} />

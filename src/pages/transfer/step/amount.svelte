@@ -4,15 +4,12 @@
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
     import type {Readable} from 'svelte/store'
-    import type {Balance} from '~/stores/balances'
 
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
-
-    import {balances} from '~/stores/balances'
 
     import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
@@ -22,7 +19,7 @@
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
 
-    function changeToken(token) {
+    function changeToken(token: Token) {
         transferData.update((data) => ({
             ...data,
             quantity: undefined,
