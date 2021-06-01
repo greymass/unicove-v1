@@ -4,7 +4,20 @@
 </script>
 
 <style type="scss">
+    .form,
+    .wrapper {
+        margin: 16px 0;
+    }
+    @media only screen and (max-width: 999px) {
+        .wrapper {
+            margin: 16px;
+        }
+    }
 </style>
 
-<ResourceStateNET showExtra />
-<ResourceStatePrices resource="net" />
+<div class="wrapper">
+    <ResourceStateNET showExtra />
+    <div class="form">
+        <ResourceStatePrices resource="net" />
+    </div>
+</div>

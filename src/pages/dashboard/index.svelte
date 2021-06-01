@@ -124,9 +124,8 @@
     )
 
     function fiatFormat(value: number) {
-        const fiatSymbol = '$'
-        const fiatName = 'USD'
-        return `${fiatSymbol}${value.toFixed(4)} ${fiatName}`
+        const fiatSymbol = '$ '
+        return `${fiatSymbol}${value.toFixed(4)}`
     }
 
     function refresh() {
@@ -139,10 +138,6 @@
 <style type="scss">
     .container {
         margin-top: 16px;
-
-        @media only screen and (max-width: 600px) {
-            padding-bottom: 140px;
-        }
     }
 
     h3 {
@@ -215,6 +210,13 @@
 
     .options {
         text-align: right;
+    }
+
+    @media only screen and (max-width: 999px) {
+        h3,
+        .balances {
+            padding: 0 25px;
+        }
     }
 </style>
 

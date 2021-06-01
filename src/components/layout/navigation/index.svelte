@@ -2,14 +2,12 @@
     import type {Readable} from 'svelte/store'
     import {derived} from 'svelte/store'
 
+    import {resourceFeatures} from '~/config'
+    import {activeBlockchain, preferences} from '~/store'
     import type {NavigationItem} from '~/ui-types'
 
-    import {activeBlockchain, preferences} from '~/store'
-
-    import Icon from '~/components/elements/icon.svelte'
     import MediaQuery from '~/components/utils/media-query.svelte'
     import NavigationContent from '~/components/layout/navigation/content.svelte'
-    import {resourceFeatures} from '~/config'
 
     export let open = false
     $: expand = $preferences.expandNavbar
@@ -52,14 +50,6 @@
 </script>
 
 <style type="scss">
-    .hamburger {
-        color: var(--main-black);
-        position: fixed;
-        top: 16px;
-        left: 16px;
-        padding: 12px;
-        cursor: pointer;
-    }
 </style>
 
 <MediaQuery query="(max-width: 999px)" let:matches>
@@ -77,9 +67,5 @@
                 }
             }}
         />
-    {:else}
-        <span class="hamburger" on:click={() => (open = !open)}>
-            <Icon name="menu" size="large" />
-        </span>
     {/if}
 </MediaQuery>

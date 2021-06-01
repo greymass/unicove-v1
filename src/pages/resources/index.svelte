@@ -3,10 +3,11 @@
     import type {Readable} from 'svelte/store'
     import {derived} from 'svelte/store'
 
-    import {activeBlockchain} from '~/store'
+    import {activeBlockchain, activeSession} from '~/store'
     import {resourceFeatures} from '~/config'
 
     import Page from '~/components/layout/page.svelte'
+    import Button from '~/components/elements/button.svelte'
 
     import ResourcesOverview from '~/pages/resources/pages/index.svelte'
     import ResourcesOverviewCpu from '~/pages/resources/pages/cpu.svelte'
@@ -21,7 +22,6 @@
     import ResourcesNETREX from '~/pages/resources/pages/net/rex.svelte'
     import ResourcesCPUStaking from '~/pages/resources/pages/cpu/staking.svelte'
     import ResourcesNETStaking from '~/pages/resources/pages/net/staking.svelte'
-    import Button from '~/components/elements/button.svelte'
 
     const enabled: Readable<boolean> = derived(activeBlockchain, ($activeBlockchain) => {
         if ($activeBlockchain) {
@@ -34,7 +34,7 @@
 </script>
 
 {#if $activeBlockchain}
-    <Page title="Network Resources">
+    <Page title="Network Resources" subtitle={String($activeSession?.auth.actor)}>
         {#if $enabled}
             <Route path="/">
                 <ResourcesOverview />

@@ -91,7 +91,7 @@
     }
     .options {
         display: inline-flex;
-        padding: 15px 30px;
+        padding: 15px 0px;
         text-align: right;
         .toggle {
             font-family: Inter;
@@ -116,6 +116,12 @@
             }
         }
     }
+    @media only screen and (max-width: 999px) {
+        .container {
+            margin: 0 52px;
+        }
+    }
+
     @media only screen and (max-width: 600px) {
         .container {
             border: none;

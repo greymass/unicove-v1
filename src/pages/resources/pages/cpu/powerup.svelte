@@ -5,9 +5,22 @@
 </script>
 
 <style>
+    .form,
+    .wrapper {
+        margin: 16px 0;
+    }
+    @media only screen and (max-width: 999px) {
+        .wrapper {
+            margin: 16px;
+        }
+    }
 </style>
 
-<ResourceStateCPU showExtra />
-<FormTransaction>
-    <ResourcesSystemPowerUp resource="cpu" />
-</FormTransaction>
+<div class="wrapper">
+    <ResourceStateCPU showExtra />
+    <div class="form">
+        <FormTransaction>
+            <ResourcesSystemPowerUp resource="cpu" />
+        </FormTransaction>
+    </div>
+</div>
