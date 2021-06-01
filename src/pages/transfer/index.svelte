@@ -1,6 +1,8 @@
 <script lang="ts">
     import type {Readable} from 'svelte/store'
     import type {TinroRouteMeta} from 'tinro'
+    import type {LinkSession} from 'anchor-link'
+
     import {onMount} from 'svelte'
     import {derived} from 'svelte/store'
     import {Name} from 'anchor-link'
@@ -64,6 +66,16 @@
             }
         }
     )
+
+    let currentSession: LinkSession
+
+    $: {
+      if ($activeSession !== currentSession) {
+        resetData()
+
+        currentSession = $activeSession
+      }
+    }
 
     function resetData() {
         transferData.set({
