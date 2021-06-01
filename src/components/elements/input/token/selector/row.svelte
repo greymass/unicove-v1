@@ -32,13 +32,13 @@
     }
 
     function formatBalanceString(balanceString: string) {
-        if (balanceString.length < 8) {
+        if (balanceString.length < 9) {
             return balanceString
         }
 
         const balanceInIntegers = balanceString.split('.')[0]
 
-        if (balanceInIntegers.length < 6) {
+        if (balanceInIntegers.length < 8) {
             return balanceInIntegers
         }
 
