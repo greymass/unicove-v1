@@ -43,7 +43,7 @@ export async function updateAccount(name: Name, chainId: ChainId, refresh: boole
         async (v) => {
             if (!v.account?.core_liquid_balance) {
                 const assets: Asset[] | void = await fetchBalance(name, chainId).catch((err) => {
-                    console.log('Error fetching account balance:', err)
+                    console.warn('Error fetching account balance:', err)
                 })
                 if (assets) {
                     v.account!.core_liquid_balance = assets[0]!
@@ -116,7 +116,7 @@ export function getAccount(
 ): Readable<AccountResponse> {
     const store = writable<AccountResponse>({stale: true})
     loadAccount(Name.from(name), chainId, store.set, refresh).catch((error) => {
-        console.log('error', error)
+        console.warn(`Unable to load account ${name} on ${chainId}`, error)
         store.update((account) => ({...account, error}))
     })
     return store

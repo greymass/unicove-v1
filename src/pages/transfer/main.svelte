@@ -93,7 +93,7 @@
                 context.awaitAccountUpdate(field)
             }
         } catch (error) {
-            console.log({error})
+            console.warn('Error during transact', error)
 
             if (context) {
                 context.setTransactionError(error)

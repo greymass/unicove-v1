@@ -10,7 +10,7 @@ export const txFee = writable<Asset | undefined>(undefined)
 export function syncTxFee() {
     interval = setInterval(() => {
         fetchTxFee().catch((error) => {
-            console.log('An error occured while fetching tx fee amount', {error})
+            console.warn('An error occured while fetching FIO tx fee amount', error)
         })
     }, 15 * 60 * 1000)
 }

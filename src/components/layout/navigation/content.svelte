@@ -186,9 +186,7 @@
         <li
             class="advanced"
             on:click={() => {
-                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
                 preferences.expandNavbarAdvanced = !expandAdvanced
-                console.log($preferences.expandNavbarAdvanced, expandAdvanced)
             }}
         >
             <span class="name">Advanced</span>

@@ -45,7 +45,7 @@
                         set(result)
                     })
                     .catch((err) => {
-                        console.log('error retrieving delegations', err)
+                        console.warn('Error retrieving delegations', err)
                         set({rows: []})
                     })
             }
