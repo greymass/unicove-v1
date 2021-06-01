@@ -10,6 +10,8 @@
 
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
+    /** Can be used in conjunction with href to set the <a target. */
+    export let target: string | undefined = undefined
     /** Whether the button is primary. */
     export let primary: boolean = false
     /** Button size. */
@@ -29,6 +31,8 @@
     // Dispatched when button is activated via keyboard or click
     // no need to preventDefault on the event unless the href attribute is set
     const dispatch = createEventDispatcher<{action: Event}>()
+
+    $: isDisabled = (formValidation && $formDisabled) || disabled
 
     function handleClick(event: MouseEvent) {
         if (href === undefined) {
@@ -60,11 +64,15 @@
     )
 
     function handleMousemove(event: MouseEvent) {
-        hoverPos.set({x: event.offsetX, y: event.offsetY})
+        if (!isDisabled) {
+            hoverPos.set({x: event.offsetX, y: event.offsetY})
+        }
     }
 
     function handleMouseenter(event: MouseEvent) {
-        hoverPos.set({x: event.offsetX, y: event.offsetY}, {hard: true})
+        if (!isDisabled) {
+            hoverPos.set({x: event.offsetX, y: event.offsetY}, {hard: true})
+        }
     }
 </script>
 
@@ -90,23 +98,25 @@
         cursor: pointer;
         overflow: hidden;
         white-space: nowrap;
-
         &.primary {
             background-color: var(--main-blue);
             color: white;
+            &:active:not(.disabled) {
+                filter: contrast(150%) brightness(105%);
+            }
         }
         &:focus-visible {
             outline: 0;
             text-decoration: underline;
         }
         &:focus,
-        &:hover {
+        &:hover:not(.disabled) {
             outline: 0;
             border-color: rgba(0, 0, 0, 0.15);
             position: relative;
         }
-        &:active {
-            filter: contrast(150%) brightness(105%);
+        &:active:not(.disabled) {
+            filter: brightness(105%);
         }
         &.disabled {
             color: var(--always-white);
@@ -119,7 +129,6 @@
         &.fluid {
             display: flex;
             flex-direction: column;
-            margin: 20px 0;
             align-items: center;
         }
         &.loading {
@@ -143,7 +152,7 @@
             opacity: 0.45;
             mix-blend-mode: overlay;
         }
-        &:hover .hover {
+        &:hover:not(.disabled) .hover {
             width: var(--gradient-size);
             left: calc(var(--gradient-size) / -2);
         }
@@ -177,12 +186,14 @@
     on:keydown={handleKeydown}
     on:mousemove={handleMousemove}
     on:mouseenter={handleMouseenter}
+    disabled={isDisabled}
     class={`button size-${size}`}
-    class:disabled={(formValidation && $formDisabled) || disabled}
+    class:disabled={isDisabled}
     class:$loading
     class:fluid
     class:primary
     {href}
+    {target}
     role="button"
     tabindex="0"
 >

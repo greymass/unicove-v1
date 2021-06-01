@@ -10,6 +10,8 @@
     import Text from '~/components/elements/text.svelte'
     import TokenImage from '~/components/elements/image/token.svelte'
 
+    import Number from './number.svelte'
+
     export let balance: Balance
     export let name: string = ''
     export let transferable: boolean = true
@@ -30,9 +32,12 @@
         }
     })
 
-    function fiatFormat(value: number) {
-        const fiatSymbol = '$'
-        return `${fiatSymbol}${value.toFixed(4)}`
+    function fiatFormat(value: number, precision: number = 2) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: precision,
+        }).format(value)
     }
 
     function toggle() {
@@ -42,7 +47,7 @@
 
 <style type="scss">
     .container {
-        &:nth-child(odd) {
+        &:nth-child(even) {
             background: var(--main-grey);
             .logo .wrapper {
                 background: var(--main-white);
@@ -89,13 +94,11 @@
             }
 
             .price,
-            .quantity,
             .value {
                 justify-content: flex-end;
             }
 
             .price,
-            .quantity,
             .token,
             .value {
                 font-family: Inter;
@@ -156,6 +159,12 @@
         }
     }
 
+    @media (hover: none) {
+        .container .row .controls :global(.button) {
+            display: block;
+        }
+    }
+
     @media only screen and (max-width: 600px) {
         .container {
             .row {
@@ -206,15 +215,17 @@
                     {/if}
                 </span>
             </div>
-            <div class="quantity">{balance.quantity.value}</div>
+            {#if balance.quantity}
+                <Number asset={balance.quantity} />
+            {/if}
             <div class="value">
                 {#if $token.price}
-                    {fiatFormat($token.price * balance.quantity.value)}
+                    {fiatFormat($token.price * balance.quantity.value, 2)}
                 {/if}
             </div>
             <div class="price">
                 {#if $token.price}
-                    {fiatFormat($token.price)}
+                    {fiatFormat($token.price, 4)}
                 {/if}
             </div>
             <div class="controls">

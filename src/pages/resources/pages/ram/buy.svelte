@@ -7,11 +7,24 @@
 </script>
 
 <style type="scss">
+    .form,
+    .wrapper {
+        margin: 16px 0;
+    }
+    @media only screen and (max-width: 999px) {
+        .wrapper {
+            margin: 16px;
+        }
+    }
 </style>
 
-<ResourceStateRAM />
-{#if $currentAccount}
-    <FormTransaction>
-        <RAMBuy />
-    </FormTransaction>
-{/if}
+<div class="wrapper">
+    <ResourceStateRAM />
+    {#if $currentAccount}
+        <div class="form">
+            <FormTransaction>
+                <RAMBuy />
+            </FormTransaction>
+        </div>
+    {/if}
+</div>
