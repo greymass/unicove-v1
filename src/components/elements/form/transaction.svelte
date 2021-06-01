@@ -3,13 +3,15 @@
     import {get, writable} from 'svelte/store'
     import type {Name} from '@greymass/eosio'
 
-    import {activeSession, currentAccount} from '~/store'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {getAccount} from '~/stores/account-provider'
     import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Segment from '~/components/elements/segment.svelte'
+
+    import TxFollower from '~/components/tx-follower/index.svelte'
 
     export let retryCallback: (() => void) | undefined = undefined
     export let resetCallback: (() => void) | undefined = undefined
@@ -139,20 +141,7 @@
 </style>
 
 {#if $transaction_id}
-    <Segment color="white">
-        <div class="header">
-            <Icon size="massive" name="check-circle" />
-            <h2>Transaction sent</h2>
-        </div>
-        <p class="txid">
-            <a href="https://bloks.io/transaction/{$transaction_id}" target="_new">
-                {$transaction_id}
-            </a>
-        </p>
-        <div class="controls">
-            <Button fluid on:action={complete} primary size="large">{completeAction}</Button>
-        </div>
-    </Segment>
+    <TxFollower id={$transaction_id} chain={$activeBlockchain} />
 {:else if error}
     <Segment color="white">
         <div class="error">
