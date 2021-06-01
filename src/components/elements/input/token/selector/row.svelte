@@ -18,14 +18,25 @@
             ).toFixed(tokenPrecision)
 
             if (isTableRow) {
-                formattedTokenBalance =
-                    fullTokenBalanceString.length > 8
-                        ? `${fullTokenBalanceString.substring(0, 6)}..`
-                        : fullTokenBalanceString
+                formattedTokenBalance = formatBalanceString(fullTokenBalanceString)
             } else {
                 formattedTokenBalance = fullTokenBalanceString
             }
         }
+    }
+
+    function formatBalanceString(balanceString) {
+      if (balanceString.length < 8) {
+        return balanceString
+      }
+
+      const balanceInIntegers = balanceString.split('.')[0]
+
+      if (balanceInIntegers.length < 6) {
+         return balanceInIntegers;
+      }
+
+      return `${Number(balanceInIntegers) / 1000000} M`;
     }
 </script>
 
