@@ -1,13 +1,17 @@
 <script lang="ts">
-    import type {Checksum256Type} from '@greymass/eosio'
-    import {Checksum256} from '@greymass/eosio'
     import type {ChainConfig} from '~/config'
+    import type {Checksum256Type} from '@greymass/eosio'
+
+    import {Checksum256} from '@greymass/eosio'
+    import {router} from 'tinro'
+
     import Icon from '~/components/elements/icon.svelte'
+    import Button from '~/components/elements/button.svelte'
+    import Card from '~/components/elements/card.svelte'
+
     import {exporerUrl, followTransaction} from './utils'
     import Summary from './summary.svelte'
     import Advanced from './advanced.svelte'
-    import Button from '../elements/button.svelte'
-    import {router} from 'tinro'
 
     /** The transaction id to follow. */
     export let id: Checksum256Type
@@ -104,7 +108,7 @@
     }
 </style>
 
-<section>
+<Card>
     <header>
         <Icon size="massive" name="check-circle" />
         <h1>{title}</h1>
@@ -140,4 +144,4 @@
             </Button>
         </div>
     </footer>
-</section>
+</Card>
