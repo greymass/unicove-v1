@@ -3,9 +3,10 @@
     import type {TinroRouteMeta} from 'tinro'
     import type {LinkSession} from 'anchor-link'
 
+    import {Name} from 'anchor-link'
     import {onMount} from 'svelte'
     import {derived} from 'svelte/store'
-    import {Name} from 'anchor-link'
+    import {router} from 'tinro'
 
     import {activeBlockchain, activeSession} from '~/store'
     import type {Token, TokenKeyParams} from '~/stores/tokens'
@@ -67,12 +68,12 @@
         }
     )
 
-    let currentSession: LinkSession | undefined = undefined
+    let currentSession: LinkSession | undefined = $activeSession
 
     $: {
         if ($activeSession !== currentSession) {
             resetData()
-
+            router.goto('/transfer')
             currentSession = $activeSession
         }
     }
