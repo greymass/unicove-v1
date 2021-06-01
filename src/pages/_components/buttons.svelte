@@ -5,8 +5,6 @@
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
-
-    const loading: Writable<boolean> = writable<boolean>(false)
 </script>
 
 <style lang="scss">
@@ -69,34 +67,6 @@
 <div>
     <Button disabled size="large">Disabled</Button>
     <Button disabled primary size="large">Disabled Primary</Button>
-</div>
-
-<p>Loading</p>
-<div>
-    <Button {loading} size="large">Loading</Button>
-    <Button {loading} primary size="large">Loading Primary</Button>
-    <Button {loading} size="large">
-        <Icon name="tool" />
-        <Text>Loading with Icon</Text>
-    </Button>
-    <Button {loading} primary size="large">
-        <Icon name="tool" />
-        <Text>Loading Primary with Icon</Text>
-    </Button>
-</div>
-
-<p>Loading while Disabled</p>
-<div>
-    <Button disabled {loading} size="large">Loading</Button>
-    <Button disabled {loading} primary size="large">Loading Primary</Button>
-    <Button disabled {loading} size="large">
-        <Icon name="tool" />
-        <Text>Loading with Icon</Text>
-    </Button>
-    <Button disabled {loading} primary size="large">
-        <Icon name="tool" />
-        <Text>Loading Primary with Icon</Text>
-    </Button>
 </div>
 
 <p>Flexbox</p>

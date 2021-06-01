@@ -12,15 +12,15 @@
     export let activeSession: LinkSession | undefined = undefined
     export let focus: boolean = false
     export let fluid: boolean = false
-    export let loading: Writable<boolean> = writable<boolean>(false)
+    export let loading = false
     export let placeholder: string | undefined = undefined
 
     const isValid = async (value: string): Promise<boolean> => {
         try {
             if (value) {
-                $loading = true
+                loading = true
                 await validateExistence(value)
-                $loading = false
+                loading = false
             } else {
                 errorMessage = undefined
                 return false
@@ -40,8 +40,8 @@
         return activeSession.client.v1.chain.get_account(value).catch((error) => {
             const isUnkownAccountError = error.toString().includes('exception: unknown key')
 
-            if ($loading) {
-                $loading = false
+            if (loading) {
+                loading = false
             }
 
             if (isUnkownAccountError) {

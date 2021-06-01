@@ -3,10 +3,6 @@
 
     import {createEventDispatcher, getContext} from 'svelte'
     import {spring} from 'svelte/motion'
-    import {writable} from 'svelte/store'
-
-    import Icon from '~/components/elements/icon.svelte'
-    import Text from '~/components/elements/text.svelte'
 
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
@@ -22,8 +18,6 @@
     export let fluid: boolean = false
     /** Should the button obey form validation */
     export let formValidation: boolean = false
-    /** Is the button in a loading state? */
-    export let loading: Writable<boolean> = writable<boolean>(false)
 
     // Get parent form disabled state (if exists)
     const formDisabled: Writable<boolean> = getContext('formDisabled')
@@ -185,7 +179,6 @@
     disabled={isDisabled}
     class={`button size-${size}`}
     class:disabled={isDisabled}
-    class:$loading
     class:fluid
     class:primary
     {href}
@@ -197,11 +190,6 @@
         <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
     {/if}
     <span class="content">
-        {#if $loading}
-            <Icon loading name="life-buoy" />
-            <Text><slot>Click me</slot></Text>
-        {:else}
-            <slot>Click me</slot>
-        {/if}
+        <slot>Click me</slot>
     </span>
 </a>
