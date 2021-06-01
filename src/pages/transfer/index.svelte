@@ -167,7 +167,7 @@
             </span>
         </div>
     </span>
-    <TransactionForm {resetCallback} {retryCallback} completeAction="New transfer">
+    <TransactionForm {resetCallback} {retryCallback}>
         <div class="container">
             <TransferMain {balance} {token} {resetData} />
         </div>

@@ -4,7 +4,7 @@
     import type {Name} from '@greymass/eosio'
 
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
-    import {getAccount} from '~/stores/account-provider'
+    import {updateAccount} from '~/stores/account-provider'
     import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -15,7 +15,6 @@
 
     export let retryCallback: (() => void) | undefined = undefined
     export let resetCallback: (() => void) | undefined = undefined
-    export let completeAction: string = 'Done'
 
     let error: boolean = false
     let errorMessage: string = ''
@@ -24,9 +23,7 @@
 
     function refreshAccount(account_name: Name) {
         // Refresh the account data
-        getAccount(account_name, $activeSession!.chainId, true)
-        // Force update of activeSession, triggering update of currentAccount
-        activeSession.update((state) => state)
+        updateAccount(account_name, $activeSession!.chainId, true)
     }
 
     function complete() {
@@ -63,6 +60,7 @@
         },
         clear: () => {
             error = false
+            console.log('clearing')
             transaction_id.set(undefined)
         },
         retryTransaction: () => {
@@ -74,6 +72,7 @@
             }
         },
         setTransaction: (id: string) => {
+            console.log('setting')
             transaction_id.set(id)
         },
         setTransactionError: (err: any) => {
@@ -87,19 +86,13 @@
 
 <style type="scss">
     :global(.segment) {
-        .controls,
-        .header {
+        .controls {
             padding: 51px 0 24px;
             text-align: center;
             :global(.icon) {
                 color: var(--main-green);
             }
         }
-        p.txid a {
-            color: var(--main-blue);
-            text-decoration: none;
-        }
-        p.txid,
         div.error {
             color: var(--main-black);
             overflow: hidden;
