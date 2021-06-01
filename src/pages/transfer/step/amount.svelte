@@ -93,10 +93,7 @@
     {#if $balance}
         <Form on:submit={confirmChange}>
             <div class="token-selector">
-                <TokenSelector
-                    defaultToken={token}
-                    onTokenSelect={changeToken}
-                />
+                <TokenSelector defaultToken={token} onTokenSelect={changeToken} />
             </div>
             <InputAsset
                 bind:valid={amountValid}

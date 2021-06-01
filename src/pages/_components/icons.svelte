@@ -4,9 +4,9 @@
 </script>
 
 <style lang="scss">
-  h2 {
-    margin-top: 40px;
-  }
+    h2 {
+        margin-top: 40px;
+    }
 </style>
 
 <div>
@@ -25,11 +25,10 @@
     <p>massive</p>
     <Icon name="anchor" size="massive" />
 
-
     <h2>Image Component with fallback</h2>
     <Image
-      fallbackSrc="https://www.bloks.io/img/chains/eos.png"
-      src="http://random.com/test.image"
-      width="30"
+        fallbackSrc="https://www.bloks.io/img/chains/eos.png"
+        src="http://random.com/test.image"
+        width="30"
     />
 </div>

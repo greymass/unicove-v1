@@ -6,8 +6,8 @@
     import Image from '~/components/elements/image.svelte'
 
     export let tokenKey: string
-    export let width: string = "32"
-    export let height: string = "32"
+    export let width: string = '32'
+    export let height: string = '32'
 
     const token: Readable<Token | undefined> = derived([tokens], ([$tokens]) => {
         if ($tokens) {
@@ -17,5 +17,5 @@
 </script>
 
 {#if $token}
-    <Image height={height} width={width} alt={String($token.name)} src={$token.logo} />
+    <Image {height} {width} alt={String($token.name)} src={$token.logo} />
 {/if}

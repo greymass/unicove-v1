@@ -75,10 +75,7 @@
 </div>
 <div>
     <p>Token Selector</p>
-    <TokenSelector
-        defaultToken={selectedToken}
-        onTokenSelect={handleTokenSelect}
-    />
+    <TokenSelector defaultToken={selectedToken} onTokenSelect={handleTokenSelect} />
 
     <p>Selected Token: {selectedToken.name}</p>
 </div>

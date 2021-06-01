@@ -34,9 +34,14 @@
     let filteredTokens = []
 
     $: {
-        filteredTokens = ($tokens && $tokens.filter((token) => {
-            return query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
-        })) || []
+        filteredTokens =
+            ($tokens &&
+                $tokens.filter((token) => {
+                    return (
+                        query.length === 0 || token.name.toLowerCase().includes(query.toLowerCase())
+                    )
+                })) ||
+            []
     }
 </script>
 

@@ -9,42 +9,42 @@
 
     export let token: Token
     export let onClick: () => void
-    export let isTableRow: boolean
+    export let isTableRow: boolean | undefined = undefined
 
     let formattedTokenBalance: string | undefined = undefined
 
     let balance
 
     $: {
-      balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)
+        balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)
 
-      if (balance) {
-        const tokenPrecision = balance.quantity.symbol.precision
-        const unitValue = balance.quantity.units.value
-        const fullTokenBalanceString = (
-            Number(unitValue) / Math.pow(10, tokenPrecision)
-        ).toFixed(tokenPrecision)
+        if (balance) {
+            const tokenPrecision = balance.quantity.symbol.precision
+            const unitValue = balance.quantity.units.value
+            const fullTokenBalanceString = (
+                Number(unitValue) / Math.pow(10, tokenPrecision)
+            ).toFixed(tokenPrecision)
 
-        if (isTableRow) {
-            formattedTokenBalance = formatBalanceString(fullTokenBalanceString)
-        } else {
-            formattedTokenBalance = fullTokenBalanceString
+            if (isTableRow) {
+                formattedTokenBalance = formatBalanceString(fullTokenBalanceString)
+            } else {
+                formattedTokenBalance = fullTokenBalanceString
+            }
         }
-      }
     }
 
     function formatBalanceString(balanceString) {
-      if (balanceString.length < 8) {
-        return balanceString
-      }
+        if (balanceString.length < 8) {
+            return balanceString
+        }
 
-      const balanceInIntegers = balanceString.split('.')[0]
+        const balanceInIntegers = balanceString.split('.')[0]
 
-      if (balanceInIntegers.length < 6) {
-         return balanceInIntegers;
-      }
+        if (balanceInIntegers.length < 6) {
+            return balanceInIntegers
+        }
 
-      return `${Number(balanceInIntegers) / 1000000} M`;
+        return `${Number(balanceInIntegers) / 1000000} M`
     }
 </script>
 
