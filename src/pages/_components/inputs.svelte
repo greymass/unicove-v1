@@ -2,6 +2,8 @@
     import {Asset, Name} from '@greymass/eosio'
     import {ChainId} from 'anchor-link'
 
+    import {tokens} from '~/stores/tokens'
+
     import Input from '~/components/elements/input.svelte'
     import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
@@ -22,18 +24,7 @@
         examples[detail.name] = detail
     }
 
-    const selectableTokens = [
-        {
-            name: 'TLOS',
-            key: '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11-eosio.token-tlos'
-        },
-        {
-            name: 'TLOSDAC',
-            key: '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11-telosdacdrop-tlosdac',
-        },
-    ]
-
-    let selectedToken = selectableTokens[0]
+    let selectedToken = $tokens[0]
 
     const handleTokenSelect = (token) => {
         selectedToken = token
@@ -86,7 +77,6 @@
     <p>Token Selector</p>
     <TokenSelector
         defaultToken={selectedToken}
-        tokens={selectableTokens}
         onTokenSelect={handleTokenSelect}
     />
 
