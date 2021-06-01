@@ -101,6 +101,9 @@
         border: 1px solid var(--light-blue);
         border-radius: 20px;
         padding: 26px;
+        :global(.button) {
+            margin-top: 31px;
+        }
     }
     .options {
         display: inline-flex;
