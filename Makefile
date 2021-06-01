@@ -13,6 +13,10 @@ build: $(SRC_FILES) node_modules package.json snowpack.config.js svelte.config.j
 dev: node_modules
 	@${BIN}/snowpack dev
 
+.PHONY: serve
+serve: build
+	@node server.js
+
 .PHONY: check
 check: node_modules
 	@${BIN}/svelte-check
