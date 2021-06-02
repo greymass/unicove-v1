@@ -125,7 +125,7 @@
 <Page>
     <div class="login">
         <header>
-            <h1>Greymass Web Wallet</h1>
+            <h1>Untitled Web Wallet</h1>
             <p>The easiest way to manage your EOSIO account.</p>
         </header>
         <ButtonLogin>Login with Anchor</ButtonLogin>
