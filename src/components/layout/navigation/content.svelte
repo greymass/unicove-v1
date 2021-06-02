@@ -2,7 +2,7 @@
     import {createEventDispatcher} from 'svelte'
     import {router} from 'tinro'
 
-    import {version, isRelease} from '~/config'
+    import {version, isRelease, releaseVersion} from '~/config'
     import {preferences} from '~/store'
     import type {NavigationItem} from '~/ui-types'
 
@@ -154,16 +154,16 @@
 
 <nav class:floating>
     <header>
-        {#if expand}
-            <div class="title">
-                <div>Greymass Wallet</div>
-                {#if !isRelease}
-                    <div class="version">
-                        {version}
-                    </div>
+        <div class="title">
+            <div>Greymass Wallet</div>
+            <div class="version">
+                {#if isRelease}
+                    {releaseVersion}
+                {:else}
+                    {version}
                 {/if}
             </div>
-        {/if}
+        </div>
         <span class="button" on:click={handleHamburger}>
             {#if expand}
                 <Icon name="x" />
