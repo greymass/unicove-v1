@@ -1,8 +1,5 @@
 <script lang="ts">
     import type {LinkSession} from 'anchor-link'
-    import type {Writable} from 'svelte/store'
-
-    import {writable} from 'svelte/store'
 
     import InputLabelled from '../labelled.svelte'
 

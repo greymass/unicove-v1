@@ -41,11 +41,6 @@
 </script>
 
 <style type="scss">
-    section {
-        border: 1px solid var(--divider-grey);
-        border-radius: 10px;
-        padding: 40px 52px;
-    }
     header {
         text-align: center;
         h1 {
