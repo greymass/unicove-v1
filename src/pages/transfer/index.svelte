@@ -134,7 +134,7 @@
     }
     @media only screen and (max-width: 999px) {
         .container {
-            margin: 0 52px;
+            margin: 0 32px;
         }
     }
 
@@ -167,7 +167,7 @@
             </span>
         </div>
     </span>
-    <TransactionForm {resetCallback} {retryCallback} completeAction="New transfer">
+    <TransactionForm {resetCallback} {retryCallback}>
         <div class="container">
             <TransferMain {balance} {token} {resetData} />
         </div>

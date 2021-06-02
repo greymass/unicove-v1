@@ -43,7 +43,7 @@
     .grid {
         display: grid;
         column-gap: $grid_gap;
-        row-gap: div($grid-gap, 2);
+        row-gap: calc(#{$grid_gap} / 2);
         grid-template-columns: $navigation_width auto 0;
         grid-template-rows: $menubar_height minmax(0, auto);
         grid-template-areas:

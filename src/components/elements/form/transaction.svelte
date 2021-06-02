@@ -3,17 +3,18 @@
     import {get, writable} from 'svelte/store'
     import type {Name} from '@greymass/eosio'
 
-    import {activeSession, currentAccount} from '~/store'
-    import {getAccount} from '~/stores/account-provider'
+    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import {updateAccount} from '~/stores/account-provider'
     import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Segment from '~/components/elements/segment.svelte'
 
+    import TxFollower from '~/components/tx-follower/index.svelte'
+
     export let retryCallback: (() => void) | undefined = undefined
     export let resetCallback: (() => void) | undefined = undefined
-    export let completeAction: string = 'Done'
 
     let error: boolean = false
     let errorMessage: string = ''
@@ -22,9 +23,7 @@
 
     function refreshAccount(account_name: Name) {
         // Refresh the account data
-        getAccount(account_name, $activeSession!.chainId, true)
-        // Force update of activeSession, triggering update of currentAccount
-        activeSession.update((state) => state)
+        updateAccount(account_name, $activeSession!.chainId, true)
     }
 
     function complete() {
@@ -61,6 +60,7 @@
         },
         clear: () => {
             error = false
+            console.log('clearing')
             transaction_id.set(undefined)
         },
         retryTransaction: () => {
@@ -72,6 +72,7 @@
             }
         },
         setTransaction: (id: string) => {
+            console.log('setting')
             transaction_id.set(id)
         },
         setTransactionError: (err: any) => {
@@ -85,26 +86,19 @@
 
 <style type="scss">
     :global(.segment) {
-        .controls,
-        .header {
-            padding-top: 3em;
+        .controls {
+            padding: 51px 0 24px;
             text-align: center;
             :global(.icon) {
                 color: var(--main-green);
             }
         }
-        p.txid a {
-            color: var(--main-blue);
-            text-decoration: none;
-        }
-        p.txid,
         div.error {
             color: var(--main-black);
-            max-width: 70vw;
             overflow: hidden;
             text-overflow: ellipsis;
             text-align: center;
-            padding: 0 0 2em;
+            padding: 24px 0 0;
         }
     }
     .error {
@@ -139,20 +133,7 @@
 </style>
 
 {#if $transaction_id}
-    <Segment color="white">
-        <div class="header">
-            <Icon size="massive" name="check-circle" />
-            <h2>Transaction sent</h2>
-        </div>
-        <p class="txid">
-            <a href="https://bloks.io/transaction/{$transaction_id}" target="_new">
-                {$transaction_id}
-            </a>
-        </p>
-        <div class="controls">
-            <Button fluid on:action={complete} primary size="large">{completeAction}</Button>
-        </div>
-    </Segment>
+    <TxFollower id={$transaction_id} chain={$activeBlockchain} />
 {:else if error}
     <Segment color="white">
         <div class="error">
