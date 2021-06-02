@@ -30,9 +30,9 @@
         font-weight: 500;
         font-size: 16px;
         line-height: 19px;
-        text-align: center;
         letter-spacing: -0.26px;
-        background-color: white;
+        color: var(--main-black);
+        background-color: var(--main-white);
 
         position: fixed;
         top: 50%;

@@ -8,9 +8,12 @@ const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
 export const isRelease = branch === 'deploy'
 
 /** App identifier, used for anchor link (session persistence). */
-export const appId = !isRelease ? `w.${branch}.gm` : 'wallet.gm'
+export const appId = !isRelease
+    ? `w.${branch.replace(/[^1-5a-z]+/g, '').slice(0, 7)}.gm`
+    : 'wallet.gm'
 
 export const version = `${branch}-${rev}`
+export const releaseVersion = `Beta 1 (${rev})`
 
 export enum ChainFeatures {
     /** eosio.namebid https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/name_bidding.cpp */
@@ -33,6 +36,20 @@ export enum ChainFeatures {
     DelphiOracle,
 }
 
+// List of features involving resources
+export const resourceFeatures = [
+    ChainFeatures.Fuel,
+    ChainFeatures.Staking,
+    ChainFeatures.REX,
+    ChainFeatures.PowerUp,
+]
+
+// Available Balance Providers
+export enum BalanceProviders {
+    // https://www.api.bloks.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
+    Bloks,
+}
+
 export interface ChainConfig {
     /** Short identifier. */
     id: string
@@ -52,8 +69,14 @@ export interface ChainConfig {
     nodeUrl: string
     /** True if network is a testnet. */
     testnet: boolean
+    /** Account to use for resource sampling */
+    resourceSampleAccount?: string
+    /** The number of milliseconds to base sample prices on */
+    resourceSampleMilliseconds?: number
     /** Bloks url  */
     bloksUrl: string
+    /** Available Balance Providers */
+    balanceProviders?: Set<BalanceProviders>
 }
 
 /** Supported chains. */
@@ -78,6 +101,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://eos.greymass.com',
         testnet: false,
         bloksUrl: 'https://bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'fio',
@@ -90,6 +114,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://fio.greymass.com',
         testnet: false,
         bloksUrl: 'https://fio.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'fio-testnet',
@@ -98,7 +123,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('9,FIO'),
         coreTokenContract: Name.from('fio.token'),
         coreTokenTransfer: Name.from('trnsfiopubky'),
-        name: 'FIO Testnet',
+        name: 'FIO (Testnet)',
         nodeUrl: 'https://fiotestnet.greymass.com',
         testnet: true,
         bloksUrl: 'https://fio-test.bloks.io',
@@ -122,6 +147,20 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://jungle3.greymass.com',
         testnet: true,
         bloksUrl: 'https://jungle3.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
+        id: 'proton',
+        chainFeatures: new Set([ChainFeatures.Staking, ChainFeatures.VoteProducer]),
+        chainId: ChainId.from('384da888112027f0321850a169f737c33e53b388aad48b5adace4bab97f437e0'),
+        coreTokenSymbol: Asset.Symbol.from('4,XPR'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Proton',
+        nodeUrl: 'https://proton.greymass.com',
+        testnet: false,
+        bloksUrl: 'https://proton.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'telos',
@@ -139,8 +178,33 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
+        resourceSampleAccount: 'greymassfuel',
+        resourceSampleMilliseconds: 1000,
         testnet: false,
         bloksUrl: 'https://telos.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
+        id: 'telos-testnet',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: ChainId.from('1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f'),
+        coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Telos (Testnet)',
+        nodeUrl: 'https://testnet.telos.net',
+        resourceSampleAccount: 'greymassfuel',
+        resourceSampleMilliseconds: 1000,
+        testnet: true,
+        bloksUrl: 'https://telos-test.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'wax',
@@ -158,6 +222,7 @@ export const chains: ChainConfig[] = [
         coreTokenTransfer: Name.from('transfer'),
         name: 'WAX',
         nodeUrl: 'https://wax.greymass.com',
+        resourceSampleAccount: 'teamgreymass',
         testnet: false,
         bloksUrl: 'https://wax.bloks.io',
     },

@@ -8,35 +8,35 @@
 </script>
 
 <style type="scss">
-    .label-container {
-        padding: 10px 3px;
-
+    .label,
+    .value {
+        padding: 17px;
+        line-height: 40px;
+    }
+    .label {
         h3 {
             display: block;
-            margin: 5px 0;
             font-weight: bold;
         }
     }
 
-    .value-container {
+    .value {
         margin-left: auto;
-        padding: 13px;
-        display: flex;
     }
 </style>
 
 <Container>
-    <div class="label-container">
+    <div class="label">
         <h3>{header}</h3>
         {#if subheader}
             <p>{subheader}</p>
         {/if}
-        {#if changeStep}
-            <StatusChange {changeStep} />
-        {/if}
     </div>
 
-    <div class="value-container">
+    <div class="value">
         <slot />
     </div>
+    {#if changeStep}
+        <StatusChange {changeStep} />
+    {/if}
 </Container>

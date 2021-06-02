@@ -1,8 +1,5 @@
 <script lang="ts">
     import type {LinkSession} from 'anchor-link'
-    import type {Writable} from 'svelte/store'
-
-    import {writable} from 'svelte/store'
 
     import InputLabelled from '../labelled.svelte'
 
@@ -12,15 +9,15 @@
     export let activeSession: LinkSession | undefined = undefined
     export let focus: boolean = false
     export let fluid: boolean = false
-    export let loading: Writable<boolean> = writable<boolean>(false)
+    export let loading = false
     export let placeholder: string | undefined = undefined
 
     const isValid = async (value: string): Promise<boolean> => {
         try {
             if (value) {
-                $loading = true
+                loading = true
                 await validateExistence(value)
-                $loading = false
+                loading = false
             } else {
                 errorMessage = undefined
                 return false
@@ -40,8 +37,8 @@
         return activeSession.client.v1.chain.get_account(value).catch((error) => {
             const isUnkownAccountError = error.toString().includes('exception: unknown key')
 
-            if ($loading) {
-                $loading = false
+            if (loading) {
+                loading = false
             }
 
             if (isUnkownAccountError) {

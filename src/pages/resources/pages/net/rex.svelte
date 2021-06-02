@@ -1,20 +1,26 @@
 <script lang="ts">
-    import Button from '~/components/elements/button.svelte'
-    import Icon from '~/components/elements/icon.svelte'
-    import Text from '~/components/elements/text.svelte'
-
+    import FormTransaction from '~/components/elements/form/transaction.svelte'
     import ResourceStateNET from '~/pages/resources/components/state/net.svelte'
     import ResourcesSystemREX from '~/pages/resources/components/forms/rex.svelte'
 </script>
 
 <style>
+    .form,
+    .wrapper {
+        margin: 16px 0;
+    }
+    @media only screen and (max-width: 999px) {
+        .wrapper {
+            margin: 16px;
+        }
+    }
 </style>
 
-<ResourceStateNET showExtra>
-    <Button href="/resources/net">
-        <Icon name="arrow-left" />
-        <Text>Back to NET Options</Text>
-    </Button>
-</ResourceStateNET>
-
-<ResourcesSystemREX resource="net" />
+<div class="wrapper">
+    <ResourceStateNET showExtra />
+    <div class="form">
+        <FormTransaction>
+            <ResourcesSystemREX resource="net" />
+        </FormTransaction>
+    </div>
+</div>

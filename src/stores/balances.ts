@@ -1,12 +1,12 @@
 import type {AccountName, ChainId, LinkSession, Name} from 'anchor-link'
-import type {Asset} from 'anchor-link'
+import {Asset} from 'anchor-link'
 import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 
-import {activeSession, currentAccount} from '~/store'
+import {activeBlockchain, activeSession, currentAccount} from '~/store'
 import {createTokenFromChainId, makeTokenKey, Token} from '~/stores/tokens'
-import {balancesProvider, updateBalances} from '~/stores/balancesProvider'
-import {getAccount} from '~/account-cache'
+import {balancesProvider, updateBalances} from '~/stores/balances-provider'
+import {updateAccount} from './account-provider'
 
 export interface Balance {
     key: string
@@ -19,14 +19,16 @@ export interface Balance {
 const initialBalances: Balance[] = []
 
 export const balances: Readable<Balance[]> = derived(
-    [activeSession, balancesProvider, currentAccount],
-    ([$activeSession, $balancesProvider, $currentAccount], set) => {
+    [activeSession, activeBlockchain, balancesProvider, currentAccount],
+    ([$activeSession, $activeBlockchain, $balancesProvider, $currentAccount], set) => {
         const records = []
         // Push any core balance information in from the current account
-        if ($activeSession && $currentAccount && $currentAccount.core_liquid_balance) {
-            records.push(
-                createBalanceFromCoreToken($activeSession, $currentAccount.core_liquid_balance)
-            )
+        if ($activeSession && $currentAccount) {
+            let coreBalance = $currentAccount.core_liquid_balance
+            if (!coreBalance) {
+                coreBalance = Asset.from(0, $activeBlockchain.coreTokenSymbol)
+            }
+            records.push(createBalanceFromCoreToken($activeSession, coreBalance))
         }
         // Push balances in as received by the balance provider
         records.push(...$balancesProvider.balances)
@@ -69,9 +71,20 @@ export function createBalanceFromToken(
 
 export async function fetchBalances(session: LinkSession | undefined, refresh = false) {
     if (session) {
-        // Refresh the active sessions account
-        getAccount(session.auth.actor, session.chainId, refresh)
+        // Refresh the sessions account data
+        updateAccount(session.auth.actor, session.chainId, refresh)
         // Refresh balances from the balance provider
         updateBalances(session)
     }
 }
+
+export const systemTokenBalance: Readable<Balance | undefined> = derived(
+    [activeBlockchain, balances],
+    ([$activeBlockchain, $balances]) => {
+        if ($activeBlockchain) {
+            const token = createTokenFromChainId($activeBlockchain.chainId)
+
+            return $balances.find((b) => b.tokenKey === token.key)
+        }
+    }
+)

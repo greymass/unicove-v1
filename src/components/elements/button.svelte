@@ -3,13 +3,11 @@
 
     import {createEventDispatcher, getContext} from 'svelte'
     import {spring} from 'svelte/motion'
-    import {writable} from 'svelte/store'
-
-    import Icon from '~/components/elements/icon.svelte'
-    import Text from '~/components/elements/text.svelte'
 
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
+    /** Can be used in conjunction with href to set the <a target. */
+    export let target: string | undefined = undefined
     /** Whether the button is primary. */
     export let primary: boolean = false
     /** Button size. */
@@ -20,8 +18,6 @@
     export let fluid: boolean = false
     /** Should the button obey form validation */
     export let formValidation: boolean = false
-    /** Is the button in a loading state? */
-    export let loading: Writable<boolean> = writable<boolean>(false)
 
     // Get parent form disabled state (if exists)
     const formDisabled: Writable<boolean> = getContext('formDisabled')
@@ -29,6 +25,8 @@
     // Dispatched when button is activated via keyboard or click
     // no need to preventDefault on the event unless the href attribute is set
     const dispatch = createEventDispatcher<{action: Event}>()
+
+    $: isDisabled = (formValidation && $formDisabled) || disabled
 
     function handleClick(event: MouseEvent) {
         if (href === undefined) {
@@ -75,10 +73,10 @@
         --gradient-size: 200px; // size of hover effect
 
         position: relative;
-        font-size: 10px;
+        font-size: 14px;
         display: inline-flex;
-        font-weight: 700;
-        letter-spacing: 0.1px;
+        font-weight: 450;
+        letter-spacing: -0.04px;
         justify-content: center;
         background-color: var(--light-blue);
         border-radius: var(--radius);
@@ -90,38 +88,37 @@
         cursor: pointer;
         overflow: hidden;
         white-space: nowrap;
-
         &.primary {
             background-color: var(--main-blue);
             color: white;
+            &:active:not(.disabled) {
+                filter: contrast(150%) brightness(105%);
+            }
         }
         &:focus-visible {
             outline: 0;
             text-decoration: underline;
         }
         &:focus,
-        &:hover {
+        &:hover:not(.disabled) {
             outline: 0;
             border-color: rgba(0, 0, 0, 0.15);
             position: relative;
         }
-        &:active {
-            filter: contrast(150%) brightness(105%);
+        &:active:not(.disabled) {
+            filter: brightness(105%);
         }
         &.disabled {
-            background-color: var(--light-red);
-            border-color: var(--main-red);
-            color: var(--main-red);
+            color: var(--always-white);
             pointer-events: none;
             cursor: default;
-            opacity: 0.5;
+            opacity: 0.3;
             cursor: not-allowed;
             pointer-events: all !important;
         }
         &.fluid {
             display: flex;
             flex-direction: column;
-            margin: 20px 0;
             align-items: center;
         }
         &.loading {
@@ -142,10 +139,10 @@
             background: radial-gradient(circle closest-side, white, transparent);
             width: 0px;
             height: var(--gradient-size);
-            opacity: 0.45;
+            opacity: 0.15;
             mix-blend-mode: overlay;
         }
-        &:hover .hover {
+        &:hover:not(.disabled) .hover {
             width: var(--gradient-size);
             left: calc(var(--gradient-size) / -2);
         }
@@ -167,7 +164,7 @@
                 --gradient-size: 500px;
             }
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 550;
             letter-spacing: -0.18px;
             padding: 16px 32px;
         }
@@ -179,22 +176,20 @@
     on:keydown={handleKeydown}
     on:mousemove={handleMousemove}
     on:mouseenter={handleMouseenter}
+    disabled={isDisabled}
     class={`button size-${size}`}
-    class:disabled={(formValidation && $formDisabled) || disabled}
-    class:$loading
+    class:disabled={isDisabled}
     class:fluid
     class:primary
     {href}
+    {target}
     role="button"
     tabindex="0"
 >
-    <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
+    {#if !isDisabled}
+        <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
+    {/if}
     <span class="content">
-        {#if $loading}
-            <Icon loading name="life-buoy" />
-            <Text><slot>Click me</slot></Text>
-        {:else}
-            <slot>Click me</slot>
-        {/if}
+        <slot>Click me</slot>
     </span>
 </a>

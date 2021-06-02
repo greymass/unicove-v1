@@ -1,11 +1,11 @@
-import type {Asset, API, LinkSession} from 'anchor-link'
+import type {Asset, LinkSession} from 'anchor-link'
 import {derived, writable} from 'svelte/store'
 import type {Readable} from 'svelte/store'
-import {loadAccount} from './account-cache'
 import type {SessionLike} from './auth'
-import {ChainConfig, chainConfig, chains} from './config'
+import {ChainConfig, chainConfig} from './config'
 import {Preferences} from './preferences'
 import {priceTicker} from './price-ticker'
+import {accountProvider} from './stores/account-provider'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
@@ -14,27 +14,19 @@ export const appReady = writable<boolean>(false)
 export const activeSession = writable<LinkSession | undefined>(undefined)
 
 /** Configuration of the currently selected blockchain */
-export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) => {
-    if (session) {
-        return chainConfig(session.chainId)
-    } else {
-        return chains[0]
-    }
-})
+export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) =>
+    chainConfig(session!.chainId)
+)
 
 /** Active price ticker for the currently selected blockchain */
 export const activePriceTicker: Readable<number> = derived(
     [activeBlockchain],
-    ([$activeBlockchain], set) => {
-        if ($activeBlockchain) {
-            return priceTicker($activeBlockchain).value.subscribe((v) => {
-                if (v) {
-                    set(v)
-                }
-            })
-        }
-        set(0)
-    }
+    ([$activeBlockchain], set) =>
+        priceTicker($activeBlockchain).value.subscribe((v) => {
+            if (v) {
+                set(v)
+            }
+        })
 )
 
 /** List of all available anchor link sessions. */
@@ -43,46 +35,39 @@ export const availableSessions = writable<SessionLike[]>([])
 /** List of preferences. */
 export const preferences = Preferences.shared
 
-/** Current logged in users account. */
-export const currentAccount = derived<typeof activeSession, API.v1.AccountObject | undefined>(
-    activeSession,
-    (session: LinkSession | undefined, set: (v: API.v1.AccountObject | undefined) => void) => {
-        if (!session) {
-            set(undefined)
-            return
-        }
-
-        let active = true
-
-        loadAccount(session.auth.actor, session.chainId, async (v) => {
-            if (!active) {
-                return
-            }
-            const account = v.account
-
-            if (!account?.core_liquid_balance) {
-                const assets: Asset[] | void = await fetchBalance(session!).catch((err) => {
-                    console.log('Error fetching account balance:', err)
-                })
-
-                if (assets) {
-                    account!.core_liquid_balance = assets[0]!
-                }
-            }
-
-            set(account)
-        })
-
-        return () => {
-            active = false
-        }
-    },
-    undefined
+/** Current logged in users account data. */
+export const currentAccount = derived(
+    accountProvider,
+    ($accountProvider) => $accountProvider.account
 )
 
-function fetchBalance(session: LinkSession) {
-    return session.client.v1.chain.get_currency_balance(
-        chainConfig(session.chainId).coreTokenContract,
-        session.auth.actor
-    )
+/** Current system token balance of current logged in user. */
+export const currentAccountBalance: Readable<Asset | undefined> = derived(
+    currentAccount,
+    ($currentAccount) => {
+        if ($currentAccount) {
+            return $currentAccount.core_liquid_balance
+        }
+    }
+)
+
+const systemDarkMode = writable<boolean>(
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+)
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+        systemDarkMode.set(event.matches)
+    })
 }
+
+/** If dark mode is enabled. */
+export const darkMode = derived(
+    [systemDarkMode, preferences],
+    ([$systemDarkMode, $preferences]) => {
+        if ($preferences.darkmode !== null) {
+            return $preferences.darkmode
+        } else {
+            return $systemDarkMode
+        }
+    }
+)

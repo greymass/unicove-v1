@@ -3,7 +3,7 @@ import {Asset} from 'anchor-link'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 
-import {chainConfig} from '~/config'
+import {BalanceProviders, chainConfig} from '~/config'
 import {activeSession} from '~/store'
 import {makeTokenKey, Token} from '~/stores/tokens'
 
@@ -56,13 +56,17 @@ export const balancesProvider: Writable<BalancesProvider> = writable(initialBala
 
 export async function updateBalances(session: LinkSession) {
     isLoading.set(true)
-    const data = await fetchData(session)
-    const balances = parseTokenBalances(session, data)
-    const tokens = parseTokens(session, data)
-    balancesProvider.set({
-        balances,
-        tokens,
-    })
+    const chain = chainConfig(session.chainId)
+    const {Bloks} = BalanceProviders
+    if (chain.balanceProviders?.has(Bloks)) {
+        const data = await fetchData(session)
+        const balances = parseTokenBalances(session, data)
+        const tokens = parseTokens(session, data)
+        balancesProvider.set({
+            balances,
+            tokens,
+        })
+    }
     isLoading.set(false)
 }
 
@@ -72,19 +76,24 @@ async function fetchData(session: LinkSession) {
         session.auth.actor
     }?type=getAccountTokens&coreSymbol=${chain.coreTokenSymbol}`
 
-    const apiResponse = await fetch(apiUrl).catch((error) => {
-        console.log('An error occured while fetching token balances:', {error})
-    })
-
-    const jsonBody =
-        apiResponse &&
-        (await apiResponse.json().catch((error) => {
-            console.log('An error occured while parsing the token balances response body:', {
-                error,
-            })
-        }))
-
-    return jsonBody.tokens
+    return await fetch(apiUrl)
+        .then(async (response) => {
+            const jsonBody =
+                response &&
+                (await response.json().catch((error) => {
+                    console.warn(
+                        'An error occured while parsing the token balances response body:',
+                        {
+                            error,
+                        }
+                    )
+                }))
+            return jsonBody.tokens
+        })
+        .catch((error) => {
+            console.warn('An error occured while fetching token balances:', {error})
+            return []
+        })
 }
 
 function parseTokenInfo(session: LinkSession, balance: RawTokenBalance): Token {

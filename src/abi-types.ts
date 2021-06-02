@@ -20,6 +20,14 @@ export class BuyRamBytes extends Struct {
     @Struct.field(UInt32) bytes!: UInt32
 }
 
+@Struct.type('delegated_bandwidth')
+export class DelegatedBandwidth extends Struct {
+    @Struct.field(Name) from!: Name
+    @Struct.field(Name) to!: Name
+    @Struct.field(Asset) net_weight!: Asset
+    @Struct.field(Asset) cpu_weight!: Asset
+}
+
 @Struct.type('delphioracledatapoint')
 export class DelphiOracleDatapoint extends Struct {
     @Struct.field(UInt64) id!: UInt64

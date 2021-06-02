@@ -1,84 +1,81 @@
 <script lang="ts">
     import type {Readable} from 'svelte/store'
     import type {TinroRouteMeta} from 'tinro'
-    import {onMount} from 'svelte'
-    import {get, derived, writable} from 'svelte/store'
-    import {Asset, Name} from 'anchor-link'
+    import type {LinkSession} from 'anchor-link'
 
-    import {FIOTransfer, Transfer} from '~/abi-types'
+    import {Name} from 'anchor-link'
+    import {onMount} from 'svelte'
+    import {derived} from 'svelte/store'
+    import {router} from 'tinro'
+
     import {activeBlockchain, activeSession} from '~/store'
     import type {Token, TokenKeyParams} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
     import {balances, makeBalanceKey} from '~/stores/balances'
     import {tokens, makeTokenKey} from '~/stores/tokens'
-
-    import Button from '~/components/elements/button.svelte'
-    import Modal from '~/components/elements/modal.svelte'
-    import Page from '~/components/layout/page.svelte'
-    import TransactionNotificationSuccess from '~/components/elements/notification/transaction/success.svelte'
-
+    import {systemTokenKey} from '~/stores/tokens'
     import {transferData, Step} from '~/pages/transfer/transfer'
-    import {txFee, syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/transfer/fio'
-    import TransferRecipient from '~/pages/transfer/step/recipient.svelte'
-    import TransferAmount from '~/pages/transfer/step/amount.svelte'
-    import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
-    import TransferMemo from '~/pages/transfer/step/memo.svelte'
+    import {syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/transfer/fio'
+
+    import Icon from '~/components/elements/icon.svelte'
+    import Text from '~/components/elements/text.svelte'
+    import TransactionForm from '~/components/elements/form/transaction.svelte'
+    import Page from '~/components/layout/page.svelte'
+
+    import TransferMain from '~/pages/transfer/main.svelte'
 
     export let meta: TinroRouteMeta | undefined = undefined
 
-    let successTx: string | undefined = undefined
-    let displaySuccessTx = writable<boolean>(false)
-
     onMount(() => {
+        resetData()
         syncTxFee()
         return () => {
-            // on unmount
             stopSyncTxFee()
         }
     })
 
     const token: Readable<Token | undefined> = derived(
-        [activeSession, tokens],
-        ([$activeSession, $tokens]) => {
-            if (meta && $activeSession && $tokens) {
-                const params: TokenKeyParams = {
-                    chainId: $activeBlockchain.chainId,
-                    contract: Name.from(meta.params.contract),
-                    name: Name.from(meta.params.token),
+        [activeSession, systemTokenKey, transferData, tokens],
+        ([$activeSession, $systemTokenKey, $transferData, $tokens]) => {
+            if ($activeSession && $systemTokenKey && $tokens) {
+                // If this transfer session data has a token key, use it first
+                if ($transferData.tokenKey) {
+                    return $tokens.find((t) => t.key === $transferData.tokenKey)
                 }
-                const key = makeTokenKey(params)
-                return $tokens.find((t) => t.key === key)
+                // If the URL has a token key, use it second
+                if (meta) {
+                    const params: TokenKeyParams = {
+                        chainId: $activeBlockchain!.chainId,
+                        contract: Name.from(meta.params.contract),
+                        name: Name.from(meta.params.token),
+                    }
+                    const key = makeTokenKey(params)
+                    return $tokens.find((t) => t.key === key)
+                }
+                // Otherwise return the system token key
+                return $tokens.find((t) => t.key === $systemTokenKey)
             }
         }
     )
-
-    const tokenContract: Readable<Name> = derived([token], ([$token]) => {
-        if ($token) {
-            return Name.from($token.contract)
-        }
-        return Name.from($activeBlockchain.coreTokenContract)
-    })
 
     const balance: Readable<Balance | undefined> = derived(
-        [activeSession, token],
-        ([$activeSession, $token]) => {
-            if ($activeSession && $token) {
-                const key = makeBalanceKey($token, $activeSession.auth.actor)
-                return $balances.find((b) => (b.key = key))
+        [activeSession, balances, token],
+        ([$activeSession, $currentBalances, $token]) => {
+            if ($token) {
+                const key = makeBalanceKey($token, $activeSession!.auth.actor)
+                return $currentBalances.find((b) => b.key === key)
             }
         }
     )
 
-    const quantity: Readable<Asset | undefined> = derived([transferData], ([$transferData]) => {
-        if ($transferData && $transferData.quantity) {
-            return $transferData.quantity
-        }
-    })
+    let currentSession: LinkSession | undefined = $activeSession
 
-    let previousActor: string | undefined = undefined
-    $: if ($activeSession && String($activeSession.auth.actor) !== previousActor) {
-        resetData()
-        previousActor = String($activeSession.auth.actor)
+    $: {
+        if ($activeSession !== currentSession) {
+            resetData()
+            router.goto('/transfer')
+            currentSession = $activeSession
+        }
     }
 
     function resetData() {
@@ -88,86 +85,91 @@
         fetchTxFee()
     }
 
-    function getActionData() {
-        let data: Transfer | FIOTransfer | undefined
-
-        switch (String($tokenContract)) {
-            case 'fio.token': {
-                data = FIOTransfer.from({
-                    payee_public_key: $transferData.toAddress!.toLegacyString(
-                        $activeBlockchain.coreTokenSymbol.name
-                    ),
-                    amount: quantity && $quantity!.units,
-                    max_fee: $txFee!.units,
-                    actor: $activeSession!.auth.actor,
-                    tpid: 'tpid@greymass',
-                })
-                break
-            }
-            default: {
-                data = Transfer.from({
-                    from: $activeSession!.auth.actor,
-                    to: $transferData.toAccount,
-                    quantity: $transferData.quantity,
-                    memo: $transferData.memo || '',
-                })
-                break
-            }
-        }
-        return data
+    function retryCallback() {
+        // Upon retry, move back to the confirm step to allow the user to retry
+        $transferData.step = Step.Confirm
     }
 
-    async function handleTransfer() {
-        $activeSession!
-            .transact({
-                action: {
-                    authorization: [$activeSession!.auth],
-                    account: get(tokenContract),
-                    name: $activeBlockchain.coreTokenTransfer,
-                    data: getActionData(),
-                },
-            })
-            .then((result) => {
-                successTx = result?.payload?.tx
-                $displaySuccessTx = true
-                resetData()
-            })
+    function resetCallback() {
+        // Upon retry, move back to the confirm step to allow the user to retry
+        $transferData.step = Step.Recipient
     }
 </script>
 
-<style>
+<style type="scss">
+    .container {
+        border: 1px solid var(--light-blue);
+        border-radius: 20px;
+        padding: 26px;
+        :global(.button) {
+            margin-top: 31px;
+        }
+    }
+    .options {
+        display: inline-flex;
+        padding: 15px 0px;
+        text-align: right;
+        .toggle {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            padding: 15px;
+            cursor: pointer;
+            color: var(--main-blue);
+            opacity: 0.3;
+            &.active {
+                opacity: 1;
+            }
+            :global(.icon) {
+                margin-right: 0.5em;
+            }
+        }
+    }
+    @media only screen and (max-width: 999px) {
+        .container {
+            margin: 0 32px;
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        .container {
+            border: none;
+            padding: 12px;
+        }
+    }
 </style>
 
-<Page title="Transfer Tokens">
-    <div class="container">
-        {#if $balance && $token}
-            {#if $transferData.step === Step.Recipient}
-                <TransferRecipient balance={$balance} token={$token} />
-            {/if}
-            {#if $transferData.step === Step.Amount}
-                <TransferAmount balance={$balance} token={$token} />
-            {/if}
-            {#if $transferData.step === Step.Confirm && $quantity}
-                <TransferConfirm token={$token} {handleTransfer} />
-            {/if}
-            {#if $transferData.step === Step.Memo}
-                <TransferMemo token={$token} />
-            {/if}
-        {:else}
-            No balance of this token to transfer!
-        {/if}
-
-        {#if $displaySuccessTx}
-            <Modal display={displaySuccessTx}>
-                <TransactionNotificationSuccess
-                    activeBlockchain={$activeBlockchain}
-                    tx={successTx}
-                />
-            </Modal>
-        {/if}
-
-        {#if $transferData.step > 0}
-            <Button fluid on:action={resetData}>Reset Transfer</Button>
-        {/if}
-    </div>
+<Page>
+    <span slot="submenu">
+        <div class="options">
+            <span
+                class="toggle"
+                class:active={$transferData.step !== Step.Receive}
+                on:click={() => ($transferData.step = Step.Recipient)}
+            >
+                <Icon name="arrow-up" />
+                <Text>Send</Text>
+            </span>
+            <span
+                class="toggle"
+                class:active={$transferData.step === Step.Receive}
+                on:click={() => ($transferData.step = Step.Receive)}
+            >
+                <Icon name="arrow-down" />
+                <Text>Receive</Text>
+            </span>
+        </div>
+    </span>
+    <TransactionForm {resetCallback} {retryCallback}>
+        <div class="container">
+            <TransferMain {balance} {token} {resetData} />
+        </div>
+    </TransactionForm>
 </Page>

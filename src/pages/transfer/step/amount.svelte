@@ -3,58 +3,114 @@
 
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
+    import type {Readable} from 'svelte/store'
 
     import InputAsset from '~/components/elements/input/asset.svelte'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
-    import StatusAddress from '~/pages/transfer/status/address.svelte'
-    import StatusAccount from '~/pages/transfer/status/account.svelte'
-    import StatusBalance from '~/pages/transfer/status/balance.svelte'
-    import StatusToken from '~/pages/transfer/status/token.svelte'
 
-    export let balance: Balance
+    import TokenSelector from '~/components/elements/input/token/selector.svelte'
+
+    export let balance: Readable<Balance | undefined>
     export let token: Token
 
     let amount: string = String(($transferData.quantity && $transferData.quantity.value) || '')
     let amountValid: boolean = false
 
+    function changeToken(token: Token) {
+        transferData.update((data) => ({
+            ...data,
+            quantity: undefined,
+            tokenKey: token.key,
+        }))
+
+        amount = ''
+        amountValid = false
+    }
+
     function confirmChange() {
         transferData.update((data) => ({
             ...data,
             quantity: Asset.from(Number(amount), token.symbol),
-            step: Step.Confirm,
+            step: data.backStep || Step.Confirm,
+            backStep: undefined,
         }))
+    }
+
+    function maxBalance() {
+        if ($balance) {
+            amount = String($balance.quantity.value)
+            amountValid = true
+        }
     }
 </script>
 
 <style type="scss">
-    :global(form) {
-        margin: 1em 0;
+    .token-selector {
+        margin-bottom: 32px;
+    }
+    .controls {
+        display: flex;
+        padding: 1em;
+        .actions {
+            cursor: pointer;
+            margin-left: auto;
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            color: var(--main-blue);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .value {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 10px;
+            line-height: 12px;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.1px;
+            text-transform: uppercase;
+            color: var(--main-black);
+        }
     }
 </style>
 
 <div class="container">
-    <StatusToken {token} />
-    {#if $transferData.toAddress}
-        <StatusAddress toAddress={$transferData.toAddress} />
+    {#if $balance}
+        <Form on:submit={confirmChange}>
+            <div class="token-selector">
+                <TokenSelector defaultToken={token} onTokenSelect={changeToken} />
+            </div>
+            <InputAsset
+                bind:valid={amountValid}
+                bind:value={amount}
+                focus
+                fluid
+                name="amount"
+                placeholder={`Enter amount of tokens`}
+                balance={$balance.quantity}
+            />
+            <div class="controls">
+                {#if token && token.price}
+                    <div class="value">≈ $ {(Number(amount) * token.price).toFixed(2)} USD</div>
+                {/if}
+                <div class="actions">
+                    <span on:click={maxBalance}>Entire Balance</span>
+                </div>
+            </div>
+        </Form>
     {/if}
-    {#if $transferData.toAccount}
-        <StatusAccount toAccount={$transferData.toAccount} />
-    {/if}
-    <StatusBalance {balance} />
-    <Form on:submit={confirmChange}>
-        <InputAsset
-            bind:valid={amountValid}
-            bind:value={amount}
-            focus
-            fluid
-            name="amount"
-            placeholder="amount to be transfered.."
-            balance={balance.quantity}
-        />
-    </Form>
     <Button
         fluid
         primary
@@ -63,10 +119,10 @@
         formValidation
         on:action={confirmChange}
     >
-        Send {amount}
-        {token.name}
-        {#if $transferData.toAccount}
-            to {$transferData.toAccount}
+        {#if $transferData.backStep}
+            Done
+        {:else}
+            Continue
         {/if}
     </Button>
 </div>

@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "dev": "snowpack dev",
+        "dev": "make dev",
         "build": "make build",
         "check": "make check",
         "format": "make format"
@@ -10,9 +10,13 @@
         "crypto": false,
         "buffer": false
     },
+    "browserslist": ">0.75%, not ie 11, not UCAndroid >0, not OperaMini all",
+    "resolutions": {
+        "acorn": "8.0.1"
+    },
     "dependencies": {
         "@greymass/eosio": "^0.4.2",
-        "@greymass/eosio-resources": "0.6.3",
+        "@greymass/eosio-resources": "0.6.4",
         "@types/feather-icons": "^4.7.0",
         "anchor-link": "^3.1.0",
         "anchor-link-browser-transport": "^3.0.0",
@@ -30,18 +34,19 @@
         "@snowpack/plugin-webpack": "^2.2.0",
         "@types/pako": "^1.0.1",
         "@types/snowpack-env": "^2.3.2",
-        "@typescript-eslint/eslint-plugin": "^4.10.0",
-        "@typescript-eslint/parser": "^4.10.0",
+        "@typescript-eslint/eslint-plugin": "^4.22.1",
+        "@typescript-eslint/parser": "^4.22.1",
         "autoprefixer": "^10.1.0",
         "eslint": "^7.15.0",
         "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-prettier": "^3.3.0",
         "eslint-plugin-svelte3": "^3.0.0",
-        "postcss": "^8.2.1",
+        "mime": "^2.5.2",
+        "postcss": "^8.2.14",
         "prettier": "^2.2.1",
         "prettier-plugin-svelte": "^2.1.0",
         "sass": "^1.30.0",
-        "snowpack": "^3.0.5",
+        "snowpack": "3.0.x",
         "svelte": "^3.35.0",
         "svelte-check": "^1.1.33",
         "svelte-preprocess": "^4.6.1",
