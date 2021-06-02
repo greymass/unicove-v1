@@ -8,9 +8,12 @@ const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
 export const isRelease = branch === 'deploy'
 
 /** App identifier, used for anchor link (session persistence). */
-export const appId = !isRelease ? `w.${branch}.gm` : 'wallet.gm'
+export const appId = !isRelease
+    ? `w.${branch.replace(/[^1-5a-z]+/g, '').slice(0, 7)}.gm`
+    : 'wallet.gm'
 
 export const version = `${branch}-${rev}`
+export const releaseVersion = `Beta 1 (${rev})`
 
 export enum ChainFeatures {
     /** eosio.namebid https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/name_bidding.cpp */

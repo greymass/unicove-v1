@@ -81,7 +81,7 @@ async function fetchData(session: LinkSession) {
             const jsonBody =
                 response &&
                 (await response.json().catch((error) => {
-                    console.log(
+                    console.warn(
                         'An error occured while parsing the token balances response body:',
                         {
                             error,
@@ -91,7 +91,7 @@ async function fetchData(session: LinkSession) {
             return jsonBody.tokens
         })
         .catch((error) => {
-            console.log('An error occured while fetching token balances:', {error})
+            console.warn('An error occured while fetching token balances:', {error})
             return []
         })
 }

@@ -31,7 +31,8 @@
         justify-content: center;
         align-items: center;
         .error {
-            color: red;
+            margin: 20px;
+            color: var(--error-red);
         }
     }
 </style>
@@ -42,6 +43,6 @@
         <Text><slot /></Text>
     </Button>
     {#if error}
-        <p class="error">That didn't go well... {error.message}</p>
+        <p class="error">Unable to login: {error.message}</p>
     {/if}
 </div>
