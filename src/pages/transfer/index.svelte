@@ -134,7 +134,7 @@
     }
     @media only screen and (max-width: 999px) {
         .container {
-            margin: 0 52px;
+            margin: 0 32px;
         }
     }
 
