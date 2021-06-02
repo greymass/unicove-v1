@@ -14,7 +14,7 @@
 <style lang="scss">
     .login {
         header {
-            margin-top: 20px;
+            margin-top: 52px;
             text-align: center;
             h1 {
                 color: var(--main-black);
@@ -29,7 +29,7 @@
                 color: var(--light-grey);
                 font-family: Inter;
                 font-style: normal;
-                font-weight: normal;
+                font-weight: 300;
                 font-size: 16px;
                 line-height: 19px;
                 letter-spacing: -0.18px;
