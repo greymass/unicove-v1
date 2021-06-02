@@ -62,7 +62,7 @@
         <span>Memo (Optional)</span>
         <br />
         <br />
-        <Input name="memo" focus fluid bind:value={memo} placeholder="Memo" />
+        <Input name="memo" fluid bind:value={memo} placeholder="Memo" />
     </div>
 {/if}
 <Button fluid primary size="large" formValidation on:action={handleConfirm}>
