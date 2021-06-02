@@ -27,7 +27,7 @@ export const activePriceTicker: Readable<number> = derived(
     [activeBlockchain],
     ([$activeBlockchain], set) =>
         priceTicker($activeBlockchain).value.subscribe((v) => {
-            if (v) {
+            if (v !== undefined) {
                 set(v)
             }
         })
