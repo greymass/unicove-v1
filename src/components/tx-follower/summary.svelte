@@ -1,6 +1,4 @@
 <script lang="ts">
-    import type {UInt32} from '@greymass/eosio'
-
     import type {TransactionStatus} from './utils'
     export let status: TransactionStatus
 

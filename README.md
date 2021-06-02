@@ -1,4 +1,4 @@
-# Greymass Wallet
+# Untitled web wallet
 
 ## Getting Started
 

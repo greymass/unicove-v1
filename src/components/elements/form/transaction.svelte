@@ -26,6 +26,7 @@
         updateAccount(account_name, $activeSession!.chainId, true)
     }
 
+    // TODO: Needs reimplemented within transaction follower to reset the context
     function complete() {
         context.clear()
         if (resetCallback) {
