@@ -2,7 +2,7 @@ import type {Asset, LinkSession} from 'anchor-link'
 import {derived, writable} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 import type {SessionLike} from './auth'
-import {ChainConfig, chainConfig} from './config'
+import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
 import {priceTicker} from './price-ticker'
 import {accountProvider} from './stores/account-provider'
@@ -14,9 +14,13 @@ export const appReady = writable<boolean>(false)
 export const activeSession = writable<LinkSession | undefined>(undefined)
 
 /** Configuration of the currently selected blockchain */
-export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) =>
-    chainConfig(session!.chainId)
-)
+export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) => {
+    if (session) {
+        return chainConfig(session.chainId)
+    } else {
+        return chains[0]
+    }
+})
 
 /** Active price ticker for the currently selected blockchain */
 export const activePriceTicker: Readable<number> = derived(
