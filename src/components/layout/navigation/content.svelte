@@ -155,7 +155,7 @@
 <nav class:floating>
     <header>
         <div class="title">
-            <div>Greymass Wallet</div>
+            <div>Untitled web wallet</div>
             <div class="version">
                 {#if isRelease}
                     {releaseVersion}
