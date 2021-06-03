@@ -218,14 +218,14 @@
             {#if balance.quantity}
                 <Number asset={balance.quantity} />
             {/if}
-            <div class="value">
-                {#if $token.price}
-                    {fiatFormat($token.price * balance.quantity.value, 2)}
-                {/if}
-            </div>
             <div class="price">
                 {#if $token.price}
                     {fiatFormat($token.price, 4)}
+                {/if}
+            </div>
+            <div class="value">
+                {#if $token.price}
+                    {fiatFormat($token.price * balance.quantity.value, 2)}
                 {/if}
             </div>
             <div class="controls">
