@@ -190,32 +190,34 @@
                 </a>
             </li>
         {/each}
-        <li
-            class="advanced"
-            on:click={() => {
-                preferences.expandNavbarAdvanced = !expandAdvanced
-            }}
-        >
-            <span class="name">Advanced</span>
-            <span class="icon">
-                <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
-            </span>
-        </li>
-        <li>
-            {#if $preferences.expandNavbarAdvanced}
-                <ul>
-                    {#each advancedNavigation as item}
-                        <li class:active={pathMatches(item)}>
-                            <a href={item.path}>
-                                <span class="icon">
-                                    <Icon name={item.icon} />
-                                </span>
-                                <span class="name">{item.name}</span>
-                            </a>
-                        </li>
-                    {/each}
-                </ul>
-            {/if}
-        </li>
+        {#if advancedNavigation.length}
+            <li
+                class="advanced"
+                on:click={() => {
+                    preferences.expandNavbarAdvanced = !expandAdvanced
+                }}
+            >
+                <span class="name">Advanced</span>
+                <span class="icon">
+                    <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
+                </span>
+            </li>
+            <li>
+                {#if $preferences.expandNavbarAdvanced}
+                    <ul>
+                        {#each advancedNavigation as item}
+                            <li class:active={pathMatches(item)}>
+                                <a href={item.path}>
+                                    <span class="icon">
+                                        <Icon name={item.icon} />
+                                    </span>
+                                    <span class="name">{item.name}</span>
+                                </a>
+                            </li>
+                        {/each}
+                    </ul>
+                {/if}
+            </li>
+        {/if}
     </ul>
 </nav>
