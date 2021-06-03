@@ -123,9 +123,9 @@
         }
     )
 
+    const currencyFormatter = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'})
     function fiatFormat(value: number) {
-        const fiatSymbol = '$ '
-        return `${fiatSymbol}${value.toFixed(4)}`
+        return currencyFormatter.format(value)
     }
 
     function refresh() {
