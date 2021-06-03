@@ -198,6 +198,12 @@
         .icon {
             float: right;
             padding: 7px;
+            width: 60px;
+            height: 60px;
+            line-height: 46px;
+            font-size: 38px;
+            font-weight: 300;
+            text-align: center;
             color: var(--always-white);
             background: var(--main-green);
             border-radius: 50%;
@@ -239,7 +245,7 @@
                         <p class="symbol">{$totalSystemTokens.symbol.name}</p>
                     </Segment>
                     <Segment>
-                        <div class="icon"><Icon name="dollar-sign" /></div>
+                        <div class="icon">$</div>
                         <p class="label">Account Value</p>
                         <p class="amount">{fiatFormat($totalUsdValue)}</p>
                         <p class="symbol">USD</p>
