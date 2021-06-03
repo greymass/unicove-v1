@@ -110,9 +110,8 @@
         padding: 15px 0px;
         text-align: right;
         .toggle {
-            font-family: Inter;
-            font-style: normal;
             font-weight: bold;
+            margin-right: 10px;
             font-size: 10px;
             line-height: 12px;
             display: flex;
@@ -120,15 +119,17 @@
             text-align: center;
             letter-spacing: 0.1px;
             text-transform: uppercase;
-            padding: 15px;
+            padding: 10px;
             cursor: pointer;
             color: var(--main-blue);
-            opacity: 0.3;
+            border-radius: 8px;
             &.active {
                 opacity: 1;
+                background-color: var(--main-grey);
+                color: var(--main-black);
             }
-            :global(.icon) {
-                margin-right: 0.5em;
+            &:last-child {
+                margin-right: 0;
             }
         }
     }
@@ -154,16 +155,14 @@
                 class:active={$transferData.step !== Step.Receive}
                 on:click={() => ($transferData.step = Step.Recipient)}
             >
-                <Icon name="arrow-up" />
-                <Text>Send</Text>
+                <Text>↑ Send</Text>
             </span>
             <span
                 class="toggle"
                 class:active={$transferData.step === Step.Receive}
                 on:click={() => ($transferData.step = Step.Receive)}
             >
-                <Icon name="arrow-down" />
-                <Text>Receive</Text>
+                <Text>↓ Receive</Text>
             </span>
         </div>
     </span>
