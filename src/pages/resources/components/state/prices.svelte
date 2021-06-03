@@ -14,21 +14,23 @@
     export let resource = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
 
+    const {PowerUp, REX, Staking} = ChainFeatures
+
     const hasPowerUp: Readable<boolean | undefined> = derived(
         activeBlockchain,
         ($activeBlockchain) => {
-            return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)
+            return $activeBlockchain && $activeBlockchain.chainFeatures.has(PowerUp)
         }
     )
 
     const hasREX: Readable<boolean | undefined> = derived(activeBlockchain, ($activeBlockchain) => {
-        return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.REX)
+        return $activeBlockchain && $activeBlockchain.chainFeatures.has(REX)
     })
 
     const hasStaking: Readable<boolean | undefined> = derived(
         activeBlockchain,
         ($activeBlockchain) => {
-            return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)
+            return $activeBlockchain && $activeBlockchain.chainFeatures.has(Staking)
         }
     )
 

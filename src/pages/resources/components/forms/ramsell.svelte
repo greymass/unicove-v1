@@ -24,6 +24,8 @@
     let kb: Writable<string> = writable('')
     let error: string | undefined
 
+    const {BuyRAM} = ChainFeatures
+
     // Create a derived store of the field we expect to be modified
     export const field = derived([currentAccount], ([$currentAccount]) => {
         if ($currentAccount) {
@@ -81,7 +83,7 @@
 </style>
 
 <Segment color="white">
-    {#if $activeBlockchain?.chainFeatures.has(ChainFeatures.BuyRAM)}
+    {#if $activeBlockchain?.chainFeatures.has(BuyRAM)}
         <Form on:submit={sellram}>
             <p>Amount of kb to sell:</p>
             <InputAsset focus fluid name="kb" placeholder={`number of kb`} bind:value={$kb} />
