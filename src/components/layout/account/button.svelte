@@ -18,8 +18,9 @@
         margin: 0 6px 0 auto;
         .icon {
             color: var(--main-blue);
-            line-height: 14px;
+            line-height: 16px;
             margin-right: 10px;
+            vertical-align: middle;
         }
     }
     @media only screen and (max-width: 600px) {

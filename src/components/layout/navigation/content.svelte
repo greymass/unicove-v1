@@ -74,9 +74,9 @@
             border-bottom: 1px solid var(--divider-grey);
         }
 
-        ul {
+        > ul {
             margin-top: 26px;
-            li {
+            > li {
                 border-radius: 8px;
                 a {
                     color: var(--main-blue);
@@ -99,7 +99,10 @@
                     }
                 }
                 .icon {
-                    padding: 0 10px;
+                    padding: 8px;
+                    :global(.icon) {
+                        vertical-align: middle;
+                    }
                 }
                 .name {
                     padding-left: 5px;
@@ -118,9 +121,13 @@
                     .icon {
                         float: right;
                         padding: 0;
+                        margin-right: 10px;
                         :global(.icon) {
                             vertical-align: middle;
                         }
+                    }
+                    &:hover {
+                        background-color: transparent;
                     }
                 }
                 ul {

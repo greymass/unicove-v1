@@ -37,11 +37,13 @@
         }
     }
     .header {
-        border-bottom: 1px solid var(--dark-grey);
+        border-bottom: 1px solid var(--divider-grey);
         color: var(--dark-grey);
+        line-height: 16px;
         margin: 24px;
         padding-bottom: 21px;
         .icon {
+            vertical-align: middle;
             color: var(--main-blue);
         }
     }

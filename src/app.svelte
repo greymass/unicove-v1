@@ -66,7 +66,7 @@
         --main-red: #ff931e;
 
         --background-highlight: #fff;
-        --background-highlight-hover: rgba(255, 255, 255, 0.3);
+        --background-highlight-hover: #fbfbfe;
 
         --dark-grey: #b7c1cb;
         --divider-grey: #e0e6ee;

@@ -65,7 +65,7 @@
 
     .table-container {
         max-height: 60vh;
-        overflow: scroll;
+        overflow-y: scroll;
         margin-top: 20px;
 
         table {

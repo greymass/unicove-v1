@@ -113,8 +113,8 @@
         }
         .page-header {
             top: 0;
-            left: 0;
-            right: 0;
+            left: 32px;
+            right: 32px;
         }
         .page-main {
             min-height: calc(100vh - #{$menubar_height} - #{$grid_gap});
@@ -124,6 +124,13 @@
             .content {
                 padding: 0;
             }
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        .page-header {
+            left: 0;
+            right: 0;
         }
     }
 </style>

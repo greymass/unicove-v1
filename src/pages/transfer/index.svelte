@@ -107,7 +107,7 @@
     }
     .options {
         display: inline-flex;
-        padding: 15px 0px;
+        padding: 22px 0px 15px;
         text-align: right;
         .toggle {
             font-weight: bold;
@@ -143,6 +143,7 @@
         .container {
             border: none;
             padding: 12px;
+            margin: 0 8px;
         }
     }
 </style>

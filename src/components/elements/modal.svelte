@@ -21,7 +21,7 @@
         height: 100%;
         overflow: auto; /* Enable scroll if needed */
         background-color: rgba(0, 0, 0, 0.4);
-        z-index: 999;
+        z-index: 1001;
     }
 
     .modal {
@@ -46,7 +46,7 @@
         width: 80%;
         max-width: 300px;
 
-        z-index: 1000;
+        z-index: 2000;
 
         &.large {
             max-width: 500px;
