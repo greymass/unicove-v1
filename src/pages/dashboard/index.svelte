@@ -154,21 +154,24 @@
     }
 
     .balances {
+        :global(.segment) {
+            display: flex;
+            align-items: center;
+        }
+        .info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
         .label {
-            font-family: Inter;
-            font-style: normal;
             font-weight: bold;
             font-size: 10px;
             line-height: 12px;
-            display: flex;
-            align-items: center;
             letter-spacing: 0.1px;
             text-transform: uppercase;
             color: var(--dark-grey);
         }
         .amount {
-            font-family: Inter;
-            font-style: normal;
             font-weight: bold;
             font-size: 18px;
             line-height: 22px;
@@ -178,39 +181,20 @@
             color: var(--main-black);
         }
         .symbol {
-            font-family: Inter;
-            font-style: normal;
-            font-weight: normal;
             font-size: 16px;
             line-height: 19px;
             letter-spacing: -0.26px;
             color: var(--main-black);
         }
-        .image {
-            float: right;
-            padding: 7px;
-            border-radius: 50%;
-            :global(img) {
-                height: 46px;
-                width: 46px;
-            }
-        }
         .icon {
-            float: right;
-            padding: 7px;
             width: 60px;
-            height: 60px;
-            line-height: 46px;
+            line-height: 60px;
             font-size: 38px;
             font-weight: 300;
             text-align: center;
             color: var(--always-white);
             background: var(--main-green);
             border-radius: 50%;
-            :global(.icon) {
-                height: 46px;
-                width: 46px;
-            }
         }
     }
 
@@ -239,16 +223,24 @@
             <div class="balances">
                 <SegmentGroup>
                     <Segment>
-                        <div class="image"><TokenImage tokenKey={$systemTokenKey} /></div>
-                        <p class="label">Total {$totalSystemTokens.symbol.name} Balance</p>
-                        <p class="amount">{$totalSystemTokens.value}</p>
-                        <p class="symbol">{$totalSystemTokens.symbol.name}</p>
+                        <div class="info">
+                            <span class="label">
+                                Total {$totalSystemTokens.symbol.name} Balance
+                            </span>
+                            <span class="amount">{$totalSystemTokens.value}</span>
+                            <span class="symbol">{$totalSystemTokens.symbol.name}</span>
+                        </div>
+                        <div class="image">
+                            <TokenImage width="60" height="60" tokenKey={$systemTokenKey} />
+                        </div>
                     </Segment>
                     <Segment>
+                        <div class="info">
+                            <span class="label">Account Value</span>
+                            <span class="amount">{fiatFormat($totalUsdValue)}</span>
+                            <span class="symbol">USD</span>
+                        </div>
                         <div class="icon">$</div>
-                        <p class="label">Account Value</p>
-                        <p class="amount">{fiatFormat($totalUsdValue)}</p>
-                        <p class="symbol">USD</p>
                     </Segment>
                 </SegmentGroup>
             </div>

@@ -7,7 +7,7 @@
         background: var(--main-grey);
         border-radius: 20px;
         color: var(--main-black);
-        padding: 16px 26px;
+        padding: 22px 26px;
         &.white {
             background: var(--main-white);
         }
