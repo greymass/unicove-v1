@@ -27,7 +27,7 @@
     let amount: Writable<string> = writable('')
     let error: string | undefined
 
-    const {PowerUp} = ChainFeatures
+    const {PowerUp: PowerUpFeature} = ChainFeatures
 
     const cost: Readable<Asset | undefined> = derived(
         [activeBlockchain, amount, powerupPrice],
@@ -108,7 +108,7 @@
 </style>
 
 <Segment color="white">
-    {#if $activeBlockchain?.chainFeatures.has(PowerUp)}
+    {#if $activeBlockchain?.chainFeatures.has(PowerUpFeature)}
         <Form on:submit={powerup}>
             <p>Amount of {unit} to rent from PowerUp.</p>
             <Input
