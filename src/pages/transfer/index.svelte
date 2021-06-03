@@ -17,7 +17,6 @@
     import {transferData, Step} from '~/pages/transfer/transfer'
     import {syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/transfer/fio'
 
-    import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
     import TransactionForm from '~/components/elements/form/transaction.svelte'
     import Page from '~/components/layout/page.svelte'
