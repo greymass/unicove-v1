@@ -19,7 +19,7 @@
     export let isValid: any = () => true
 
     let timer: number | undefined
-    let delay: number = 250
+    let delay: number = 300
 
     // Get parent form context (if exists)
     const form: Form = getContext('form')
