@@ -67,22 +67,22 @@
     })
 
     function handleBack() {
-      transferData.update((data) => ({
-          ...data,
-          step: previousStep(data.step),
-          backStep: undefined,
-        })
+        transferData.update((data) => ({
+            ...data,
+            step: previousStep(data.step),
+            backStep: undefined,
+        }))
     }
 
     function previousStep(step) {
-      switch (step) {
-        case Step.Amount:
-          return Step.Recipient
-        case Step.Confirm:
-          return Step.Amount
-        default:
-          return undefined
-      }
+        switch (step) {
+            case Step.Amount:
+                return Step.Recipient
+            case Step.Confirm:
+                return Step.Amount
+            default:
+                return undefined
+        }
     }
 
     async function handleTransfer() {
@@ -240,7 +240,7 @@
         <div class="controls">
             {#if $transferData.step > 1}
                 <Button on:action={handleBack}>
-                  <Icon size="medium" name="arrow-left" />Back
+                    <Icon size="medium" name="arrow-left" />Back
                 </Button>
             {:else}
                 <Button href="/">Cancel</Button>

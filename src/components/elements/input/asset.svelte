@@ -20,9 +20,9 @@
     let errorMessage: string | undefined
 
     $: {
-      if (value) {
-        errorMessage = undefined
-      }
+        if (value) {
+            errorMessage = undefined
+        }
     }
 
     const isValid = (value: string) => {
