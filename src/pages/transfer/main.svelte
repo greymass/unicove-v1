@@ -74,14 +74,14 @@
         }))
     }
 
-    function previousStep(step) {
+    function previousStep(step: Step) {
         switch (step) {
             case Step.Amount:
                 return Step.Recipient
             case Step.Confirm:
                 return Step.Amount
             default:
-                return undefined
+                return Step.Recipient
         }
     }
 

@@ -2,7 +2,6 @@
     import {activeBlockchain} from '~/store'
 
     import Button from '~/components/elements/button.svelte'
-    import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
     import Input from '~/components/elements/input.svelte'
 
