@@ -12,6 +12,7 @@ const transport = new Transport({
 })
 const link = new Link({
     chains: chains.map((chain) => ({chainId: chain.chainId, nodeUrl: getClient(chain)})),
+    encodeChainIds: false,
     transport,
 })
 
