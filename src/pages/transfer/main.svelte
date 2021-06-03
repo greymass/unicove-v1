@@ -112,6 +112,7 @@
         :global(.button) {
             background: none;
             color: var(--main-blue);
+            font-size: 10px;
             text-transform: uppercase;
         }
     }

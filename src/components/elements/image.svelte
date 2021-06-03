@@ -6,8 +6,8 @@
     export let width: string | undefined = undefined
     export let height: string | undefined = undefined
 
-    let srcToUse: string = src
-    let altToUse: string = alt
+    $: srcToUse = src
+    $: altToUse = alt
 
     function useImageFallback() {
         srcToUse = fallbackSrc

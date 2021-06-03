@@ -66,6 +66,5 @@
     </div>
 {/if}
 <Button fluid primary size="large" formValidation on:action={handleConfirm}>
-    <Icon name="edit-3" />
     <Text>Sign Transaction</Text>
 </Button>

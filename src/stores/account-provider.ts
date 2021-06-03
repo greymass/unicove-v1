@@ -1,4 +1,4 @@
-import {API, Asset, Name} from 'anchor-link'
+import {API, Asset, Name, Serializer} from 'anchor-link'
 import type {ChainId, NameType} from 'anchor-link'
 import {get, writable} from 'svelte/store'
 import type {Readable, Writable} from 'svelte/store'
@@ -21,12 +21,16 @@ export const accountProvider: Writable<AccountResponse> = writable(initialAccoun
     // Update on a set interval
     const interval = setInterval(() => {
         const session = get(activeSession)
-        updateAccount(session!.auth.actor, session!.chainId)
+        if (session) {
+            updateAccount(session.auth.actor, session.chainId)
+        }
     }, 30000)
 
     // Subscribe to changes to the active session and update on change
     const unsubscribe = activeSession.subscribe((session) => {
-        updateAccount(session!.auth.actor, session!.chainId)
+        if (session) {
+            updateAccount(session.auth.actor, session.chainId)
+        }
     })
 
     return () => {
@@ -76,10 +80,10 @@ function accountKey(name: Name, chainId: ChainId) {
 
 export async function storeAccount(account: API.v1.AccountObject, chainId: ChainId) {
     const db = await dbPromise
-    db.put(
+    await db.put(
         'account-cache',
         {
-            account: JSON.parse(JSON.stringify(account)),
+            account: Serializer.objectify(account),
             updated: new Date(),
         },
         accountKey(account.account_name, chainId)

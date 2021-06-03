@@ -163,6 +163,7 @@
             .hover {
                 --gradient-size: 500px;
             }
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 550;
             letter-spacing: -0.18px;
