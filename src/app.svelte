@@ -90,7 +90,7 @@
         --background-highlight: #3a3a3c;
         --background-highlight-hover: #3a3a3c57;
 
-        --light-blue: #3a3a3c;
+        --light-blue: #2a415e;
         --dark-grey: #8e8e93;
         --divider-grey: #3a3a3c;
     }

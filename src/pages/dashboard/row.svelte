@@ -71,28 +71,19 @@
                 flex: 0;
             }
             &:hover {
+                background-color: var(--light-blue);
                 .controls :global(.button) {
                     display: block;
                 }
             }
-
             .logo {
                 .wrapper {
                     background-color: var(--main-grey);
-                    padding: 3px;
+                    width: 24px;
+                    height: 24px;
                     border-radius: 50%;
-                    :global(img) {
-                        height: 18px;
-                        width: 18px;
-                    }
-                    &:before {
-                        content: '';
-                        float: left;
-                        width: auto;
-                    }
                 }
             }
-
             .price,
             .value {
                 justify-content: flex-end;
@@ -201,7 +192,7 @@
         <div class="row" on:click={toggle}>
             <div class="logo">
                 <div class="wrapper">
-                    <TokenImage tokenKey={$token.key} />
+                    <TokenImage width="24" height="24" tokenKey={$token.key} />
                 </div>
             </div>
             <div class="token">
