@@ -113,8 +113,8 @@
         }
         .page-header {
             top: 0;
-            left: 32px;
-            right: 32px;
+            left: 0;
+            right: 0;
         }
         .page-main {
             min-height: calc(100vh - #{$menubar_height} - #{$grid_gap});

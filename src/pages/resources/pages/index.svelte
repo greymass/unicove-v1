@@ -14,28 +14,30 @@
     import Text from '~/components/elements/text.svelte'
     import SegmentGroup from '~/components/elements/segment/group.svelte'
 
+    const {BuyRAM, PowerUp, REX, Staking} = ChainFeatures
+
     const hasBuyRAM: Readable<boolean | undefined> = derived(
         activeBlockchain,
         ($activeBlockchain) => {
-            return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.BuyRAM)
+            return $activeBlockchain && $activeBlockchain.chainFeatures.has(BuyRAM)
         }
     )
 
     const hasPowerUp: Readable<boolean | undefined> = derived(
         activeBlockchain,
         ($activeBlockchain) => {
-            return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.PowerUp)
+            return $activeBlockchain && $activeBlockchain.chainFeatures.has(PowerUp)
         }
     )
 
     const hasREX: Readable<boolean | undefined> = derived(activeBlockchain, ($activeBlockchain) => {
-        return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.REX)
+        return $activeBlockchain && $activeBlockchain.chainFeatures.has(REX)
     })
 
     const hasStaking: Readable<boolean | undefined> = derived(
         activeBlockchain,
         ($activeBlockchain) => {
-            return $activeBlockchain && $activeBlockchain.chainFeatures.has(ChainFeatures.Staking)
+            return $activeBlockchain && $activeBlockchain.chainFeatures.has(Staking)
         }
     )
 </script>
