@@ -69,12 +69,12 @@
     function handleBack() {
       transferData.update((data) => ({
           ...data,
-          step: data.backStep,
-          backStep: backStepFromStep(),
-      }))
+          step: previousStep(data.step),
+          backStep: undefined,
+        })
     }
 
-    function backStepFromStep(step) {
+    function previousStep(step) {
       switch (step) {
         case Step.Amount:
           return Step.Recipient
@@ -239,7 +239,9 @@
     {#if ![Step.Receive, Step.Sending].includes($transferData.step)}
         <div class="controls">
             {#if $transferData.step > 1}
-                <Button on:action={handleBack}>Back</Button>
+                <Button on:action={handleBack}>
+                  <Icon size="medium" name="arrow-left" />Back
+                </Button>
             {:else}
                 <Button href="/">Cancel</Button>
             {/if}
