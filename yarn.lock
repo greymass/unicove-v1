@@ -910,25 +910,25 @@
     hash.js "^1.0.0"
     tslib "^2.0.3"
 
-"@nodelib/fs.scandir@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz#d4b3549a5db5de2683e0c1071ab4f140904bbf69"
-  integrity sha512-33g3pMJk3bg5nXbL/+CY6I2eJDzZAni49PfJnL5fghPTggPvBd/pFNSgJsdAgWptuFu7qq/ERvOYFlhvsLTCKA==
+"@nodelib/fs.scandir@2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
+  integrity sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==
   dependencies:
-    "@nodelib/fs.stat" "2.0.4"
+    "@nodelib/fs.stat" "2.0.5"
     run-parallel "^1.1.9"
 
-"@nodelib/fs.stat@2.0.4", "@nodelib/fs.stat@^2.0.2":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-2.0.4.tgz#a3f2dd61bab43b8db8fa108a121cfffe4c676655"
-  integrity sha512-IYlHJA0clt2+Vg7bccq+TzRdJvv19c2INqBSsoOLp1je7xjtr7J26+WXR72MCdvU9q1qTzIWDfhMf+DRvQJK4Q==
+"@nodelib/fs.stat@2.0.5", "@nodelib/fs.stat@^2.0.2":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-2.0.5.tgz#5bd262af94e9d25bd1e71b05deed44876a222e8b"
+  integrity sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A==
 
 "@nodelib/fs.walk@^1.2.3":
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/@nodelib/fs.walk/-/fs.walk-1.2.6.tgz#cce9396b30aa5afe9e3756608f5831adcb53d063"
-  integrity sha512-8Broas6vTtW4GIXTAHDoE32hnN2M5ykgCpWGbuXHQ15vEMqr23pB76e/GZcYsZCHALv50ktd24qhEyKr6wBtow==
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@nodelib/fs.walk/-/fs.walk-1.2.7.tgz#94c23db18ee4653e129abd26fb06f870ac9e1ee2"
+  integrity sha512-BTIhocbPBSrRmHxOAJFtR18oLhxTtAFDAvL8hY1S3iU8k+E60W/YFs4jrixGzQjMpF4qPXxIQHcjVD9dz1C2QA==
   dependencies:
-    "@nodelib/fs.scandir" "2.1.4"
+    "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
 "@npmcli/move-file@^1.0.1":
@@ -1327,9 +1327,9 @@ alphanum-sort@^1.0.0:
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
 anchor-link-browser-transport@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.2.0.tgz#8d824c27e46951f87eef36b3d0fc603b9da612a0"
-  integrity sha512-cI2yMTkaMLVLO7/v/rWPtStRLjUEB0ZJcylRFJCucYsaGXM/ZoE0VY3AnMZaz0CznCWzbfwXctJzLbVSV1GUJw==
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.2.1.tgz#a2d339640da9743ec481014d85566cd8f3f33f7e"
+  integrity sha512-WQgk5ifXBNdvEM/YOz3ZQhDNnqbDLCq+JrXaiartEtUbnOJ/43cmRECJ1J+wNIwwnwL0VDfoLAb5WSFjwIt02g==
   dependencies:
     tslib "^2.0.3"
 
@@ -1855,9 +1855,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001219, caniuse-lite@^1.0.30001230:
-  version "1.0.30001233"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001233.tgz#b7cb4a377a4b12ed240d2fa5c792951a06e5f2c4"
-  integrity sha512-BmkbxLfStqiPA7IEzQpIk0UFZFf3A4E6fzjPJ6OR+bFC2L8ES9J8zGA/asoi47p8XDVkev+WJo2I2Nc8c/34Yg==
+  version "1.0.30001234"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001234.tgz#8fc2e709e3b0679d7af7f073a1c661155c39b975"
+  integrity sha512-a3gjUVKkmwLdNysa1xkUAwN2VfJUJyVW47rsi3aCbkRCtbHAfo+rOsCqVw29G6coQ8gzAPb5XBXwiGHwme3isA==
 
 chalk@^2.0.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
