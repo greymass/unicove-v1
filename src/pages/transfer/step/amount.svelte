@@ -6,6 +6,7 @@
     import type {Readable} from 'svelte/store'
 
     import InputAsset from '~/components/elements/input/asset.svelte'
+    import InputLabel from '~/components/elements/input/label.svelte'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
 
@@ -89,9 +90,11 @@
 <div class="container">
     {#if $balance}
         <Form on:submit={confirmChange}>
+            <InputLabel>Token</InputLabel>
             <div class="token-selector">
                 <TokenSelector defaultToken={token} onTokenSelect={changeToken} />
             </div>
+            <InputLabel>Amount</InputLabel>
             <InputAsset
                 bind:valid={amountValid}
                 bind:value={amount}
