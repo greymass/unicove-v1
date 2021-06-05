@@ -1,5 +1,6 @@
 <script lang="ts">
     export let color = ''
+    export let bordered = false
 </script>
 
 <style type="scss">
@@ -11,12 +12,15 @@
         &.white {
             background: var(--main-white);
         }
+        &.bordered {
+            border: 1px solid var(--divider-grey);
+        }
         &.transparent {
             background: transparent;
         }
     }
 </style>
 
-<div class="segment {color}">
+<div class="segment {color}" class:bordered>
     <slot />
 </div>
