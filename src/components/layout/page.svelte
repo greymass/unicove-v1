@@ -126,6 +126,13 @@
             }
         }
     }
+
+    @media only screen and (max-width: 600px) {
+        .page-header {
+            left: 0;
+            right: 0;
+        }
+    }
 </style>
 
 <div

@@ -28,6 +28,8 @@
     let amount: Writable<string> = writable('')
     let error: string | undefined
 
+    const {REX} = ChainFeatures
+
     const cost: Readable<Asset | undefined> = derived(
         [activeBlockchain, amount, rexPrice],
         ([$activeBlockchain, $amount, $rexPrice]) => {
@@ -125,7 +127,7 @@
 </style>
 
 <Segment color="white">
-    {#if $activeBlockchain?.chainFeatures.has(ChainFeatures.REX)}
+    {#if $activeBlockchain?.chainFeatures.has(REX)}
         <Form on:submit={rex}>
             <p>Amount of {unit} to rent from REX.</p>
             <Input

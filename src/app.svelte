@@ -66,7 +66,7 @@
         --main-red: #ff931e;
 
         --background-highlight: #fff;
-        --background-highlight-hover: rgba(255, 255, 255, 0.3);
+        --background-highlight-hover: #fbfbfe;
 
         --dark-grey: #b7c1cb;
         --divider-grey: #e0e6ee;
@@ -90,7 +90,7 @@
         --background-highlight: #3a3a3c;
         --background-highlight-hover: #3a3a3c57;
 
-        --light-blue: #3a3a3c;
+        --light-blue: #2a415e;
         --dark-grey: #8e8e93;
         --divider-grey: #3a3a3c;
     }

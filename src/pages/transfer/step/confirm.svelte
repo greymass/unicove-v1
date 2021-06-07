@@ -2,7 +2,6 @@
     import {activeBlockchain} from '~/store'
 
     import Button from '~/components/elements/button.svelte'
-    import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
     import Input from '~/components/elements/input.svelte'
 
@@ -62,10 +61,9 @@
         <span>Memo (Optional)</span>
         <br />
         <br />
-        <Input name="memo" fluid bind:value={memo} placeholder="Memo" />
+        <Input name="memo" assumeValid fluid bind:value={memo} placeholder="Memo" />
     </div>
 {/if}
 <Button fluid primary size="large" formValidation on:action={handleConfirm}>
-    <Icon name="edit-3" />
     <Text>Sign Transaction</Text>
 </Button>

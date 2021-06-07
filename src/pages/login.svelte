@@ -125,7 +125,7 @@
 <Page>
     <div class="login">
         <header>
-            <h1>Greymass Web Wallet</h1>
+            <h1>Untitled Web Wallet</h1>
             <p>The easiest way to manage your EOSIO account.</p>
         </header>
         <ButtonLogin>Login with Anchor</ButtonLogin>
@@ -144,7 +144,7 @@
     </div>
     <div class="info">
         <SegmentGroup>
-            <Segment color="white">
+            <Segment color="white" bordered>
                 <div class="box">
                     <div class="icon">
                         <Icon name="download" size="large" />
@@ -154,7 +154,7 @@
                     <a href="https://greymass.com/anchor/download">Download Anchor</a>
                 </div>
             </Segment>
-            <Segment color="white">
+            <Segment color="white" bordered>
                 <div class="box">
                     <div class="icon">
                         <Icon name="message-circle" size="large" />

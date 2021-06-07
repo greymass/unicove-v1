@@ -66,6 +66,25 @@
         return undefined
     })
 
+    function handleBack() {
+        transferData.update((data) => ({
+            ...data,
+            step: previousStep(data.step),
+            backStep: undefined,
+        }))
+    }
+
+    function previousStep(step: Step) {
+        switch (step) {
+            case Step.Amount:
+                return Step.Recipient
+            case Step.Confirm:
+                return Step.Amount
+            default:
+                return Step.Recipient
+        }
+    }
+
     async function handleTransfer() {
         transferData.update((data) => ({
             ...data,
@@ -112,6 +131,7 @@
         :global(.button) {
             background: none;
             color: var(--main-blue);
+            font-size: 10px;
             text-transform: uppercase;
         }
     }
@@ -219,7 +239,9 @@
     {#if ![Step.Receive, Step.Sending].includes($transferData.step)}
         <div class="controls">
             {#if $transferData.step > 1}
-                <Button on:action={resetData}>Restart</Button>
+                <Button on:action={handleBack}>
+                    <Icon size="medium" name="arrow-left" />Back
+                </Button>
             {:else}
                 <Button href="/">Cancel</Button>
             {/if}

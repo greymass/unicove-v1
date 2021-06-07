@@ -26,6 +26,8 @@
     let cpu: Writable<string> = writable('')
     let net: Writable<string> = writable('')
 
+    const {Staking} = ChainFeatures
+
     const amountCPU: Readable<Asset> = derived(cpu, ($cpu) => {
         let amount = parseFloat($cpu)
         if (isNaN(amount)) {
@@ -88,7 +90,7 @@
 </style>
 
 <Segment color="white">
-    {#if $activeBlockchain?.chainFeatures.has(ChainFeatures.Staking)}
+    {#if $activeBlockchain?.chainFeatures.has(Staking)}
         <Form on:submit={stake}>
             {#if resource === 'cpu'}
                 <p>Amount of {$activeBlockchain.coreTokenSymbol.name} to stake as CPU:</p>

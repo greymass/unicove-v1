@@ -70,7 +70,7 @@
 <div class="container">
     <div class="token">Token</div>
     <div class="quantity">Balance</div>
-    <div class="value">Value</div>
     <div class="price">Price</div>
+    <div class="value">Value</div>
     <div class="controls" />
 </div>

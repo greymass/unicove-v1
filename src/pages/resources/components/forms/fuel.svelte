@@ -8,6 +8,8 @@
 
     import Progress from '~/components/elements/progress.svelte'
 
+    const {Fuel} = ChainFeatures
+
     interface ResourceProviderQuota {
         /** The name of the quota, as defined by the resource provider */
         name: string
@@ -209,7 +211,7 @@
 {#await loading}
     <p>Hang on, fetching balances and stuff...</p>
 {:then _}
-    {#if $activeBlockchain?.chainFeatures.has(ChainFeatures.Fuel)}
+    {#if $activeBlockchain?.chainFeatures.has(Fuel)}
         {#each quotas as quota}
             <div class="quota">
                 <p class="name">

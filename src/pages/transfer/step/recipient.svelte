@@ -7,6 +7,7 @@
     import type {Token} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
+    import InputLabel from '~/components/elements/input/label.svelte'
     import InputAccountLookup from '~/components/elements/input/account/lookup.svelte'
     import InputPublicKey from '~/components/elements/input/publicKey.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -39,6 +40,7 @@
 <div class="container">
     {#if balance && token}
         <Form on:submit={confirmChange}>
+            <InputLabel>To</InputLabel>
             {#if $activeBlockchain && $activeBlockchain.id === 'fio'}
                 <InputPublicKey
                     bind:value={toAddress}

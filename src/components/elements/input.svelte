@@ -17,9 +17,10 @@
     let ref: HTMLInputElement
 
     export let isValid: any = () => true
+    export let assumeValid: boolean = false
 
     let timer: number | undefined
-    let delay: number = 250
+    let delay: number = 300
 
     // Get parent form context (if exists)
     const form: Form = getContext('form')
@@ -45,13 +46,13 @@
         if (form) {
             form.onChange({
                 name,
-                valid: false,
+                valid: assumeValid,
                 value,
             })
         }
         dispatch('changed', {
             name,
-            valid: false,
+            valid: assumeValid,
             value,
         })
     }

@@ -74,9 +74,9 @@
             border-bottom: 1px solid var(--divider-grey);
         }
 
-        ul {
+        > ul {
             margin-top: 26px;
-            li {
+            > li {
                 border-radius: 8px;
                 a {
                     color: var(--main-blue);
@@ -99,7 +99,10 @@
                     }
                 }
                 .icon {
-                    padding: 0 10px;
+                    padding: 8px;
+                    :global(.icon) {
+                        vertical-align: middle;
+                    }
                 }
                 .name {
                     padding-left: 5px;
@@ -118,9 +121,13 @@
                     .icon {
                         float: right;
                         padding: 0;
+                        margin-right: 10px;
                         :global(.icon) {
                             vertical-align: middle;
                         }
+                    }
+                    &:hover {
+                        background-color: transparent;
                     }
                 }
                 ul {
@@ -183,32 +190,34 @@
                 </a>
             </li>
         {/each}
-        <li
-            class="advanced"
-            on:click={() => {
-                preferences.expandNavbarAdvanced = !expandAdvanced
-            }}
-        >
-            <span class="name">Advanced</span>
-            <span class="icon">
-                <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
-            </span>
-        </li>
-        <li>
-            {#if $preferences.expandNavbarAdvanced}
-                <ul>
-                    {#each advancedNavigation as item}
-                        <li class:active={pathMatches(item)}>
-                            <a href={item.path}>
-                                <span class="icon">
-                                    <Icon name={item.icon} />
-                                </span>
-                                <span class="name">{item.name}</span>
-                            </a>
-                        </li>
-                    {/each}
-                </ul>
-            {/if}
-        </li>
+        {#if advancedNavigation.length}
+            <li
+                class="advanced"
+                on:click={() => {
+                    preferences.expandNavbarAdvanced = !expandAdvanced
+                }}
+            >
+                <span class="name">Advanced</span>
+                <span class="icon">
+                    <Icon name={expandAdvanced ? 'chevron-down' : 'chevron-right'} />
+                </span>
+            </li>
+            <li>
+                {#if $preferences.expandNavbarAdvanced}
+                    <ul>
+                        {#each advancedNavigation as item}
+                            <li class:active={pathMatches(item)}>
+                                <a href={item.path}>
+                                    <span class="icon">
+                                        <Icon name={item.icon} />
+                                    </span>
+                                    <span class="name">{item.name}</span>
+                                </a>
+                            </li>
+                        {/each}
+                    </ul>
+                {/if}
+            </li>
+        {/if}
     </ul>
 </nav>
