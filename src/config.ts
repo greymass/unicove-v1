@@ -6,7 +6,7 @@ const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
 const ver = import.meta.env.SNOWPACK_PUBLIC_VERSION || 'unknown'
 
 /** Only true in a production build. */
-export const isRelease = branch === 'deploy'
+export const isRelease = branch === 'HEAD'
 
 /** App identifier, used for anchor link (session persistence). */
 export const appId = !isRelease
