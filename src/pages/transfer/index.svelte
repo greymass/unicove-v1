@@ -97,7 +97,7 @@
 
 <style type="scss">
     .container {
-        border: 1px solid var(--light-blue);
+        border: 1px solid var(--divider-grey);
         border-radius: 20px;
         padding: 26px;
         :global(.button) {

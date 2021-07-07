@@ -1,3 +1,6 @@
+const pkg = require('./package.json')
+process.env['VERSION'] = pkg.version
+
 if (!process.env['BRANCH']) {
     process.env['BRANCH'] = 'HEAD'
 }
@@ -7,7 +10,7 @@ if (!process.env['NODE_ENV']) {
 }
 
 // env vars to forward to snowpack (included in js bundle)
-const forwardEnv = ['BRANCH', 'REV']
+const forwardEnv = ['BRANCH', 'REV', 'VERSION']
 for (const key of forwardEnv) {
     process.env[`SNOWPACK_PUBLIC_${key}`] = process.env[key]
 }

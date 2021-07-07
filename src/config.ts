@@ -3,17 +3,18 @@ import {ChainId} from 'anchor-link'
 
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
+const ver = import.meta.env.SNOWPACK_PUBLIC_VERSION || 'unknown'
 
 /** Only true in a production build. */
-export const isRelease = branch === 'deploy'
+export const isRelease = branch === 'HEAD'
 
 /** App identifier, used for anchor link (session persistence). */
 export const appId = !isRelease
     ? `w.${branch.replace(/[^1-5a-z]+/g, '').slice(0, 7)}.gm`
     : 'wallet.gm'
 
-export const version = `${branch}-${rev}`
-export const releaseVersion = `Beta 1 (${rev})`
+export const version = `${ver} (${branch}-${rev})`
+export const releaseVersion = `Version ${ver}`
 
 export enum ChainFeatures {
     /** eosio.namebid https://github.com/EOSIO/eosio.contracts/blob/master/contracts/eosio.system/src/name_bidding.cpp */
