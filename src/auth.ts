@@ -1,4 +1,4 @@
-import Link, {ChainId, ChainIdType, LinkSession, PermissionLevel} from 'anchor-link'
+import Link, {ChainId, LinkSession, PermissionLevel} from 'anchor-link'
 import Transport from 'anchor-link-browser-transport'
 import {get} from 'svelte/store'
 
