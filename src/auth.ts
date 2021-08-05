@@ -1,4 +1,4 @@
-import Link, {ChainId, PermissionLevel} from 'anchor-link'
+import {Link, ChainId, LinkSession, PermissionLevel} from 'anchor-link'
 import Transport from 'anchor-link-browser-transport'
 import {get} from 'svelte/store'
 
@@ -28,8 +28,31 @@ export function sessionEquals(a: SessionLike, b: SessionLike) {
 
 /** Restore previous sessions. */
 export async function init() {
-    const session = await link.restoreSession(appId)
     const list = await link.listSessions(appId)
+    let session: LinkSession | null = null
+    if (window.location.search.includes('auth=')) {
+        // load active session from query string if present
+        // prompt for login if an auth is requested but not available
+        const qs = new URLSearchParams(window.location.search)
+        const auth = PermissionLevel.from(qs.get('auth') || '')
+        let chainId: ChainId | undefined
+        if (qs.has('chain')) {
+            chainId = ChainId.from(qs.get('chain') || '')
+        }
+        session = await link.restoreSession(appId, auth, chainId)
+        const removeQuery = () => {
+            if (window.history) {
+                window.history.replaceState(null, '', window.location.pathname)
+            }
+        }
+        if (!session) {
+            return login().finally(removeQuery) // keep qs until after login so anchor redirects back correctly
+        } else {
+            removeQuery()
+        }
+    } else {
+        session = await link.restoreSession(appId)
+    }
     availableSessions.set(list)
     if (session) {
         activeSession.set(session)
@@ -44,8 +67,8 @@ export async function login() {
         storeAccount(result.account, result.session.chainId)
     }
     const list = await link.listSessions(appId)
-    activeSession.set(result.session)
     availableSessions.set(list)
+    activeSession.set(result.session)
 }
 
 /** Remove existing session. */
