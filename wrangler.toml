@@ -2,6 +2,7 @@ name = 'unicove-dev'
 account_id = 'bbe7913c77b349926a3c18505196e2fd'
 workers_dev = true
 type = 'javascript'
+compatibility_date = '2021-11-09'
 
 [site]
 bucket = './build'
