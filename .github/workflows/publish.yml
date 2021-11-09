@@ -25,5 +25,5 @@ jobs:
       - name: Publish
         uses: cloudflare/wrangler-action@1.3.0
         with:
-          enviroment: ${{ steps.env.outputs.env }}
           apiToken: ${{ secrets.CF_API_TOKEN }}
+          environment: ${{ steps.env.outputs.env }}
