@@ -4,9 +4,12 @@ BIN := ./node_modules/.bin
 .EXPORT_ALL_VARIABLES:
 REV := $(shell git rev-parse --short HEAD)
 BRANCH := $(shell git branch --show-current)
+VERSION := $(shell node -e "console.log(require('./package.json').version)")
+DIRTY := $(shell git status --porcelain | grep -q . && echo "1" || echo "0")
 
 build: $(SRC_FILES) node_modules package.json svelte.config.js tsconfig.json yarn.lock
-	@echo "Starting build of $(BRANCH)-$(REV)"
+	@echo "Starting build of $(VERSION) ($(BRANCH)-$(REV))"
+	@if [ $$DIRTY -eq 1 ]; then echo "WARNING: Working directory is dirty, build may not be accurate"; fi
 	@${BIN}/svelte-kit build || (rm -rf build && exit 1)
 
 .PHONY: dev
