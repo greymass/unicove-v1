@@ -1,38 +1,43 @@
-# create-svelte
+Unicove
+=======
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+Unicove is your portal to EOSIO blockchains, a secure & easy to use web wallet.
 
-## Creating a project
+https://unicove.com
 
-If you're seeing this, you've probably already done this step. Congrats!
 
-```bash
-# create a new project in the current directory
-npm init svelte@next
+Developing
+----------
 
-# create a new project in my-app
-npm init svelte@next my-app
+Make sure you have [node.js](https://nodejs.org), [yarn](https://yarnpkg.com) and [make](https://www.gnu.org/software/make/) installed then run:
+
+```
+make dev
 ```
 
-> Note: the `@next` is temporary
+This will install dependencies and start a live-reloading development server on your machine.
 
-## Developing
+To preview the full SSR (server side rendered) version of the site run:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```
+make preview
 ```
 
-## Building
 
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
+License
+-------
 
-```bash
-npm run build
-```
+Copyright (C) 2021  Greymass Inc.
 
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

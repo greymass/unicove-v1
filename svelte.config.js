@@ -10,7 +10,8 @@ const config = {
         cssHash: ({hash, css}) => `uc-${hash(css)}`,
     },
     kit: {
-		adapter: workersAdapter(),
+        adapter: workersAdapter(),
+        appDir: '_uc',
     },
 }
 

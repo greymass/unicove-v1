@@ -5,13 +5,25 @@ BIN := ./node_modules/.bin
 REV := $(shell git rev-parse --short HEAD)
 BRANCH := $(shell git branch --show-current)
 
-build: $(SRC_FILES) node_modules package.json snowpack.config.js svelte.config.js tsconfig.json yarn.lock
+build: $(SRC_FILES) node_modules package.json svelte.config.js tsconfig.json yarn.lock
 	@echo "Starting build of $(BRANCH)-$(REV)"
 	@${BIN}/svelte-kit build || (rm -rf build && exit 1)
 
 .PHONY: dev
 dev: node_modules
 	@${BIN}/svelte-kit dev
+
+.PHONY: preview
+preview: node_modules
+	@${BIN}/svelte-kit preview
+
+.PHONY: publish
+publish: build
+	@${BIN}/wrangler publish
+
+.PHONY: publish-preview
+publish-preview: build
+	@${BIN}/wrangler preview
 
 .PHONY: check
 check: node_modules
@@ -24,6 +36,7 @@ lint: node_modules
 .PHONY: format
 format: node_modules
 	@${BIN}/prettier --ignore-path .gitignore --write --plugin-search-dir=. .
+
 
 node_modules:
 	yarn install --non-interactive --frozen-lockfile
