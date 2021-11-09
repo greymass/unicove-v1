@@ -1,11 +1,7 @@
-@use "node_modules/inter-ui/default" with (
-    $inter-font-display: swap,
-    $inter-font-path: '/static/inter'
-);
-@use "node_modules/inter-ui/variable" with (
-    $inter-font-display: swap,
-    $inter-font-path: '/static/inter'
-);
+@use 'node_modules/inter-ui/default' with
+    ($inter-font-display: swap, $inter-font-path: '/static/inter');
+@use 'node_modules/inter-ui/variable' with
+    ($inter-font-display: swap, $inter-font-path: '/static/inter');
 @include default.all;
 @include variable.all;
 
