@@ -10,14 +10,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Staging environment
-        if: endsWith(github.ref, '/kit') # TODO: Change to dev
+      - name: Setup environment
         id: env
-        run: echo ::set-output name=env::staging
-      - name: Production environment
-        if: endsWith(github.ref, '/deploy')
-        id: env
-        run: echo ::set-output name=env::production
+        run: |
+          # TODO: Change from kit to dev before merge
+          if [[ "${{github.base_ref}}" == "kit" || "${{github.ref}}" == "refs/heads/kit" ]]; then
+            echo ::set-output name=env::staging
+          fi
+          if [[ "${{github.base_ref}}" == "deploy" || "${{github.ref}}" == "refs/heads/deploy" ]]; then
+            echo ::set-output name=env::production
+          fi
       - name: Build
         run: make build
       - name: Publish
