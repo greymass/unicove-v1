@@ -17,7 +17,7 @@ dev: node_modules
 	@${BIN}/svelte-kit dev
 
 .PHONY: preview
-preview: node_modules
+preview: build
 	@${BIN}/svelte-kit preview
 
 .PHONY: publish
