@@ -1,5 +1,6 @@
-Unicove
-=======
+<a href="https://unicove.com"><img align="right" src="./static/unicove-emblem.svg" width="190" alt="Unicove Emblem" /></a>
+
+# Unicove
 
 Unicove is your portal to EOSIO blockchains, a secure & easy to use web wallet.
 
@@ -23,6 +24,7 @@ To preview the full SSR (server side rendered) version of the site run:
 make preview
 ```
 
+Before submitting a PR make sure to run `make check` and `make lint`.
 
 License
 -------
