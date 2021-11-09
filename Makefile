@@ -34,12 +34,12 @@ check: node_modules
 
 .PHONY: lint
 lint: node_modules
-	@${BIN}/prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .
+	@${BIN}/prettier --ignore-path .gitignore --check --plugin-search-dir=. .
+	@${BIN}/eslint --ignore-path .gitignore .
 
 .PHONY: format
 format: node_modules
 	@${BIN}/prettier --ignore-path .gitignore --write --plugin-search-dir=. .
-
 
 node_modules:
 	yarn install --non-interactive --frozen-lockfile
