@@ -1,0 +1,26 @@
+name = 'unicove-dev'
+account_id = 'bbe7913c77b349926a3c18505196e2fd'
+workers_dev = true
+type = 'javascript'
+
+[site]
+bucket = './build'
+entry-point = './workers-site'
+
+[build]
+command = ''
+
+[build.upload]
+format = 'service-worker'
+
+[env.production]
+name = 'unicove'
+zone_id = '44d92672d1de0c2755c11645cb45dfd3'
+route = "https://unicove.com/*"
+workers_dev = false
+
+[env.staging]
+name = 'unicove-staging'
+zone_id = 'de6f4d89dfb79a754a61c583cee90dbd'
+route = "https://unicove-staging.com/*"
+workers_dev = false

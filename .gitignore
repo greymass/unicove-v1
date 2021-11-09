@@ -1,0 +1,4 @@
+.svelte-kit
+/build
+/workers-site
+node_modules
