@@ -6,9 +6,7 @@ Unicove is your portal to EOSIO blockchains, a secure & easy to use web wallet.
 
 https://unicove.com
 
-
-Developing
-----------
+## Developing
 
 Make sure you have [node.js](https://nodejs.org), [yarn](https://yarnpkg.com) and [make](https://www.gnu.org/software/make/) installed then run:
 
@@ -26,10 +24,9 @@ make preview
 
 Before submitting a PR make sure to run `make check` and `make lint`.
 
-License
--------
+## License
 
-Copyright (C) 2021  Greymass Inc.
+Copyright (C) 2021 Greymass Inc.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -38,8 +35,8 @@ License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program. If not, see <https://www.gnu.org/licenses/>.

@@ -1,9 +1,9 @@
-arrowParens: "always"
+arrowParens: 'always'
 bracketSpacing: false
-endOfLine: "lf"
+endOfLine: 'lf'
 printWidth: 100
 semi: false
 singleQuote: true
 tabWidth: 4
-trailingComma: "es5"
-svelteSortOrder : "options-scripts-styles-markup"
+trailingComma: 'es5'
+svelteSortOrder: 'options-scripts-styles-markup'

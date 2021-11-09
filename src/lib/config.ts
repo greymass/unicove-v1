@@ -14,7 +14,10 @@ export const isRelease = branch === 'deploy'
 
 /** App identifier, used for anchor link (session persistence). */
 export const appId = !isRelease
-    ? `w.${branch.replace(/[^1-5a-z]+/gi, '').toLowerCase().slice(0, 7)}.gm`
+    ? `w.${branch
+          .replace(/[^1-5a-z]+/gi, '')
+          .toLowerCase()
+          .slice(0, 7)}.gm`
     : 'wallet.gm'
 
 /** App version taken in the format 1.2.3 (git-shortrev), for staging and local builds it also includes the branch name. */
