@@ -71,9 +71,11 @@
     <p>Value: {examples['example-is-valid'].value}</p>
     <p>Is Valid: {examples['example-is-valid'].valid}</p>
 </div>
-<div>
-    <p>Token Selector</p>
-    <TokenSelector defaultToken={selectedToken} onTokenSelect={handleTokenSelect} />
+{#if selectedToken}
+    <div>
+        <p>Token Selector</p>
+        <TokenSelector defaultToken={selectedToken} onTokenSelect={handleTokenSelect} />
 
-    <p>Selected Token: {selectedToken.name}</p>
-</div>
+        <p>Selected Token: {selectedToken.name}</p>
+    </div>
+{/if}
