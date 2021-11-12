@@ -2,13 +2,13 @@
     import ButtonLogin from '~/components/elements/button/login.svelte'
     import Page from '~/components/layout/page.svelte'
     import {chains} from '~/config'
-    import {preferences} from '~/store'
+    import {darkMode} from '~/store'
 
     import Icon from '~/components/elements/icon.svelte'
     import Segment from '~/components/elements/segment.svelte'
     import SegmentGroup from '~/components/elements/segment/group.svelte'
 
-    $: darkmode = $preferences.darkmode
+    $: darkmode = $darkMode
 </script>
 
 <style lang="scss">
