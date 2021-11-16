@@ -1,6 +1,8 @@
 <script>
+    import {ChainId} from 'anchor-link'
+
     import type {Token} from '~/stores/tokens'
-    import {tokens} from '~/stores/tokens'
+    import {tokens, createTokenFromChainId} from '~/stores/tokens'
 
     import Input from '~/components/elements/input.svelte'
     import TokenSelector from '~/components/elements/input/token/selector.svelte'
@@ -22,7 +24,11 @@
         examples[detail.name] = detail
     }
 
-    let selectedToken = $tokens[0]
+    let selectedToken =
+        $tokens[0] ||
+        createTokenFromChainId(
+            ChainId.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906')
+        )
 
     const handleTokenSelect = (token: Token) => {
         selectedToken = token
