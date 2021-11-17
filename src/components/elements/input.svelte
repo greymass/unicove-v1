@@ -57,9 +57,10 @@
         })
     }
 
-    const debounce = (e: Event) => {
+    type HTMLInputFormEvent = Event & {currentTarget: EventTarget & HTMLInputElement}
+    const debounce = (e: HTMLInputFormEvent) => {
         clearTimeout(timer)
-        value = (<HTMLInputElement>e.target).value
+        value = e.currentTarget.value
         // Immediately invalidate
         invalidate(name, value)
         // Debounce actual validation
@@ -76,8 +77,7 @@
             dispatch('changed', response)
         }, delay)
     }
-
-    const handleKeyup = (e: Event): void => debounce(e)
+    const handleInput = (e: HTMLInputFormEvent): void => debounce(e)
 </script>
 
 <style type="scss">
@@ -101,7 +101,7 @@
 </style>
 
 <input
-    on:keyup={handleKeyup}
+    on:input={handleInput}
     class={fluid ? 'fullWidth' : ''}
     type="text"
     {name}
