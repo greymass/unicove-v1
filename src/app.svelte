@@ -11,8 +11,10 @@
     import Request from '~/pages/request/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
-    import Components from '~/pages/_components/index.svelte'
-    import Loading from '~/pages/loading.svelte'
+
+    import AccountCreation from '~/pages/account-creation.svelte'
+    import Components from './pages/_components/index.svelte'
+    import Loading from './pages/loading.svelte'
     import Toasts from '~/components/elements/toasts.svelte'
 
     $: document.body.classList.toggle('darkmode', $darkMode)
@@ -174,6 +176,9 @@
             </Route>
             <Route path="/resources/*">
                 <Resources />
+            </Route>
+            <Route path="/account-creation">
+                <AccountCreation />
             </Route>
             <Route fallback>
                 <Page title="Page not found">

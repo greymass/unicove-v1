@@ -890,9 +890,9 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@greymass/account-creation@git+ssh://git@github.com:greymass/account-creation-lib.git#39d546e":
+"@greymass/account-creation@git+ssh://git@github.com:greymass/account-creation-lib.git#3591f4187602723d352af6debd550b894176452c":
   version "0.0.0"
-  resolved "git+ssh://git@github.com:greymass/account-creation-lib.git#39d546e52485560387a22c118863b21bd43ecd3e"
+  resolved "git+ssh://git@github.com:greymass/account-creation-lib.git#3591f4187602723d352af6debd550b894176452c"
   dependencies:
     "@greymass/eosio" "^0.5.2"
     eosio-signing-request "^2.3.1"

@@ -1,5 +1,7 @@
 <script lang="ts">
     import { AccountCreator } from '@greymass/account-creation'
+    import Page from '~/components/layout/page.svelte'
+    import Button from '~/components/elements/button.svelte'
 
     async function createAccount() {
         const supportedChains = {
@@ -32,10 +34,20 @@
     }
 </script>
 
-<div>
+<style>
+    .button-container, h2 {
+        padding: 20px;
+        padding-bottom: 0;
+    }
+</style>
+
+<Page>
     <h2>
         Click here to create your account:
     </h2>
-
-    <button on:click={createAccount} />
-</div>
+    <div class="button-container">
+        <Button on:action={createAccount}>
+            Create Account
+        </Button>
+    </div>
+</Page>
