@@ -17,7 +17,6 @@
             supportedChains,
             scope: 'testpage',
             loginOnCreate: true,
-            returnUrl: 'http://localhost:3000/',
         })
 
         const { error, ...accountDetails } = await accountCreator.createAccount()
@@ -27,8 +26,6 @@
 
             return alert(`An error occured during account creation: ${error}!`);
         }
-
-        console.log({accountDetails})
 
         alert(`Created ${accountDetails.actor} on ${accountDetails.network}!`);
     }
