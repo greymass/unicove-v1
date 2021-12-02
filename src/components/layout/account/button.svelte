@@ -1,12 +1,9 @@
 <script>
-    import {activeSession, preferences, darkMode} from '~/store'
+    import {activeSession} from '~/store'
     import Icon from '~/components/elements/icon.svelte'
+    import ThemeButton from '~/components/elements/button/theme.svelte'
 
     export let open = false
-
-    function setDarkMode(state: boolean, event: MouseEvent) {
-        preferences.darkmode = event.shiftKey ? null : state
-    }
 </script>
 
 <style type="scss">
@@ -36,15 +33,7 @@
 </style>
 
 <div class="account-button">
-    {#if $darkMode}
-        <span class="icon" on:click={(event) => setDarkMode(false, event)}>
-            <Icon name="sun" />
-        </span>
-    {:else}
-        <span class="icon" on:click={(event) => setDarkMode(true, event)}>
-            <Icon name="moon" />
-        </span>
-    {/if}
+    <ThemeButton />
     <span class="accounts" on:click={() => (open = true)}>
         <span class="icon">
             <Icon name="user" />
