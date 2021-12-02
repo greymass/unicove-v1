@@ -107,6 +107,10 @@
             &:active:not(.disabled) {
                 filter: contrast(150%) brightness(105%);
             }
+            :global(body.darkmode) & {
+                background-color: var(--middle-green-eagle);
+                color: black;
+            }
         }
         &.effect::before {
             content: '';
@@ -187,6 +191,10 @@
             font-weight: 550;
             letter-spacing: -0.18px;
             padding: 16px 32px;
+        }
+        :global(body.darkmode) & {
+            background-color: #252525;
+            color: var(--middle-green-eagle);
         }
     }
 </style>
