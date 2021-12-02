@@ -87,6 +87,14 @@
         --middle-blue-green: #7de8d1;
         --emerald: #62d385;
         --cultured: #eeeeee;
+
+        --middle-green-eagle: #063a47;
+        --lapis-lazuli: #005dac;
+        --oxford-blue: #0a0e33;
+        --brown-sugar: #996443;
+        --antic-ruby: #82172e;
+        --violet-crayola: #9d2c7a;
+        --rich-black-FOGRA: #111111;
     }
 
     body.darkmode {
@@ -109,6 +117,14 @@
         --middle-blue-green: #82172e; /* antic ruby */
         --emerald: #9d2c7a; /* Violet Crayola */
         --cultured: #111111; /* Rich Black FOGRA */
+
+        --middle-green-eagle: #f9c5b8; /* melon */
+        --lapis-lazuli: #ffa253; /* sandy-brown */
+        --oxford-blue: #f5f1cc; /* light-goldenrod-yellow */
+        --brown-sugar: #669bbc; /* air-superiority-blue */
+        --antic-ruby: #7de8d1; /* middle-blue-green */
+        --violet-crayola: #62d385; /* emerald */
+        --rich-black-FOGRA: #eeeeee; /* cultured */
     }
 
     body {
