@@ -78,27 +78,16 @@
         font-weight: 450;
         letter-spacing: -0.04px;
         justify-content: center;
-        background-color: var(--light-blue);
+        background-color: var(--cultured);
         border-radius: var(--radius);
         padding: 10px 12px;
-        color: var(--main-blue);
+        color: var(--lapis-lazuli);
         text-decoration: none;
         user-select: none;
         -webkit-user-select: none;
         cursor: pointer;
-        overflow: hidden;
+        overflow: visible;
         white-space: nowrap;
-        &.primary {
-            background-color: var(--main-blue);
-            color: white;
-            &:active:not(.disabled) {
-                filter: contrast(150%) brightness(105%);
-            }
-        }
-        &:focus-visible {
-            outline: 0;
-            text-decoration: underline;
-        }
         &:focus,
         &:hover:not(.disabled) {
             outline: 0;
@@ -108,11 +97,41 @@
         &:active:not(.disabled) {
             filter: brightness(105%);
         }
+        &:focus-visible {
+            outline: 0;
+            text-decoration: underline;
+        }
+        &.primary {
+            background-color: var(--lapis-lazuli);
+            color: white;
+            &:active:not(.disabled) {
+                filter: contrast(150%) brightness(105%);
+            }
+        }
+        &.effect::before {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        &.effect:hover::before {
+            background: linear-gradient(
+                90deg,
+                #669bbc 0%,
+                #f5f1cc 34.9%,
+                #ffa253 67.19%,
+                #f9c5b8 99.48%
+            );
+            filter: blur(40px);
+        }
         &.disabled {
-            color: var(--always-white);
             pointer-events: none;
             cursor: default;
-            opacity: 0.3;
+            opacity: 0.5;
             cursor: not-allowed;
             pointer-events: all !important;
         }
