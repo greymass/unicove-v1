@@ -1,17 +1,19 @@
 <script>
     import {activeSession} from '~/store'
     import Icon from '~/components/elements/icon.svelte'
-    import ThemeButton from '~/components/elements/button/theme.svelte'
+    import ThemeButton from '~/components/elements/button/mode.svelte'
 
     export let open = false
 </script>
 
 <style type="scss">
     .account-button {
-        color: var(--main-black);
+        display: flex;
+        align-items: center;
+        color: var(--main-blue);
         cursor: pointer;
         font-size: 14px;
-        padding: 30px 16px;
+        font-weight: 600;
         margin: 0 6px 0 auto;
         .icon {
             color: var(--main-blue);
@@ -19,6 +21,10 @@
             margin-right: 10px;
             vertical-align: middle;
         }
+    }
+    .accounts {
+        display: flex;
+        align-items: center;
     }
     @media only screen and (max-width: 600px) {
         .account-button .accounts {

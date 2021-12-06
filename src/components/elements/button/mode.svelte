@@ -9,6 +9,7 @@
 
 <style type="scss">
     .icon {
+        display: inline-flex;
         color: var(--main-blue);
         line-height: 16px;
         margin-right: 10px;

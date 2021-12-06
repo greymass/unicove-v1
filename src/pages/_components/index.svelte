@@ -12,7 +12,7 @@
     import QRCode from './qrcode.svelte'
 
     import Nav from '~/components/elements/nav.svelte'
-    import ThemeButton from '~/components/elements/button/theme.svelte'
+    import ThemeButton from '~/components/elements/button/mode.svelte'
 
     const routes = [
         {name: 'Buttons', path: 'buttons', component: Buttons},
