@@ -149,7 +149,6 @@
         /* identical to box height */
 
         letter-spacing: -0.26px;
-        color: var(--main-black);
         margin-top: 27px;
     }
 
@@ -244,7 +243,6 @@
                     </Segment>
                 </SegmentGroup>
             </div>
-            <h3>Tokens</h3>
             <TokenTable {balances} {rexTokens} {delegatedTokens} />
         </div>
     {/if}

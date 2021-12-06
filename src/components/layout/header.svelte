@@ -11,7 +11,7 @@
         font-size: 24px;
         line-height: 29px;
         letter-spacing: -0.47px;
-        color: var(--main-black);
+        color: var(--black);
     }
 
     h3 {
