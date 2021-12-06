@@ -20,6 +20,9 @@
 </script>
 
 <style lang="scss">
+    p {
+        margin-bottom: 10px;
+    }
 </style>
 
 <p>
