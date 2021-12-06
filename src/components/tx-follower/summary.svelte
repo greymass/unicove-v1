@@ -28,7 +28,7 @@
         .content {
             text-align: right;
             max-width: 70%;
-            font-weight: 600;
+            font-weight: 500;
         }
         &:last-child {
             border: 0;
