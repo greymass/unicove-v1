@@ -171,19 +171,16 @@
             color: var(--dark-grey);
         }
         .amount {
-            font-weight: bold;
-            font-size: 18px;
-            line-height: 22px;
+            font-size: 20px;
+            line-height: 24px;
             /* identical to box height */
-            margin: 6px 0;
-            letter-spacing: -0.26px;
-            color: var(--main-black);
+            margin: 10px 0 6px;
+            color: var(--black);
         }
         .symbol {
             font-size: 16px;
             line-height: 19px;
-            letter-spacing: -0.26px;
-            color: var(--main-black);
+            color: var(--black);
         }
         .icon {
             width: 60px;
