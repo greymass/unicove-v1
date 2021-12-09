@@ -86,6 +86,7 @@
         --emerald: #62d385;
         --cultured: #eeeeee;
         --black: #000000;
+        --white: #ffffff;
 
         --middle-green-eagle: #063a47;
         --lapis-lazuli: #005dac;
@@ -118,6 +119,7 @@
         --emerald: #9d2c7a; /* Violet Crayola */
         --cultured: #111111; /* Rich Black FOGRA */
         --black: #ffffff;
+        --white: #000000;
 
         --middle-green-eagle: #f9c5b8; /* melon */
         --lapis-lazuli: #ffa253; /* sandy-brown */

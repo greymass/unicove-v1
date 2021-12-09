@@ -92,7 +92,7 @@
                 <FormBalance token={$systemToken} balance={systemTokenBalance} />
             {/if}
             <InputErrorMessage errorMessage={error} />
-            <Button primary fluid size="large" formValidation on:action={buyrambytes}
+            <Button style="primary" fluid size="large" formValidation on:action={buyrambytes}
                 >Buy {$kb} kb for {$cost}</Button
             >
         </Form>

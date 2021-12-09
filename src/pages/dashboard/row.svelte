@@ -256,7 +256,7 @@
             <div class="controls">
                 <div class="desktop">
                     {#if transferable}
-                        <Button href={$url} primary>
+                        <Button href={$url} style="secondary">
                             <Icon name="arrow-up" />
                             <Text>Send</Text>
                         </Button>
@@ -283,7 +283,7 @@
                 {/if}
             </div>
             {#if transferable}
-                <Button fluid href={$url} primary>
+                <Button fluid href={$url} style="secondary">
                     <Icon name="arrow-up" />
                     <Text>Send</Text>
                 </Button>

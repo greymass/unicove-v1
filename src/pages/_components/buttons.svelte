@@ -28,7 +28,8 @@
 <p>Standard</p>
 <div>
     <Button>Standard</Button>
-    <Button primary>Primary</Button>
+    <Button style="primary">Primary</Button>
+    <Button style="secondary">Secondary</Button>
     <Button>
         <Text>Icon</Text>
         <Icon name="external-link" />
@@ -42,7 +43,7 @@
 <p>Large</p>
 <div>
     <Button size="large">Large</Button>
-    <Button size="large" primary>Large Primary</Button>
+    <Button size="large" style="primary">Large Primary</Button>
     <Button size="large">
         <Icon name="unlock" />
         <Text>Icon here</Text>
@@ -63,18 +64,18 @@
 <p>Disabled</p>
 <div>
     <Button disabled size="large">Disabled</Button>
-    <Button disabled primary size="large">Disabled Primary</Button>
+    <Button disabled style="primary" size="large">Disabled Primary</Button>
 </div>
 
 <p>Flexbox</p>
 <div class="overunder">
     <Button size="large">Flexy</Button>
-    <Button size="large" primary>Flexy Primary</Button>
-    <Button size="large" primary>
+    <Button size="large" style="primary">Flexy Primary</Button>
+    <Button size="large" style="primary">
         <Icon name="layout" />
         <Text>Flexy with icon</Text>
     </Button>
-    <Button size="large" primary>
+    <Button size="large" style="primary">
         <Icon name="tool" />
         <Text>Flexing</Text>
         <Icon name="trash" />

@@ -116,7 +116,7 @@
     {/if}
     <Button
         fluid
-        primary
+        style="primary"
         size="large"
         disabled={!amountValid}
         formValidation

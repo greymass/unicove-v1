@@ -8,8 +8,8 @@
     export let href: string | undefined = undefined
     /** Can be used in conjunction with href to set the <a target. */
     export let target: string | undefined = undefined
-    /** Whether the button is primary. */
-    export let primary: boolean = false
+    /** Whether the button is default primary or secondary. */
+    export let style: 'default' | 'primary' | 'secondary' = 'default'
     /** Button size. */
     export let size: 'large' | 'regular' = 'regular'
     /** Disabled state */
@@ -112,6 +112,16 @@
                 color: black;
             }
         }
+        &.secondary {
+            border: 1px solid var(--cultured);
+            background-color: transparent;
+            color: var(--lapis-lazuli);
+            :global(body.darkmode) & {
+                border-color: #3b3b3b;
+                background-color: transparent;
+                color: var(--middle-green-eagle);
+            }
+        }
         &.effect::before {
             content: '';
             position: absolute;
@@ -205,10 +215,9 @@
     on:mousemove={handleMousemove}
     on:mouseenter={handleMouseenter}
     disabled={isDisabled}
-    class={`button size-${size}`}
+    class={`button size-${size} ${style === 'default' ? '' : style}`}
     class:disabled={isDisabled}
     class:fluid
-    class:primary
     {href}
     {target}
     role="button"

@@ -112,7 +112,9 @@
                     </div>
                     <div class="pair">{$token} per {unit}</div>
                     <div class="term">Usable for up to <br /> 24 hours.</div>
-                    <Button primary href="/resources/{resource}/powerup">Rent via PowerUp</Button>
+                    <Button style="primary" href="/resources/{resource}/powerup"
+                        >Rent via PowerUp</Button
+                    >
                 </div>
             </Segment>
         {/if}
@@ -129,7 +131,7 @@
                         {unit}
                     </div>
                     <div class="term">Usable each day for <br />the next 30 days.</div>
-                    <Button primary href="/resources/{resource}/rex">Rent via REX</Button>
+                    <Button style="primary" href="/resources/{resource}/rex">Rent via REX</Button>
                 </div>
             </Segment>
         {/if}
@@ -150,7 +152,7 @@
                         {unit}
                     </div>
                     <div class="term">Usable each day until <br />they are unstaked.</div>
-                    <Button primary href="/resources/{resource}/stake">Stake Tokens</Button>
+                    <Button style="primary" href="/resources/{resource}/stake">Stake Tokens</Button>
                 </div>
             </Segment>
         {/if}

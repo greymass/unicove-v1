@@ -57,11 +57,11 @@
     <SegmentGroup>
         <ResourceStateRAM>
             {#if $hasBuyRAM}
-                <Button primary href="/resources/ram/buy">
+                <Button style="primary" href="/resources/ram/buy">
                     <Text>Buy RAM</Text>
                     <Icon name="hard-drive" />
                 </Button>
-                <Button primary href="/resources/ram/sell">
+                <Button style="primary" href="/resources/ram/sell">
                     <Text>Sell RAM</Text>
                     <Icon name="hard-drive" />
                 </Button>
@@ -69,12 +69,12 @@
         </ResourceStateRAM>
         <ResourceStateCPU>
             {#if $hasREX || $hasPowerUp}
-                <Button primary href="/resources/cpu">
+                <Button style="primary" href="/resources/cpu">
                     <Text>Rent CPU</Text>
                     <Icon name="cpu" />
                 </Button>
             {:else if $hasStaking}
-                <Button primary href="/resources/cpu/stake">
+                <Button style="primary" href="/resources/cpu/stake">
                     <Text>Stake CPU</Text>
                     <Icon name="cpu" />
                 </Button>
@@ -82,12 +82,12 @@
         </ResourceStateCPU>
         <ResourceStateNET>
             {#if $hasREX || $hasPowerUp}
-                <Button primary href="/resources/net">
+                <Button style="primary" href="/resources/net">
                     <Text>Rent NET</Text>
                     <Icon name="wifi" />
                 </Button>
             {:else if $hasStaking}
-                <Button primary href="/resources/net/stake">
+                <Button style="primary" href="/resources/net/stake">
                     <Text>Stake NET</Text>
                     <Icon name="wifi" />
                 </Button>
