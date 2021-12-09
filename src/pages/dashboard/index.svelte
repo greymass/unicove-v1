@@ -188,8 +188,8 @@
             font-size: 38px;
             font-weight: 300;
             text-align: center;
-            color: var(--always-white);
-            background: var(--main-green);
+            color: #000000;
+            background: #ffffff;
             border-radius: 50%;
         }
     }
