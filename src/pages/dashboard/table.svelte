@@ -87,10 +87,6 @@
     <TokenHeaderRow />
     {#if $systemTokenBalance}
         <TokenRow balance={$systemTokenBalance} />
-        <TokenRow balance={$systemTokenBalance} />
-        <TokenRow balance={$systemTokenBalance} />
-        <TokenRow balance={$systemTokenBalance} />
-        <TokenRow balance={$systemTokenBalance} />
     {/if}
     {#if $stakedBalance && $systemToken}
         <TokenRow
