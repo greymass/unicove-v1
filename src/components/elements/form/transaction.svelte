@@ -136,7 +136,7 @@
 {#if $transaction_id}
     <TxFollower id={$transaction_id} chain={$activeBlockchain} />
 {:else if error}
-    <Segment color="white">
+    <Segment background="white">
         <div class="error">
             <Icon name="alert-circle" size="massive" />
             <h2>Transaction Failed</h2>

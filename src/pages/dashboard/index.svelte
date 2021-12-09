@@ -168,7 +168,7 @@
             line-height: 12px;
             letter-spacing: 0.1px;
             text-transform: uppercase;
-            color: var(--dark-grey);
+            color: #3b3b3b;
         }
         .amount {
             font-size: 20px;
@@ -218,7 +218,7 @@
         <div class="container">
             <div class="balances">
                 <SegmentGroup>
-                    <Segment>
+                    <Segment background="image-1">
                         <div class="info">
                             <span class="label">
                                 Total {$totalSystemTokens.symbol.name} Balance
@@ -230,7 +230,7 @@
                             <TokenImage width="60" height="60" tokenKey={$systemTokenKey} />
                         </div>
                     </Segment>
-                    <Segment>
+                    <Segment background="image-2">
                         <div class="info">
                             <span class="label">Account Value</span>
                             <span class="amount">{fiatFormat($totalUsdValue)}</span>

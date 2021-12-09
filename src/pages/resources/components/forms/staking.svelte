@@ -89,7 +89,7 @@
 <style>
 </style>
 
-<Segment color="white">
+<Segment background="white">
     {#if $activeBlockchain?.chainFeatures.has(Staking)}
         <Form on:submit={stake}>
             {#if resource === 'cpu'}

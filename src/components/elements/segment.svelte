@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let color = ''
+    export let background: 'white' | 'transparent' | 'image-1' | 'image-2' | '' = ''
     export let bordered = false
 </script>
 
@@ -12,15 +12,23 @@
         &.white {
             background: var(--main-white);
         }
-        &.bordered {
-            border: 1px solid var(--divider-grey);
-        }
         &.transparent {
             background: transparent;
+        }
+        &.image-1 {
+            background: url('/images/dashboard-bg-1.jpeg') no-repeat;
+            background-size: cover;
+        }
+        &.image-2 {
+            background: url('/images/dashboard-bg-2.jpeg') no-repeat;
+            background-size: cover;
+        }
+        &.bordered {
+            border: 1px solid var(--divider-grey);
         }
     }
 </style>
 
-<div class="segment {color}" class:bordered>
+<div class="segment {background}" class:bordered>
     <slot />
 </div>

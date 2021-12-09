@@ -144,7 +144,7 @@
     </div>
     <div class="info">
         <SegmentGroup>
-            <Segment color="white" bordered>
+            <Segment background="white" bordered>
                 <div class="box">
                     <div class="icon">
                         <Icon name="download" size="large" />
@@ -154,7 +154,7 @@
                     <a href="https://greymass.com/anchor/download">Download Anchor</a>
                 </div>
             </Segment>
-            <Segment color="white" bordered>
+            <Segment background="white" bordered>
                 <div class="box">
                     <div class="icon">
                         <Icon name="message-circle" size="large" />

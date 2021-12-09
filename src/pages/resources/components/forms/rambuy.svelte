@@ -83,7 +83,7 @@
 <style>
 </style>
 
-<Segment color="white">
+<Segment background="white">
     {#if $activeBlockchain?.chainFeatures.has(BuyRAM)}
         <Form on:submit={buyrambytes}>
             <p>Amount of kb to buy:</p>
