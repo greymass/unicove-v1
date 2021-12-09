@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let background: 'white' | 'transparent' | 'image-1' | 'image-2' | '' = ''
+    export let background: 'white' | 'transparent' | 'image' | '' = ''
     export let bordered = false
 </script>
 
@@ -15,13 +15,12 @@
         &.transparent {
             background: transparent;
         }
-        &.image-1 {
-            background: url('/images/dashboard-bg-1.jpeg') no-repeat;
+        &.image {
+            background-image: url('/images/dashboard-bg-1.jpg');
             background-size: cover;
-        }
-        &.image-2 {
-            background: url('/images/dashboard-bg-2.jpeg') no-repeat;
-            background-size: cover;
+            :global(body.darkmode) & {
+                background-image: url('/images/dashboard-bg-2.jpg');
+            }
         }
         &.bordered {
             border: 1px solid var(--divider-grey);
