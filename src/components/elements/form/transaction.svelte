@@ -144,7 +144,9 @@
         </div>
         <div class="controls">
             {#if retryCallback}
-                <Button size="large" style="primary" on:action={context.retryTransaction}>Try Again</Button>
+                <Button size="large" style="primary" on:action={context.retryTransaction}
+                    >Try Again</Button
+                >
             {/if}
         </div>
     </Segment>

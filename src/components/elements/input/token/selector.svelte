@@ -57,7 +57,7 @@
         right: 0;
         top: 0;
         :global(.darkmode) & {
-            color: var(--middle-green-eagle)
+            color: var(--middle-green-eagle);
         }
     }
 
