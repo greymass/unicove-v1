@@ -164,12 +164,13 @@
             height: 4px;
             width: 105px;
             margin: 0 3px 0 0;
-            background: var(--light-blue);
+            background: var(--main-blue);
+            opacity: 0.3;
         }
         &.step-1 .step:nth-child(-n + 1),
         &.step-2 .step:nth-child(-n + 2),
         &.step-3 .step:nth-child(-n + 3) {
-            background: var(--main-blue);
+            opacity: 1;
         }
     }
     @media only screen and (max-width: 600px) {
@@ -225,7 +226,7 @@
             <TransferAmount {balance} token={$token} />
         {/if}
         {#if $transferData.step === Step.Confirm && $transferData.quantity}
-            <TransferConfirm {handleTransfer} />
+            <TransferConfirm {handleTransfer} token={$token} />
         {/if}
         {#if $transferData.step === Step.Receive}
             <TransferReceive />
@@ -239,11 +240,11 @@
     {#if ![Step.Receive, Step.Sending].includes($transferData.step)}
         <div class="controls">
             {#if $transferData.step > 1}
-                <Button on:action={handleBack}>
-                    <Icon size="medium" name="arrow-left" />Back
+                <Button on:action={handleBack} style="no-frame">
+                    <Icon size="medium" name="arrow-left" /><span>Back</span>
                 </Button>
             {:else}
-                <Button href="/">Cancel</Button>
+                <Button href="/" style="no-frame">Cancel</Button>
             {/if}
         </div>
     {/if}

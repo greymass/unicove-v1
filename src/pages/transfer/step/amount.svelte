@@ -75,14 +75,14 @@
         .value {
             font-family: Inter;
             font-style: normal;
-            font-weight: 600;
+            font-weight: 550;
             font-size: 10px;
             line-height: 12px;
             display: flex;
             align-items: center;
             letter-spacing: 0.1px;
             text-transform: uppercase;
-            color: var(--main-black);
+            color: var(--light-grey);
         }
     }
 </style>

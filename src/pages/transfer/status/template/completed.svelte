@@ -8,11 +8,6 @@
 </script>
 
 <style type="scss">
-    .label,
-    .value {
-        padding: 17px;
-        line-height: 40px;
-    }
     .label {
         h3 {
             display: block;
@@ -21,7 +16,8 @@
     }
 
     .value {
-        margin-left: auto;
+        flex: 1;
+        text-align: right;
     }
 </style>
 

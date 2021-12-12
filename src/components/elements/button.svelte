@@ -9,7 +9,7 @@
     /** Can be used in conjunction with href to set the <a target. */
     export let target: string | undefined = undefined
     /** Whether the button is default primary or secondary. */
-    export let style: 'default' | 'primary' | 'secondary' = 'default'
+    export let style: 'default' | 'primary' | 'secondary' | 'no-frame' = 'default'
     /** Button size. */
     export let size: 'large' | 'regular' = 'regular'
     /** Disabled state */
@@ -116,10 +116,18 @@
             border: 1px solid var(--cultured);
             background-color: transparent;
             color: var(--lapis-lazuli);
-            :global(body.darkmode) & {
+            :global(.darkmode) & {
                 border-color: #3b3b3b;
                 background-color: transparent;
                 color: var(--middle-green-eagle);
+            }
+        }
+        &.no-frame {
+            background-color: transparent;
+            border: none;
+            font-weight: bold;
+            :global(.darkmode) & {
+                background-color: transparent;
             }
         }
         &.effect::before {

@@ -30,6 +30,7 @@
     <Button>Standard</Button>
     <Button style="primary">Primary</Button>
     <Button style="secondary">Secondary</Button>
+    <Button style="no-frame">No Frame</Button>
     <Button>
         <Text>Icon</Text>
         <Icon name="external-link" />

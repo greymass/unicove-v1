@@ -1,5 +1,6 @@
 <script lang="ts">
     import {activeBlockchain} from '~/store'
+    import type {Token} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
     import Text from '~/components/elements/text.svelte'
@@ -13,6 +14,7 @@
     import StatusFee from '~/pages/transfer/status/fee.svelte'
 
     export let handleTransfer: () => void
+    export let token: Token
 
     let memo: string = ''
 
@@ -34,11 +36,10 @@
 
 <style type="scss">
     .memo-container {
-        padding: 20px 8px 10px 8px;
+        padding: 20px 0 0 0;
 
         span {
             font-weight: bold;
-            margin-left: 8px;
         }
     }
 </style>
@@ -51,7 +52,7 @@
     <StatusAccount editable toAccount={$transferData.toAccount} />
 {/if}
 {#if $transferData.quantity}
-    <StatusQuantity editable quantity={$transferData.quantity} />
+    <StatusQuantity editable quantity={$transferData.quantity} {token} />
 {/if}
 {#if $transferData.quantity && $txFee}
     <StatusFee txFee={$txFee} quantity={$transferData.quantity} />

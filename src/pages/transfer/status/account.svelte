@@ -17,13 +17,6 @@
     const changeStep = editable ? changeRecipient : undefined
 </script>
 
-<style type="scss">
-    span {
-        line-height: 32px;
-        vertical-align: middle;
-    }
-</style>
-
-<Completed header="Receiving Account" {changeStep}>
+<Completed header="To" {changeStep}>
     <span>{toAccount}</span>
 </Completed>
