@@ -9,10 +9,9 @@
     import InputLabel from '~/components/elements/input/label.svelte'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
+    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
-
-    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     export let balance: Readable<Balance | undefined>
     export let token: Token

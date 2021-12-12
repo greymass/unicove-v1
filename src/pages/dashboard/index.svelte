@@ -140,18 +140,6 @@
         margin-top: 16px;
     }
 
-    h3 {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 22px;
-        /* identical to box height */
-
-        letter-spacing: -0.26px;
-        margin-top: 27px;
-    }
-
     .balances {
         :global(.segment) {
             display: flex;

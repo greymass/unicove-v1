@@ -1,8 +1,9 @@
 <script lang="ts">
     import type {Asset} from 'anchor-link'
-    import Completed from '~/pages/transfer/status/template/completed.svelte'
-    import TokenImage from '~/components/elements/image/token.svelte'
+
     import type {Token} from '~/stores/tokens'
+    import TokenImage from '~/components/elements/image/token.svelte'
+    import Completed from '~/pages/transfer/status/template/completed.svelte'
     import {transferData, Step} from '../transfer'
 
     export let quantity: Asset

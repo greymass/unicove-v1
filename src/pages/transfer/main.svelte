@@ -227,12 +227,13 @@
         {/if}
         {#if $transferData.step === Step.Confirm && $transferData.quantity}
             <TransferConfirm {handleTransfer} token={$token} />
+            <TransferSending token={$token} />
         {/if}
         {#if $transferData.step === Step.Receive}
             <TransferReceive />
         {/if}
         {#if $transferData.step === Step.Sending}
-            <TransferSending />
+            <TransferSending token={$token} />
         {/if}
     {:else}
         No balance of this token to transfer!
