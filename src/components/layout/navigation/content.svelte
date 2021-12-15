@@ -40,11 +40,15 @@
     nav {
         transition: 300ms ease-in-out;
         transition-property: width, min-width;
+        background-image: url('/images/noise-light.png');
         background-color: var(--main-grey);
         padding: 26px;
         width: 268px;
         min-width: 268px;
         height: 100vh;
+        :global(.darkmode) & {
+            background-image: url('/images/noise-dark.png');
+        }
         header {
             color: var(--dark-grey);
             font-weight: 600;
