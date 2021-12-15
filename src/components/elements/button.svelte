@@ -153,7 +153,7 @@
         &.disabled {
             pointer-events: none;
             cursor: default;
-            opacity: 0.5;
+            opacity: 0.3;
             cursor: not-allowed;
             pointer-events: all !important;
         }
