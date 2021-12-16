@@ -37,13 +37,10 @@
         right: 0;
         margin-left: auto;
         margin-right: auto;
-        color: #fff;
-        background: var(--lapis-lazuli);
+        color: var(--white);
+        background: var(--main-blue);
         border-radius: 50%;
         padding: 7px;
-        :global(.darkmode) & {
-            background: var(--middle-green-eagle);
-        }
     }
 </style>
 
