@@ -13,6 +13,7 @@
     import Resources from '~/pages/resources/index.svelte'
     import Components from './pages/_components/index.svelte'
     import Loading from './pages/loading.svelte'
+import Loginnew from './pages/loginnew.svelte';
 
     $: document.body.classList.toggle('darkmode', $darkMode)
 
@@ -156,7 +157,7 @@
     {#if !$appReady}
         <Loading />
     {:else if needLogin}
-        <Login />
+        <Loginnew />
     {:else}
         <Route>
             <Route path="/">
