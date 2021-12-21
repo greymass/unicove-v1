@@ -38,7 +38,7 @@
 </style>
 
 <div class="login">
-    <Button {disabled} size="large" style="primary" on:action={loginHandler}>
+    <Button {disabled} size="regular" style="secondary" on:action={loginHandler}>
         <Icon name="log-in" />
         <Text><slot /></Text>
     </Button>

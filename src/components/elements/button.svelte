@@ -113,7 +113,7 @@
             }
         }
         &.secondary {
-            border: 1px solid var(--cultured);
+            border: 1px solid #c4c4c4;
             background-color: transparent;
             color: var(--lapis-lazuli);
             :global(.darkmode) & {

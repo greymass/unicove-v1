@@ -1,14 +1,27 @@
 <script lang="ts">
     export let width: number | undefined = undefined
+    export let variant: 'dark' | 'white' | undefined = undefined
 </script>
 
-<style>
+<style lang="scss">
     path {
         fill: var(--dark-grey);
+        .dark & {
+            fill: var(--middle-green-eagle);
+        }
+        .white & {
+            fill: var(--white);
+        }
     }
 </style>
 
-<svg viewBox="0 0 850 142" fill="none" xmlns="http://www.w3.org/2000/svg" {width}>
+<svg
+    viewBox="0 0 850 142"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {width}
+    class={variant ? variant : ''}
+>
     <path
         d="M146.242 0.500002L165.106 0.5C193.06 0.5 218.566 10.9116 237.904 28.0427V0.500002H274.501V108.507C274.502 108.714 274.503 108.922 274.503 109.13V141.5H237.904V108.621C237.671 74.9946 214.316 46.8227 182.838 38.9998L182.838 141.5H146.242L146.242 0.500002Z"
     />
