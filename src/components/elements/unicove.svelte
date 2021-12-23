@@ -10,7 +10,10 @@
             fill: var(--middle-green-eagle);
         }
         .white & {
-            fill: var(--white);
+            fill: #ffffff;
+            :global(.darkmode) & {
+                fill: #c4c4c4;
+            }
         }
     }
 </style>
