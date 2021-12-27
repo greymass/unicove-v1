@@ -11,6 +11,9 @@
         fill: var(--dark-grey);
         .dark & {
             fill: var(--middle-green-eagle);
+            :global(.darkmode) & {
+                fill: #ffffff;
+            }
         }
         .white & {
             fill: #ffffff;

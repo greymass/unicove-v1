@@ -58,6 +58,9 @@
                     color: var(--middle-green-eagle);
                     font-size: 10px;
                     line-height: 12px;
+                    :global(.darkmode) & {
+                        color: #ffffff;
+                    }
                 }
             }
         }
@@ -72,26 +75,34 @@
             }
         }
     }
+    .noise {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(rgba(255, 255, 255, 0), rgba(150, 150, 150, 0.5)),
+            url('/images/logo-noise.png');
+        mix-blend-mode: overlay;
+    }
     .tagline {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
         position: relative;
-        background: var(--cultured);
+        .background {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+        }
         .sun-container {
             z-index: 0;
             position: absolute;
             max-width: 480px;
             width: 100%;
-        }
-        .noise {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: url('/images/logo-noise.png');
-            mix-blend-mode: overlay;
         }
         .fadeout-border {
             position: absolute;
@@ -101,9 +112,6 @@
             left: 0;
             background: var(--cultured);
             filter: blur(100px);
-            @media (max-width: 629px) {
-                top: 35%;
-            }
         }
         .circle {
             width: 100%;
@@ -123,13 +131,10 @@
             height: 70%;
             top: 45%;
 
-            background: linear-gradient(0deg, var(--melon), var(--melon));
+            background: var(--melon);
             background-blend-mode: overlay;
             mix-blend-mode: normal;
             filter: blur(100px);
-            @media (max-width: 629px) {
-                top: 35%;
-            }
         }
         .union {
             position: absolute;
@@ -138,13 +143,10 @@
             left: 25%;
             top: 60%;
 
-            background: linear-gradient(0deg, var(--cultured), var(--cultured));
+            background: var(--cultured);
             background-blend-mode: overlay;
             mix-blend-mode: normal;
             filter: blur(100px);
-            @media (max-width: 629px) {
-                top: 35%;
-            }
         }
         .cut {
             position: absolute;
@@ -153,13 +155,10 @@
             left: 30%;
             top: 37%;
 
-            background: linear-gradient(0deg, var(--cultured), var(--cultured));
+            background: var(--cultured);
             background-blend-mode: overlay;
             mix-blend-mode: normal;
             filter: blur(100px);
-            @media (max-width: 629px) {
-                top: 35%;
-            }
         }
         .unicove {
             width: 100%;
@@ -208,6 +207,26 @@
             align-items: center;
             justify-content: center;
             max-height: 250px;
+        }
+        .background {
+            z-index: -1;
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background: var(--cultured);
+            .color {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    var(--air-superiority-blue) 0%,
+                    var(--melon) 20%,
+                    var(--melon) 60%,
+                    var(--light-goldenrod-yellow) 100%
+                );
+                mix-blend-mode: normal;
+                filter: blur(50px);
+            }
         }
         .content {
             margin-top: 30px;
@@ -375,14 +394,16 @@
         </div>
     </header>
     <div class="tagline">
-        <div class="sun-container">
-            <div class="circle" />
+        <div class="background">
+            <div class="sun-container">
+                <div class="circle" />
+            </div>
+            <div class="cut" />
+            <div class="cloud" />
+            <div class="union" />
+            <div class="fadeout-border" />
+            <div class="noise" />
         </div>
-        <div class="cut" />
-        <div class="cloud" />
-        <div class="union" />
-        <div class="fadeout-border" />
-        <div class="noise" />
         <div class="unicove">
             <Unicove variant="white" />
         </div>
@@ -409,6 +430,10 @@
     </div>
     <section class="transactions">
         <div class="image">
+            <div class="background">
+                <div class="color" />
+                <div class="noise" />
+            </div>
             <Logo variant="white" />
         </div>
         <div class="content">
