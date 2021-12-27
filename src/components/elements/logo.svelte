@@ -1,18 +1,33 @@
 <script lang="ts">
     export let width: number | undefined = undefined
-    export let dark = false
+    export let variant: 'dark' | 'white' | undefined = undefined
 </script>
 
 <style lang="scss">
+    svg {
+        max-height: 100%;
+    }
     path {
         fill: var(--dark-grey);
         .dark & {
             fill: var(--middle-green-eagle);
         }
+        .white & {
+            fill: #ffffff;
+            :global(.darkmode) & {
+                fill: #c4c4c4;
+            }
+        }
     }
 </style>
 
-<svg viewBox="0 0 377 362" fill="none" xmlns="http://www.w3.org/2000/svg" {width} class:dark>
+<svg
+    viewBox="0 0 377 362"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {width}
+    class={variant ? variant : ''}
+>
     <path
         d="M144.222 133.775C136.592 155.033 140.492 179.432 155.755 197.379L163.419 206.39L163.357 206.462L194.041 242.355L194.021 242.373L196.214 244.952C201.295 250.927 197.085 260.161 189.28 260.161C181.575 260.161 177.383 251.171 182.141 245.2L156.169 214.819L152.65 218.91C125.419 250.571 147.72 299.845 189.28 299.845C230.712 299.845 253.059 250.832 226.086 219.117L225.761 218.765L208.703 201.409C200.187 192.746 196.039 180.648 197.43 168.53L197.441 168.532C197.976 160.437 200.347 152.475 204.498 145.295L204.61 145.1C184.99 152.081 161.57 148.708 145.623 134.981L144.222 133.775Z"
     />

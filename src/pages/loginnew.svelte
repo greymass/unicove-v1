@@ -1,5 +1,6 @@
 <script lang="ts">
-    import {version, isRelease, releaseVersion} from '~/config'
+    import {version, isRelease, releaseVersion, chains} from '~/config'
+    import {preferences} from '~/store'
 
     import Logo from '~/components/elements/logo.svelte'
     import Unicove from '~/components/elements/unicove.svelte'
@@ -9,6 +10,8 @@
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
     import MediaQuery from '~/components/utils/media-query.svelte'
+
+    $: darkmode = $preferences.darkmode
 </script>
 
 <style lang="scss">
@@ -196,14 +199,23 @@
         position: relative;
         z-index: 10;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         .image,
         .content {
             flex: 0 1 400px;
         }
+        .image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-height: 250px;
+        }
         .content {
             h3 {
                 text-align: left;
+            }
+            h4 {
+                color: var(--light-grey);
             }
             p {
                 line-height: 15px;
@@ -212,13 +224,49 @@
                 margin-bottom: 20px;
             }
         }
+        .blockchains {
+            display: flex;
+        }
+
+        .blockchain {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 15px;
+            p {
+                color: var(--light-grey);
+                margin-top: 8px;
+            }
+        }
+    }
+    .usage {
+        margin-top: 150px;
+        max-width: 900px;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h3 {
+            text-align: left;
+        }
+        p {
+            margin-top: 20px;
+        }
+        .features {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            column-gap: 50px;
+        }
     }
 </style>
 
 <div class="container">
     <header>
         <div class="logo">
-            <Logo width={40} dark />
+            <Logo width={40} variant="dark" />
             <div class="title">
                 <div class="unicove">
                     <Unicove width={90} variant="dark" />
@@ -278,7 +326,9 @@
         </div>
     </div>
     <section class="section-1">
-        <div class="image" />
+        <div class="image">
+            <Logo variant="white" />
+        </div>
         <div class="content">
             <h3>The place where your blockchain transactions come to life</h3>
             <p>
@@ -287,13 +337,57 @@
                 activity, and so much more.
             </p>
             <h4>Supported Blockchains</h4>
-            <ul>
-                <li>EOS</li>
-                <li>WAX</li>
-                <li>TELOS</li>
-                <li>Proton</li>
-                <li>FIO</li>
+            <ul class="blockchains">
+                {#each chains.filter((chain) => !chain.testnet) as chain}
+                    <li class="blockchain">
+                        <img
+                            alt={chain.name}
+                            src={`/images/chains/${chain.id}-${darkmode ? 'dark' : 'light'}.svg`}
+                        />
+                        <p>{chain.name}</p>
+                    </li>
+                {/each}
             </ul>
         </div>
+    </section>
+    <section class="usage">
+        <img src="/images/usage.png" alt="Unicove Usage" />
+        <ul class="features">
+            <li class="feature">
+                <h3>Robustly secure</h3>
+                <p>
+                    Unicove is built to work with Anchor, the secure wallet developed by Greymass.
+                    With mobile, desktop, and hardware options, you get access to best-in-class key
+                    management and security.
+                </p>
+            </li>
+            <li class="feature">
+                <h3>Seamless and intuitive</h3>
+                <p>
+                    Unicove’s intutive interface makes it easy to take advantage of every feature
+                    your favorite blockchain has to offer. With your keys safe in Anchor, you can
+                    fully manage your account from any web browser.
+                </p>
+            </li>
+            <li class="feature">
+                <h3>Built for users</h3>
+                <p>
+                    Create transactions, make new accounts, and even earn rewards from your tokens.
+                    All with an easy interface that is always up to date. Super easy to use just
+                    sign in and get stuff done.
+                </p>
+            </li>
+        </ul>
+    </section>
+    <section class="anchor">
+        <div class="text">
+            <h3>Your keys are always safely held by Anchor</h3>
+            <p>
+                Use Anchor to seamlessly and securely interact with any supported EOSIO-based
+                blockchain. Anchor allows you to login to Unicove and manage your account.
+            </p>
+            <a href="https://greymass.com/anchor/">Learn more about Anchor -></a>
+        </div>
+        <div class="image" />
     </section>
 </div>
