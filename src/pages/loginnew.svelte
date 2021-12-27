@@ -10,6 +10,7 @@
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
     import MediaQuery from '~/components/utils/media-query.svelte'
+    import Anchor from '~/components/elements/anchor.svelte'
 
     $: darkmode = $preferences.darkmode
 </script>
@@ -249,6 +250,7 @@
         align-items: center;
 
         h3 {
+            font-size: 20px;
             text-align: left;
         }
         p {
@@ -259,6 +261,29 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             column-gap: 50px;
+        }
+    }
+
+    .anchor {
+        margin-top: 120px;
+        max-width: 900px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        h3 {
+            font-size: 20px;
+            text-align: left;
+        }
+        p,
+        .link {
+            margin-top: 20px;
+        }
+        .image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image {
+            width: 100px;
         }
     }
 </style>
@@ -386,8 +411,16 @@
                 Use Anchor to seamlessly and securely interact with any supported EOSIO-based
                 blockchain. Anchor allows you to login to Unicove and manage your account.
             </p>
-            <a href="https://greymass.com/anchor/">Learn more about Anchor -></a>
+            <div class="link">
+                <Button href="https://greymass.com/anchor/" style="secondary"
+                    >Learn more about Anchor -></Button
+                >
+            </div>
         </div>
-        <div class="image" />
+        <div class="image-container">
+            <div class="image">
+                <Anchor />
+            </div>
+        </div>
     </section>
 </div>
