@@ -196,15 +196,11 @@
             }
         }
     }
-    .section-1 {
+    .transactions {
         position: relative;
         z-index: 10;
-        display: flex;
-        justify-content: space-evenly;
-        .image,
-        .content {
-            flex: 0 1 400px;
-        }
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
         .image {
             display: flex;
             align-items: center;
@@ -288,8 +284,60 @@
         }
     }
     .greymass {
+        margin-bottom: 50px;
         .image {
             width: 150px;
+        }
+    }
+    footer {
+        padding: 70px 0;
+        background: var(--white);
+        .content {
+            display: grid;
+            grid-template-areas: 'logo links support' 'bottom bottom bottom';
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 850px;
+            margin: 0 auto;
+            h4 {
+                font-weight: bold;
+                font-size: 10px;
+                line-height: 12px;
+                text-transform: uppercase;
+                color: var(--rich-black-FOGRA);
+            }
+            p,
+            li {
+                margin-top: 10px;
+                color: var(--main-black);
+                font-style: normal;
+                font-weight: normal;
+                font-size: 13px;
+                line-height: 16px;
+            }
+            .logo {
+                grid-area: logo;
+            }
+            .links {
+                grid-area: links;
+            }
+            .support {
+                grid-area: support;
+                .button {
+                    margin-top: 20px;
+                }
+            }
+            .bottom {
+                grid-area: bottom;
+                border-top: 1px solid var(--cultured);
+                margin-top: 40px;
+                padding-top: 10px;
+                color: var(--dark-grey);
+                display: flex;
+                justify-content: space-between;
+                p {
+                    color: var(--dark-grey);
+                }
+            }
         }
     }
 </style>
@@ -356,7 +404,7 @@
             </div>
         </div>
     </div>
-    <section class="section-1">
+    <section class="transactions">
         <div class="image">
             <Logo variant="white" />
         </div>
@@ -455,3 +503,47 @@
         </div>
     </section>
 </div>
+<footer>
+    <div class="content">
+        <div class="logo"><Logo width={65} /></div>
+        <div class="links">
+            <h4>Unicove</h4>
+            <ul>
+                <li><ButtonLogin>Sign In</ButtonLogin></li>
+                <li>Create new account</li>
+                <li>
+                    <a href="https://forums.eoscommunity.org/c/greymass/anchor-wallet/5">Feedback</a
+                    >
+                </li>
+                <li>
+                    <a href="https://forums.eoscommunity.org/c/greymass/anchor-wallet/5">Support</a>
+                </li>
+                <li>Press</li>
+                <li><a href="https://greymass.com/anchor/download">Get Anchor</a></li>
+            </ul>
+        </div>
+        <div class="support">
+            <h4>Vote and support our endavours</h4>
+            <p>
+                Like our commitment to making the boring blockchain stuff less tedious? Vote for us
+                so we can make fun stuff that simplifies and enhances your blockchain experience!
+            </p>
+            <div class="button">
+                <Button>
+                    <Icon name="thumbs-up" /><Text>Vote for teamgreymass</Text>
+                </Button>
+            </div>
+        </div>
+        <div class="bottom">
+            <p class="version">
+                Unicove
+                {#if isRelease}
+                    {releaseVersion}
+                {:else}
+                    {version}
+                {/if}
+            </p>
+            <p>©2021 Greymass. All rights reserved</p>
+        </div>
+    </div>
+</footer>
