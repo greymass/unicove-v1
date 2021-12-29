@@ -211,13 +211,18 @@
         .background {
             z-index: -1;
             position: absolute;
-            width: 50%;
-            height: 100%;
+            width: 70%;
+            height: 120%;
             background: var(--cultured);
+            @media (max-width: 729px) {
+                height: 70%;
+            }
             .color {
                 position: absolute;
-                width: 100%;
-                height: 100%;
+                top: 15%;
+                left: 15%;
+                width: 70%;
+                height: 70%;
                 background: linear-gradient(
                     var(--air-superiority-blue) 0%,
                     var(--melon) 20%,
