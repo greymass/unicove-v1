@@ -11,6 +11,7 @@
     import Text from '~/components/elements/text.svelte'
     import MediaQuery from '~/components/utils/media-query.svelte'
     import Anchor from '~/components/elements/anchor.svelte'
+    import Features from '~/components/elements/features.svelte'
 
     $: darkmode = $preferences.darkmode
 </script>
@@ -271,6 +272,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        @media (max-width: 842px) {
+            margin-top: 0;
+        }
 
         h3 {
             font-size: 20px;
@@ -279,11 +283,39 @@
         p {
             margin-top: 20px;
         }
+        .big-image {
+            display: flex;
+            justify-content: center;
+            visibility: hidden;
+            height: 0;
+            width: 100%;
+            @media (min-width: 843px) {
+                visibility: visible;
+                height: auto;
+            }
+        }
         .features {
+            width: 100%;
             margin-top: 40px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             column-gap: 50px;
+            @media (max-width: 842px) {
+                grid-template-columns: 1fr;
+            }
+        }
+        .feature {
+            display: flex;
+            flex-direction: column;
+            .image {
+                display: none;
+                width: 250px;
+                height: 150px;
+                align-self: center;
+                @media (max-width: 842px) {
+                    display: flex;
+                }
+            }
         }
     }
 
@@ -463,9 +495,14 @@
         </div>
     </section>
     <section class="usage">
-        <img src="/images/usage.png" alt="Unicove Usage" />
+        <div class="big-image">
+            <Features />
+        </div>
         <ul class="features">
             <li class="feature">
+                <div class="image">
+                    <Features portion="left" />
+                </div>
                 <h3>Robustly secure</h3>
                 <p>
                     Unicove is built to work with Anchor, the secure wallet developed by Greymass.
@@ -474,6 +511,9 @@
                 </p>
             </li>
             <li class="feature">
+                <div class="image">
+                    <Features portion="center" />
+                </div>
                 <h3>Seamless and intuitive</h3>
                 <p>
                     Unicove’s intutive interface makes it easy to take advantage of every feature
@@ -482,6 +522,9 @@
                 </p>
             </li>
             <li class="feature">
+                <div class="image">
+                    <Features portion="right" />
+                </div>
                 <h3>Built for users</h3>
                 <p>
                     Create transactions, make new accounts, and even earn rewards from your tokens.
