@@ -6,6 +6,7 @@
 
     let disabled = false
     let error: Error | undefined
+    export let asLink = false
 
     function loginHandler() {
         disabled = true
@@ -37,12 +38,16 @@
     }
 </style>
 
-<div class="login">
-    <Button {disabled} size="regular" style="secondary" on:action={loginHandler}>
-        <Icon name="log-in" />
-        <Text><slot /></Text>
-    </Button>
-    {#if error}
-        <p class="error">Unable to login: {error.message}</p>
-    {/if}
-</div>
+{#if asLink}
+    <a href={undefined} on:click={loginHandler} alt="login link"><slot /></a>
+{:else}
+    <div class="login">
+        <Button {disabled} size="regular" style="secondary" on:action={loginHandler}>
+            <Icon name="log-in" />
+            <Text><slot /></Text>
+        </Button>
+        {#if error}
+            <p class="error">Unable to login: {error.message}</p>
+        {/if}
+    </div>
+{/if}

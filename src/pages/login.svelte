@@ -378,6 +378,11 @@
             }
             .links {
                 grid-area: links;
+                li,
+                a {
+                    color: var(--main-black);
+                    text-decoration: none;
+                }
             }
             .support {
                 grid-area: support;
@@ -585,17 +590,24 @@
         <div class="links">
             <h4>Unicove</h4>
             <ul>
-                <li><ButtonLogin>Sign In</ButtonLogin></li>
+                <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
                 <li>Create new account</li>
                 <li>
-                    <a href="https://forums.eoscommunity.org/c/greymass/anchor-wallet/5">Feedback</a
+                    <a
+                        href="https://forums.eoscommunity.org/c/greymass/anchor-wallet/5"
+                        target="_blank">Feedback</a
                     >
                 </li>
                 <li>
-                    <a href="https://forums.eoscommunity.org/c/greymass/anchor-wallet/5">Support</a>
+                    <a
+                        href="https://forums.eoscommunity.org/c/greymass/anchor-wallet/5"
+                        target="_blank">Support</a
+                    >
                 </li>
                 <li>Press</li>
-                <li><a href="https://greymass.com/anchor/download">Get Anchor</a></li>
+                <li>
+                    <a href="https://greymass.com/anchor/download" target="_blank">Get Anchor</a>
+                </li>
             </ul>
         </div>
         <div class="support">
