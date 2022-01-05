@@ -21,6 +21,7 @@
         background-image: url('/images/noise-light.png');
         min-height: 100vh;
         overflow: hidden;
+        isolation: isolate;
         :global(.darkmode) & {
             background-image: url('/images/noise-dark.png');
         }
@@ -76,15 +77,6 @@
             }
         }
     }
-    .noise {
-        position: absolute;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(rgba(255, 255, 255, 0), rgba(150, 150, 150, 0.5)),
-            url('/images/logo-noise.png');
-        mix-blend-mode: overlay;
-    }
     .tagline {
         display: flex;
         flex-direction: column;
@@ -98,6 +90,10 @@
             height: 500px;
             display: flex;
             justify-content: center;
+            mix-blend-mode: multiply;
+            :global(.darkmode) & {
+                mix-blend-mode: screen;
+            }
         }
         .sun-container {
             z-index: 0;
@@ -199,40 +195,39 @@
     .transactions {
         max-width: 950px;
         position: relative;
-        z-index: 10;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        &::after {
+            content: ' ';
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 50%;
+            height: 100%;
+            background-image: linear-gradient(
+                var(--air-superiority-blue) 0%,
+                var(--melon) 20%,
+                var(--melon) 60%,
+                var(--light-goldenrod-yellow) 100%
+            );
+            filter: blur(50px);
+            mix-blend-mode: multiply;
+            :global(.darkmode) & {
+                mix-blend-mode: screen;
+            }
+            @media (max-width: 729px) {
+                width: 80%;
+                left: 10%;
+                height: 50%;
+            }
+        }
         .image {
             margin-top: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             max-height: 250px;
-        }
-        .background {
-            z-index: -1;
-            position: absolute;
-            width: 70%;
-            height: 120%;
-            background: var(--cultured);
-            @media (max-width: 729px) {
-                height: 70%;
-            }
-            .color {
-                position: absolute;
-                top: 15%;
-                left: 15%;
-                width: 70%;
-                height: 70%;
-                background: linear-gradient(
-                    var(--air-superiority-blue) 0%,
-                    var(--melon) 20%,
-                    var(--melon) 60%,
-                    var(--light-goldenrod-yellow) 100%
-                );
-                mix-blend-mode: normal;
-                filter: blur(50px);
-            }
         }
         .content {
             margin-top: 30px;
@@ -329,8 +324,7 @@
             font-size: 20px;
             text-align: left;
         }
-        p,
-        .link {
+        p {
             margin-top: 20px;
         }
         .image-container {
@@ -349,7 +343,7 @@
         }
     }
     footer {
-        padding: 70px 0;
+        padding: 70px 15px;
         background: var(--white);
         .content {
             display: grid;
@@ -444,7 +438,6 @@
             <div class="cloud" />
             <div class="union" />
             <div class="fadeout-border" />
-            <div class="noise" />
         </div>
         <div class="unicove">
             <Unicove variant="white" />
@@ -472,10 +465,6 @@
     </div>
     <section class="transactions">
         <div class="image">
-            <div class="background">
-                <div class="color" />
-                <div class="noise" />
-            </div>
             <Logo variant="white" />
         </div>
         <div class="content">
