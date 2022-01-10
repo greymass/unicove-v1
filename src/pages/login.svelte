@@ -17,11 +17,11 @@
 
 <style lang="scss">
     .container {
-        background-image: url('/images/noise-light.png');
+        background-image: url('/images/noise-light.jpeg');
         overflow: hidden;
         isolation: isolate;
         :global(.darkmode) & {
-            background-image: url('/images/noise-dark.png');
+            background-image: url('/images/noise-dark.jpeg');
         }
         > * {
             margin: 0 auto;
@@ -83,86 +83,15 @@
             position: absolute;
             content: '';
             inset: 0;
-            background-image: url('/images/unicove-bg-light.png');
+            background-image: url('/images/unicove-bg-light.jpeg');
             background-repeat: no-repeat;
             background-size: contain;
             background-position: top center;
-        }
-
-        .background {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 500px;
-            display: flex;
-            justify-content: center;
-            mix-blend-mode: multiply;
             :global(.darkmode) & {
-                mix-blend-mode: screen;
+                background-image: url('/images/unicove-bg-dark.jpeg');
             }
         }
-        .sun-container {
-            z-index: 0;
-            position: absolute;
-            max-width: 480px;
-            width: 100%;
-        }
-        .fadeout-border {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 75%;
-            left: 0;
-            background: var(--cultured);
-            filter: blur(100px);
-        }
-        .circle {
-            width: 100%;
-            padding-top: 100%;
-            border-radius: 50%;
-            background: linear-gradient(
-                180deg,
-                var(--air-superiority-blue) 0%,
-                var(--light-goldenrod-yellow) 34.9%,
-                var(--sandy-brown) 67.19%,
-                var(--melon) 99.48%
-            );
-        }
-        .cloud {
-            position: absolute;
-            width: 70%;
-            height: 70%;
-            top: 45%;
 
-            background: var(--melon);
-            background-blend-mode: overlay;
-            mix-blend-mode: normal;
-            filter: blur(100px);
-        }
-        .union {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 25%;
-            top: 60%;
-
-            background: var(--cultured);
-            background-blend-mode: overlay;
-            mix-blend-mode: normal;
-            filter: blur(100px);
-        }
-        .cut {
-            position: absolute;
-            width: 70%;
-            height: 70%;
-            left: 30%;
-            top: 37%;
-
-            background: var(--cultured);
-            background-blend-mode: overlay;
-            mix-blend-mode: normal;
-            filter: blur(100px);
-        }
         .unicove {
             width: 100%;
             padding-top: 160px;
@@ -355,10 +284,13 @@
         .image {
             grid-area: image;
             min-height: 300px;
-            background-image: url('/images/anchor-bg-light.png');
+            background-image: url('/images/anchor-bg-light.jpeg');
             background-size: auto;
             background-repeat: no-repeat;
             background-position: center;
+            :global(.darkmode) & {
+                background-image: url('/images/anchor-bg-dark.jpeg');
+            }
         }
         .link {
             margin-top: 20px;
@@ -369,10 +301,13 @@
         margin-bottom: 50px;
         .image {
             min-height: 500px;
-            background-image: url('/images/greymass-bg-light.png');
+            background-image: url('/images/greymass-bg-light.jpeg');
             background-size: auto;
             background-repeat: no-repeat;
             background-position: center;
+            :global(.darkmode) & {
+                background-image: url('/images/greymass-bg-dark.jpeg');
+            }
         }
     }
     footer {
@@ -496,7 +431,10 @@
     </div>
     <section class="transactions">
         <div class="image">
-            <img src="/images/logo-bg-light.png" alt="Unicove Logo" />
+            <img
+                src={darkmode ? '/images/logo-bg-dark.jpeg' : '/images/logo-bg-light.jpeg'}
+                alt="Unicove Logo"
+            />
         </div>
         <div class="content">
             <h3>The place where your blockchain transactions come to life</h3>
