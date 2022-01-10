@@ -18,7 +18,6 @@
 <style lang="scss">
     .container {
         background-image: url('/images/noise-light.png');
-        min-height: 100vh;
         overflow: hidden;
         isolation: isolate;
         :global(.darkmode) & {
@@ -41,7 +40,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 36px 0 20px 0;
+        padding: 36px 10px 20px 10px;
         .logo {
             display: flex;
             .title {
@@ -79,6 +78,7 @@
         align-items: center;
         justify-content: flex-start;
         position: relative;
+        padding: 0 15px;
         &::after {
             position: absolute;
             content: '';
@@ -203,6 +203,10 @@
         position: relative;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+
+        @media (max-width: 699px) {
+            grid-template-columns: 1fr;
+        }
         .image {
             margin-top: 30px;
             display: flex;
@@ -211,10 +215,16 @@
             max-height: 250px;
             img {
                 max-width: 100%;
+                @media (max-width: 699px) {
+                    width: 100%;
+                    height: 500px;
+                    object-fit: cover;
+                }
             }
         }
         .content {
             margin-top: 30px;
+            padding: 0 15px;
             h3 {
                 text-align: left;
             }
@@ -242,10 +252,20 @@
                 margin-top: 8px;
             }
         }
+        @media (max-width: 355px) {
+            .blockchains {
+                justify-content: space-between;
+            }
+
+            .blockchain {
+                margin-right: 0;
+            }
+        }
     }
     .usage {
         margin-top: 150px;
         max-width: 900px;
+        padding: 0 15px;
         position: relative;
         z-index: 10;
         display: flex;
@@ -315,6 +335,9 @@
         p {
             margin-top: 20px;
         }
+        .text {
+            padding: 0 15px;
+        }
         .image {
             display: flex;
             align-items: center;
@@ -355,12 +378,20 @@
     footer {
         padding: 70px 15px;
         background: var(--white);
+        @media (max-width: 550px) {
+            padding: 40px 15px;
+        }
         .content {
             display: grid;
             grid-template-areas: 'logo links support' 'bottom bottom bottom';
             grid-template-columns: repeat(3, 1fr);
+            row-gap: 50px;
             max-width: 850px;
             margin: 0 auto;
+            @media (max-width: 550px) {
+                grid-template-columns: 100px 1fr;
+                grid-template-areas: 'logo links' 'support support' 'bottom bottom';
+            }
             h4 {
                 font-weight: bold;
                 font-size: 10px;
@@ -397,7 +428,6 @@
             .bottom {
                 grid-area: bottom;
                 border-top: 1px solid var(--cultured);
-                margin-top: 40px;
                 padding-top: 10px;
                 color: var(--dark-grey);
                 display: flex;
