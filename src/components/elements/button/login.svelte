@@ -7,6 +7,7 @@
     let disabled = false
     let error: Error | undefined
     export let asLink = false
+    export let style: 'default' | 'primary' | 'secondary' | 'no-frame' | 'effect' = 'secondary'
 
     function loginHandler() {
         disabled = true
@@ -42,7 +43,7 @@
     <a href={undefined} on:click={loginHandler} alt="login link"><slot /></a>
 {:else}
     <div class="login">
-        <Button {disabled} size="regular" style="secondary" on:action={loginHandler}>
+        <Button {disabled} size="regular" {style} on:action={loginHandler}>
             <Icon name="log-in" />
             <Text><slot /></Text>
         </Button>

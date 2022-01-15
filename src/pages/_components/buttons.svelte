@@ -31,6 +31,7 @@
     <Button style="primary">Primary</Button>
     <Button style="secondary">Secondary</Button>
     <Button style="no-frame">No Frame</Button>
+    <Button style="effect">Effect</Button>
     <Button>
         <Text>Icon</Text>
         <Icon name="external-link" />
@@ -39,12 +40,22 @@
         <Icon name="external-link" />
         <Text>Icon left</Text>
     </Button>
+    <Button>
+        <Icon name="bell" />
+        <Text>Icon</Text>
+        <Icon name="activity" />
+        <Text>everywhere</Text>
+        <Icon name="octagon" />
+    </Button>
 </div>
 
 <p>Large</p>
 <div>
     <Button size="large">Large</Button>
     <Button size="large" style="primary">Large Primary</Button>
+    <Button size="large" style="secondary">Secondary</Button>
+    <Button size="large" style="no-frame">No Frame</Button>
+    <Button size="large" style="effect">Effect</Button>
     <Button size="large">
         <Icon name="unlock" />
         <Text>Icon here</Text>

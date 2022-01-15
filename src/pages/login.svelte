@@ -418,14 +418,14 @@
                     An easy way to create a new account. Supported chains are EOS, WAX, TELOS,
                     Proton, and FIO.
                 </p>
-                <Button style="secondary" size="regular"
+                <Button style="effect" size="regular"
                     ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
             <div class="action">
                 <h3>Login to wallet</h3>
                 <p>Use Anchor to login and manage your account and tokens.</p>
-                <ButtonLogin>Login</ButtonLogin>
+                <ButtonLogin style="effect">Login</ButtonLogin>
             </div>
         </div>
     </div>

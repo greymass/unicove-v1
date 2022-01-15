@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {Writable} from 'svelte/store'
 
-    import {createEventDispatcher, getContext} from 'svelte'
+    import {createEventDispatcher, getContext, onMount} from 'svelte'
     import {spring} from 'svelte/motion'
 
     /** If set button will act as a standard <a href=..tag. */
@@ -9,7 +9,7 @@
     /** Can be used in conjunction with href to set the <a target. */
     export let target: string | undefined = undefined
     /** Whether the button is default primary or secondary. */
-    export let style: 'default' | 'primary' | 'secondary' | 'no-frame' = 'default'
+    export let style: 'default' | 'primary' | 'secondary' | 'no-frame' | 'effect' = 'default'
     /** Button size. */
     export let size: 'large' | 'regular' = 'regular'
     /** Disabled state */
@@ -64,6 +64,32 @@
     function handleMouseenter(event: MouseEvent) {
         hoverPos.set({x: event.offsetX, y: event.offsetY}, {hard: true})
     }
+
+    let initialGradientDeg = 90
+    let gradientDeg = 90
+    if (style === 'effect') {
+        const duration = 1000
+        const degMove = 45
+        let direction: 'POS' | 'NEG' = 'POS'
+        onMount(() => {
+            let frame: number
+            const interval = setInterval(() => {
+                frame = requestAnimationFrame(() => {
+                    gradientDeg = (direction === 'POS' ? gradientDeg + 1 : gradientDeg - 1) % 360
+                    if (direction === 'POS' && gradientDeg >= initialGradientDeg + degMove) {
+                        direction = 'NEG'
+                    } else if (direction === 'NEG' && gradientDeg <= initialGradientDeg - degMove) {
+                        direction = 'POS'
+                    }
+                })
+            }, duration / degMove)
+
+            return () => {
+                cancelAnimationFrame(frame)
+                clearInterval(interval)
+            }
+        })
+    }
 </script>
 
 <style type="scss">
@@ -116,6 +142,7 @@
             border: 1px solid #c4c4c4;
             background-color: transparent;
             color: var(--lapis-lazuli);
+            font-weight: 600;
             :global(.darkmode) & {
                 border-color: #3b3b3b;
                 background-color: transparent;
@@ -130,26 +157,34 @@
                 background-color: transparent;
             }
         }
-        &.effect::before {
-            content: '';
-            position: absolute;
-            display: block;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
+        &.effect {
+            background-color: var(--white);
+            .before {
+                position: absolute;
+                border-radius: var(--radius);
+                inset: -5px;
+                z-index: -1;
+                background: linear-gradient(
+                    90deg,
+                    var(--air-superiority-blue) 0%,
+                    var(--light-goldenrod-yellow) 34.9%,
+                    var(--sandy-brown) 67.19%,
+                    var(--melon) 99.48%
+                );
+                filter: blur(10px);
+                transition: all 200ms ease-in-out;
+            }
+            &:hover .before,
+            &:active .before {
+                inset: 5px;
+                filter: blur(0px);
+            }
+            &:hover,
+            &:active {
+                border-color: var(--cultured);
+            }
         }
-        &.effect:hover::before {
-            background: linear-gradient(
-                90deg,
-                #669bbc 0%,
-                #f5f1cc 34.9%,
-                #ffa253 67.19%,
-                #f9c5b8 99.48%
-            );
-            filter: blur(40px);
-        }
+
         &.disabled {
             pointer-events: none;
             cursor: default;
@@ -231,9 +266,21 @@
     role="button"
     tabindex="0"
 >
-    {#if !isDisabled}
-        <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
+    {#if style === 'effect'}
+        <span
+            class="before"
+            style={`background: linear-gradient(
+            ${gradientDeg}deg,
+            var(--air-superiority-blue) 0%,
+            var(--light-goldenrod-yellow) 34.9%,
+            var(--sandy-brown) 67.19%,
+            var(--melon) 99.48%
+        );`}
+        />
     {/if}
+    <!-- {#if !isDisabled}
+        <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
+    {/if} -->
     <span class="content">
         <slot>Click me</slot>
     </span>
