@@ -69,7 +69,7 @@
     let gradientDeg = 90
     if (style === 'effect') {
         const duration = 1000
-        const degMove = 45
+        const degMove = 15
         let direction: 'POS' | 'NEG' = 'POS'
         onMount(() => {
             let frame: number
