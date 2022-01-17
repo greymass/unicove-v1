@@ -11,6 +11,7 @@
     import Text from '~/components/elements/text.svelte'
     import MediaQuery from '~/components/utils/media-query.svelte'
     import Features from '~/components/elements/features.svelte'
+    import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
 
     $: darkmode = $preferences.darkmode
 </script>
@@ -149,6 +150,9 @@
                     height: 500px;
                     object-fit: cover;
                 }
+            }
+            .logo {
+                position: absolute;
             }
         }
         .content {
@@ -435,6 +439,15 @@
                 src={darkmode ? '/images/logo-bg-dark.jpeg' : '/images/logo-bg-light.jpeg'}
                 alt="Unicove Logo"
             />
+            <div class="logo">
+                <MediaQuery query="(max-width: 699px)" let:matches>
+                    {#if matches}
+                        <UnicoveAnimated style="width: 56%;" />
+                    {:else}
+                        <UnicoveAnimated style="width: 42%;" />
+                    {/if}
+                </MediaQuery>
+            </div>
         </div>
         <div class="content">
             <h3>The place where your blockchain transactions come to life</h3>
