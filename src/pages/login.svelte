@@ -18,6 +18,8 @@
 
 <style lang="scss">
     .container {
+        --padding: 30px;
+
         background-image: url('/images/noise-light.jpeg');
         overflow: hidden;
         isolation: isolate;
@@ -79,7 +81,7 @@
         align-items: center;
         justify-content: flex-start;
         position: relative;
-        padding: 0 15px;
+        padding: 0 var(--padding);
         &::after {
             position: absolute;
             content: '';
@@ -157,7 +159,7 @@
         }
         .content {
             margin-top: 30px;
-            padding: 0 15px;
+            padding: 0 var(--padding);
             h3 {
                 text-align: left;
             }
@@ -172,14 +174,15 @@
             }
         }
         .blockchains {
-            display: flex;
+            display: grid;
+            grid-auto-flow: column;
+            column-gap: 15px;
         }
 
         .blockchain {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-right: 15px;
             p {
                 color: var(--light-grey);
                 margin-top: 8px;
@@ -198,7 +201,7 @@
     .usage {
         margin-top: 150px;
         max-width: 900px;
-        padding: 0 15px;
+        padding: 0 var(--padding);
         position: relative;
         z-index: 10;
         display: flex;
@@ -269,7 +272,7 @@
             margin-top: 20px;
         }
         .text {
-            padding: 0 15px;
+            padding: 0 var(--padding);
         }
         .image {
             display: flex;
@@ -315,10 +318,10 @@
         }
     }
     footer {
-        padding: 70px 15px;
+        padding: 70px 30px;
         background: var(--white);
         @media (max-width: 550px) {
-            padding: 40px 15px;
+            padding: 40px 30px;
         }
         .content {
             display: grid;
