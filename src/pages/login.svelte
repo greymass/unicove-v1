@@ -1,6 +1,6 @@
 <script lang="ts">
     import {version, isRelease, releaseVersion, chains} from '~/config'
-    import {preferences} from '~/store'
+    import {darkMode} from '~/store'
 
     import Logo from '~/components/elements/logo.svelte'
     import Unicove from '~/components/elements/unicove.svelte'
@@ -12,8 +12,6 @@
     import MediaQuery from '~/components/utils/media-query.svelte'
     import Features from '~/components/elements/features.svelte'
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
-
-    $: darkmode = $preferences.darkmode
 </script>
 
 <style lang="scss">
@@ -439,7 +437,7 @@
     <section class="transactions">
         <div class="image">
             <img
-                src={darkmode ? '/images/logo-bg-dark.jpeg' : '/images/logo-bg-light.jpeg'}
+                src={$darkMode ? '/images/logo-bg-dark.jpeg' : '/images/logo-bg-light.jpeg'}
                 alt="Unicove Logo"
             />
             <div class="logo">
@@ -465,7 +463,7 @@
                     <li class="blockchain">
                         <img
                             alt={chain.name}
-                            src={`/images/chains/${chain.id}-${darkmode ? 'dark' : 'light'}.svg`}
+                            src={`/images/chains/${chain.id}-${$darkMode ? 'dark' : 'light'}.svg`}
                         />
                         <p>{chain.name}</p>
                     </li>
