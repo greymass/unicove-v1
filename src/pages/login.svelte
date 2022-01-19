@@ -129,6 +129,7 @@
         }
     }
     .transactions {
+        margin-top: 30px;
         max-width: 950px;
         position: relative;
         display: grid;
@@ -138,6 +139,7 @@
             grid-template-columns: 1fr;
         }
         .image {
+            position: relative;
             margin-top: 30px;
             display: flex;
             align-items: center;
@@ -153,6 +155,10 @@
             }
             .logo {
                 position: absolute;
+                inset: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
         }
         .content {
@@ -226,6 +232,9 @@
                 visibility: visible;
                 height: auto;
             }
+            & :global(svg) {
+                width: 100%;
+            }
         }
         .features {
             width: 100%;
@@ -247,6 +256,9 @@
                 align-self: center;
                 @media (max-width: 842px) {
                     display: flex;
+                }
+                & :global(svg) {
+                    width: 100%;
                 }
             }
         }
@@ -409,7 +421,7 @@
             <ButtonLogin>Login</ButtonLogin>
         </div>
     </header>
-    <div class="tagline">
+    <section class="tagline">
         <div class="unicove">
             <Unicove variant="white" />
         </div>
@@ -433,7 +445,7 @@
                 <ButtonLogin style="effect">Login</ButtonLogin>
             </div>
         </div>
-    </div>
+    </section>
     <section class="transactions">
         <div class="image">
             <img
@@ -443,7 +455,7 @@
             <div class="logo">
                 <MediaQuery query="(max-width: 699px)" let:matches>
                     {#if matches}
-                        <UnicoveAnimated style="width: 56%;" />
+                        <UnicoveAnimated style="width: 70%;" />
                     {:else}
                         <UnicoveAnimated style="width: 42%;" />
                     {/if}
