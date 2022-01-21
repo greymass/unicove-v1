@@ -68,8 +68,8 @@
     let initialGradientDeg = 90
     let gradientDeg = 90
     if (style === 'effect') {
-        const duration = 1000
-        const degMove = 15
+        const duration = 500
+        const degMove = 20
         let direction: 'POS' | 'NEG' = 'POS'
         onMount(() => {
             let frame: number
@@ -101,27 +101,30 @@
         position: relative;
         font-size: 14px;
         display: inline-flex;
-        font-weight: 450;
-        letter-spacing: -0.04px;
         justify-content: center;
+        border: 1px solid var(--main-grey);
         background-color: var(--cultured);
         border-radius: var(--radius);
         padding: 10px 12px;
-        color: var(--lapis-lazuli);
+        color: var(--main-blue);
+        font-weight: bold;
         text-decoration: none;
         user-select: none;
         -webkit-user-select: none;
         cursor: pointer;
         overflow: visible;
         white-space: nowrap;
+        transition: color, background-color, border-color, 150ms ease-in-out;
         &:focus,
         &:hover:not(.disabled) {
             outline: 0;
-            border-color: rgba(0, 0, 0, 0.15);
-            position: relative;
+            background-color: var(--white);
+            border-color: var(--main-blue);
         }
         &:active:not(.disabled) {
-            filter: brightness(105%);
+            border-color: var(--main-blue);
+            background-color: var(--main-blue);
+            color: var(--white);
         }
         &:focus-visible {
             outline: 0;
@@ -129,20 +132,38 @@
         }
         &.primary {
             background-color: var(--lapis-lazuli);
-            color: white;
+            color: var(--white);
+            &:focus,
+            &:hover:not(.disabled) {
+                background-color: var(--white);
+                border-color: var(--main-blue);
+                color: var(--main-blue);
+            }
             &:active:not(.disabled) {
-                filter: contrast(150%) brightness(105%);
+                border-color: var(--main-blue);
+                background-color: var(--main-blue);
+                color: var(--white);
             }
             :global(body.darkmode) & {
                 background-color: var(--middle-green-eagle);
-                color: black;
+                color: var(--white);
             }
         }
         &.secondary {
-            border: 1px solid #c4c4c4;
+            border: 1px solid var(--cultured);
             background-color: transparent;
             color: var(--lapis-lazuli);
-            font-weight: 600;
+            &:focus,
+            &:hover:not(.disabled) {
+                background-color: var(--white);
+                border-color: var(--main-blue);
+                color: var(--main-blue);
+            }
+            &:active:not(.disabled) {
+                border-color: var(--main-blue);
+                background-color: var(--main-blue);
+                color: var(--white);
+            }
             :global(.darkmode) & {
                 border-color: #3b3b3b;
                 background-color: transparent;
@@ -151,8 +172,18 @@
         }
         &.no-frame {
             background-color: transparent;
-            border: none;
-            font-weight: bold;
+            border-color: transparent;
+            &:focus,
+            &:hover:not(.disabled) {
+                background-color: var(--white);
+                border-color: var(--main-blue);
+                color: var(--main-blue);
+            }
+            &:active:not(.disabled) {
+                border-color: var(--main-blue);
+                background-color: var(--main-blue);
+                color: var(--white);
+            }
             :global(.darkmode) & {
                 background-color: transparent;
             }
@@ -162,7 +193,7 @@
             .before {
                 position: absolute;
                 border-radius: var(--radius);
-                inset: -5px;
+                inset: 0;
                 z-index: -1;
                 background: linear-gradient(
                     90deg,
@@ -171,17 +202,8 @@
                     var(--sandy-brown) 67.19%,
                     var(--melon) 99.48%
                 );
-                filter: blur(10px);
+                filter: blur(15px);
                 transition: all 200ms ease-in-out;
-            }
-            &:hover .before,
-            &:active .before {
-                inset: 5px;
-                filter: blur(0px);
-            }
-            &:hover,
-            &:active {
-                border-color: var(--cultured);
             }
         }
 
@@ -205,23 +227,6 @@
         :global(*) {
             pointer-events: none;
         }
-        .hover {
-            position: absolute;
-            transition: 140ms ease-in-out;
-            transition-property: width, left, opacity;
-            top: calc(var(--gradient-size) / -2);
-            left: 0px;
-            border-radius: var(--radius);
-            background: radial-gradient(circle closest-side, white, transparent);
-            width: 0px;
-            height: var(--gradient-size);
-            opacity: 0.15;
-            mix-blend-mode: overlay;
-        }
-        &:hover:not(.disabled) .hover {
-            width: var(--gradient-size);
-            left: calc(var(--gradient-size) / -2);
-        }
         .content {
             z-index: 1;
             display: flex;
@@ -236,12 +241,8 @@
         }
         &.size-large {
             --spacing: 8px;
-            .hover {
-                --gradient-size: 500px;
-            }
             border-radius: 12px;
             font-size: 16px;
-            font-weight: 550;
             letter-spacing: -0.18px;
             padding: 16px 32px;
         }
@@ -278,9 +279,6 @@
         );`}
         />
     {/if}
-    <!-- {#if !isDisabled}
-        <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
-    {/if} -->
     <span class="content">
         <slot>Click me</slot>
     </span>
