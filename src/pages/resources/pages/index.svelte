@@ -44,7 +44,7 @@
     .wrapper {
         margin: 16px 0;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
         gap: 25px;
     }
     .buttons {
