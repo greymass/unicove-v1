@@ -14,11 +14,13 @@
         if ($currentAccount) {
             const max = Number($currentAccount?.cpu_limit.max)
             const usage = Number($currentAccount?.cpu_limit.used)
-            percentage = (usage / max) * 100
+            percentage = isNaN(max) || isNaN(usage) ? 0 : (usage / max) * 100
             if (max === 0 || percentage > 100) {
                 percentage = 100
             }
             return percentage.toFixed(1)
+        } else {
+            return (0).toFixed(1)
         }
     })
 

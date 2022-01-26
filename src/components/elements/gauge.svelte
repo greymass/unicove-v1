@@ -1,7 +1,6 @@
 <script lang="ts">
     import {tweened} from 'svelte/motion'
     import {cubicInOut} from 'svelte/easing'
-    import {onMount} from 'svelte'
 
     import Icon from '~/components/elements/icon.svelte'
 
@@ -61,9 +60,7 @@
             initialAngle,
     })
 
-    onMount(() => {
-        percentageAnimated.set(percentage / 100)
-    })
+    $: percentageAnimated.set(percentage / 100)
 </script>
 
 <style lang="scss">
