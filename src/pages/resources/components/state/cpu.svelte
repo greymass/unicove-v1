@@ -1,5 +1,6 @@
 <script lang="ts">
     import {derived} from 'svelte/store'
+    import Gauge from '~/components/elements/gauge.svelte'
 
     import {currentAccount} from '~/store'
     import Wrapper from './index.svelte'
@@ -20,20 +21,18 @@
             return percentage.toFixed(1)
         }
     })
+
+    $: usagePerc = (Number($currentAccount?.cpu_limit.available) / 1000).toFixed(precision)
 </script>
 
-<Wrapper icon="cpu" {showExtra}>
-    <h4 class="header">CPU</h4>
+<Wrapper {showExtra}>
+    <h4>CPU</h4>
     <h3>
-        {(Number($currentAccount?.cpu_limit.available) / 1000).toFixed(precision)} <span>ms</span>
+        {usagePerc} <span>ms</span>
     </h3>
-    <p>
-        {#if Number($used) < 100}
-            {$used}% Quota Usage
-        {:else}
-            No usable CPU
-        {/if}
-    </p>
+    <div class="gauge">
+        <Gauge icon="cpu" percentage={Number($used)} fallback="No usable CPU" />
+    </div>
     <slot />
     <div slot="extra">
         <ul>

@@ -1,5 +1,6 @@
 <script lang="ts">
     import {derived} from 'svelte/store'
+    import Gauge from '~/components/elements/gauge.svelte'
     import {currentAccount} from '~/store'
 
     import Wrapper from './index.svelte'
@@ -20,22 +21,21 @@
             return percentage.toFixed(1)
         }
     })
+
+    $: usagePerc = (
+        (Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) /
+        1000
+    ).toFixed(precision)
 </script>
 
-<Wrapper icon="hard-drive" {showExtra}>
+<Wrapper {showExtra}>
     <h4>RAM</h4>
     <h3>
-        {((Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) / 1000).toFixed(
-            precision
-        )} <span>kb</span>
+        {usagePerc} <span>kb</span>
     </h3>
-    <p>
-        {#if Number($used) < 100}
-            {$used}% Quota Usage
-        {:else}
-            No usable RAM
-        {/if}
-    </p>
+    <div class="gauge">
+        <Gauge icon="hard-drive" percentage={Number($used)} fallback="No usable RAM" />
+    </div>
     <slot />
     <div slot="extra">
         <ul>

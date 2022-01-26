@@ -1,5 +1,6 @@
 <script lang="ts">
     import {derived} from 'svelte/store'
+    import Gauge from '~/components/elements/gauge.svelte'
 
     import {currentAccount} from '~/store'
     import Wrapper from './index.svelte'
@@ -20,20 +21,17 @@
             return percentage.toFixed(1)
         }
     })
+    $: usagePerc = (Number($currentAccount?.net_limit.available) / 1000).toFixed(precision)
 </script>
 
-<Wrapper icon="wifi" {showExtra}>
+<Wrapper {showExtra}>
     <h4>NET</h4>
     <h3>
-        {(Number($currentAccount?.net_limit.available) / 1000).toFixed(2)} <span>kb</span>
+        {usagePerc} <span>kb</span>
     </h3>
-    <p>
-        {#if Number($used) < 100}
-            {$used}% Quota Usage
-        {:else}
-            No usable NET
-        {/if}
-    </p>
+    <div class="gauge">
+        <Gauge icon="wifi" percentage={Number($used)} fallback="No usable NET" />
+    </div>
     <slot />
     <div slot="extra">
         <ul>

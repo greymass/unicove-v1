@@ -10,9 +10,7 @@
     import ResourceStateRAM from '~/pages/resources/components/state/ram.svelte'
 
     import Button from '~/components/elements/button.svelte'
-    import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
-    import SegmentGroup from '~/components/elements/segment/group.svelte'
 
     const {BuyRAM, PowerUp, REX, Staking} = ChainFeatures
 
@@ -45,6 +43,19 @@
 <style type="scss">
     .wrapper {
         margin: 16px 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 25px;
+    }
+    .buttons {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        & > :global(*) {
+            min-width: 80px;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
     }
     @media only screen and (max-width: 999px) {
         .wrapper {
@@ -54,44 +65,42 @@
 </style>
 
 <div class="wrapper">
-    <SegmentGroup>
-        <ResourceStateRAM>
-            {#if $hasBuyRAM}
-                <Button style="primary" href="/resources/ram/buy">
-                    <Text>Buy RAM</Text>
-                    <Icon name="hard-drive" />
+    <ResourceStateRAM>
+        {#if $hasBuyRAM}
+            <div class="buttons">
+                <Button style="no-frame" href="/resources/ram/buy">
+                    <Text>BUY</Text>
                 </Button>
-                <Button style="primary" href="/resources/ram/sell">
-                    <Text>Sell RAM</Text>
-                    <Icon name="hard-drive" />
+                <Button style="no-frame" href="/resources/ram/sell">
+                    <Text>SELL</Text>
                 </Button>
-            {/if}
-        </ResourceStateRAM>
-        <ResourceStateCPU>
+            </div>
+        {/if}
+    </ResourceStateRAM>
+    <ResourceStateCPU>
+        <div class="buttons">
             {#if $hasREX || $hasPowerUp}
-                <Button style="primary" href="/resources/cpu">
-                    <Text>Rent CPU</Text>
-                    <Icon name="cpu" />
+                <Button style="no-frame" href="/resources/cpu">
+                    <Text>RENT</Text>
                 </Button>
             {:else if $hasStaking}
-                <Button style="primary" href="/resources/cpu/stake">
-                    <Text>Stake CPU</Text>
-                    <Icon name="cpu" />
+                <Button style="no-frame" href="/resources/cpu/stake">
+                    <Text>STAKE</Text>
                 </Button>
             {/if}
-        </ResourceStateCPU>
-        <ResourceStateNET>
+        </div>
+    </ResourceStateCPU>
+    <ResourceStateNET>
+        <div class="buttons">
             {#if $hasREX || $hasPowerUp}
-                <Button style="primary" href="/resources/net">
-                    <Text>Rent NET</Text>
-                    <Icon name="wifi" />
+                <Button style="no-frame" href="/resources/net">
+                    <Text>RENT</Text>
                 </Button>
             {:else if $hasStaking}
-                <Button style="primary" href="/resources/net/stake">
-                    <Text>Stake NET</Text>
-                    <Icon name="wifi" />
+                <Button style="no-frame" href="/resources/net/stake">
+                    <Text>STAKE</Text>
                 </Button>
             {/if}
-        </ResourceStateNET>
-    </SegmentGroup>
+        </div>
+    </ResourceStateNET>
 </div>

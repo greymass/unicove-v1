@@ -1,37 +1,30 @@
 <script lang="ts">
-    import Icon from '~/components/elements/icon.svelte'
-    import Segment from '~/components/elements/segment.svelte'
-
     export let showExtra = false
-    export let icon = 'help-circle'
 </script>
 
 <style type="scss">
-    :global(.state > .icon) {
-        position: absolute;
-        top: 0;
-        color: var(--light-grey);
-        left: -10px;
-        height: 32px;
-        width: 32px;
-    }
     .state {
-        position: relative;
         display: flex;
-        flex-direction: row;
-        :global(.icon + .content) {
-            margin-left: 32px;
+        flex-direction: column;
+        align-items: center;
+        background: var(--main-grey);
+        border-radius: 20px;
+        color: var(--main-black);
+        padding: 22px 26px;
+        .content {
+            flex: 1;
+            min-height: 250px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .extra {
             flex: 1 1 auto;
             :global(ul li) {
                 color: var(--dark-grey);
-                font-family: Inter;
-                font-style: normal;
-                font-weight: normal;
                 font-size: 16px;
                 line-height: 16px;
-                letter-spacing: -0.26px;
                 padding: 0.25em;
                 text-align: right;
                 &:first-child {
@@ -42,40 +35,27 @@
             }
         }
         :global(h3) {
-            font-family: Inter;
-            font-style: normal;
-            font-weight: bold;
-            font-size: 24px;
-            line-height: 24px;
-            /* identical to box height */
-            margin-bottom: 16px;
-
-            letter-spacing: -0.47px;
-
-            color: var(--main-black);
-        }
-        :global(h3 > span) {
+            font-size: 16px;
             font-weight: normal;
-            font-size: 18px;
-            color: var(--light-grey);
+            line-height: 19px;
+            margin-bottom: 8px;
+            color: var(--main-black);
+            text-align: center;
         }
         :global(h4) {
-            color: var(--dark-grey);
-            font-family: Inter;
-            font-style: normal;
             font-weight: bold;
-            font-size: 10px;
-            line-height: 12px;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            letter-spacing: 0.1px;
+            font-size: 18px;
+            line-height: 22px;
+            color: var(--black);
             text-transform: uppercase;
+            text-align: center;
+        }
+        :global(.gauge) {
+            padding: 0 30px;
         }
         :global(p) {
-            font-family: Inter;
-            font-style: normal;
-            font-weight: normal;
+            display: flex;
+            flex-direction: column;
             font-size: 16px;
             line-height: 19px;
             letter-spacing: -0.26px;
@@ -90,16 +70,13 @@
     }
 </style>
 
-<Segment>
-    <div class="state">
-        <Icon name={icon} />
-        <div class="content">
-            <slot />
-        </div>
-        {#if showExtra}
-            <div class="extra">
-                <slot name="extra" />
-            </div>
-        {/if}
+<div class="state">
+    <div class="content">
+        <slot />
     </div>
-</Segment>
+    {#if showExtra}
+        <div class="extra">
+            <slot name="extra" />
+        </div>
+    {/if}
+</div>
