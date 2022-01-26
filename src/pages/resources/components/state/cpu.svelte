@@ -28,25 +28,36 @@
 </script>
 
 <Wrapper {showExtra}>
-    <h4>CPU</h4>
-    <h3>
-        {usagePerc} <span>ms</span>
-    </h3>
+    {#if !showExtra}
+        <h4>CPU</h4>
+        <h3>
+            {usagePerc} <span>ms</span>
+        </h3>
+    {/if}
     <div class="gauge">
         <Gauge icon="cpu" percentage={Number($used)} fallback="No usable CPU" />
     </div>
     <slot />
     <div slot="extra">
+        {#if showExtra}
+            <h4>CPU</h4>
+            <h3>Resource Statistics</h3>
+        {/if}
         <ul>
-            <li>Resource Statistics</li>
             <li>
-                Available: {(Number($currentAccount?.cpu_limit.available) / 1000).toFixed(
-                    precision
-                )} ms
+                <span>Available:</span>
+                <span
+                    >{(Number($currentAccount?.cpu_limit.available) / 1000).toFixed(precision)} ms</span
+                >
             </li>
-            <li>Used: {(Number($currentAccount?.cpu_limit.used) / 1000).toFixed(precision)} ms</li>
             <li>
-                Maximum: {(Number($currentAccount?.cpu_limit.max) / 1000).toFixed(precision)} ms
+                <span>Used:</span>
+                <span>{(Number($currentAccount?.cpu_limit.used) / 1000).toFixed(precision)} ms</span
+                >
+            </li>
+            <li>
+                <span>Maximum:</span>
+                <span>{(Number($currentAccount?.cpu_limit.max) / 1000).toFixed(precision)} ms</span>
             </li>
         </ul>
     </div>

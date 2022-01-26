@@ -27,25 +27,39 @@
 </script>
 
 <Wrapper {showExtra}>
-    <h4>NET</h4>
-    <h3>
-        {usagePerc} <span>kb</span>
-    </h3>
+    {#if !showExtra}
+        <h4>NET</h4>
+        <h3>
+            {usagePerc} <span>kb</span>
+        </h3>
+    {/if}
     <div class="gauge">
         <Gauge icon="wifi" percentage={Number($used)} fallback="No usable NET" />
     </div>
     <slot />
     <div slot="extra">
+        {#if showExtra}
+            <h4>NET</h4>
+            <h3>Resource Statistics</h3>
+        {/if}
         <ul>
-            <li>Resource Statistics</li>
             <li>
-                Available: {(Number($currentAccount?.net_limit.available) / 1000).toFixed(
-                    precision
-                )} kb
+                <span>Available:</span>
+                <span
+                    >{(Number($currentAccount?.net_limit.available) / 1000).toFixed(precision)} kb</span
+                >
             </li>
-            <li>Used: {(Number($currentAccount?.net_limit.used) / 1000).toFixed(precision)} kb</li>
             <li>
-                Maximum: {(Number($currentAccount?.net_limit.max) / 1000).toFixed(precision)} kb
+                <span>Used:</span>
+                <span>
+                    {(Number($currentAccount?.net_limit.used) / 1000).toFixed(precision)}<span>
+                        &nbsp;kb</span
+                    >
+                </span>
+            </li>
+            <li>
+                <span>Maximum:</span>
+                <span>{(Number($currentAccount?.net_limit.max) / 1000).toFixed(precision)} kb</span>
             </li>
         </ul>
     </div>

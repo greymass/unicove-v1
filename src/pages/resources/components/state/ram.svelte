@@ -31,28 +31,38 @@
 </script>
 
 <Wrapper {showExtra}>
-    <h4>RAM</h4>
-    <h3>
-        {usagePerc} <span>kb</span>
-    </h3>
+    {#if !showExtra}
+        <h4>RAM</h4>
+        <h3>
+            {usagePerc} <span>kb</span>
+        </h3>
+    {/if}
     <div class="gauge">
         <Gauge icon="hard-drive" percentage={Number($used)} fallback="No usable RAM" />
     </div>
     <slot />
     <div slot="extra">
+        {#if showExtra}
+            <h4>RAM</h4>
+            <h3>Resource Statistics</h3>
+        {/if}
         <ul>
-            <li>Resource Statistics</li>
             <li>
-                Available: {(
-                    (Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) /
-                    1000
-                ).toFixed(precision)} kb
+                <span>Available:</span>
+                <span
+                    >{(
+                        (Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) /
+                        1000
+                    ).toFixed(precision)} kb</span
+                >
             </li>
             <li>
-                Used: {(Number($currentAccount?.ram_usage) / 1000).toFixed(precision)} kb
+                <span>Used:</span>
+                <span>{(Number($currentAccount?.ram_usage) / 1000).toFixed(precision)} kb</span>
             </li>
             <li>
-                Maximum: {(Number($currentAccount?.ram_quota) / 1000).toFixed(precision)} kb
+                <span>Maximum:</span>
+                <span>{(Number($currentAccount?.ram_quota) / 1000).toFixed(precision)} kb</span>
             </li>
         </ul>
     </div>

@@ -66,6 +66,7 @@
 <style lang="scss">
     .container {
         position: relative;
+        width: 120px;
     }
     path {
         stroke-width: 9;
@@ -80,6 +81,7 @@
     .icon {
         position: absolute;
         inset: 0;
+        top: -20px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -118,7 +120,7 @@
         <path class="color" d={path} />
     </svg>
     <div class="icon">
-        <Icon name={icon} size="massive" />
+        <Icon name={icon} size="huge" />
     </div>
     <p>
         {#if percentage < 100}
