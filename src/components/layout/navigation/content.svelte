@@ -42,14 +42,13 @@
     nav {
         transition: 300ms ease-in-out;
         transition-property: width, min-width;
-        background-image: url('/images/noise-light.png');
-        background-color: var(--main-grey);
+        background-image: url('/images/nav-noise-light.png');
         padding: 26px;
         width: 268px;
         min-width: 268px;
         height: 100vh;
         :global(.darkmode) & {
-            background-image: url('/images/noise-dark.png');
+            background-image: url('/images/nav-noise-dark.png');
         }
         header {
             display: flex;
