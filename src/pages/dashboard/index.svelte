@@ -187,7 +187,6 @@
     }
 
     @media only screen and (max-width: 999px) {
-        h3,
         .balances {
             padding: 0 25px;
         }

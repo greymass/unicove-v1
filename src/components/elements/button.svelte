@@ -1,8 +1,6 @@
 <script lang="ts">
     import type {Writable} from 'svelte/store'
-
-    import {createEventDispatcher, getContext, onMount} from 'svelte'
-    import {spring} from 'svelte/motion'
+    import {createEventDispatcher, getContext} from 'svelte'
 
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
