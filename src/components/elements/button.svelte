@@ -48,48 +48,6 @@
             dispatch('action', event)
         }
     }
-
-    let hoverPos = spring(
-        {x: 0, y: 0},
-        {
-            stiffness: 0.04,
-            damping: 0.2,
-        }
-    )
-
-    function handleMousemove(event: MouseEvent) {
-        hoverPos.set({x: event.offsetX, y: event.offsetY})
-    }
-
-    function handleMouseenter(event: MouseEvent) {
-        hoverPos.set({x: event.offsetX, y: event.offsetY}, {hard: true})
-    }
-
-    let initialGradientDeg = 90
-    let gradientDeg = 90
-    if (style === 'effect') {
-        const duration = 500
-        const degMove = 20
-        let direction: 'POS' | 'NEG' = 'POS'
-        onMount(() => {
-            let frame: number
-            const interval = setInterval(() => {
-                frame = requestAnimationFrame(() => {
-                    gradientDeg = (direction === 'POS' ? gradientDeg + 1 : gradientDeg - 1) % 360
-                    if (direction === 'POS' && gradientDeg >= initialGradientDeg + degMove) {
-                        direction = 'NEG'
-                    } else if (direction === 'NEG' && gradientDeg <= initialGradientDeg - degMove) {
-                        direction = 'POS'
-                    }
-                })
-            }, duration / degMove)
-
-            return () => {
-                cancelAnimationFrame(frame)
-                clearInterval(interval)
-            }
-        })
-    }
 </script>
 
 <style type="scss">
@@ -197,13 +155,27 @@
                 z-index: -1;
                 background: linear-gradient(
                     90deg,
-                    var(--air-superiority-blue) 0%,
-                    var(--light-goldenrod-yellow) 34.9%,
-                    var(--sandy-brown) 67.19%,
-                    var(--melon) 99.48%
+                    var(--air-superiority-blue) 25%,
+                    var(--light-goldenrod-yellow) 41%,
+                    var(--sandy-brown) 58%,
+                    var(--melon) 75%
                 );
+                background-size: 200%;
+                background-position: 25%;
                 filter: blur(15px);
-                transition: all 200ms ease-in-out;
+                animation: bg-effect 4s infinite;
+            }
+        }
+
+        @keyframes bg-effect {
+            0% {
+                background-position: 25%;
+            }
+            50% {
+                background-position: 50%;
+            }
+            100% {
+                background-position: 25%;
             }
         }
 
@@ -256,8 +228,6 @@
 <a
     on:click={handleClick}
     on:keydown={handleKeydown}
-    on:mousemove={handleMousemove}
-    on:mouseenter={handleMouseenter}
     disabled={isDisabled}
     class={`button size-${size} ${style === 'default' ? '' : style}`}
     class:disabled={isDisabled}
@@ -268,16 +238,7 @@
     tabindex="0"
 >
     {#if style === 'effect'}
-        <span
-            class="before"
-            style={`background: linear-gradient(
-            ${gradientDeg}deg,
-            var(--air-superiority-blue) 0%,
-            var(--light-goldenrod-yellow) 34.9%,
-            var(--sandy-brown) 67.19%,
-            var(--melon) 99.48%
-        );`}
-        />
+        <span class="before" />
     {/if}
     <span class="content">
         <slot>Click me</slot>
