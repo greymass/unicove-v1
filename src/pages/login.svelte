@@ -413,8 +413,11 @@
             <ThemeButton />
             <MediaQuery query="(min-width: 536px)" let:matches>
                 {#if matches}
-                    <Button style="secondary" size="regular"
-                        ><Icon name="plus" /><Text>New Account</Text></Button
+                    <Button
+                        style="secondary"
+                        size="regular"
+                        href="https://create.anchor.link/"
+                        target="_blank"><Icon name="plus" /><Text>New Account</Text></Button
                     >
                 {/if}
             </MediaQuery>
@@ -435,8 +438,11 @@
                     An easy way to create a new account. Supported chains are EOS, WAX, TELOS,
                     Proton, and FIO.
                 </p>
-                <Button style="effect" size="regular"
-                    ><Icon name="plus" /><Text>Create new account</Text></Button
+                <Button
+                    style="effect"
+                    size="regular"
+                    href="https://create.anchor.link/"
+                    target="_blank"><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
             <div class="action">
@@ -566,7 +572,9 @@
             <h4>Unicove</h4>
             <ul>
                 <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
-                <li>Create new account</li>
+                <li>
+                    <a href="https://create.anchor.link/" target="_blank"> Create new account</a>
+                </li>
                 <li>
                     <a
                         href="https://forums.eoscommunity.org/c/greymass/anchor-wallet/5"
