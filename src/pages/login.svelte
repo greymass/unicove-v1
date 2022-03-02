@@ -12,6 +12,35 @@
     import MediaQuery from '~/components/utils/media-query.svelte'
     import Features from '~/components/elements/features.svelte'
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
+    import {AccountCreator} from "@greymass/account-creation";
+
+    async function createAccount() {
+        const supportedChains = {
+            aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906:
+                'https://eos.greymass.com',
+            '2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840':
+                'https://jungle3.greymass.com',
+            '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11':
+                'https://telos.greymass.com',
+            '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4':
+                'https://wax.greymass.com',
+        }
+
+        const accountCreator = new AccountCreator({
+            supportedChains,
+            scope: 'unicove',
+        })
+
+        const {error, ...accountDetails} = await accountCreator.createAccount()
+
+        if (error) {
+            console.error(error)
+
+            return alert(`An error occured during account creation: ${error}!`)
+        }
+
+        alert(`Created ${accountDetails.actor} on ${accountDetails.network}!`)
+    }
 </script>
 
 <style lang="scss">
@@ -419,8 +448,8 @@
                     <Button
                         style="tertiary"
                         size="regular"
-                        href="https://create.anchor.link/"
-                        target="_blank"><Icon name="plus" /><Text>New Account</Text></Button
+                        on:action={createAccount}
+                     ><Icon name="plus" /><Text>New Account</Text></Button
                     >
                 {/if}
             </MediaQuery>
@@ -444,8 +473,8 @@
                 <Button
                     style="effect"
                     size="regular"
-                    href="https://create.anchor.link/"
-                    target="_blank"><Icon name="plus" /><Text>Create new account</Text></Button
+                    on:action={createAccount}
+                ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
             <div class="action">
@@ -576,7 +605,7 @@
             <ul>
                 <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
                 <li>
-                    <a href="https://create.anchor.link/" target="_blank"> Create new account</a>
+                    <a on:click={createAccount}> Create new account</a>
                 </li>
                 <li>
                     <a
