@@ -16,7 +16,7 @@
         "acorn": "8.0.1"
     },
     "dependencies": {
-        "@greymass/account-creation": "https://github.com/greymass/account-creation-lib",
+        "@greymass/account-creation": "https://github.com/greymass/account-creation-lib#debug",
         "@greymass/eosio": "^0.4.2",
         "@greymass/eosio-resources": "0.6.4",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",
