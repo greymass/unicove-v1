@@ -29,6 +29,9 @@
         const accountCreator = new AccountCreator({
             supportedChains,
             scope: 'unicove',
+            whalesplainerUrl: __SNOWPACK_ENV__.NODE_ENV === "production" ?
+                __SNOWPACK_ENV__.SNOWPACK_PUBLIC_PRODUCTION_WHALESPLAINER_URL :
+                __SNOWPACK_ENV__.SNOWPACK_PUBLIC_DEVELOPMENT_WHALESPLAINER_URL,
         })
 
         const {error, ...accountDetails} = await accountCreator.createAccount()

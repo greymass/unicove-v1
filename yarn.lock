@@ -900,7 +900,7 @@
 
 "@greymass/account-creation@https://github.com/greymass/account-creation-lib#debug":
   version "0.0.0"
-  resolved "https://github.com/greymass/account-creation-lib#d08879b97ddb2606e34f6f215557094b02454de7"
+  resolved "https://github.com/greymass/account-creation-lib#d2b54f2d5593ae33d3386ca282f9f8b490e70b63"
   dependencies:
     "@greymass/eosio" "^0.5.2"
     eosio-signing-request "^2.3.1"
@@ -927,9 +927,9 @@
     tslib "^2.0.3"
 
 "@greymass/eosio@^0.5.0", "@greymass/eosio@^0.5.2":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@greymass/eosio/-/eosio-0.5.3.tgz#12bec8dcc9d455529c56bc4336d0073184bcb9d7"
-  integrity sha512-HI3NfqaHG7JsZqnKAPcKR4ARYhIabstNu5pWYLRyNxWuzYfFHyfktfU+5I2Y+87igHCPR8iRKc/te0ZTW0QoBw==
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@greymass/eosio/-/eosio-0.5.4.tgz#22ddb16f90aa6841bea4f50c1ddef0cc3b79d384"
+  integrity sha512-bcXsGenmzXtFm6PkGCpWREqTHKG3PDT8peNEH6N358GFwjOuqenMDh/r4eMv2uekNETzyNwQ1VF2Hxb/SaY2ng==
   dependencies:
     bn.js "^4.11.9"
     brorand "^1.1.0"
@@ -2030,10 +2030,18 @@ entities@^2.0.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.2.0.tgz#098dc90ebb83d8dffa089d55256b351d34c4da55"
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
 
-eosio-signing-request@^2.2.0, eosio-signing-request@^2.3.1:
+eosio-signing-request@^2.2.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/eosio-signing-request/-/eosio-signing-request-2.3.1.tgz#9a0b09ec0dcb5cbd461516779fb47890af7365ef"
   integrity sha512-74ouYaB00+Rq4lUxQMRtB9mXU+yd6vW9I6Iq3e8480CO0axaZc7h0ru2GBqO92InclmTnEFDYhr/MFK5yADiJg==
+  dependencies:
+    "@greymass/eosio" "^0.5.0"
+    tslib "^2.0.3"
+
+eosio-signing-request@^2.3.1:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/eosio-signing-request/-/eosio-signing-request-2.4.0.tgz#87e89d4e016a6317e249dc3cc571390a9c2940d3"
+  integrity sha512-jmFAzdXDfuDELN2Xvr857cm/TA0pb9lCoHQvRq9Gb/yp0GfIqWHhJuVyZyLkCHlU2E62rnID7es12qNFmn2l2g==
   dependencies:
     "@greymass/eosio" "^0.5.0"
     tslib "^2.0.3"

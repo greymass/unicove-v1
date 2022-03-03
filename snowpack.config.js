@@ -15,6 +15,9 @@ for (const key of forwardEnv) {
     process.env[`SNOWPACK_PUBLIC_${key}`] = process.env[key]
 }
 
+process.env['SNOWPACK_PUBLIC_PRODUCTION_WHALESPLAINER_URL'] = 'https://create.anchor.link';
+process.env['SNOWPACK_PUBLIC_DEVELOPMENT_WHALESPLAINER_URL'] = 'http://localhost:3000';
+
 /** @type { import("snowpack").SnowpackUserConfig } */
 module.exports = {
     mount: {
