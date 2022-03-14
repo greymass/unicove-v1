@@ -127,7 +127,7 @@
             <span class="percentage">{percentageAnimatedRound}%</span>
             <span class="usage">Quota used</span>
         {:else}
-            {fallback}
+            <span class="percentage">{fallback}</span>
         {/if}
     </p>
 </div>

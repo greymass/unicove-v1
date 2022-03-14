@@ -34,7 +34,7 @@
         </h3>
     {/if}
     <div class="gauge">
-        <Gauge icon="wifi" percentage={Number($used)} fallback="No usable NET" />
+        <Gauge icon="wifi" percentage={Number($used)} fallback="N/A" />
     </div>
     <slot />
     <div slot="extra">

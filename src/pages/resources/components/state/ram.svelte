@@ -38,7 +38,7 @@
         </h3>
     {/if}
     <div class="gauge">
-        <Gauge icon="hard-drive" percentage={Number($used)} fallback="No usable RAM" />
+        <Gauge icon="hard-drive" percentage={Number($used)} fallback="N/A" />
     </div>
     <slot />
     <div slot="extra">
