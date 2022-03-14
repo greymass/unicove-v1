@@ -227,7 +227,6 @@
         {/if}
         {#if $transferData.step === Step.Confirm && $transferData.quantity}
             <TransferConfirm {handleTransfer} token={$token} />
-            <TransferSending token={$token} />
         {/if}
         {#if $transferData.step === Step.Receive}
             <TransferReceive />
