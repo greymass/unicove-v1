@@ -26,8 +26,6 @@
         !$router.path.startsWith('/request')
 </script>
 
-<style lang="scss" global></style>
-
 <svelte:head>
     <script
         async
