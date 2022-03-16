@@ -20,10 +20,12 @@
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
     import {AccountCreator} from '@greymass/account-creation'
 
+    const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
+
     async function createAccount() {
         const accountCreator = new AccountCreator({
             scope: 'unicove',
-            whalesplainerUrl: __SNOWPACK_ENV__.SNOWPACK_PUBLIC_WHALESPLAINER_URL,
+            whalesplainerUrl,
         })
 
         const {error, ...accountDetails} = await accountCreator.createAccount()
