@@ -35,7 +35,7 @@
             if (balance) {
                 validateBalance(value, balance)
             }
-        } catch (errorObject) {
+        } catch (errorObject: any) {
             errorMessage = errorObject.message
             valid = false
             return false

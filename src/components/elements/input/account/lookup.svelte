@@ -22,7 +22,7 @@
                 errorMessage = undefined
                 return false
             }
-        } catch (errorObject) {
+        } catch (errorObject: any) {
             errorMessage = errorObject.message
             return false
         }

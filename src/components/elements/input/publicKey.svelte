@@ -16,7 +16,7 @@
         try {
             validatePresence(value)
             validatePublicKey(value)
-        } catch (errorObject) {
+        } catch (errorObject: any) {
             errorMessage = errorObject.message
             valid = false
             return false

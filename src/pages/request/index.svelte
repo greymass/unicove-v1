@@ -1,7 +1,7 @@
 <script lang="ts">
     import {onMount} from 'svelte'
     import {meta} from 'tinro'
-    import type {API, TransactionHeader} from 'anchor-link'
+    import type {API, TransactionHeader, PermissionLevelType} from 'anchor-link'
 
     import {activeSession} from '~/store'
     import Page from '~/components/layout/page.svelte'
@@ -28,9 +28,13 @@
             const info: API.v1.GetInfoResponse = await $activeSession!.client.v1.chain.get_info()
             const header: TransactionHeader = info.getTransactionHeader()
             const abis = await $currentRequest!.fetchAbis()
+            const auth: PermissionLevelType = {
+                actor: $activeSession.auth.actor,
+                permission: $activeSession.auth.permission,
+            }
             const transaction = $currentRequest!.resolveTransaction(
                 abis,
-                $activeSession.auth,
+                auth,
                 header
             )
             $activeSession!.transact({

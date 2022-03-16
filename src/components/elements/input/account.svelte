@@ -17,7 +17,7 @@
         try {
             validatePresence(value)
             validateAccountLength(value)
-        } catch (errorObject) {
+        } catch (errorObject: any) {
             errorMessage = errorObject.message
             return false
         }

@@ -1,3 +1,8 @@
+<script context="module">
+    declare const __SNOWPACK_ENV__: {
+        SNOWPACK_PUBLIC_WHALESPLAINER_URL: string;
+    };
+</script>
 <script lang="ts">
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
