@@ -32,11 +32,7 @@
                 actor: $activeSession.auth.actor,
                 permission: $activeSession.auth.permission,
             }
-            const transaction = $currentRequest!.resolveTransaction(
-                abis,
-                auth,
-                header
-            )
+            const transaction = $currentRequest!.resolveTransaction(abis, auth, header)
             $activeSession!.transact({
                 transaction,
             })

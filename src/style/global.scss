@@ -1,8 +1,8 @@
-@use "node_modules/inter-ui/default" with (
+@use 'node_modules/inter-ui/default' with (
     $inter-font-display: swap,
     $inter-font-path: '/fonts/inter'
 );
-@use "node_modules/inter-ui/variable" with (
+@use 'node_modules/inter-ui/variable' with (
     $inter-font-display: swap,
     $inter-font-path: '/fonts/inter'
 );

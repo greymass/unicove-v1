@@ -1,8 +1,9 @@
 <script context="module">
     declare const __SNOWPACK_ENV__: {
-        SNOWPACK_PUBLIC_WHALESPLAINER_URL: string;
-    };
+        SNOWPACK_PUBLIC_WHALESPLAINER_URL: string
+    }
 </script>
+
 <script lang="ts">
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
@@ -17,12 +18,12 @@
     import MediaQuery from '~/components/utils/media-query.svelte'
     import Features from '~/components/elements/features.svelte'
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
-    import {AccountCreator} from "@greymass/account-creation";
+    import {AccountCreator} from '@greymass/account-creation'
 
     async function createAccount() {
         const accountCreator = new AccountCreator({
             scope: 'unicove',
-            whalesplainerUrl: __SNOWPACK_ENV__.SNOWPACK_PUBLIC_WHALESPLAINER_URL
+            whalesplainerUrl: __SNOWPACK_ENV__.SNOWPACK_PUBLIC_WHALESPLAINER_URL,
         })
 
         const {error, ...accountDetails} = await accountCreator.createAccount()
@@ -441,8 +442,7 @@
                         style="tertiary"
                         size="regular"
                         on:action={createAccount}
-                     ><Icon name="plus" /><Text>New Account</Text></Button
-                    >
+                     ><Icon name="plus" /><Text>New Account</Text></Button>
                 {/if}
             </MediaQuery>
             <ButtonLogin style="tertiary">Login</ButtonLogin>
@@ -462,11 +462,8 @@
                     An easy way to create a new account. Supported chains are EOS, WAX, TELOS,
                     Proton, and FIO.
                 </p>
-                <Button
-                    style="effect"
-                    size="regular"
-                    on:action={createAccount}
-                ><Icon name="plus" /><Text>Create new account</Text></Button
+                <Button style="effect" size="regular" on:action={createAccount}
+                    ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
             <div class="action">
