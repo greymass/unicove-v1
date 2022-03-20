@@ -3,20 +3,17 @@
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
     import Text from '~/components/elements/text.svelte'
+    import {addToast} from '~/stores/toast'
 
     let disabled = false
-    let error: Error | undefined
     export let asLink = false
     export let style: 'default' | 'primary' | 'secondary' | 'no-frame' | 'effect' = 'secondary'
 
     function loginHandler() {
         disabled = true
         login()
-            .then(() => {
-                error = undefined
-            })
             .catch((err) => {
-                error = err
+                addToast({title: 'Unable to login', message: err.message})
             })
             .finally(() => {
                 disabled = false
@@ -47,8 +44,5 @@
             <Icon name="log-in" />
             <Text><slot /></Text>
         </Button>
-        {#if error}
-            <p class="error">Unable to login: {error.message}</p>
-        {/if}
     </div>
 {/if}

@@ -11,8 +11,9 @@
     import Request from '~/pages/request/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
-    import Components from './pages/_components/index.svelte'
-    import Loading from './pages/loading.svelte'
+    import Components from '~/pages/_components/index.svelte'
+    import Loading from '~/pages/loading.svelte'
+    import Toasts from '~/components/elements/toasts.svelte'
 
     $: document.body.classList.toggle('darkmode', $darkMode)
 
@@ -187,4 +188,5 @@
             {/if}
         </Route>
     {/if}
+    <Toasts />
 </main>
