@@ -29,10 +29,6 @@
         align-content: center;
         justify-content: center;
         align-items: center;
-        .error {
-            margin: 20px;
-            color: var(--error-red);
-        }
     }
 </style>
 
