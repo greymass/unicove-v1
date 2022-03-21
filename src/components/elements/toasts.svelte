@@ -1,7 +1,7 @@
 <script lang="ts">
     import {slide} from 'svelte/transition'
 
-    import Toast from './Toast.svelte'
+    import Toast from '~/components/elements/Toast.svelte'
 
     import {dismissToast, toasts} from '~/stores/toast'
 </script>
