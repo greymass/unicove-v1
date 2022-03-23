@@ -10,6 +10,11 @@
             src: '/images/token-eos.svg',
             darkSrc: '/images/token-eos-dark.svg',
         },
+        '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11-eosio.token-tlos': {
+            name: 'TELOS',
+            src: '/images/chains/telos-light.svg',
+            darkSrc: '/images/chains/telos-dark.svg',
+        },
     }
 </script>
 
