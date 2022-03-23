@@ -21,7 +21,7 @@
 <style type="scss">
     $grid_gap: 4em;
     $navigation_width: 268px;
-    $menubar_height: 5.5em;
+    $menubar_height: 78px;
     $bottom_padding: 4em;
 
     .dimmer {

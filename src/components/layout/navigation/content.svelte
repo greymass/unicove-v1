@@ -43,7 +43,7 @@
         transition: 300ms ease-in-out;
         transition-property: width, min-width;
         background-image: url('/images/nav-noise-light.png');
-        padding: 26px;
+        padding: 18px 26px;
         width: 268px;
         min-width: 268px;
         height: 100vh;
@@ -52,7 +52,8 @@
         }
         header {
             display: flex;
-            padding-bottom: 20px;
+            align-items: flex-start;
+            height: 60px;
             border-bottom: 1px solid var(--divider-grey);
             .title {
                 display: flex;
