@@ -28,6 +28,9 @@
             margin: 0 auto;
             max-width: 1200px;
         }
+        header {
+            max-width: 950px;
+        }
     }
     h2,
     h3 {
