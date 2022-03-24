@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let background: 'white' | 'transparent' | 'image' | '' = ''
+    export let background: 'white' | 'transparent' | 'image' | 'image-alt' | '' = ''
     export let bordered = false
 </script>
 
@@ -17,8 +17,17 @@
         }
         &.image {
             background-image: url('/images/dashboard-bg-1.jpg');
-            background-size: cover;
-            :global(body.darkmode) & {
+            background-size: 200%;
+            background-position: 25% 100%;
+            :global(.darkmode) & {
+                background-image: url('/images/dashboard-bg-2.jpg');
+            }
+        }
+        &.image-alt {
+            background-image: url('/images/dashboard-bg-1.jpg');
+            background-size: 200%;
+            background-position: 0 0;
+            :global(.darkmode) & {
                 background-image: url('/images/dashboard-bg-2.jpg');
             }
         }

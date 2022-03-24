@@ -217,7 +217,7 @@
                             <TokenImage width="60" height="60" tokenKey={$systemTokenKey} />
                         </div>
                     </Segment>
-                    <Segment background="image">
+                    <Segment background="image-alt">
                         <div class="info">
                             <span class="label">Account Value</span>
                             <span class="amount">{fiatFormat($totalUsdValue)}</span>
