@@ -14,6 +14,9 @@
     /** Whether or not to show the left navigation */
     export let displayNavigation = true
 
+    /** Whether or not to show the divider after the page title */
+    export let divider = true
+
     let accountSidebar = false
     let navigationSidebar = false
 </script>
@@ -64,6 +67,11 @@
             max-height: 100vh;
             overflow: hidden;
         }
+
+        &.noRowGap {
+            row-gap: 0;
+        }
+
         :global(.account-button) {
             right: $grid_gap;
         }
@@ -79,7 +87,9 @@
         right: $grid_gap;
         height: $menubar_height;
         background: var(--main-white);
-        border-bottom: 1px solid var(--divider-grey);
+        &.divider {
+            border-bottom: 1px solid var(--divider-grey);
+        }
     }
 
     .page-leftbar {
@@ -139,6 +149,7 @@
     class="grid"
     class:navigation={accountSidebar || navigationSidebar}
     class:withoutsidebar={!displayNavigation || !$activeSession}
+    class:noRowGap={!divider}
 >
     <div
         class="dimmer"
@@ -155,7 +166,7 @@
         </aside>
     {/if}
 
-    <header class="page-header">
+    <header class="page-header" class:divider>
         <NavigationSidebarButton bind:open={navigationSidebar} />
         {#if $$slots.submenu}
             <div class="submenu">
