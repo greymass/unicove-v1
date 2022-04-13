@@ -30,6 +30,7 @@
     <Button>Standard</Button>
     <Button style="primary">Primary</Button>
     <Button style="secondary">Secondary</Button>
+    <Button style="tertiary">Tertiary</Button>
     <Button style="no-frame">No Frame</Button>
     <Button style="effect">Effect</Button>
     <Button>
@@ -54,6 +55,7 @@
     <Button size="large">Large</Button>
     <Button size="large" style="primary">Large Primary</Button>
     <Button size="large" style="secondary">Secondary</Button>
+    <Button size="large" style="tertiary">Tertiary</Button>
     <Button size="large" style="no-frame">No Frame</Button>
     <Button size="large" style="effect">Effect</Button>
     <Button size="large">

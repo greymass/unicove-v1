@@ -7,7 +7,7 @@
 
     let disabled = false
     export let asLink = false
-    export let style: 'default' | 'primary' | 'secondary' | 'no-frame' | 'effect' = 'secondary'
+    export let style: 'default' | 'primary' | 'secondary' | 'tertiary' | 'no-frame' | 'effect' = 'secondary'
 
     function loginHandler() {
         disabled = true

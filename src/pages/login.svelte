@@ -417,14 +417,14 @@
             <MediaQuery query="(min-width: 536px)" let:matches>
                 {#if matches}
                     <Button
-                        style="default"
+                        style="tertiary"
                         size="regular"
                         href="https://create.anchor.link/"
                         target="_blank"><Icon name="plus" /><Text>New Account</Text></Button
                     >
                 {/if}
             </MediaQuery>
-            <ButtonLogin style="default">Login</ButtonLogin>
+            <ButtonLogin style="tertiary">Login</ButtonLogin>
         </div>
     </header>
     <section class="tagline">
