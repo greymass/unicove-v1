@@ -136,7 +136,7 @@
         }
     }
     .header {
-        color: var(--main-black);
+        color: var(--black);
         font-family: Inter;
         font-style: normal;
         font-weight: bold;
@@ -147,7 +147,7 @@
         margin-bottom: 7px;
     }
     .subheader {
-        color: var(--light-grey);
+        color: var(--dark-grey);
         font-family: Inter;
         font-style: normal;
         font-weight: normal;
