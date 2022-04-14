@@ -7,7 +7,8 @@
     /** Can be used in conjunction with href to set the <a target. */
     export let target: string | undefined = undefined
 
-    export let style: 'default' | 'primary' | 'secondary' | 'tertiary' | 'no-frame' | 'effect' = 'default'
+    export let style: 'default' | 'primary' | 'secondary' | 'tertiary' | 'no-frame' | 'effect' =
+        'default'
     /** Button size. */
     export let size: 'large' | 'regular' = 'regular'
     /** Disabled state */
