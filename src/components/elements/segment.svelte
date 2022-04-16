@@ -16,19 +16,17 @@
             background: transparent;
         }
         &.image {
-            background-image: url('/images/dashboard-bg-1.jpg');
-            background-size: 200%;
-            background-position: 25% 100%;
+            background-size: cover;
+            background-image: url('/images/unicove-bright-mode-card-1.jpeg');
             :global(.darkmode) & {
-                background-image: url('/images/dashboard-bg-2.jpg');
+                background-image: url('/images/unicove-dark-mode-card-1.jpeg');
             }
         }
         &.image-alt {
-            background-image: url('/images/dashboard-bg-1.jpg');
-            background-size: 200%;
-            background-position: 0 0;
+            background-size: cover;
+            background-image: url('/images/unicove-bright-mode-card-2.jpeg');
             :global(.darkmode) & {
-                background-image: url('/images/dashboard-bg-2.jpg');
+                background-image: url('/images/unicove-dark-mode-card-2.jpeg');
             }
         }
         &.bordered {
