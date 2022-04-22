@@ -7,6 +7,8 @@
     import type {NavigationItem} from '~/ui-types'
 
     import Icon from '~/components/elements/icon.svelte'
+    import Logo from '~/components/elements/logo.svelte'
+    import Unicove from '~/components/elements/unicove.svelte'
 
     // Dispatched when button is activated via keyboard or click
     const dispatch = createEventDispatcher<{collapse: boolean}>()
@@ -40,30 +42,31 @@
     nav {
         transition: 300ms ease-in-out;
         transition-property: width, min-width;
-        background-color: var(--main-grey);
-        padding: 26px;
+        background-image: url('/images/nav-noise-light.png');
+        padding: 18px 26px;
         width: 268px;
         min-width: 268px;
         height: 100vh;
+        :global(.darkmode) & {
+            background-image: url('/images/nav-noise-dark.png');
+        }
         header {
-            color: var(--dark-grey);
-            font-weight: 600;
-            height: 46px;
             display: flex;
-            overflow: hidden;
+            align-items: flex-start;
+            height: 60px;
+            border-bottom: 1px solid var(--divider-grey);
             .title {
-                transition: 200ms all ease-out;
-                flex-grow: 1;
-                white-space: nowrap;
-                margin-right: 1em;
-                margin-top: 2px;
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                margin-left: 12px;
+                .unicove {
+                    margin-bottom: 4px;
+                }
                 .version {
-                    font-family: Inter;
-                    font-style: normal;
-                    font-weight: 500;
+                    color: var(--dark-grey);
                     font-size: 10px;
-                    line-height: 250%;
-                    letter-spacing: -0.04px;
+                    line-height: 12px;
                 }
             }
             .button {
@@ -71,7 +74,6 @@
                 cursor: pointer;
                 display: none;
             }
-            border-bottom: 1px solid var(--divider-grey);
         }
 
         > ul {
@@ -161,8 +163,11 @@
 
 <nav class:floating>
     <header>
+        <Logo width={40} />
         <div class="title">
-            <div>Untitled web wallet</div>
+            <div class="unicove">
+                <Unicove width={90} />
+            </div>
             <div class="version">
                 {#if isRelease}
                     {releaseVersion}

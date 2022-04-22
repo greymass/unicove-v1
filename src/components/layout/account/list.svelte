@@ -191,7 +191,7 @@
 
 {#if $activeSession}
     <div class="list">
-        <Button fluid primary on:action={handleAdd}>
+        <Button fluid style="primary" on:action={handleAdd}>
             <Icon name="user-plus" />
             <Text>Add another account</Text>
         </Button>

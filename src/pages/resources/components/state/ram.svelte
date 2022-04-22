@@ -1,5 +1,6 @@
 <script lang="ts">
     import {derived} from 'svelte/store'
+    import Gauge from '~/components/elements/gauge.svelte'
     import {currentAccount} from '~/store'
 
     import Wrapper from './index.svelte'
@@ -13,44 +14,55 @@
         if ($currentAccount) {
             const max = Number($currentAccount?.ram_quota)
             const usage = Number($currentAccount?.ram_usage)
-            percentage = (usage / max) * 100
+            percentage = isNaN(max) || isNaN(usage) ? 0 : (usage / max) * 100
             if (max === 0 || percentage > 100) {
                 percentage = 100
             }
             return percentage.toFixed(1)
+        } else {
+            return (0).toFixed(1)
         }
     })
+
+    $: usagePerc = (
+        (Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) /
+        1000
+    ).toFixed(precision)
 </script>
 
-<Wrapper icon="hard-drive" {showExtra}>
-    <h4>RAM</h4>
-    <h3>
-        {((Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) / 1000).toFixed(
-            precision
-        )} <span>kb</span>
-    </h3>
-    <p>
-        {#if Number($used) < 100}
-            {$used}% Quota Usage
-        {:else}
-            No usable RAM
-        {/if}
-    </p>
+<Wrapper {showExtra}>
+    {#if !showExtra}
+        <h4>RAM</h4>
+        <h3>
+            {usagePerc} <span>kb</span>
+        </h3>
+    {/if}
+    <div class="gauge">
+        <Gauge icon="hard-drive" percentage={Number($used)} fallback="N/A" />
+    </div>
     <slot />
     <div slot="extra">
+        {#if showExtra}
+            <h4>RAM</h4>
+            <h3>Resource Statistics</h3>
+        {/if}
         <ul>
-            <li>Resource Statistics</li>
             <li>
-                Available: {(
-                    (Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) /
-                    1000
-                ).toFixed(precision)} kb
+                <span>Available:</span>
+                <span
+                    >{(
+                        (Number($currentAccount?.ram_quota) - Number($currentAccount?.ram_usage)) /
+                        1000
+                    ).toFixed(precision)} kb</span
+                >
             </li>
             <li>
-                Used: {(Number($currentAccount?.ram_usage) / 1000).toFixed(precision)} kb
+                <span>Used:</span>
+                <span>{(Number($currentAccount?.ram_usage) / 1000).toFixed(precision)} kb</span>
             </li>
             <li>
-                Maximum: {(Number($currentAccount?.ram_quota) / 1000).toFixed(precision)} kb
+                <span>Maximum:</span>
+                <span>{(Number($currentAccount?.ram_quota) / 1000).toFixed(precision)} kb</span>
             </li>
         </ul>
     </div>

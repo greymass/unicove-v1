@@ -107,7 +107,7 @@
 <style>
 </style>
 
-<Segment color="white">
+<Segment background="white">
     {#if $activeBlockchain?.chainFeatures.has(PowerUpFeature)}
         <Form on:submit={powerup}>
             <p>Amount of {unit} to rent from PowerUp.</p>

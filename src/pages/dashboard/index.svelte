@@ -140,19 +140,6 @@
         margin-top: 16px;
     }
 
-    h3 {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 22px;
-        /* identical to box height */
-
-        letter-spacing: -0.26px;
-        color: var(--main-black);
-        margin-top: 27px;
-    }
-
     .balances {
         :global(.segment) {
             display: flex;
@@ -169,22 +156,19 @@
             line-height: 12px;
             letter-spacing: 0.1px;
             text-transform: uppercase;
-            color: var(--dark-grey);
+            color: var(--main-black);
         }
         .amount {
-            font-weight: bold;
-            font-size: 18px;
-            line-height: 22px;
+            font-size: 20px;
+            line-height: 24px;
             /* identical to box height */
-            margin: 6px 0;
-            letter-spacing: -0.26px;
-            color: var(--main-black);
+            margin: 10px 0 6px;
+            color: var(--black);
         }
         .symbol {
             font-size: 16px;
             line-height: 19px;
-            letter-spacing: -0.26px;
-            color: var(--main-black);
+            color: var(--black);
         }
         .icon {
             width: 60px;
@@ -192,8 +176,8 @@
             font-size: 38px;
             font-weight: 300;
             text-align: center;
-            color: var(--always-white);
-            background: var(--main-green);
+            color: #000000;
+            background: #ffffff;
             border-radius: 50%;
         }
     }
@@ -203,7 +187,6 @@
     }
 
     @media only screen and (max-width: 999px) {
-        h3,
         .balances {
             padding: 0 25px;
         }
@@ -222,7 +205,7 @@
         <div class="container">
             <div class="balances">
                 <SegmentGroup>
-                    <Segment>
+                    <Segment background="image">
                         <div class="info">
                             <span class="label">
                                 Total {$totalSystemTokens.symbol.name} Balance
@@ -234,7 +217,7 @@
                             <TokenImage width="60" height="60" tokenKey={$systemTokenKey} />
                         </div>
                     </Segment>
-                    <Segment>
+                    <Segment background="image-alt">
                         <div class="info">
                             <span class="label">Account Value</span>
                             <span class="amount">{fiatFormat($totalUsdValue)}</span>
@@ -244,7 +227,6 @@
                     </Segment>
                 </SegmentGroup>
             </div>
-            <h3>Tokens</h3>
             <TokenTable {balances} {rexTokens} {delegatedTokens} />
         </div>
     {/if}

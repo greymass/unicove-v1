@@ -9,10 +9,9 @@
     import InputLabel from '~/components/elements/input/label.svelte'
     import Button from '~/components/elements/button.svelte'
     import Form from '~/components/elements/form.svelte'
+    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     import {transferData, Step} from '~/pages/transfer/transfer'
-
-    import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
     export let balance: Readable<Balance | undefined>
     export let token: Token
@@ -75,14 +74,14 @@
         .value {
             font-family: Inter;
             font-style: normal;
-            font-weight: 600;
+            font-weight: 550;
             font-size: 10px;
             line-height: 12px;
             display: flex;
             align-items: center;
             letter-spacing: 0.1px;
             text-transform: uppercase;
-            color: var(--main-black);
+            color: var(--light-grey);
         }
     }
 </style>
@@ -116,7 +115,7 @@
     {/if}
     <Button
         fluid
-        primary
+        style="primary"
         size="large"
         disabled={!amountValid}
         formValidation

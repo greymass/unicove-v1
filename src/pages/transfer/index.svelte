@@ -147,7 +147,7 @@
     }
 </style>
 
-<Page>
+<Page divider={false}>
     <span slot="submenu">
         <div class="options">
             <span

@@ -50,12 +50,15 @@
 
 <style type="scss">
     .close-button {
-        color: var(--main-blue);
+        color: var(--lapis-lazuli);
         cursor: pointer;
         padding: 32px 22px;
         position: absolute;
         right: 0;
         top: 0;
+        :global(.darkmode) & {
+            color: var(--middle-green-eagle);
+        }
     }
 
     h2 {

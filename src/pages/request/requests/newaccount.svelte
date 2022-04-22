@@ -178,19 +178,22 @@
             {#if $chain}
                 {#if $session}
                     {#if $chain.chainId.equals($session.chainId)}
-                        <Button primary size="large" on:action={sign}
+                        <Button style="primary" size="large" on:action={sign}
                             >Pay to create this account</Button
                         >
                     {:else}
                         <h2>Switch to an account on {$chain.name} to sign.</h2>
-                        <Button primary size="large" disabled>Pay to create this account</Button>
+                        <Button style="primary" size="large" disabled
+                            >Pay to create this account</Button
+                        >
                     {/if}
                 {:else}
                     <p>
                         To approve this request, either scan the QR code above with a compatible
                         wallet or use the button below to manually sign this request with Anchor.
                     </p>
-                    <Button primary size="large" on:action={sign}>Pay to create this account</Button
+                    <Button style="primary" size="large" on:action={sign}
+                        >Pay to create this account</Button
                     >
                 {/if}
             {/if}

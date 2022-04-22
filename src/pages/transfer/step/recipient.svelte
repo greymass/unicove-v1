@@ -61,7 +61,7 @@
                 />
             {/if}
             <Button
-                primary
+                style="primary"
                 disabled={loading}
                 size="large"
                 fluid

@@ -12,6 +12,7 @@
     import QRCode from './qrcode.svelte'
 
     import Nav from '~/components/elements/nav.svelte'
+    import ThemeButton from '~/components/elements/button/mode.svelte'
 
     const routes = [
         {name: 'Buttons', path: 'buttons', component: Buttons},
@@ -44,6 +45,10 @@
         padding: 16px;
         background-color: var(--main-grey);
     }
+    .title {
+        display: flex;
+        justify-content: space-between;
+    }
     hr {
         margin: 0;
         border-style: solid;
@@ -70,7 +75,10 @@
 
 <Route path="/*">
     <header>
-        <h1>Component library 🦄</h1>
+        <div class="title">
+            <h1>Component library 🦄</h1>
+            <ThemeButton />
+        </div>
         <Nav {routes} home="Overview" />
     </header>
     <section>

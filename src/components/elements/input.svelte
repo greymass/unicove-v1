@@ -82,20 +82,24 @@
 
 <style type="scss">
     input {
-        background: var(--main-white);
-        border: 1px solid var(--divider-grey);
+        background: var(--main-grey);
+        border: 1px solid var(--dark-grey);
         border-radius: 12px;
         color: var(--main-black);
         font-size: 14px;
         padding: 10px 12px;
         &:focus {
-            border: 1px solid var(--main-blue);
+            border: 1px solid var(--lapis-lazuli);
             color: var(--main-black);
             outline: none;
         }
 
         &.fullWidth {
             width: 100%;
+        }
+        :global(body.darkmode) & {
+            background-color: #252525;
+            border-color: var(--middle-green-eagle);
         }
     }
 </style>
