@@ -5,8 +5,11 @@
 </script>
 
 <script lang="ts">
+    import {AccountCreator} from '@greymass/account-creation'
+
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
+    import {addToast} from "~/stores/toast";
 
     import Logo from '~/components/elements/logo.svelte'
     import Unicove from '~/components/elements/unicove.svelte'
@@ -18,7 +21,6 @@
     import MediaQuery from '~/components/utils/media-query.svelte'
     import Features from '~/components/elements/features.svelte'
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
-    import {AccountCreator} from '@greymass/account-creation'
 
     const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 
@@ -31,10 +33,10 @@
         const {error, ...accountDetails} = await accountCreator.createAccount()
 
         if (error) {
-            return alert(`An error occured during account creation: ${error}!`)
+            return addToast({title: 'Unable to create account', message: `An error occured during account creation: ${error}!`});
         }
 
-        alert(`Created ${accountDetails.actor} on the chain with id ${accountDetails.network}!`)
+        addToast({title: 'Account created!', message: `Successfully created the "${accountDetails.actor}" account. Please login to continue using Unicove.`})
     }
 </script>
 
