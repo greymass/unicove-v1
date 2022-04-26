@@ -1,4 +1,4 @@
-# Untitled web wallet
+# Unicove
 
 ## Getting Started
 
