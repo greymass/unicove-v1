@@ -1,6 +1,15 @@
+<script context="module">
+    declare const __SNOWPACK_ENV__: {
+        SNOWPACK_PUBLIC_WHALESPLAINER_URL: string
+    }
+</script>
+
 <script lang="ts">
+    import {AccountCreator} from '@greymass/account-creation'
+
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
+    import {addToast} from '~/stores/toast'
 
     import Logo from '~/components/elements/logo.svelte'
     import Unicove from '~/components/elements/unicove.svelte'
@@ -12,6 +21,30 @@
     import MediaQuery from '~/components/utils/media-query.svelte'
     import Features from '~/components/elements/features.svelte'
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
+
+    const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
+
+    async function createAccount() {
+        const accountCreator = new AccountCreator({
+            scope: 'unicove',
+            whalesplainerUrl,
+        })
+
+        const {error, sa: accountName} = await accountCreator.createAccount()
+
+        if (error) {
+            return addToast({
+                title: 'Unable to create account',
+                message: `An error occured during account creation: ${error}!`,
+            })
+        }
+
+        addToast({
+            title: 'Account created!',
+            message: `Successfully created the "${accountName}" account. Please login to use Unicove.`,
+            timeout: 10000,
+        })
+    }
 </script>
 
 <style lang="scss">
@@ -416,11 +449,8 @@
             <ThemeButton />
             <MediaQuery query="(min-width: 536px)" let:matches>
                 {#if matches}
-                    <Button
-                        style="tertiary"
-                        size="regular"
-                        href="https://create.anchor.link/"
-                        target="_blank"><Icon name="plus" /><Text>New Account</Text></Button
+                    <Button style="tertiary" size="regular" on:action={createAccount}
+                        ><Icon name="plus" /><Text>New Account</Text></Button
                     >
                 {/if}
             </MediaQuery>
@@ -441,11 +471,8 @@
                     An easy way to create a new account. Supported chains are EOS, WAX, TELOS,
                     Proton, and FIO.
                 </p>
-                <Button
-                    style="effect"
-                    size="regular"
-                    href="https://create.anchor.link/"
-                    target="_blank"><Icon name="plus" /><Text>Create new account</Text></Button
+                <Button style="effect" size="regular" on:action={createAccount}
+                    ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
             <div class="action">
@@ -576,7 +603,7 @@
             <ul>
                 <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
                 <li>
-                    <a href="https://create.anchor.link/" target="_blank"> Create new account</a>
+                    <a on:click={createAccount}> Create new account</a>
                 </li>
                 <li>
                     <a
@@ -603,7 +630,7 @@
                 so we can make fun stuff that simplifies and enhances your blockchain experience!
             </p>
             <div class="button">
-                <Button href="https://greymass.com/support-us" target="_blank">
+                <Button>
                     <Icon name="thumbs-up" /><Text>Vote for teamgreymass</Text>
                 </Button>
             </div>
