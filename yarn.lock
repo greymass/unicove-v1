@@ -898,12 +898,12 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@greymass/account-creation@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@greymass/account-creation/-/account-creation-0.0.1.tgz#38ca39f6f90c8fb061ee63c7cdd6be8a2891f5df"
-  integrity sha512-DhvxrcirRzJCJryzAWMqH2QIGpYw8ZaUwpwVUrZJx72jw3S+sO42etdmRNzSq/L5Hc3YbJSmSSxBZ4BMfHYCdw==
+"@greymass/account-creation@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@greymass/account-creation/-/account-creation-0.0.2.tgz#ed1d729aee0c1adc1c62dd311db3946aac234cff"
+  integrity sha512-JWNs29FYV9OGPzOJ9U2NOzZDq1gX9fNjVdBW5mo/Ds83LGyRO51zvKyu8tTLu8my9MvhkTj+AqnQA/siYKrWPw==
   dependencies:
-    "@greymass/eosio" "^0.5.2"
+    "@greymass/eosio" "^0.6.0"
     eosio-signing-request "^2.3.1"
     tslib "^2.1.0"
 
@@ -916,10 +916,10 @@
     bn.js "^4.11.9"
     tslib "^2.1.0"
 
-"@greymass/eosio@0.5.2", "@greymass/eosio@^0.4.0", "@greymass/eosio@^0.4.2", "@greymass/eosio@^0.5.0", "@greymass/eosio@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@greymass/eosio/-/eosio-0.5.2.tgz#b7fa20937e6378277534e97b828ea871f1804953"
-  integrity sha512-3qMnm4o3B5GZ0cXK/AaKYyDkFLISHSkO3G0hPtn9aYdzNKuefyacyKWKQjQKC4kKLsNoJQd7d1ldAkV8Z0+0gA==
+"@greymass/eosio@0.6.0", "@greymass/eosio@^0.4.0", "@greymass/eosio@^0.4.2", "@greymass/eosio@^0.5.0", "@greymass/eosio@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@greymass/eosio/-/eosio-0.6.0.tgz#6da636c1651626881cee0a46747559d20412f3a0"
+  integrity sha512-acVKfiuNMkZ9aOFf/EJIk8X5PAoc53ZJeGP0ehpACX3Pz/rFOTmZFDnVaBKTuL3pFSMPA1K5h1la9nC42fDTcw==
   dependencies:
     bn.js "^4.11.9"
     brorand "^1.1.0"

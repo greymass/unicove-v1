@@ -17,7 +17,7 @@
         "@greymass/eosio": "0.6.0"
     },
     "dependencies": {
-        "@greymass/account-creation": "^0.0.1",
+        "@greymass/account-creation": "^0.0.2",
         "@greymass/eosio": "^0.4.2",
         "@greymass/eosio-resources": "0.6.4",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",

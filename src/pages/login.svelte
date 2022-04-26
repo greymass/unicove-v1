@@ -30,13 +30,17 @@
             whalesplainerUrl,
         })
 
-        const {error, ...accountDetails} = await accountCreator.createAccount()
+        const {error, sa: accountName} = await accountCreator.createAccount()
 
         if (error) {
             return addToast({title: 'Unable to create account', message: `An error occured during account creation: ${error}!`});
         }
 
-        addToast({title: 'Account created!', message: `Successfully created the "${accountDetails.actor}" account. Please login to continue using Unicove.`})
+        addToast({
+            title: 'Account created!',
+            message: `Successfully created the "${accountName}" account. Please login to use Unicove.`,
+            timeout: 10000
+        })
     }
 </script>
 
