@@ -175,7 +175,10 @@
     }
 
     // load account based on active session
-    $: loading = loadQuotas() && loadUsage()
+    $: loading = true
+    Promise.all([loadQuotas(), loadUsage()]).then(() => {
+        loading = false
+    })
 </script>
 
 <style type="scss">

@@ -603,7 +603,7 @@
                 so we can make fun stuff that simplifies and enhances your blockchain experience!
             </p>
             <div class="button">
-                <Button>
+                <Button href="https://greymass.com/support-us" target="_blank">
                     <Icon name="thumbs-up" /><Text>Vote for teamgreymass</Text>
                 </Button>
             </div>
