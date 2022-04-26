@@ -1,5 +1,11 @@
+<script context="module">
+    declare const __SNOWPACK_ENV__: {
+        SNOWPACK_PUBLIC_WHALESPLAINER_URL: string
+    }
+</script>
+
 <script lang="ts">
-    import {AccountCreator} from '@greymass/create-account'
+    import {AccountCreator} from '@greymass/account-creation'
 
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
@@ -16,46 +22,28 @@
     import Features from '~/components/elements/features.svelte'
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
 
-    const creationServiceUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
-
-    let creatingAccount = false
-
-    function handleCreateAccount(event: Event) {
-        event.preventDefault()
-
-        if (creatingAccount) return
-
-        creatingAccount = true
-
-        createAccount()
-            .then((accountCreationResponse) => {
-                addToast({
-                    title: 'Account created!',
-                    message: `Successfully created the "${
-                        (accountCreationResponse as any).sa
-                    }" account. Please login to use Unicove.`,
-                    timeout: 10000,
-                })
-            })
-            .catch((error) => {
-                addToast({
-                    title: 'Account not created!',
-                    message: error.message,
-                    timeout: 10000,
-                })
-            })
-            .finally(() => {
-                creatingAccount = false
-            })
-    }
+    const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 
     async function createAccount() {
         const accountCreator = new AccountCreator({
             scope: 'unicove',
-            creationServiceUrl,
+            whalesplainerUrl,
         })
 
-        return accountCreator.createAccount()
+        const {error, sa: accountName} = await accountCreator.createAccount()
+
+        if (error) {
+            return addToast({
+                title: 'Unable to create account',
+                message: `An error occured during account creation: ${error}!`,
+            })
+        }
+
+        addToast({
+            title: 'Account created!',
+            message: `Successfully created the "${accountName}" account. Please login to use Unicove.`,
+            timeout: 10000,
+        })
     }
 </script>
 
@@ -461,11 +449,7 @@
             <ThemeButton />
             <MediaQuery query="(min-width: 536px)" let:matches>
                 {#if matches}
-                    <Button
-                        style="tertiary"
-                        size="regular"
-                        on:action={handleCreateAccount}
-                        disabled={creatingAccount}
+                    <Button style="tertiary" size="regular" on:action={createAccount}
                         ><Icon name="plus" /><Text>New Account</Text></Button
                     >
                 {/if}
@@ -487,11 +471,7 @@
                     An easy way to create a new account. Supported chains are EOS, WAX, TELOS,
                     Proton, and FIO.
                 </p>
-                <Button
-                    style="effect"
-                    size="regular"
-                    on:action={handleCreateAccount}
-                    disabled={creatingAccount}
+                <Button style="effect" size="regular" on:action={createAccount}
                     ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
@@ -623,9 +603,7 @@
             <ul>
                 <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
                 <li>
-                    <a href="https://create.anchor.link/" on:click={handleCreateAccount}>
-                        Create new account</a
-                    >
+                    <a on:click={createAccount}> Create new account</a>
                 </li>
                 <li>
                     <a
@@ -652,7 +630,7 @@
                 so we can make fun stuff that simplifies and enhances your blockchain experience!
             </p>
             <div class="button">
-                <Button href="https://greymass.com/support-us" target="_blank">
+                <Button>
                     <Icon name="thumbs-up" /><Text>Vote for teamgreymass</Text>
                 </Button>
             </div>
