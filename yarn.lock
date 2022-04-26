@@ -909,6 +909,15 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@greymass/account-creation@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@greymass/account-creation/-/account-creation-0.0.2.tgz#ed1d729aee0c1adc1c62dd311db3946aac234cff"
+  integrity sha512-JWNs29FYV9OGPzOJ9U2NOzZDq1gX9fNjVdBW5mo/Ds83LGyRO51zvKyu8tTLu8my9MvhkTj+AqnQA/siYKrWPw==
+  dependencies:
+    "@greymass/eosio" "^0.6.0"
+    eosio-signing-request "^2.3.1"
+    tslib "^2.1.0"
+
 "@greymass/eosio-resources@0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@greymass/eosio-resources/-/eosio-resources-0.7.0.tgz#41425a22434818dd5caf175a4ffb0feab29fed0b"
@@ -2035,7 +2044,7 @@ entities@^2.0.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.2.0.tgz#098dc90ebb83d8dffa089d55256b351d34c4da55"
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
 
-eosio-signing-request@^2.2.0:
+eosio-signing-request@^2.2.0, eosio-signing-request@^2.3.1:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/eosio-signing-request/-/eosio-signing-request-2.4.0.tgz#87e89d4e016a6317e249dc3cc571390a9c2940d3"
   integrity sha512-jmFAzdXDfuDELN2Xvr857cm/TA0pb9lCoHQvRq9Gb/yp0GfIqWHhJuVyZyLkCHlU2E62rnID7es12qNFmn2l2g==
