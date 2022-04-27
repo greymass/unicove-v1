@@ -52,7 +52,8 @@
         border-radius: 12px;
         max-width: 400px;
         border: 1px solid var(--divider-grey);
-        position: relative;
+        display: flex;
+        align-items: center;
         cursor: pointer;
 
         &:hover {
@@ -64,14 +65,12 @@
         }
 
         .logo-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 10px;
-            margin-right: 5px;
+            display: flex;
+            margin-right: 15px;
         }
 
         .name-text {
+            flex: 1;
             font-family: Inter;
             font-style: normal;
             font-weight: 500;
@@ -79,17 +78,17 @@
             letter-spacing: -0.04px;
             color: var(--main-black);
             display: inline;
-            margin-left: 25px;
             text-align: left;
 
             &.blueText {
-                color: var(--main-blue);
+                color: var(--lapis-lazuli);
+                :global(.darkmode) & {
+                    color: var(--middle-green-eagle);
+                }
             }
         }
 
         .balance-container {
-            display: inline;
-            float: right;
             padding: 5px;
             width: 70px;
             font-family: Inter;
@@ -109,11 +108,8 @@
         }
 
         .arrow-container {
-            position: absolute;
-            right: 15px;
-            top: 0;
+            display: flex;
             width: 20px;
-            padding: 10px;
         }
     }
 </style>

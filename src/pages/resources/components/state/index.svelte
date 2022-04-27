@@ -1,81 +1,78 @@
 <script lang="ts">
-    import Icon from '~/components/elements/icon.svelte'
-    import Segment from '~/components/elements/segment.svelte'
-
     export let showExtra = false
-    export let icon = 'help-circle'
 </script>
 
 <style type="scss">
-    :global(.state > .icon) {
-        position: absolute;
-        top: 0;
-        color: var(--light-grey);
-        left: -10px;
-        height: 32px;
-        width: 32px;
-    }
     .state {
-        position: relative;
         display: flex;
-        flex-direction: row;
-        :global(.icon + .content) {
-            margin-left: 32px;
+        justify-content: center;
+        background: var(--main-grey);
+        border-radius: 20px;
+        color: var(--main-black);
+        padding: 22px 26px;
+        &.extra {
+            background: transparent;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .content {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        &.extra .content {
+            max-width: 120px;
         }
         .extra {
             flex: 1 1 auto;
+            margin-left: 20px;
             :global(ul li) {
-                color: var(--dark-grey);
-                font-family: Inter;
-                font-style: normal;
-                font-weight: normal;
+                color: var(--light-grey);
                 font-size: 16px;
                 line-height: 16px;
-                letter-spacing: -0.26px;
-                padding: 0.25em;
-                text-align: right;
-                &:first-child {
-                    font-weight: bold;
-                    font-size: 12px;
-                    line-height: 14px;
-                }
+                padding: 2px 0;
+                display: flex;
+                max-width: 200px;
+                justify-content: space-between;
             }
         }
         :global(h3) {
-            font-family: Inter;
-            font-style: normal;
-            font-weight: bold;
-            font-size: 24px;
-            line-height: 24px;
-            /* identical to box height */
-            margin-bottom: 16px;
-
-            letter-spacing: -0.47px;
-
-            color: var(--main-black);
-        }
-        :global(h3 > span) {
+            font-size: 16px;
             font-weight: normal;
-            font-size: 18px;
+            line-height: 19px;
+            margin-bottom: 8px;
             color: var(--light-grey);
-        }
-        :global(h4) {
-            color: var(--dark-grey);
-            font-family: Inter;
-            font-style: normal;
-            font-weight: bold;
-            font-size: 10px;
-            line-height: 12px;
-            display: flex;
-            align-items: center;
             text-align: center;
-            letter-spacing: 0.1px;
+        }
+        :global(.extra h3) {
+            margin-top: 10px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 14px;
             text-transform: uppercase;
         }
+        :global(h4) {
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 22px;
+            color: var(--black);
+            text-transform: uppercase;
+            text-align: center;
+        }
+        :global(.extra h4) {
+            text-align: left;
+        }
+        :global(.gauge) {
+            display: flex;
+            justify-content: center;
+        }
         :global(p) {
-            font-family: Inter;
-            font-style: normal;
-            font-weight: normal;
+            display: flex;
+            flex-direction: column;
             font-size: 16px;
             line-height: 19px;
             letter-spacing: -0.26px;
@@ -90,16 +87,13 @@
     }
 </style>
 
-<Segment>
-    <div class="state">
-        <Icon name={icon} />
-        <div class="content">
-            <slot />
-        </div>
-        {#if showExtra}
-            <div class="extra">
-                <slot name="extra" />
-            </div>
-        {/if}
+<div class="state" class:extra={showExtra}>
+    <div class="content">
+        <slot />
     </div>
-</Segment>
+    {#if showExtra}
+        <div class="extra">
+            <slot name="extra" />
+        </div>
+    {/if}
+</div>

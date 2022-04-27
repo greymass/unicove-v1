@@ -48,9 +48,43 @@
 <style type="scss">
     .container {
         &:nth-child(even) {
-            background: var(--main-grey);
+            background: linear-gradient(
+                90deg,
+                rgba(248, 248, 248, 0) 0%,
+                #f8f8f8 17.71%,
+                #f8f8f8 80.73%,
+                rgba(249, 249, 249, 0) 100%
+            );
+            :global(.darkmode) & {
+                background: linear-gradient(
+                    90deg,
+                    rgba(17, 17, 17, 0) 0%,
+                    #111111 17.71%,
+                    #111111 80.73%,
+                    rgba(17, 17, 17, 0) 100%
+                );
+            }
             .logo .wrapper {
                 background: var(--main-white);
+            }
+        }
+
+        &:hover {
+            background: linear-gradient(
+                90deg,
+                rgba(102, 155, 188, 0) 0%,
+                rgba(102, 155, 188, 0.1) 17.71%,
+                rgba(102, 155, 188, 0.1) 80.73%,
+                rgba(102, 155, 188, 0) 100%
+            );
+            :global(.darkmode) & {
+                background: linear-gradient(
+                    90deg,
+                    rgba(153, 100, 67, 0) 0%,
+                    rgba(153, 100, 67, 0.2) 17.71%,
+                    rgba(153, 100, 67, 0.2) 80.73%,
+                    rgba(153, 100, 67, 0) 100%
+                );
             }
         }
         .row {
@@ -71,7 +105,7 @@
                 flex: 0;
             }
             &:hover {
-                background-color: var(--light-blue);
+                // background-color: var(--light-blue);
                 .controls :global(.button) {
                     display: block;
                 }
@@ -222,7 +256,7 @@
             <div class="controls">
                 <div class="desktop">
                     {#if transferable}
-                        <Button href={$url} primary>
+                        <Button href={$url} style="secondary">
                             <Icon name="arrow-up" />
                             <Text>Send</Text>
                         </Button>
@@ -249,7 +283,7 @@
                 {/if}
             </div>
             {#if transferable}
-                <Button fluid href={$url} primary>
+                <Button fluid href={$url} style="secondary">
                     <Icon name="arrow-up" />
                     <Text>Send</Text>
                 </Button>

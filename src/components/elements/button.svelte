@@ -1,15 +1,14 @@
 <script lang="ts">
     import type {Writable} from 'svelte/store'
-
     import {createEventDispatcher, getContext} from 'svelte'
-    import {spring} from 'svelte/motion'
 
     /** If set button will act as a standard <a href=..tag. */
     export let href: string | undefined = undefined
     /** Can be used in conjunction with href to set the <a target. */
     export let target: string | undefined = undefined
-    /** Whether the button is primary. */
-    export let primary: boolean = false
+
+    export let style: 'default' | 'primary' | 'secondary' | 'tertiary' | 'no-frame' | 'effect' =
+        'default'
     /** Button size. */
     export let size: 'large' | 'regular' = 'regular'
     /** Disabled state */
@@ -48,22 +47,6 @@
             dispatch('action', event)
         }
     }
-
-    let hoverPos = spring(
-        {x: 0, y: 0},
-        {
-            stiffness: 0.04,
-            damping: 0.2,
-        }
-    )
-
-    function handleMousemove(event: MouseEvent) {
-        hoverPos.set({x: event.offsetX, y: event.offsetY})
-    }
-
-    function handleMouseenter(event: MouseEvent) {
-        hoverPos.set({x: event.offsetX, y: event.offsetY}, {hard: true})
-    }
 </script>
 
 <style type="scss">
@@ -75,41 +58,133 @@
         position: relative;
         font-size: 14px;
         display: inline-flex;
-        font-weight: 450;
-        letter-spacing: -0.04px;
         justify-content: center;
-        background-color: var(--light-blue);
+        border: 1px solid var(--main-grey);
+        background-color: var(--cultured);
         border-radius: var(--radius);
         padding: 10px 12px;
         color: var(--main-blue);
+        font-weight: bold;
         text-decoration: none;
         user-select: none;
         -webkit-user-select: none;
         cursor: pointer;
-        overflow: hidden;
+        overflow: visible;
         white-space: nowrap;
-        &.primary {
+        transition: color, background-color, border-color, 150ms ease-in-out;
+        &:focus,
+        &:hover:not(.disabled) {
+            outline: 0;
+            background-color: var(--white);
+            border-color: var(--main-blue);
+        }
+        &:active:not(.disabled) {
+            border-color: var(--main-blue);
             background-color: var(--main-blue);
-            color: white;
-            &:active:not(.disabled) {
-                filter: contrast(150%) brightness(105%);
-            }
+            color: var(--white);
         }
         &:focus-visible {
             outline: 0;
             text-decoration: underline;
         }
-        &:focus,
-        &:hover:not(.disabled) {
-            outline: 0;
-            border-color: rgba(0, 0, 0, 0.15);
-            position: relative;
+        &.primary {
+            background-color: var(--lapis-lazuli);
+            color: var(--white);
+            &:focus,
+            &:hover:not(.disabled) {
+                background-color: var(--white);
+                border-color: var(--main-blue);
+                color: var(--main-blue);
+            }
+            &:active:not(.disabled) {
+                border-color: var(--main-blue);
+                background-color: var(--main-blue);
+                color: var(--white);
+            }
+            :global(body.darkmode) & {
+                background-color: var(--middle-green-eagle);
+                color: var(--white);
+            }
         }
-        &:active:not(.disabled) {
-            filter: brightness(105%);
+        &.secondary {
+            border: 1px solid var(--cultured);
+            background-color: transparent;
+            color: var(--lapis-lazuli);
+            &:focus,
+            &:hover:not(.disabled) {
+                background-color: var(--white);
+                border-color: var(--main-blue);
+                color: var(--main-blue);
+            }
+            &:active:not(.disabled) {
+                border-color: var(--main-blue);
+                background-color: var(--main-blue);
+                color: var(--white);
+            }
+            :global(.darkmode) & {
+                border-color: #3b3b3b;
+                background-color: transparent;
+                color: var(--middle-green-eagle);
+            }
         }
+
+        &.tertiary {
+            border-color: var(--white);
+            background-color: var(--white);
+        }
+
+        &.no-frame {
+            background-color: transparent;
+            border-color: transparent;
+            &:focus,
+            &:hover:not(.disabled) {
+                background-color: var(--white);
+                border-color: var(--main-blue);
+                color: var(--main-blue);
+            }
+            &:active:not(.disabled) {
+                border-color: var(--main-blue);
+                background-color: var(--main-blue);
+                color: var(--white);
+            }
+            :global(.darkmode) & {
+                background-color: transparent;
+            }
+        }
+        &.effect {
+            background-color: var(--white);
+            .before {
+                position: absolute;
+                border-radius: var(--radius);
+                inset: 0;
+                z-index: -1;
+                background: linear-gradient(
+                    90deg,
+                    var(--air-superiority-blue) 25%,
+                    var(--light-goldenrod-yellow) 41%,
+                    var(--sandy-brown) 58%,
+                    var(--melon) 75%
+                );
+                background-size: 200%;
+                background-position: 25%;
+                filter: blur(15px);
+                animation: bg-effect 4s infinite;
+            }
+        }
+
+        @keyframes bg-effect {
+            0% {
+                background-position: 25%;
+            }
+            50% {
+                background-position: 50%;
+            }
+            100% {
+                background-position: 25%;
+            }
+        }
+
         &.disabled {
-            color: var(--always-white);
             pointer-events: none;
             cursor: default;
             opacity: 0.3;
@@ -129,23 +204,6 @@
         :global(*) {
             pointer-events: none;
         }
-        .hover {
-            position: absolute;
-            transition: 140ms ease-in-out;
-            transition-property: width, left, opacity;
-            top: calc(var(--gradient-size) / -2);
-            left: 0px;
-            border-radius: var(--radius);
-            background: radial-gradient(circle closest-side, white, transparent);
-            width: 0px;
-            height: var(--gradient-size);
-            opacity: 0.15;
-            mix-blend-mode: overlay;
-        }
-        &:hover:not(.disabled) .hover {
-            width: var(--gradient-size);
-            left: calc(var(--gradient-size) / -2);
-        }
         .content {
             z-index: 1;
             display: flex;
@@ -160,14 +218,14 @@
         }
         &.size-large {
             --spacing: 8px;
-            .hover {
-                --gradient-size: 500px;
-            }
             border-radius: 12px;
             font-size: 16px;
-            font-weight: 550;
             letter-spacing: -0.18px;
             padding: 16px 32px;
+        }
+        :global(body.darkmode) & {
+            background-color: #252525;
+            color: var(--middle-green-eagle);
         }
     }
 </style>
@@ -175,20 +233,17 @@
 <a
     on:click={handleClick}
     on:keydown={handleKeydown}
-    on:mousemove={handleMousemove}
-    on:mouseenter={handleMouseenter}
     disabled={isDisabled}
-    class={`button size-${size}`}
+    class={`button size-${size} ${style === 'default' ? '' : style}`}
     class:disabled={isDisabled}
     class:fluid
-    class:primary
     {href}
     {target}
     role="button"
     tabindex="0"
 >
-    {#if !isDisabled}
-        <span class="hover" style={`transform: translate(${$hoverPos.x}px, ${$hoverPos.y}px)`} />
+    {#if style === 'effect'}
+        <span class="before" />
     {/if}
     <span class="content">
         <slot>Click me</slot>

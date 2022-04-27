@@ -126,7 +126,7 @@
 <style>
 </style>
 
-<Segment color="white">
+<Segment background="white">
     {#if $activeBlockchain?.chainFeatures.has(REX)}
         <Form on:submit={rex}>
             <p>Amount of {unit} to rent from REX.</p>

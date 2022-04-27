@@ -130,7 +130,9 @@
     <footer>
         <div>
             <slot name="done">
-                <Button primary fluid size="large" on:action={() => router.goto('/')}>Done</Button>
+                <Button style="primary" fluid size="large" on:action={() => router.goto('/')}
+                    >Done</Button
+                >
             </slot>
         </div>
         <div>

@@ -1,6 +1,6 @@
 {
-    "name": "Untitled web wallet",
-    "short_name": "Untitled web wallet",
+    "name": "Unicove",
+    "short_name": "Unicove",
     "start_url": "/",
     "icons": [
         {
@@ -20,7 +20,7 @@
             "purpose": "maskable"
         }
     ],
-    "theme_color": "#E8E8E8",
-    "background_color": "#585D6E",
+    "theme_color": "#EFEFEF",
+    "background_color": "#111111",
     "display": "minimal-ui"
 }

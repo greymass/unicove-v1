@@ -1,20 +1,19 @@
 <script>
-    import {activeSession, preferences, darkMode} from '~/store'
+    import {activeSession} from '~/store'
     import Icon from '~/components/elements/icon.svelte'
+    import ThemeButton from '~/components/elements/button/mode.svelte'
 
     export let open = false
-
-    function setDarkMode(state: boolean, event: MouseEvent) {
-        preferences.darkmode = event.shiftKey ? null : state
-    }
 </script>
 
 <style type="scss">
     .account-button {
-        color: var(--main-black);
+        display: flex;
+        align-items: center;
+        color: var(--main-blue);
         cursor: pointer;
         font-size: 14px;
-        padding: 30px 16px;
+        font-weight: 600;
         margin: 0 6px 0 auto;
         .icon {
             color: var(--main-blue);
@@ -22,6 +21,10 @@
             margin-right: 10px;
             vertical-align: middle;
         }
+    }
+    .accounts {
+        display: flex;
+        align-items: center;
     }
     @media only screen and (max-width: 600px) {
         .account-button .accounts {
@@ -36,15 +39,7 @@
 </style>
 
 <div class="account-button">
-    {#if $darkMode}
-        <span class="icon" on:click={(event) => setDarkMode(false, event)}>
-            <Icon name="sun" />
-        </span>
-    {:else}
-        <span class="icon" on:click={(event) => setDarkMode(true, event)}>
-            <Icon name="moon" />
-        </span>
-    {/if}
+    <ThemeButton />
     <span class="accounts" on:click={() => (open = true)}>
         <span class="icon">
             <Icon name="user" />

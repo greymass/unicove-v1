@@ -10,6 +10,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        padding: 16px 0 16px 16px;
     }
 </style>
 

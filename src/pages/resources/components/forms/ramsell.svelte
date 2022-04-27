@@ -82,7 +82,7 @@
 <style>
 </style>
 
-<Segment color="white">
+<Segment background="white">
     {#if $activeBlockchain?.chainFeatures.has(BuyRAM)}
         <Form on:submit={sellram}>
             <p>Amount of kb to sell:</p>
@@ -91,7 +91,7 @@
                 <FormBalance token={$systemToken} balance={systemTokenBalance} />
             {/if}
             <InputErrorMessage errorMessage={error} />
-            <Button primary fluid size="large" formValidation on:action={sellram}
+            <Button style="primary" fluid size="large" formValidation on:action={sellram}
                 >Sell {$kb} kb for {$cost}</Button
             >
         </Form>

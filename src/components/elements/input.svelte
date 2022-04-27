@@ -57,9 +57,10 @@
         })
     }
 
-    const debounce = (e: Event) => {
+    type HTMLInputFormEvent = Event & {currentTarget: EventTarget & HTMLInputElement}
+    const debounce = (e: HTMLInputFormEvent) => {
         clearTimeout(timer)
-        value = (<HTMLInputElement>e.target).value
+        value = e.currentTarget.value
         // Immediately invalidate
         invalidate(name, value)
         // Debounce actual validation
@@ -76,20 +77,19 @@
             dispatch('changed', response)
         }, delay)
     }
-
-    const handleKeyup = (e: Event): void => debounce(e)
+    const handleInput = (e: HTMLInputFormEvent): void => debounce(e)
 </script>
 
 <style type="scss">
     input {
-        background: var(--main-white);
-        border: 1px solid var(--divider-grey);
+        background: var(--main-grey);
+        border: 1px solid var(--dark-grey);
         border-radius: 12px;
         color: var(--main-black);
         font-size: 14px;
         padding: 10px 12px;
         &:focus {
-            border: 1px solid var(--main-blue);
+            border: 1px solid var(--lapis-lazuli);
             color: var(--main-black);
             outline: none;
         }
@@ -97,11 +97,15 @@
         &.fullWidth {
             width: 100%;
         }
+        :global(body.darkmode) & {
+            background-color: #252525;
+            border-color: var(--middle-green-eagle);
+        }
     }
 </style>
 
 <input
-    on:keyup={handleKeyup}
+    on:input={handleInput}
     class={fluid ? 'fullWidth' : ''}
     type="text"
     {name}

@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let color = ''
+    export let background: 'white' | 'transparent' | 'image' | 'image-alt' | '' = ''
     export let bordered = false
 </script>
 
@@ -12,15 +12,29 @@
         &.white {
             background: var(--main-white);
         }
-        &.bordered {
-            border: 1px solid var(--divider-grey);
-        }
         &.transparent {
             background: transparent;
+        }
+        &.image {
+            background-size: cover;
+            background-image: url('/images/unicove-bright-mode-card-1.jpeg');
+            :global(.darkmode) & {
+                background-image: url('/images/unicove-dark-mode-card-1.jpeg');
+            }
+        }
+        &.image-alt {
+            background-size: cover;
+            background-image: url('/images/unicove-bright-mode-card-2.jpeg');
+            :global(.darkmode) & {
+                background-image: url('/images/unicove-dark-mode-card-2.jpeg');
+            }
+        }
+        &.bordered {
+            border: 1px solid var(--divider-grey);
         }
     }
 </style>
 
-<div class="segment {color}" class:bordered>
+<div class="segment {background}" class:bordered>
     <slot />
 </div>

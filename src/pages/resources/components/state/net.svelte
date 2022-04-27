@@ -1,5 +1,6 @@
 <script lang="ts">
     import {derived} from 'svelte/store'
+    import Gauge from '~/components/elements/gauge.svelte'
 
     import {currentAccount} from '~/store'
     import Wrapper from './index.svelte'
@@ -13,39 +14,52 @@
         if ($currentAccount) {
             const max = Number($currentAccount?.net_limit.max)
             const usage = Number($currentAccount?.net_limit.used)
-            percentage = (usage / max) * 100
+            percentage = isNaN(max) || isNaN(usage) ? 0 : (usage / max) * 100
             if (max === 0 || percentage > 100) {
                 percentage = 100
             }
             return percentage.toFixed(1)
+        } else {
+            return (0).toFixed(1)
         }
     })
+    $: usagePerc = (Number($currentAccount?.net_limit.available) / 1000).toFixed(precision)
 </script>
 
-<Wrapper icon="wifi" {showExtra}>
-    <h4>NET</h4>
-    <h3>
-        {(Number($currentAccount?.net_limit.available) / 1000).toFixed(2)} <span>kb</span>
-    </h3>
-    <p>
-        {#if Number($used) < 100}
-            {$used}% Quota Usage
-        {:else}
-            No usable NET
-        {/if}
-    </p>
+<Wrapper {showExtra}>
+    {#if !showExtra}
+        <h4>NET</h4>
+        <h3>
+            {usagePerc} <span>kb</span>
+        </h3>
+    {/if}
+    <div class="gauge">
+        <Gauge icon="wifi" percentage={Number($used)} fallback="N/A" />
+    </div>
     <slot />
     <div slot="extra">
+        {#if showExtra}
+            <h4>NET</h4>
+            <h3>Resource Statistics</h3>
+        {/if}
         <ul>
-            <li>Resource Statistics</li>
             <li>
-                Available: {(Number($currentAccount?.net_limit.available) / 1000).toFixed(
-                    precision
-                )} kb
+                <span>Available:</span>
+                <span
+                    >{(Number($currentAccount?.net_limit.available) / 1000).toFixed(precision)} kb</span
+                >
             </li>
-            <li>Used: {(Number($currentAccount?.net_limit.used) / 1000).toFixed(precision)} kb</li>
             <li>
-                Maximum: {(Number($currentAccount?.net_limit.max) / 1000).toFixed(precision)} kb
+                <span>Used:</span>
+                <span>
+                    {(Number($currentAccount?.net_limit.used) / 1000).toFixed(precision)}<span>
+                        &nbsp;kb</span
+                    >
+                </span>
+            </li>
+            <li>
+                <span>Maximum:</span>
+                <span>{(Number($currentAccount?.net_limit.max) / 1000).toFixed(precision)} kb</span>
             </li>
         </ul>
     </div>

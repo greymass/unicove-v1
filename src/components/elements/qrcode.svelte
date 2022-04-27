@@ -20,7 +20,7 @@
     export let size: number = 250
 </script>
 
-<style>
+<style lang="scss">
     div {
         background: #ffffff;
         border: 1px solid #e0e6ee;
@@ -37,8 +37,8 @@
         right: 0;
         margin-left: auto;
         margin-right: auto;
-        color: #fff;
-        background: #2d8eff;
+        color: var(--white);
+        background: var(--main-blue);
         border-radius: 50%;
         padding: 7px;
     }

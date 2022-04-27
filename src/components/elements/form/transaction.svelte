@@ -136,7 +136,7 @@
 {#if $transaction_id}
     <TxFollower id={$transaction_id} chain={$activeBlockchain} />
 {:else if error}
-    <Segment color="white">
+    <Segment background="white">
         <div class="error">
             <Icon name="alert-circle" size="massive" />
             <h2>Transaction Failed</h2>
@@ -144,7 +144,9 @@
         </div>
         <div class="controls">
             {#if retryCallback}
-                <Button size="large" primary on:action={context.retryTransaction}>Try Again</Button>
+                <Button size="large" style="primary" on:action={context.retryTransaction}
+                    >Try Again</Button
+                >
             {/if}
         </div>
     </Segment>

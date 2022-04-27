@@ -16,11 +16,12 @@
         line-height: 2em;
     }
     h2 {
+        color: var(--black);
         font-size: 2em;
         margin: 0.5em 0;
     }
     p {
-        color: var(--light-grey);
+        color: var(--dark-grey);
         margin-top: 1em;
     }
 </style>
@@ -29,7 +30,7 @@
     <div class="container">
         <h2>{$currentAccount.account_name}</h2>
         <Clipboard text={$currentAccount.account_name} let:copy>
-            <Button on:action={copy} primary>
+            <Button on:action={copy} style="primary">
                 <Icon name="clipboard" />
                 <Text>Copy to clipboard</Text>
             </Button>
