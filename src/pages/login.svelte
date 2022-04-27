@@ -1,6 +1,6 @@
 <script lang="ts">
     import {AccountCreator} from '@greymass/account-creation'
-    import type {NameType} from 'anchor-link'
+    import type {AccountCreationResponse} from '@greymass/account-creation'
 
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
@@ -19,30 +19,28 @@
 
     const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 
-    interface AccountCreationResponse {
-        sa?: NameType
-        error?: string
-    }
-
     async function createAccount() {
         const accountCreator = new AccountCreator({
             scope: 'unicove',
             whalesplainerUrl,
         })
 
-        const {error, sa: accountName}: AccountCreationResponse =
+        const accountCreationResponse: AccountCreationResponse =
             await accountCreator.createAccount()
 
-        if (error) {
+        if (accountCreationResponse.error) {
             return addToast({
                 title: 'Unable to create account',
-                message: `An error occured during account creation: ${error}!`,
+                message: `An error occured during account creation: ${accountCreationResponse.error}!`,
+                timeout: 10000,
             })
         }
 
         addToast({
             title: 'Account created!',
-            message: `Successfully created the "${accountName}" account. Please login to use Unicove.`,
+            message: `Successfully created the "${
+                (accountCreationResponse as any).sa
+            }" account. Please login to use Unicove.`,
             timeout: 10000,
         })
     }
