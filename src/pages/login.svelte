@@ -21,7 +21,7 @@
 
     let creatingAccount = false
 
-    async function createAccount(event: MouseEvent) {
+    async function createAccount(event: any) {
         event.preventDefault()
 
         if (creatingAccount) return
@@ -39,20 +39,20 @@
         creatingAccount = false
 
         if (accountCreationResponse.error) {
-            return addToast({
+            addToast({
                 title: 'Unable to create account',
                 message: `An error occured during account creation: ${accountCreationResponse.error}!`,
                 timeout: 10000,
             })
+        } else {
+            addToast({
+                title: 'Account created!',
+                message: `Successfully created the "${
+                    (accountCreationResponse as any).sa
+                }" account. Please login to use Unicove.`,
+                timeout: 10000,
+            })
         }
-
-        addToast({
-            title: 'Account created!',
-            message: `Successfully created the "${
-                (accountCreationResponse as any).sa
-            }" account. Please login to use Unicove.`,
-            timeout: 10000,
-        })
     }
 </script>
 
@@ -458,7 +458,11 @@
             <ThemeButton />
             <MediaQuery query="(min-width: 536px)" let:matches>
                 {#if matches}
-                    <Button style="tertiary" size="regular" on:action={createAccount} disabled={creatingAccount}
+                    <Button
+                        style="tertiary"
+                        size="regular"
+                        on:action={createAccount}
+                        disabled={creatingAccount}
                         ><Icon name="plus" /><Text>New Account</Text></Button
                     >
                 {/if}
@@ -480,7 +484,11 @@
                     An easy way to create a new account. Supported chains are EOS, WAX, TELOS,
                     Proton, and FIO.
                 </p>
-                <Button style="effect" size="regular" on:action={createAccount} disabled={creatingAccount}
+                <Button
+                    style="effect"
+                    size="regular"
+                    on:action={createAccount}
+                    disabled={creatingAccount}
                     ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
@@ -612,7 +620,9 @@
             <ul>
                 <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
                 <li>
-                    <a href="https://create.anchor.link/" on:click={createAccount}> Create new account</a>
+                    <a href="https://create.anchor.link/" on:click={createAccount}>
+                        Create new account</a
+                    >
                 </li>
                 <li>
                     <a
