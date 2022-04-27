@@ -17,7 +17,7 @@
         "acorn": "8.0.1"
     },
     "dependencies": {
-        "@greymass/account-creation": "^0.0.2",
+        "@greymass/account-creation": "^0.0.3",
         "@greymass/eosio": "^0.6.0",
         "@greymass/eosio-resources": "0.7.0",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",
