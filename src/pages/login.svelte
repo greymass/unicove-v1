@@ -1,11 +1,6 @@
-<script context="module">
-    declare const __SNOWPACK_ENV__: {
-        SNOWPACK_PUBLIC_WHALESPLAINER_URL: string
-    }
-</script>
-
 <script lang="ts">
     import {AccountCreator} from '@greymass/account-creation'
+    import type {NameType} from 'anchor-link'
 
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
@@ -24,13 +19,19 @@
 
     const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 
+    interface AccountCreationResponse {
+        sa?: NameType
+        error?: string
+    }
+
     async function createAccount() {
         const accountCreator = new AccountCreator({
             scope: 'unicove',
             whalesplainerUrl,
         })
 
-        const {error, sa: accountName} = await accountCreator.createAccount()
+        const {error, sa: accountName}: AccountCreationResponse =
+            await accountCreator.createAccount()
 
         if (error) {
             return addToast({
@@ -603,7 +604,7 @@
             <ul>
                 <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
                 <li>
-                    <a on:click={createAccount}> Create new account</a>
+                    <a href={'#'} on:click={createAccount}> Create new account</a>
                 </li>
                 <li>
                     <a
