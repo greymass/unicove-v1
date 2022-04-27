@@ -24,7 +24,15 @@
 
     const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 
-    async function createAccount() {
+    let creatingAccount = false
+
+    async function createAccount(event: MouseEvent) {
+        event.preventDefault()
+
+        if (creatingAccount) return
+
+        creatingAccount = true
+
         const accountCreator = new AccountCreator({
             scope: 'unicove',
             whalesplainerUrl,
@@ -449,7 +457,7 @@
             <ThemeButton />
             <MediaQuery query="(min-width: 536px)" let:matches>
                 {#if matches}
-                    <Button style="tertiary" size="regular" on:action={createAccount}
+                    <Button style="tertiary" size="regular" on:action={createAccount} disabled={creatingAccount}
                         ><Icon name="plus" /><Text>New Account</Text></Button
                     >
                 {/if}
@@ -471,7 +479,7 @@
                     An easy way to create a new account. Supported chains are EOS, WAX, TELOS,
                     Proton, and FIO.
                 </p>
-                <Button style="effect" size="regular" on:action={createAccount}
+                <Button style="effect" size="regular" on:action={createAccount} disabled={creatingAccount}
                     ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
@@ -630,7 +638,7 @@
                 so we can make fun stuff that simplifies and enhances your blockchain experience!
             </p>
             <div class="button">
-                <Button>
+                <Button href="https://greymass.com/support-us" target="_blank">
                     <Icon name="thumbs-up" /><Text>Vote for teamgreymass</Text>
                 </Button>
             </div>
