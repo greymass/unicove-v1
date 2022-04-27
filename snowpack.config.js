@@ -9,13 +9,14 @@ if (!process.env['NODE_ENV']) {
     process.env['NODE_ENV'] = isProductionBuild ? 'production' : 'development'
 }
 
-// env vars to forward to snowpack (included in js bundle)
-const forwardEnv = ['BRANCH', 'REV', 'VERSION']
-for (const key of forwardEnv) {
-    process.env[`SNOWPACK_PUBLIC_${key}`] = process.env[key]
+const defaultValues = {
+    WHALESPLAINER_URL: 'https://create.anchor.link',
 }
-
-process.env['SNOWPACK_PUBLIC_WHALESPLAINER_URL'] = process.env['WHALESPLAINER_URL'] || 'https://create.anchor.link';
+// env vars to forward to snowpack (included in js bundle)
+const forwardEnv = ['BRANCH', 'REV', 'VERSION', 'WHALESPLAINER_URL']
+for (const key of forwardEnv) {
+    process.env[`SNOWPACK_PUBLIC_${key}`] = process.env[key] || defaultValues[key]
+}
 
 /** @type { import("snowpack").SnowpackUserConfig } */
 module.exports = {
