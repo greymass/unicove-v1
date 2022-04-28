@@ -40,8 +40,8 @@
 
         if (accountCreationResponse.error) {
             addToast({
-                title: 'Unable to create account',
-                message: `An error occured during account creation: ${accountCreationResponse.error}!`,
+                title: 'Account not created!',
+                message: accountCreationResponse.error,
                 timeout: 10000,
             })
         } else {
