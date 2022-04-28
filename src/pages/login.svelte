@@ -21,7 +21,7 @@
 
     let creatingAccount = false
 
-    async function createAccount(event: any) {
+    async function createAccount(event: Event) {
         event.preventDefault()
 
         if (creatingAccount) return
