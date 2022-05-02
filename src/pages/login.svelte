@@ -1,6 +1,5 @@
 <script lang="ts">
     import {AccountCreator} from '@greymass/account-creation'
-    import type {AccountCreationResponse} from '@greymass/account-creation'
 
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
@@ -33,26 +32,22 @@
             whalesplainerUrl,
         })
 
-        const accountCreationResponse: AccountCreationResponse =
-            await accountCreator.createAccount()
+        const accountCreationResponse = await accountCreator.createAccount().catch(({error}) => {
+            addToast({
+                title: 'Account not created!',
+                message: error,
+                timeout: 10000,
+            })
+        })
 
         creatingAccount = false
 
-        if (accountCreationResponse.error) {
-            addToast({
-                title: 'Account not created!',
-                message: accountCreationResponse.error,
-                timeout: 10000,
-            })
-        } else {
+        accountCreationResponse &&
             addToast({
                 title: 'Account created!',
-                message: `Successfully created the "${
-                    (accountCreationResponse as any).sa
-                }" account. Please login to use Unicove.`,
+                message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
                 timeout: 10000,
             })
-        }
     }
 </script>
 
