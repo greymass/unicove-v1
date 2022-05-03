@@ -23,7 +23,7 @@
     function handleCreateAccount(event: Event) {
         event.preventDefault()
 
-        createAccount().catch((error) => {
+        createAccount().catch(error => {
             addToast({
                 title: 'Account not created!',
                 message: error.message,
@@ -32,31 +32,34 @@
         })
     }
 
-    async function createAccount() {
-        if (creatingAccount) return
+    function createAccount() {
+        return new Promise((resolve, reject) => {
+            if (creatingAccount) return
 
-        creatingAccount = true
+            creatingAccount = true
 
-        const accountCreator = new AccountCreator({
-            scope: 'unicove',
-            whalesplainerUrl,
-        })
+            const accountCreator = new AccountCreator({
+                scope: 'unicove',
+                whalesplainerUrl,
+            })
 
-        accountCreator
-            .createAccount()
-            .then((accountCreationResponse) => {
-                addToast({
-                    title: 'Account created!',
-                    message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
-                    timeout: 10000,
+            accountCreator
+                .createAccount()
+                .then((accountCreationResponse) => {
+                    addToast({
+                        title: 'Account created!',
+                        message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
+                        timeout: 10000,
+                    })
+                    creatingAccount = false
+                    resolve()
                 })
-                creatingAccount = false
-            })
-            .catch((error) => {
-                creatingAccount = false
+                .catch((error) => {
+                    creatingAccount = false
 
-                throw error
-            })
+                    reject(error)
+                })
+        })
     }
 </script>
 
@@ -491,7 +494,7 @@
                 <Button
                     style="effect"
                     size="regular"
-                    on:action={createAccount}
+                    on:action={handleCreateAccount}
                     disabled={creatingAccount}
                     ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
@@ -624,7 +627,7 @@
             <ul>
                 <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
                 <li>
-                    <a href="https://create.anchor.link/" on:click={createAccount}>
+                    <a href="https://create.anchor.link/" on:click={handleCreateAccount}>
                         Create new account</a
                     >
                 </li>
