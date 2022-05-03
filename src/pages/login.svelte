@@ -32,33 +32,31 @@
         })
     }
 
-    function createAccount() {
-        return new Promise((resolve, reject) => {
-            if (creatingAccount) return
+    async function createAccount() {
+        if (creatingAccount) return
 
-            creatingAccount = true
+        creatingAccount = true
 
-            const accountCreator = new AccountCreator({
-                scope: 'unicove',
-                whalesplainerUrl,
-            })
+        const accountCreator = new AccountCreator({
+            scope: 'unicove',
+            whalesplainerUrl,
+        })
 
-            accountCreator
-                .createAccount()
-                .then((accountCreationResponse) => {
-                    addToast({
-                        title: 'Account created!',
-                        message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
-                        timeout: 10000,
-                    })
-                    creatingAccount = false
-                    resolve(null)
-                })
-                .catch((error) => {
-                    creatingAccount = false
+        let accountCreationResponse
 
-                    reject(error)
-                })
+        try {
+            accountCreationResponse = await accountCreator.createAccount()
+        } catch (error) {
+            creatingAccount = false
+
+            throw error
+        }
+
+        creatingAccount = false
+        addToast({
+            title: 'Account created!',
+            message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
+            timeout: 10000,
         })
     }
 </script>
