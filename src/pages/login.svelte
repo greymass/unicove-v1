@@ -23,7 +23,7 @@
     function handleCreateAccount(event: Event) {
         event.preventDefault()
 
-        createAccount().catch(error => {
+        createAccount().catch((error) => {
             addToast({
                 title: 'Account not created!',
                 message: error.message,
@@ -52,7 +52,7 @@
                         timeout: 10000,
                     })
                     creatingAccount = false
-                    resolve()
+                    resolve(null)
                 })
                 .catch((error) => {
                     creatingAccount = false
