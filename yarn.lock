@@ -909,10 +909,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@greymass/account-creation@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@greymass/account-creation/-/account-creation-0.0.6.tgz#c023213223724946020d2cfaabc68fcb3bf1f888"
-  integrity sha512-1CewJMMChqbL+edeI/RFlMf4aGz6auxqjXWy/zYxFuA7NTKkzl2gUkC61/yd90Q30QRFTwE9/r+RG0oAEEsWjg==
+"@greymass/account-creation@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@greymass/account-creation/-/account-creation-0.0.7.tgz#cfde654cb7d31a5cd24e3d262cc302c7f665770f"
+  integrity sha512-SwlyfE4zzDYDzRSSZziXsrYHcJFIc5GCPlL4sJqf0JuOz9pOjR757maj7o54wJzqxLSsMI2vlAlYbQBDzA9Z0Q==
   dependencies:
     "@greymass/eosio" "^0.6.0"
     eosio-signing-request "^2.3.1"
