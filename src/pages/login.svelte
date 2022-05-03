@@ -20,9 +20,19 @@
 
     let creatingAccount = false
 
-    async function createAccount(event: Event) {
+    function handleCreateAccount(event: Event) {
         event.preventDefault()
 
+        createAccount().catch((error) => {
+            addToast({
+                title: 'Account not created!',
+                message: error.message,
+                timeout: 10000,
+            })
+        })
+    }
+
+    async function createAccount() {
         if (creatingAccount) return
 
         creatingAccount = true
@@ -32,21 +42,20 @@
             whalesplainerUrl,
         })
 
-        const accountCreationResponse = await accountCreator.createAccount().catch(({error}) => {
-            addToast({
-                title: 'Account not created!',
-                message: error,
-                timeout: 10000,
+        accountCreator
+            .createAccount()
+            .then((accountCreationResponse) => {
+                addToast({
+                    title: 'Account created!',
+                    message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
+                    timeout: 10000,
+                })
+                creatingAccount = false
             })
-        })
+            .catch((error) => {
+                creatingAccount = false
 
-        creatingAccount = false
-
-        accountCreationResponse &&
-            addToast({
-                title: 'Account created!',
-                message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
-                timeout: 10000,
+                throw error
             })
     }
 </script>
@@ -456,7 +465,7 @@
                     <Button
                         style="tertiary"
                         size="regular"
-                        on:action={createAccount}
+                        on:action={handleCreateAccount}
                         disabled={creatingAccount}
                         ><Icon name="plus" /><Text>New Account</Text></Button
                     >
