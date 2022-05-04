@@ -23,41 +23,37 @@
     function handleCreateAccount(event: Event) {
         event.preventDefault()
 
-        createAccount().catch((error) => {
-            addToast({
-                title: 'Account not created!',
-                message: error.message,
-                timeout: 10000,
-            })
-        })
-    }
-
-    async function createAccount() {
         if (creatingAccount) return
 
         creatingAccount = true
 
+        createAccount()
+            .then((accountCreationResponse) => {
+                addToast({
+                    title: 'Account created!',
+                    message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
+                    timeout: 10000,
+                })
+            })
+            .catch((error) => {
+                addToast({
+                    title: 'Account not created!',
+                    message: error.message,
+                    timeout: 10000,
+                })
+            })
+            .finally(() => {
+                creatingAccount = false
+            })
+    }
+
+    async function createAccount() {
         const accountCreator = new AccountCreator({
             scope: 'unicove',
             whalesplainerUrl,
         })
 
-        let accountCreationResponse
-
-        try {
-            accountCreationResponse = await accountCreator.createAccount()
-        } catch (error) {
-            creatingAccount = false
-
-            throw error
-        }
-
-        creatingAccount = false
-        addToast({
-            title: 'Account created!',
-            message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
-            timeout: 10000,
-        })
+        return accountCreator.createAccount()
     }
 </script>
 
