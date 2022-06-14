@@ -15,7 +15,18 @@
     import Loading from '~/pages/loading.svelte'
     import Toasts from '~/components/elements/toasts.svelte'
 
-    $: document.body.classList.toggle('darkmode', $darkMode)
+    $: {
+        document.body.classList.toggle('darkmode', $darkMode)
+        if ($darkMode) {
+            document
+                .querySelector('meta[name=theme-color]')
+                ?.setAttribute('content', needLogin ? '#101010' : '#1c1c1e')
+        } else {
+            document
+                .querySelector('meta[name=theme-color]')
+                ?.setAttribute('content', needLogin ? '#ececec' : '#ffffff')
+        }
+    }
 
     $: needLogin =
         $activeSession === undefined &&

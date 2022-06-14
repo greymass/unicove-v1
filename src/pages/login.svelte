@@ -1,6 +1,9 @@
 <script lang="ts">
+    import {AccountCreator} from '@greymass/account-creation'
+
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'
+    import {addToast} from '~/stores/toast'
 
     import Logo from '~/components/elements/logo.svelte'
     import Unicove from '~/components/elements/unicove.svelte'
@@ -12,6 +15,46 @@
     import MediaQuery from '~/components/utils/media-query.svelte'
     import Features from '~/components/elements/features.svelte'
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
+
+    const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
+
+    let creatingAccount = false
+
+    function handleCreateAccount(event: Event) {
+        event.preventDefault()
+
+        if (creatingAccount) return
+
+        creatingAccount = true
+
+        createAccount()
+            .then((accountCreationResponse) => {
+                addToast({
+                    title: 'Account created!',
+                    message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
+                    timeout: 10000,
+                })
+            })
+            .catch((error) => {
+                addToast({
+                    title: 'Account not created!',
+                    message: error.message,
+                    timeout: 10000,
+                })
+            })
+            .finally(() => {
+                creatingAccount = false
+            })
+    }
+
+    async function createAccount() {
+        const accountCreator = new AccountCreator({
+            scope: 'unicove',
+            whalesplainerUrl,
+        })
+
+        return accountCreator.createAccount()
+    }
 </script>
 
 <style lang="scss">
@@ -419,8 +462,9 @@
                     <Button
                         style="tertiary"
                         size="regular"
-                        href="https://create.anchor.link/"
-                        target="_blank"><Icon name="plus" /><Text>New Account</Text></Button
+                        on:action={handleCreateAccount}
+                        disabled={creatingAccount}
+                        ><Icon name="plus" /><Text>New Account</Text></Button
                     >
                 {/if}
             </MediaQuery>
@@ -444,8 +488,9 @@
                 <Button
                     style="effect"
                     size="regular"
-                    href="https://create.anchor.link/"
-                    target="_blank"><Icon name="plus" /><Text>Create new account</Text></Button
+                    on:action={handleCreateAccount}
+                    disabled={creatingAccount}
+                    ><Icon name="plus" /><Text>Create new account</Text></Button
                 >
             </div>
             <div class="action">
@@ -576,7 +621,9 @@
             <ul>
                 <li><ButtonLogin asLink>Sign In</ButtonLogin></li>
                 <li>
-                    <a href="https://create.anchor.link/" target="_blank"> Create new account</a>
+                    <a href="https://create.anchor.link/" on:click={handleCreateAccount}>
+                        Create new account</a
+                    >
                 </li>
                 <li>
                     <a
