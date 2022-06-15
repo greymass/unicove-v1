@@ -6,10 +6,10 @@
 
 ```bash
 # Clone the repo
-git clone https://github.com/greymass/wallet.git
+git clone https://github.com/greymass/unicove.git
 
 # Navigate to cloned folder and Install dependencies
-cd wallet && yarn install
+cd unicove && yarn install
 ```
 
 #### 2. Run
