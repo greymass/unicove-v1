@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {AccountCreator} from '@greymass/account-creation'
+    import {AccountCreator} from '@greymass/create-account'
 
     import {version, isRelease, releaseVersion, chains} from '~/config'
     import {darkMode} from '~/store'

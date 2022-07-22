@@ -909,12 +909,13 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@greymass/account-creation@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@greymass/account-creation/-/account-creation-0.0.8.tgz#9353e8045c64d660ae68a32ed547b54e7b8d6033"
-  integrity sha512-QPAdZb6+aQgtkaOIgo5XNiwIOgLnZr/LAtaU4/tSXV+0LYFMBcqlg7ktTSbnc8EwkLbCChjQNTAZdMu+Cr5JSg==
+"@greymass/create-account@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@greymass/create-account/-/create-account-0.0.9.tgz#1f41b00e33508396fa3ece2f431213c80cfd9d7a"
+  integrity sha512-cWzqB5fYHmT5f5V5Kfgu/vF98+5YBIH4hk0XzsfbkC2FqoVy+918fpMx12gx654Effnc8q5stIdluDm/dnjlHw==
   dependencies:
     "@greymass/eosio" "^0.6.0"
+    "@greymass/return-path" "^0.0.1"
     eosio-signing-request "^2.3.1"
     tslib "^2.1.0"
 
@@ -942,6 +943,13 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@greymass/miniaes/-/miniaes-1.0.0.tgz#2337a4637edbb49289f3c977c5891bb6bef1ba75"
   integrity sha512-xKYTnAyyoq3gpJS11JvU4dkju28M8Zbp06CuP3aKR4DMH6B2z64LauGGGzKksKh5Qd770JA/dzhLbImnBlymbg==
+  dependencies:
+    tslib "^2.1.0"
+
+"@greymass/return-path@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@greymass/return-path/-/return-path-0.0.1.tgz#bcf4e74671af06d22ecd95dcdadb94efaa5adf78"
+  integrity sha512-PMPgSJYSHeaYXbURj4JfsEeReWkJqlTKFMn2iTPhvb+6ICR5GhVPDJKewqZPqpZumcD13M1c701YYWKHZlMsxw==
   dependencies:
     tslib "^2.1.0"
 
