@@ -16,7 +16,7 @@
     import Features from '~/components/elements/features.svelte'
     import UnicoveAnimated from '~/components/elements/unicove-animated.svelte'
 
-    const whalesplainerUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
+    const creationServiceUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 
     let creatingAccount = false
 
@@ -31,7 +31,9 @@
             .then((accountCreationResponse) => {
                 addToast({
                     title: 'Account created!',
-                    message: `Successfully created the "${accountCreationResponse.sa}" account. Please login to use Unicove.`,
+                    message: `Successfully created the "${
+                        (accountCreationResponse as any).sa
+                    }" account. Please login to use Unicove.`,
                     timeout: 10000,
                 })
             })
@@ -50,7 +52,7 @@
     async function createAccount() {
         const accountCreator = new AccountCreator({
             scope: 'unicove',
-            whalesplainerUrl,
+            creationServiceUrl,
         })
 
         return accountCreator.createAccount()
