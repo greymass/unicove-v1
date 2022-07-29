@@ -24,6 +24,11 @@
             name: 'Send & Receive',
             path: '/transfer',
         },
+        {
+            icon: 'percent',
+            name: 'Earn',
+            path: '/earn',
+        },
     ]
 
     const advancedNavigation: Readable<NavigationItem[]> = derived(
