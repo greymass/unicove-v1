@@ -1,6 +1,8 @@
 import {Asset, Name} from '@greymass/eosio'
 import {ChainId} from 'anchor-link'
 
+import {BalanceProviders} from '~/lib/balance-providers/types'
+
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
 const ver = import.meta.env.SNOWPACK_PUBLIC_VERSION || 'unknown'
@@ -44,12 +46,6 @@ export const resourceFeatures = [
     ChainFeatures.REX,
     ChainFeatures.PowerUp,
 ]
-
-// Available Balance Providers
-export enum BalanceProviders {
-    // https://www.api.bloks.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
-    Bloks,
-}
 
 export interface ChainConfig {
     /** Short identifier. */
@@ -102,7 +98,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://eos.greymass.com',
         testnet: false,
         bloksUrl: 'https://bloks.io',
-        balanceProviders: new Set([BalanceProviders.Bloks]),
+        balanceProviders: new Set([BalanceProviders.LightAPI]),
     },
     {
         id: 'fio',
@@ -161,7 +157,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://proton.greymass.com',
         testnet: false,
         bloksUrl: 'https://proton.bloks.io',
-        balanceProviders: new Set([BalanceProviders.Bloks]),
+        balanceProviders: new Set([BalanceProviders.LightAPI]),
     },
     {
         id: 'telos',
@@ -183,7 +179,7 @@ export const chains: ChainConfig[] = [
         resourceSampleMilliseconds: 1000,
         testnet: false,
         bloksUrl: 'https://telos.bloks.io',
-        balanceProviders: new Set([BalanceProviders.Bloks]),
+        balanceProviders: new Set([BalanceProviders.LightAPI]),
     },
     {
         id: 'telos-testnet',
@@ -226,6 +222,7 @@ export const chains: ChainConfig[] = [
         resourceSampleAccount: 'teamgreymass',
         testnet: false,
         bloksUrl: 'https://wax.bloks.io',
+        balanceProviders: new Set([BalanceProviders.LightAPI]),
     },
 ]
 

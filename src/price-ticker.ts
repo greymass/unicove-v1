@@ -106,6 +106,7 @@ export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResu
     )
         ? getOraclePairs(chain)
         : readable({value: []})
+
     const pair = derived(pairs, ($pairs) => {
         let pair: DelphiOraclePair | undefined
         if (!pairName) {
@@ -116,6 +117,7 @@ export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResu
         } else {
             pair = $pairs.find((p) => p.name.equals(pairName))
         }
+
         return pair || null
     })
     const datapoint = flatten(
@@ -141,6 +143,7 @@ export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResu
             }
         })
     )
+
     tickerStores[tickerName] = ticker
     return ticker
 }
