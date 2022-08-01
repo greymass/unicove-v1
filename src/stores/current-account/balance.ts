@@ -28,7 +28,7 @@ export const currentAccountBalance: Readable<Asset> = derived(
             amount += $account.value
         }
         if ($delegated) {
-            amount += $delegated
+            amount += $delegated.value
         }
         if ($rex) {
             amount += $rex.value
