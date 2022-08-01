@@ -1,11 +1,10 @@
-import type {Asset, LinkSession} from 'anchor-link'
+import type {LinkSession} from 'anchor-link'
 import {derived, writable} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 import type {SessionLike} from './auth'
 import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
 import {priceTicker} from './price-ticker'
-import {accountProvider} from './stores/account-provider'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)

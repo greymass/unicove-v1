@@ -1,5 +1,5 @@
 <script>
-    import {Asset} from 'anchor-link'
+    import type {Asset} from 'anchor-link'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
@@ -12,8 +12,8 @@
     import TokenRow from '~/pages/dashboard/row.svelte'
 
     export let balances: Readable<Balance[] | undefined>
-    export let delegatedTokens: Readable<number>
-    export let rexTokens: Readable<number>
+    export let currentDelegatedTokens: Readable<Asset>
+    export let currentREXBalance: Readable<Asset>
 
     const records: Readable<Balance[] | undefined> = derived(
         [activeSession, balances, systemTokenKey],
@@ -48,13 +48,13 @@
     )
 
     const rexBalance = derived(
-        [activeSession, rexTokens, systemToken],
-        ([$activeSession, $rexTokens, $systemToken]) => {
-            if ($activeSession && $rexTokens && $systemToken) {
+        [activeSession, currentREXBalance, systemToken],
+        ([$activeSession, $currentREXBalance, $systemToken]) => {
+            if ($activeSession && $currentREXBalance && $systemToken) {
                 const token = createBalanceFromToken(
                     $activeSession,
                     $systemToken,
-                    Asset.from($rexTokens, $systemToken.symbol)
+                    $currentREXBalance
                 )
                 return token
             }
@@ -62,13 +62,13 @@
     )
 
     const stakedBalance = derived(
-        [activeSession, delegatedTokens, systemToken],
-        ([$activeSession, $delegatedTokens, $systemToken]) => {
-            if ($activeSession && $delegatedTokens && $systemToken) {
+        [activeSession, currentDelegatedTokens, systemToken],
+        ([$activeSession, $currentDelegatedTokens, $systemToken]) => {
+            if ($activeSession && $currentDelegatedTokens && $systemToken) {
                 const token = createBalanceFromToken(
                     $activeSession,
                     $systemToken,
-                    Asset.from($delegatedTokens, $systemToken.symbol)
+                    $currentDelegatedTokens
                 )
                 return token
             }

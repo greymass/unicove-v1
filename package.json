@@ -19,7 +19,7 @@
     "dependencies": {
         "@greymass/create-account": "^0.0.9",
         "@greymass/eosio": "^0.6.0",
-        "@greymass/eosio-resources": "0.7.0",
+        "@greymass/eosio-resources": "^0.8.1",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",
         "@types/feather-icons": "^4.7.0",
         "anchor-link": "^3.3.0",

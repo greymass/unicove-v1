@@ -5,7 +5,8 @@
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
 
-    import {activeSession, currentAccount} from '~/store'
+    import {activeSession} from '~/store'
+    import {currentAccount} from '~/stores/account'
     import {balances} from '~/stores/balances'
     import {tokens} from '~/stores/tokens'
     import {Step, transferData} from '~/pages/transfer/transfer'

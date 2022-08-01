@@ -1,18 +1,14 @@
 <script>
-    import {Asset} from 'anchor-link'
-    import {derived} from 'svelte/store'
-    import type {Readable} from 'svelte/store'
-
-    import {getClient} from '~/api-client'
-    import {DelegatedBandwidth} from '~/abi-types'
-    import {ChainFeatures} from '~/config'
-
-    import {activeSession, activeBlockchain, activePriceTicker} from '~/store'
-    import {currentAccount} from '~/stores/account'
+    import {activeSession} from '~/store'
+    import {
+        currentREXBalance,
+        currentDelegatedTokens,
+        currentAccountBalance,
+        currentAccountValue,
+    } from '~/stores/account'
     import {balances, fetchBalances} from '~/stores/balances'
     import {isLoading} from '~/stores/balances-provider'
-    import {getToken, systemTokenKey} from '~/stores/tokens'
-    import {stateREX} from '~/pages/resources/resources'
+    import {systemTokenKey} from '~/stores/tokens'
 
     import Page from '~/components/layout/page.svelte'
     import Button from '~/components/elements/button.svelte'
@@ -22,107 +18,6 @@
     import TokenImage from '~/components/elements/image/token.svelte'
 
     import TokenTable from '~/pages/dashboard/table.svelte'
-
-    interface Delegations {
-        rows: DelegatedBandwidth[]
-    }
-
-    const delegations: Readable<Delegations> = derived(
-        [activeBlockchain, currentAccount],
-        ([$activeBlockchain, $currentAccount], set) => {
-            if (
-                $activeBlockchain &&
-                $activeBlockchain.chainFeatures.has(ChainFeatures.Staking) &&
-                $currentAccount
-            ) {
-                getClient($activeBlockchain.chainId)
-                    .v1.chain.get_table_rows({
-                        code: 'eosio',
-                        table: 'delband',
-                        scope: $currentAccount.account_name,
-                        type: DelegatedBandwidth,
-                    })
-                    .then((result) => {
-                        set(result)
-                    })
-                    .catch((err) => {
-                        console.warn('Error retrieving delegations', err)
-                        set({rows: []})
-                    })
-            }
-        }
-    )
-
-    const delegatedTokens = derived(
-        [currentAccount, delegations],
-        ([$currentAccount, $delegations]) => {
-            let delegated = 0
-            if ($currentAccount && $delegations && $delegations.rows.length > 0) {
-                $delegations.rows
-                    .filter((record) => record.from.equals($currentAccount.account_name))
-                    .forEach((record) => {
-                        delegated += record.cpu_weight.value
-                        delegated += record.net_weight.value
-                    })
-            }
-            return delegated
-        }
-    )
-
-    const rexTokens: Readable<number> = derived(
-        [currentAccount, stateREX],
-        ([$currentAccount, $stateREX]) => {
-            if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
-                return $stateREX.value * $currentAccount.rex_info.rex_balance.value
-            }
-            return 0
-        }
-    )
-
-    const totalUsdValue: Readable<number> = derived(
-        [balances, currentAccount, delegatedTokens, activePriceTicker, rexTokens],
-        ([$balances, $currentAccount, $delegated, $price, $rex]) => {
-            let value = 0
-            if ($currentAccount && $price !== undefined) {
-                value += $rex * $price
-                value += $delegated * $price
-                $balances
-                    .filter((record) => record.account.equals($currentAccount.account_name))
-                    .map((record) => {
-                        const token = getToken(record.tokenKey)
-                        if (token && token.price) {
-                            value += record.quantity.value * token.price
-                        }
-                    })
-            }
-            return value
-        }
-    )
-
-    const totalSystemTokens: Readable<Asset> = derived(
-        [balances, currentAccount, delegatedTokens, rexTokens, systemTokenKey],
-        ([$balances, $currentAccount, $delegated, $rex, $systemTokenKey]) => {
-            let amount = 0
-            if ($currentAccount) {
-                $balances
-                    .filter(
-                        (record) =>
-                            record.account.equals($currentAccount.account_name) &&
-                            record.tokenKey === $systemTokenKey
-                    )
-                    .map((record) => {
-                        amount += record.quantity.value
-                    })
-            }
-            if ($delegated) {
-                amount += $delegated
-            }
-            if ($rex) {
-                amount += $rex
-            }
-            return Asset.from(amount, $activeBlockchain.coreTokenSymbol)
-        }
-    )
 
     const currencyFormatter = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'})
     function fiatFormat(value: number) {
@@ -209,10 +104,10 @@
                     <Segment background="image">
                         <div class="info">
                             <span class="label">
-                                Total {$totalSystemTokens.symbol.name} Balance
+                                Total {$currentAccountBalance.symbol.name} Balance
                             </span>
-                            <span class="amount">{$totalSystemTokens.value}</span>
-                            <span class="symbol">{$totalSystemTokens.symbol.name}</span>
+                            <span class="amount">{$currentAccountBalance.value}</span>
+                            <span class="symbol">{$currentAccountBalance.symbol.name}</span>
                         </div>
                         <div class="image">
                             <TokenImage width="60" height="60" tokenKey={$systemTokenKey} />
@@ -221,14 +116,14 @@
                     <Segment background="image-alt">
                         <div class="info">
                             <span class="label">Account Value</span>
-                            <span class="amount">{fiatFormat($totalUsdValue)}</span>
+                            <span class="amount">{fiatFormat($currentAccountValue)}</span>
                             <span class="symbol">USD</span>
                         </div>
                         <div class="icon">$</div>
                     </Segment>
                 </SegmentGroup>
             </div>
-            <TokenTable {balances} {rexTokens} {delegatedTokens} />
+            <TokenTable {balances} {currentREXBalance} {currentDelegatedTokens} />
         </div>
     {/if}
 </Page>
