@@ -3,7 +3,8 @@
     import {get, writable} from 'svelte/store'
     import type {Name} from '@greymass/eosio'
 
-    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import {activeBlockchain, activeSession} from '~/store'
+    import {currentAccount} from '~/stores/account'
     import {updateAccount} from '~/stores/account-provider'
     import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'

@@ -2,7 +2,7 @@
     import {derived} from 'svelte/store'
     import Gauge from '~/components/elements/gauge.svelte'
 
-    import {currentAccount} from '~/store'
+    import {currentAccount} from '~/stores/account'
     import Wrapper from './index.svelte'
 
     export let showExtra = false

@@ -7,7 +7,8 @@
     import {DelegatedBandwidth} from '~/abi-types'
     import {ChainFeatures} from '~/config'
 
-    import {activeSession, activeBlockchain, currentAccount, activePriceTicker} from '~/store'
+    import {activeSession, activeBlockchain, activePriceTicker} from '~/store'
+    import {currentAccount} from '~/stores/account'
     import {balances, fetchBalances} from '~/stores/balances'
     import {isLoading} from '~/stores/balances-provider'
     import {getToken, systemTokenKey} from '~/stores/tokens'

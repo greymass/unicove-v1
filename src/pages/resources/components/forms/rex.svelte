@@ -7,7 +7,8 @@
 
     import {REXDeposit, REXRentCPU, REXRentNET} from '~/abi-types'
     import {ChainFeatures} from '~/config'
-    import {activeBlockchain, activeSession, currentAccount} from '~/store'
+    import {activeBlockchain, activeSession} from '~/store'
+    import {currentAccount} from '~/stores/account'
     import {systemToken} from '~/stores/tokens'
     import {systemTokenBalance} from '~/stores/balances'
     import {rexPrice} from '~/pages/resources/resources'

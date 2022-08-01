@@ -1,5 +1,6 @@
 <script lang="ts">
-    import {activeBlockchain, currentAccount} from '~/store'
+    import {activeBlockchain} from '~/store'
+    import {currentAccount} from '~/stores/account'
 
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'

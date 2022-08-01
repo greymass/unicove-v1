@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {currentAccount} from '~/store'
+    import {currentAccount} from '~/stores/account'
 
     import FormTransaction from '~/components/elements/form/transaction.svelte'
 
