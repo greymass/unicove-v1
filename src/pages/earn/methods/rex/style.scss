@@ -1,0 +1,29 @@
+.title {
+    font-family: 'Inter';
+    font-style: normal;
+    margin-bottom: 33px;
+    text-align: center;
+    h1 {
+        color: var(--main-black);
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 29px;
+        letter-spacing: -0.47px;
+        margin-bottom: 12px;
+    }
+    h3 {
+        color: var(--light-grey);
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 19px;
+        letter-spacing: -0.18px;
+    }
+}
+.initial {
+    border: 1px solid var(--cultured);
+    border-radius: 10px;
+    margin: auto;
+    padding: 29px;
+    text-align: center;
+    width: 376px;
+}

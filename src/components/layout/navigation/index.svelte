@@ -2,7 +2,7 @@
     import type {Readable} from 'svelte/store'
     import {derived} from 'svelte/store'
 
-    import {resourceFeatures} from '~/config'
+    import {earnMethods, resourceFeatures} from '~/config'
     import {activeBlockchain, preferences} from '~/store'
     import type {NavigationItem} from '~/ui-types'
 
@@ -12,7 +12,7 @@
     export let open = false
     $: expand = $preferences.expandNavbar
 
-    const primaryNavigation: NavigationItem[] = [
+    const primaryNavigationDefaults = [
         {
             exactPath: true,
             icon: 'layout',
@@ -24,12 +24,26 @@
             name: 'Send & Receive',
             path: '/transfer',
         },
-        {
-            icon: 'percent',
-            name: 'Earn',
-            path: '/earn',
-        },
     ]
+
+    const primaryNavigation: Readable<NavigationItem[]> = derived(
+        [activeBlockchain],
+        ([$activeBlockchain]) => {
+            const items: NavigationItem[] = [...primaryNavigationDefaults]
+            if ($activeBlockchain) {
+                if (
+                    Array.from($activeBlockchain.earnMethods).some((r) => earnMethods.includes(r))
+                ) {
+                    items.push({
+                        icon: 'percent',
+                        name: 'Earn',
+                        path: '/earn',
+                    })
+                }
+            }
+            return items
+        }
+    )
 
     const advancedNavigation: Readable<NavigationItem[]> = derived(
         [activeBlockchain],
@@ -60,7 +74,7 @@
 <MediaQuery query="(max-width: 999px)" let:matches>
     {#if !matches || open}
         <NavigationContent
-            {primaryNavigation}
+            primaryNavigation={$primaryNavigation}
             advancedNavigation={$advancedNavigation}
             expand={matches || expand}
             floating={matches}

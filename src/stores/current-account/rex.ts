@@ -3,7 +3,7 @@ import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 import {stateREX} from '~/pages/resources/resources'
 
-import {activeBlockchain} from '~/store'
+import {activeBlockchain, activePriceTicker} from '~/store'
 import {currentAccount} from './account'
 
 export const currentREXBalance: Readable<Asset> = derived(
@@ -13,5 +13,16 @@ export const currentREXBalance: Readable<Asset> = derived(
             return $stateREX.exchange($currentAccount.rex_info.rex_balance)
         }
         return Asset.from(0, $activeBlockchain.coreTokenSymbol)
+    }
+)
+
+export const currentREXBalanceValue: Readable<Asset> = derived(
+    [activePriceTicker, currentREXBalance],
+    ([$activePriceTicker, $currentREXBalance]) => {
+        console.log($activePriceTicker)
+        if ($activePriceTicker && $currentREXBalance) {
+            return Asset.from($currentREXBalance.value * $activePriceTicker, '2,USD')
+        }
+        return Asset.from(0, '2,USD')
     }
 )

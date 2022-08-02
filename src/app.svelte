@@ -175,7 +175,7 @@
             <Route path="/">
                 <Dashboard />
             </Route>
-            <Route path="/earn">
+            <Route path="/earn/*">
                 <Earn />
             </Route>
             <Route path="/transfer">
