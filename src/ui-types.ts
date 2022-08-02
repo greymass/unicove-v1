@@ -14,7 +14,7 @@ export interface FormTransaction {
 export interface InputResponse {
     name: string
     valid: boolean
-    value: string
+    value: string | boolean
 }
 
 export interface NavigationItem {

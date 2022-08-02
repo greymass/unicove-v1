@@ -2,6 +2,7 @@
     import {Route} from 'tinro'
 
     import Buttons from './buttons.svelte'
+    import Checkbox from './checkbox.svelte'
     import Forms from './forms.svelte'
     import Icons from './icons.svelte'
     import Inputs from './inputs.svelte'
@@ -16,6 +17,7 @@
 
     const routes = [
         {name: 'Buttons', path: 'buttons', component: Buttons},
+        {name: 'Checkbox', path: 'checkbox', component: Checkbox},
         {name: 'Forms', path: 'forms', component: Forms},
         {name: 'Icons', path: 'icons', component: Icons},
         {name: 'Inputs', path: 'inputs', component: Inputs},
