@@ -45,6 +45,12 @@ export const resourceFeatures = [
     ChainFeatures.PowerUp,
 ]
 
+// List of features for the Earn section
+export enum EarnMethods {
+    REX,
+}
+export const earnMethods = [EarnMethods.REX]
+
 // Available Balance Providers
 export enum BalanceProviders {
     // https://www.api.bloks.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
@@ -66,6 +72,8 @@ export interface ChainConfig {
     coreTokenSymbol: Asset.Symbol
     /** System Token Transfer Action */
     coreTokenTransfer: Name
+    /** Methods to Earn */
+    earnMethods: Set<EarnMethods>
     /** Node URL to use. */
     nodeUrl: string
     /** True if network is a testnet. */
@@ -98,6 +106,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('4,EOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
+        earnMethods: new Set([EarnMethods.REX]),
         name: 'EOS',
         nodeUrl: 'https://eos.greymass.com',
         testnet: false,
@@ -111,6 +120,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('9,FIO'),
         coreTokenContract: Name.from('fio.token'),
         coreTokenTransfer: Name.from('trnsfiopubky'),
+        earnMethods: new Set(),
         name: 'FIO',
         nodeUrl: 'https://fio.greymass.com',
         testnet: false,
@@ -124,6 +134,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('9,FIO'),
         coreTokenContract: Name.from('fio.token'),
         coreTokenTransfer: Name.from('trnsfiopubky'),
+        earnMethods: new Set(),
         name: 'FIO (Testnet)',
         nodeUrl: 'https://fiotestnet.greymass.com',
         testnet: true,
@@ -144,6 +155,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('4,EOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
+        earnMethods: new Set(),
         name: 'Jungle 3 (Testnet)',
         nodeUrl: 'https://jungle3.greymass.com',
         testnet: true,
@@ -157,6 +169,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('4,XPR'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
+        earnMethods: new Set(),
         name: 'Proton',
         nodeUrl: 'https://proton.greymass.com',
         testnet: false,
@@ -177,6 +190,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
+        earnMethods: new Set([EarnMethods.REX]),
         name: 'Telos',
         nodeUrl: 'https://telos.greymass.com',
         resourceSampleAccount: 'greymassfuel',
@@ -199,6 +213,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
+        earnMethods: new Set(),
         name: 'Telos (Testnet)',
         nodeUrl: 'https://testnet.telos.net',
         resourceSampleAccount: 'greymassfuel',
@@ -221,6 +236,7 @@ export const chains: ChainConfig[] = [
         coreTokenSymbol: Asset.Symbol.from('8,WAX'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
+        earnMethods: new Set(),
         name: 'WAX',
         nodeUrl: 'https://wax.greymass.com',
         resourceSampleAccount: 'teamgreymass',
