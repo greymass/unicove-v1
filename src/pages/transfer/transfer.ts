@@ -15,11 +15,12 @@ export const enum Step {
 }
 
 export interface TransferData {
+    // Navigation
     step: Step
     backStep?: Step
+    // Form Data
     tokenKey?: string
     quantity?: Asset
-    displaySuccessTx?: string
     memo?: string
     toAccount?: Name | undefined
     toAddress?: PublicKey | undefined
