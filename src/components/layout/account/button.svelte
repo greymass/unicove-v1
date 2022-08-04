@@ -16,6 +16,7 @@
         font-weight: 600;
         margin: 0 6px 0 auto;
         .icon {
+            display: inline-flex;
             color: var(--main-blue);
             line-height: 16px;
             margin-right: 10px;
