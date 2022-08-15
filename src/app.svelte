@@ -190,6 +190,7 @@
             <Route path="/resources/*">
                 <Resources />
             </Route>
+            <Route path="/proposal/:account/:proposal">Success!</Route>
             <Route fallback>
                 <Page title="Page not found">
                     <p>You shouldn't be here. Get out before it's too late.</p>
