@@ -32,7 +32,8 @@
     $: needLogin =
         $activeSession === undefined &&
         !$router.path.startsWith('/_components') &&
-        !$router.path.startsWith('/request')
+        !$router.path.startsWith('/request') &&
+        !$router.path.startsWith('/proposal')
 </script>
 
 <style lang="scss" global>
