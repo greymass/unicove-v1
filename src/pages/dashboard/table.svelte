@@ -13,7 +13,7 @@
 
     export let balances: Readable<Balance[] | undefined>
     export let currentDelegatedTokens: Readable<Asset>
-    export let currentREXBalance: Readable<Asset>
+    export let currentREXBalance: Readable<Asset | undefined>
 
     const records: Readable<Balance[] | undefined> = derived(
         [activeSession, balances, systemTokenKey],
