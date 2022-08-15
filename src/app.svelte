@@ -10,6 +10,7 @@
     import Dashboard from '~/pages/dashboard/index.svelte'
     import Request from '~/pages/request/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
+    import Proposal from '~/pages/proposal/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from '~/pages/_components/index.svelte'
     import Loading from '~/pages/loading.svelte'
@@ -31,7 +32,8 @@
     $: needLogin =
         $activeSession === undefined &&
         !$router.path.startsWith('/_components') &&
-        !$router.path.startsWith('/request')
+        !$router.path.startsWith('/request') &&
+        !$router.path.startsWith('/proposal')
 </script>
 
 <style lang="scss" global>
@@ -179,6 +181,9 @@
             </Route>
             <Route path="/transfer/:contract/:token" let:meta>
                 <Transfer {meta} />
+            </Route>
+            <Route path="/proposal/:network/:account/:proposal" let:meta>
+                <Proposal {meta} />
             </Route>
             <Route path="/request/:payload">
                 <Request />
