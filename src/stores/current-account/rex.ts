@@ -6,20 +6,23 @@ import {stateREX} from '~/pages/resources/resources'
 import {activeBlockchain, activePriceTicker} from '~/store'
 import {currentAccount} from './account'
 
-export const currentREXBalance: Readable<Asset> = derived(
+export const currentREXBalance: Readable<Asset | undefined> = derived(
     [activeBlockchain, currentAccount, stateREX],
     ([$activeBlockchain, $currentAccount, $stateREX]) => {
-        if ($currentAccount && $currentAccount.rex_info && $stateREX) {
-            return $stateREX.exchange($currentAccount.rex_info.rex_balance)
+        if ($currentAccount && $stateREX) {
+            if ($currentAccount.rex_info) {
+                return $stateREX.exchange($currentAccount.rex_info.rex_balance)
+            } else {
+                return Asset.from(0, $activeBlockchain.coreTokenSymbol)
+            }
         }
-        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
+        return undefined
     }
 )
 
 export const currentREXBalanceValue: Readable<Asset> = derived(
     [activePriceTicker, currentREXBalance],
     ([$activePriceTicker, $currentREXBalance]) => {
-        console.log($activePriceTicker)
         if ($activePriceTicker && $currentREXBalance) {
             return Asset.from($currentREXBalance.value * $activePriceTicker, '2,USD')
         }
