@@ -3,6 +3,7 @@ import {writable} from 'svelte/store'
 import type {Asset} from '@greymass/eosio'
 
 export const enum Step {
+    Loading,
     Setup,
     Confirm,
     Complete,
@@ -19,4 +20,14 @@ export interface EarnData {
     quantity?: Asset
 }
 
-export const earnData = writable<EarnData>({step: Step.Overview})
+const defaultData = {
+    step: Step.Loading,
+    backStep: undefined,
+    quantity: undefined,
+}
+
+export const earnData = writable<EarnData>(defaultData)
+
+export function resetEarnData() {
+    earnData.set({...defaultData})
+}

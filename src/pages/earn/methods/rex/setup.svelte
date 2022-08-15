@@ -1,20 +1,41 @@
 <script>
+    import {Asset} from 'anchor-link'
+
     import InputAsset from '~/components/elements/input/asset.svelte'
     import InputLabel from '~/components/elements/input/label.svelte'
     import Button from '~/components/elements/button.svelte'
 
     import {currentLiquidBalance} from '~/stores/account'
 
-    import {earnData} from '~/pages/earn/earn'
+    import {earnData, Step} from '~/pages/earn/earn'
 
     let amount: string = String(($earnData.quantity && $earnData.quantity.value) || '')
     let amountValid: boolean = false
 
-    function confirmChange() {}
+    function fillMax() {
+        amount = String($currentLiquidBalance!.value)
+        amountValid = true
+    }
+
+    function confirmChange() {
+        earnData.update((data) => ({
+            ...data,
+            quantity: Asset.from(Number(amount), $currentLiquidBalance!.symbol),
+            step: Step.Confirm,
+        }))
+    }
 </script>
 
 <style type="scss">
     @import './style.scss';
+    .balance,
+    .votereq {
+        margin: 1em;
+        span {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
 </style>
 
 {#if $currentLiquidBalance}
@@ -33,9 +54,12 @@
             placeholder={`Enter amount of tokens`}
             balance={$currentLiquidBalance}
         />
-        <p>
-            Available tokens: {String($currentLiquidBalance)}
-        </p>
+        <div class="balance">
+            Available balance:
+            <span on:click={fillMax}>
+                {String($currentLiquidBalance)}
+            </span>
+        </div>
         <input type="checkbox" label="Auto vote" />
         <Button
             fluid
@@ -47,7 +71,7 @@
         >
             Deposit
         </Button>
-        <p>Vote for 21 validators to enable staking</p>
+        <div class="votereq">Vote for 21 validators to enable staking</div>
     </div>
 {/if}
 <div class="returns">

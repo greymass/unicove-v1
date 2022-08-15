@@ -6,10 +6,27 @@
 
     import {currentLiquidBalance, currentREXBalance, currentREXBalanceValue} from '~/stores/account'
     import {activePriceTicker} from '~/store'
+    import {earnData, Step} from '~/pages/earn/earn'
 
     const hasLiquidTokens = derived(currentLiquidBalance, ($balance) => {
         return $balance!.value > 0
     })
+
+    function deposit() {
+        earnData.update((data) => ({
+            ...data,
+            step: Step.Deposit,
+            backStep: data.step,
+        }))
+    }
+
+    function withdraw() {
+        earnData.update((data) => ({
+            ...data,
+            step: Step.Withdraw,
+            backStep: data.step,
+        }))
+    }
 </script>
 
 <style type="scss">
@@ -25,7 +42,7 @@
         <InputLabel>Current staked balance</InputLabel>
         <p class="balance">{$currentREXBalance}</p>
         <p>{$currentREXBalanceValue} @ {$activePriceTicker} EOS/USD</p>
-        <Button size="large" disabled={!hasLiquidTokens}>Deposit</Button>
-        <Button size="large">Withdraw</Button>
+        <Button size="large" on:action={deposit} disabled={!hasLiquidTokens}>Deposit</Button>
+        <Button size="large" on:action={withdraw}>Withdraw</Button>
     </div>
 {/if}

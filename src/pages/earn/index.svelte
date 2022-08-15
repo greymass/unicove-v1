@@ -14,6 +14,8 @@
     import EarnREX from '~/pages/earn/methods/rex/index.svelte'
     import EarnDebug from '~/pages/earn/methods/debug/index.svelte'
 
+    import {earnData} from '~/pages/earn/earn'
+
     const enabled: Readable<boolean> = derived(activeBlockchain, ($activeBlockchain) => {
         if ($activeBlockchain) {
             return Array.from($activeBlockchain.earnMethods).some((r) => earnMethods.includes(r))
@@ -24,6 +26,7 @@
 
 {#if $activeBlockchain}
     <Page>
+        <p>{JSON.stringify($earnData)}</p>
         {#if $enabled}
             <Route path="/">
                 <EarnREX {activeSession} />
