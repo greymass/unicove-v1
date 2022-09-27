@@ -39,15 +39,10 @@
         <meta name="twitter:image" content="/site.png" />
 
         <title>Unicove</title>
+
+        %sveltekit.head%
     </head>
     <body>
-        <noscript>
-            <p>
-                Unicove requires JavaScript to run, please add an exception for this
-                domain if you wish to use it.
-            </p>
-        </noscript>
-        <main><div class="app-loading"></div></main>
-        <script type="module" src="/dist/main.js"></script>
+        %sveltekit.body%
     </body>
 </html>
