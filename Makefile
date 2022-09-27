@@ -5,13 +5,13 @@ BIN := ./node_modules/.bin
 REV := $(shell git rev-parse --short HEAD)
 BRANCH := $(shell git branch --show-current)
 
-build: $(SRC_FILES) node_modules package.json snowpack.config.js svelte.config.js tsconfig.json yarn.lock
+build: $(SRC_FILES) node_modules package.json vite.config.js svelte.config.js tsconfig.json yarn.lock
 	@echo "Starting build of $(BRANCH)-$(REV)"
-	@${BIN}/snowpack build || (rm -rf build && exit 1)
+	@${BIN}/vite build || (rm -rf build && exit 1)
 
 .PHONY: dev
 dev: node_modules
-	@${BIN}/snowpack dev
+	@${BIN}/vite dev
 
 .PHONY: serve
 serve: build
