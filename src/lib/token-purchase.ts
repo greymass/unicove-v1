@@ -7,7 +7,7 @@ const unicoveUrl = import.meta.env.SNOWPACK_PUBLIC_UNICOVE_URL
 
 const tokenOrderUrl = `${creationServiceUrl}/api/tokens/order`
 
-export const openPopup = async (accountName: Name): Promise<void> => {
+export const openPopup = async (accountName: Name | undefined): Promise<void> => {
     let whalesplainerTokenOrderResponse
     let whalesplainerTokenOrder
 
@@ -18,8 +18,8 @@ export const openPopup = async (accountName: Name): Promise<void> => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                wallet_address: accountName.toString(),
-                account_reference: accountName.toString(),
+                wallet_address: accountName?.toString(),
+                account_reference: accountName?.toString(),
                 fiat_code: 'USD',
                 coin_code: 'EOS',
                 return_url_on_success: unicoveUrl,
