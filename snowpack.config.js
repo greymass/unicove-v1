@@ -11,9 +11,10 @@ if (!process.env['NODE_ENV']) {
 
 const defaultValues = {
     WHALESPLAINER_URL: 'https://create.anchor.link',
+    UNICOVE_URL: 'https://unicove.com',
 }
 // env vars to forward to snowpack (included in js bundle)
-const forwardEnv = ['BRANCH', 'REV', 'VERSION', 'WHALESPLAINER_URL']
+const forwardEnv = ['BRANCH', 'REV', 'VERSION', 'WHALESPLAINER_URL', 'UNICOVE_URL']
 for (const key of forwardEnv) {
     process.env[`SNOWPACK_PUBLIC_${key}`] = process.env[key] || defaultValues[key]
 }
