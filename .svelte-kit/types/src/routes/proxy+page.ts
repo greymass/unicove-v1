@@ -3,10 +3,10 @@ import type { PageLoad } from './$types';
 
 
 import App from '../App.svelte'
-import {init as initAuth} from '~/auth'
+import {init as initAuth} from '../auth'
 import {Preferences} from '~/preferences'
-import {appReady} from '~/store'
-export const prerender = false
+import {appReady} from './store'
+// export const prerender = false
 
 
 // app initialization we show a full-screen loading spinner until this resolves

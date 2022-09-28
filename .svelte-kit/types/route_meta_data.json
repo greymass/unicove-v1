@@ -1,5 +1,7 @@
 {
 	"": [
-		"src/routes/+page.ts"
+		"src/routes/+page.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.ts"
 	]
 }

@@ -1,8 +1,8 @@
 <script lang="ts">
     import {Route, router} from 'tinro'
 
-    import {activeSession, appReady, darkMode} from '~/store'
-    import {isRelease} from '~/config'
+    import {activeSession, appReady, darkMode} from './store'
+    import {isRelease} from './config'
 
     import Page from '~/components/layout/page.svelte'
 
