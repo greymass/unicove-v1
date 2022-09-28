@@ -1,15 +1,13 @@
 <script lang="ts">
     import type {PageData} from './$types'
+    import App from '../App.svelte'
 
     export let data: PageData
+    let loading = true
 </script>
 
-<noscript>
-    <p>
-        Unicove requires JavaScript to run, please add an exception for this
-        domain if you wish to use it.
-    </p>
-</noscript>
-<main><div class="app-loading"></div></main>
-
-<script type="module" src="/dist/main.js"></script>
+{#if loading}
+    <div class="app-loading" />
+{:else}
+    <App />
+{/if}

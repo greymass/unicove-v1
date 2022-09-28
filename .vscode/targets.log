@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Sep 27 08:39:45 2022
+# Make data base, printed on Wed Sep 28 08:49:48 2022
 
 # Variables
 
@@ -27,7 +27,7 @@ PNPM_HOME = /home/dean/.local/share/pnpm
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-445d90b9-5529-4522-b955-77042fcd5091.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-10d46b44-cf91-428a-a1e3-d242c6a96c4b.sock
 # environment
 LC_NAME = en_US.UTF-8
 # environment
@@ -49,7 +49,7 @@ QT_ACCESSIBILITY = 1
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # makefile (from 'Makefile', line 5)
-REV := 3f47c10
+REV := 46f6dbd
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -123,7 +123,7 @@ CONDA_SHLVL = 1
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 10929
+VSCODE_PID = 18222
 # makefile (from 'Makefile', line 6)
 BRANCH := sveltekit
 # environment
@@ -133,7 +133,7 @@ XDG_SESSION_TYPE = x11
 # environment
 CONDA_PYTHON_EXE = /home/dean/anaconda3/bin/python
 # environment
-SESSION_MANAGER = local/pop-os:@/tmp/.ICE-unix/1838,unix/pop-os:/tmp/.ICE-unix/1838
+SESSION_MANAGER = local/pop-os:@/tmp/.ICE-unix/1892,unix/pop-os:/tmp/.ICE-unix/1892
 # automatic
 *F = $(notdir $*)
 # environment
@@ -165,7 +165,7 @@ MAKELEVEL := 0
 # default
 MAKE = $(MAKE_COMMAND)
 # environment
-PATH = /home/dean/.local/bin:/home/dean/anaconda3/bin:/home/dean/anaconda3/condabin:/home/dean/.local/share/pnpm:/run/user/1000/fnm_multishells/156484_1659637515347/bin:/run/user/1000/fnm_multishells/11259_1663261126307/bin:/home/dean/.fnm:/home/dean/.nvm/versions/node/v17.4.0/bin:/home/dean/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+PATH = /home/dean/.local/bin:/home/dean/anaconda3/bin:/home/dean/anaconda3/condabin:/home/dean/.local/share/pnpm:/run/user/1000/fnm_multishells/156484_1659637515347/bin:/run/user/1000/fnm_multishells/18567_1664380186567/bin:/home/dean/.fnm:/home/dean/.nvm/versions/node/v17.4.0/bin:/home/dean/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
 # default
 MAKEFILES := 
 # environment
@@ -177,7 +177,7 @@ LC_MONETARY = en_US.UTF-8
 # environment
 LC_TIME = en_US.UTF-8
 # environment
-INVOCATION_ID = ddb7d835d11b4a35a6b206ddb738606e
+INVOCATION_ID = 51a8ddeeff7b439f8fefa70c18961b10
 # environment
 FNM_MULTISHELL_PATH = /run/user/1000/fnm_multishells/156484_1659637515347
 # environment
@@ -213,7 +213,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile
 .DEFAULT_GOAL := build
 # environment
-SYSTEMD_EXEC_PID = 1861
+SYSTEMD_EXEC_PID = 1915
 # environment
 EDITOR = nvim
 # environment
@@ -225,15 +225,15 @@ GTK_MODULES = gail:atk-bridge:appmenu-gtk-module
 # default
 MAKE_VERSION := 4.3
 # makefile (from 'Makefile', line 1)
-SRC_FILES := src/lib/readable-object.ts src/db.ts src/pages/loading.svelte src/pages/_components/index.svelte src/pages/_components/icons.svelte src/pages/_components/qrcode.svelte src/pages/_components/modals.svelte src/pages/_components/progress.svelte src/pages/_components/buttons.svelte src/pages/_components/forms.svelte src/pages/_components/segments.svelte src/pages/_components/tx-follower.svelte src/pages/_components/inputs.svelte src/pages/resources/index.svelte src/pages/resources/pages/net/fuel.svelte src/pages/resources/pages/net/rex.svelte src/pages/resources/pages/net/staking.svelte src/pages/resources/pages/net/powerup.svelte src/pages/resources/pages/cpu.svelte src/pages/resources/pages/index.svelte src/pages/resources/pages/net.svelte src/pages/resources/pages/cpu/fuel.svelte src/pages/resources/pages/cpu/rex.svelte src/pages/resources/pages/cpu/staking.svelte src/pages/resources/pages/cpu/powerup.svelte src/pages/resources/pages/ram/buy.svelte src/pages/resources/pages/ram/sell.svelte src/pages/resources/resources.ts src/pages/resources/components/forms/rambuy.svelte src/pages/resources/components/forms/fuel.svelte src/pages/resources/components/forms/rex.svelte src/pages/resources/components/forms/staking.svelte src/pages/resources/components/forms/powerup.svelte src/pages/resources/components/forms/ramsell.svelte src/pages/resources/components/state/prices.svelte src/pages/resources/components/state/cpu.svelte src/pages/resources/components/state/index.svelte src/pages/resources/components/state/net.svelte src/pages/resources/components/state/ram.svelte src/pages/login.svelte src/pages/transfer/step/sending.svelte src/pages/transfer/step/receive.svelte src/pages/transfer/step/amount.svelte src/pages/transfer/step/confirm.svelte src/pages/transfer/step/recipient.svelte src/pages/transfer/step/token.svelte src/pages/transfer/fio.ts src/pages/transfer/index.svelte src/pages/transfer/field-container/index.svelte src/pages/transfer/field-container/status-icon.svelte src/pages/transfer/status/address.svelte src/pages/transfer/status/account.svelte src/pages/transfer/status/quantity.svelte src/pages/transfer/status/template/completed.svelte src/pages/transfer/status/template/change.svelte src/pages/transfer/status/template/container.svelte src/pages/transfer/status/fee.svelte src/pages/transfer/status/memo.svelte src/pages/transfer/status/recipient.svelte src/pages/transfer/status/token.svelte src/pages/transfer/transfer.ts src/pages/transfer/main.svelte src/pages/request/request.ts src/pages/request/index.svelte src/pages/request/requests/default.svelte src/pages/request/requests/loading.svelte src/pages/request/requests/newaccount.svelte src/pages/request/resources.ts src/pages/request/template.ts src/pages/dashboard/index.svelte src/pages/dashboard/number.svelte src/pages/dashboard/headerrow.svelte src/pages/dashboard/row.svelte src/pages/dashboard/table.svelte src/main.ts src/abi-types.ts src/preferences.ts src/config.ts src/ui-types.ts src/app.svelte src/price-ticker.ts src/store.ts src/stores/toast.ts src/stores/account-provider.ts src/stores/balances.ts src/stores/balances-provider.ts src/stores/tokens.ts src/style/global.scss src/style/reset.scss src/components/elements/image/token.svelte src/components/elements/toast.svelte src/components/elements/segment.svelte src/components/elements/unicove.svelte src/components/elements/card.svelte src/components/elements/button.svelte src/components/elements/text.svelte src/components/elements/input.svelte src/components/elements/modal/trigger.svelte src/components/elements/qrcode.svelte src/components/elements/toasts.svelte src/components/elements/nav.svelte src/components/elements/icon.svelte src/components/elements/logo.svelte src/components/elements/input/labelled.svelte src/components/elements/input/account/lookup.svelte src/components/elements/input/label.svelte src/components/elements/input/asset.svelte src/components/elements/input/account.svelte src/components/elements/input/publicKey.svelte src/components/elements/input/errorMessage.svelte src/components/elements/input/validators/presence.ts src/components/elements/input/validators/asset.ts src/components/elements/input/validators/account.ts src/components/elements/input/validators/publicKey.ts src/components/elements/input/token/selector.svelte src/components/elements/input/token/selector/row.svelte src/components/elements/clipboard.svelte src/components/elements/segment/group.svelte src/components/elements/progress.svelte src/components/elements/modal.svelte src/components/elements/gauge.svelte src/components/elements/form.svelte src/components/elements/form/balance.svelte src/components/elements/form/transaction.svelte src/components/elements/button/mode.svelte src/components/elements/button/login.svelte src/components/elements/unicove-animated.svelte src/components/elements/features.svelte src/components/elements/notification/transaction/success.svelte src/components/elements/image.svelte src/components/utils/media-query.svelte src/components/layout/account/button.svelte src/components/layout/account/list.svelte src/components/layout/account/sidebar.svelte src/components/layout/page.svelte src/components/layout/navigation/index.svelte src/components/layout/navigation/button.svelte src/components/layout/navigation/content.svelte src/components/layout/header.svelte src/components/tx-follower/index.svelte src/components/tx-follower/advanced.svelte src/components/tx-follower/summary.svelte src/components/tx-follower/utils.ts src/api-client.ts src/auth.ts src/helpers.ts
+SRC_FILES := src/lib/readable-object.ts src/db.ts src/App.svelte src/pages/loading.svelte src/pages/_components/index.svelte src/pages/_components/icons.svelte src/pages/_components/qrcode.svelte src/pages/_components/modals.svelte src/pages/_components/progress.svelte src/pages/_components/buttons.svelte src/pages/_components/forms.svelte src/pages/_components/segments.svelte src/pages/_components/tx-follower.svelte src/pages/_components/inputs.svelte src/pages/resources/index.svelte src/pages/resources/pages/net/fuel.svelte src/pages/resources/pages/net/rex.svelte src/pages/resources/pages/net/staking.svelte src/pages/resources/pages/net/powerup.svelte src/pages/resources/pages/cpu.svelte src/pages/resources/pages/index.svelte src/pages/resources/pages/net.svelte src/pages/resources/pages/cpu/fuel.svelte src/pages/resources/pages/cpu/rex.svelte src/pages/resources/pages/cpu/staking.svelte src/pages/resources/pages/cpu/powerup.svelte src/pages/resources/pages/ram/buy.svelte src/pages/resources/pages/ram/sell.svelte src/pages/resources/resources.ts src/pages/resources/components/forms/rambuy.svelte src/pages/resources/components/forms/fuel.svelte src/pages/resources/components/forms/rex.svelte src/pages/resources/components/forms/staking.svelte src/pages/resources/components/forms/powerup.svelte src/pages/resources/components/forms/ramsell.svelte src/pages/resources/components/state/prices.svelte src/pages/resources/components/state/cpu.svelte src/pages/resources/components/state/index.svelte src/pages/resources/components/state/net.svelte src/pages/resources/components/state/ram.svelte src/pages/login.svelte src/pages/transfer/step/sending.svelte src/pages/transfer/step/receive.svelte src/pages/transfer/step/amount.svelte src/pages/transfer/step/confirm.svelte src/pages/transfer/step/recipient.svelte src/pages/transfer/step/token.svelte src/pages/transfer/fio.ts src/pages/transfer/index.svelte src/pages/transfer/field-container/index.svelte src/pages/transfer/field-container/status-icon.svelte src/pages/transfer/status/address.svelte src/pages/transfer/status/account.svelte src/pages/transfer/status/quantity.svelte src/pages/transfer/status/template/completed.svelte src/pages/transfer/status/template/change.svelte src/pages/transfer/status/template/container.svelte src/pages/transfer/status/fee.svelte src/pages/transfer/status/memo.svelte src/pages/transfer/status/recipient.svelte src/pages/transfer/status/token.svelte src/pages/transfer/transfer.ts src/pages/transfer/main.svelte src/pages/request/request.ts src/pages/request/index.svelte src/pages/request/requests/default.svelte src/pages/request/requests/loading.svelte src/pages/request/requests/newaccount.svelte src/pages/request/resources.ts src/pages/request/template.ts src/pages/dashboard/index.svelte src/pages/dashboard/number.svelte src/pages/dashboard/headerrow.svelte src/pages/dashboard/row.svelte src/pages/dashboard/table.svelte src/routes/+error.svelte src/routes/+page.ts src/routes/+page.svelte src/routes/+layout.svelte src/main.ts src/abi-types.ts src/preferences.ts src/app.html src/config.ts src/ui-types.ts src/price-ticker.ts src/store.ts src/stores/toast.ts src/stores/account-provider.ts src/stores/balances.ts src/stores/balances-provider.ts src/stores/tokens.ts src/style/global.scss src/style/reset.scss src/components/elements/image/token.svelte src/components/elements/toast.svelte src/components/elements/segment.svelte src/components/elements/unicove.svelte src/components/elements/card.svelte src/components/elements/button.svelte src/components/elements/text.svelte src/components/elements/input.svelte src/components/elements/modal/trigger.svelte src/components/elements/qrcode.svelte src/components/elements/toasts.svelte src/components/elements/nav.svelte src/components/elements/icon.svelte src/components/elements/logo.svelte src/components/elements/input/labelled.svelte src/components/elements/input/account/lookup.svelte src/components/elements/input/label.svelte src/components/elements/input/asset.svelte src/components/elements/input/account.svelte src/components/elements/input/publicKey.svelte src/components/elements/input/errorMessage.svelte src/components/elements/input/validators/presence.ts src/components/elements/input/validators/asset.ts src/components/elements/input/validators/account.ts src/components/elements/input/validators/publicKey.ts src/components/elements/input/token/selector.svelte src/components/elements/input/token/selector/row.svelte src/components/elements/clipboard.svelte src/components/elements/segment/group.svelte src/components/elements/progress.svelte src/components/elements/modal.svelte src/components/elements/gauge.svelte src/components/elements/form.svelte src/components/elements/form/balance.svelte src/components/elements/form/transaction.svelte src/components/elements/button/mode.svelte src/components/elements/button/login.svelte src/components/elements/unicove-animated.svelte src/components/elements/features.svelte src/components/elements/notification/transaction/success.svelte src/components/elements/image.svelte src/components/utils/media-query.svelte src/components/layout/account/button.svelte src/components/layout/account/list.svelte src/components/layout/account/sidebar.svelte src/components/layout/page.svelte src/components/layout/navigation/index.svelte src/components/layout/navigation/button.svelte src/components/layout/navigation/content.svelte src/components/layout/header.svelte src/components/tx-follower/index.svelte src/components/tx-follower/advanced.svelte src/components/tx-follower/summary.svelte src/components/tx-follower/utils.ts src/api-client.ts src/auth.ts src/helpers.ts
 # 'override' directive
 .SHELLSTATUS := 0
 # environment
-MANAGERPID = 1637
+MANAGERPID = 1688
 # environment
 LC_MEASUREMENT = en_US.UTF-8
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 10929
+GIO_LAUNCHED_DESKTOP_FILE_PID = 18222
 # environment
 _ = /usr/share/code/code
 # environment
@@ -245,12 +245,11 @@ XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
- 
 _CE_M = 
 # environment
 NVM_CD_FLAGS = 
 # environment
-JOURNAL_STREAM = 8:38377
+JOURNAL_STREAM = 8:46230
 # environment
 VISUAL = nvim
 # environment
@@ -272,8 +271,11 @@ PAPERSIZE = letter
 # automatic
 <F = $(notdir $<)
 # default
+ 
 SUFFIXES := 
+ 
 # default
+ 
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
 # environment
 XDG_MENU_PREFIX = gnome-
@@ -285,6 +287,7 @@ _CE_CONDA =
 GDMSESSION = pop
 # environment
 LC_IDENTIFICATION = en_US.UTF-8
+ 
 # variable set hash-table stats:
 # Load=136/1024=13%, Rehash=0, Collisions=6/178=3%
 
@@ -294,9 +297,9 @@ LC_IDENTIFICATION = en_US.UTF-8
 
 # Directories
 
-# . (device 66305, inode 20578507): 21 files, no impossibilities.
+# . (device 66305, inode 20578507): 23 files, no impossibilities.
 
-# 21 files, no impossibilities in 1 directories.
+# 23 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -345,6 +348,7 @@ src/components/elements/modal/trigger.svelte:
 #  File has not been updated.
 
 # Not a target:
+ 
 src/pages/request/request.ts:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -395,6 +399,7 @@ src/pages/transfer/step/confirm.svelte:
 #  File has not been updated.
 
 # Not a target:
+ 
 src/pages/transfer/status/address.svelte:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -455,7 +460,19 @@ src/components/tx-follower/summary.svelte:
 #  File has not been updated.
 
 # Not a target:
+src/routes/+layout.svelte:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 src/components/elements/input/validators/presence.ts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+vite.config.js:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -485,6 +502,12 @@ src/components/elements/unicove-animated.svelte:
 #  File has not been updated.
 
 # Not a target:
+src/App.svelte:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 src/components/layout/navigation/button.svelte:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -493,7 +516,7 @@ src/components/layout/navigation/button.svelte:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-03 16:09:38.988270367
+#  Last modified 2022-09-27 10:02:38.170173283
 #  File has been updated.
 #  Successfully updated.
 
@@ -602,7 +625,6 @@ src/components/tx-follower/advanced.svelte:
 # Not a target:
 src/lib/readable-object.ts:
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -693,12 +715,6 @@ src/components/elements/qrcode.svelte:
 #  File has not been updated.
 
 # Not a target:
-src/app.svelte:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-# Not a target:
 src/pages/resources/resources.ts:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -782,8 +798,15 @@ src/pages/request/requests/loading.svelte:
 #  File has not been updated.
 
 # Not a target:
+src/routes/+page.ts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 src/pages/transfer/step/receive.svelte:
 #  Implicit rule search has not been done.
+ 
 #  Modification time never checked.
 #  File has not been updated.
 
@@ -841,7 +864,7 @@ dev: node_modules
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 14):
-	@${BIN}/snowpack dev
+	@${BIN}/vite dev
 
 # Not a target:
 src/pages/transfer/step/amount.svelte:
@@ -864,7 +887,6 @@ src/pages/resources/components/forms/rex.svelte:
 
 # Not a target:
 src/pages/resources/pages/ram/buy.svelte:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -893,13 +915,13 @@ src/auth.ts:
 #  Modification time never checked.
 #  File has not been updated.
 
-build: src/lib/readable-object.ts src/db.ts src/pages/loading.svelte src/pages/_components/index.svelte src/pages/_components/icons.svelte src/pages/_components/qrcode.svelte src/pages/_components/modals.svelte src/pages/_components/progress.svelte src/pages/_components/buttons.svelte src/pages/_components/forms.svelte src/pages/_components/segments.svelte src/pages/_components/tx-follower.svelte src/pages/_components/inputs.svelte src/pages/resources/index.svelte src/pages/resources/pages/net/fuel.svelte src/pages/resources/pages/net/rex.svelte src/pages/resources/pages/net/staking.svelte src/pages/resources/pages/net/powerup.svelte src/pages/resources/pages/cpu.svelte src/pages/resources/pages/index.svelte src/pages/resources/pages/net.svelte src/pages/resources/pages/cpu/fuel.svelte src/pages/resources/pages/cpu/rex.svelte src/pages/resources/pages/cpu/staking.svelte src/pages/resources/pages/cpu/powerup.svelte src/pages/resources/pages/ram/buy.svelte src/pages/resources/pages/ram/sell.svelte src/pages/resources/resources.ts src/pages/resources/components/forms/rambuy.svelte src/pages/resources/components/forms/fuel.svelte src/pages/resources/components/forms/rex.svelte src/pages/resources/components/forms/staking.svelte src/pages/resources/components/forms/powerup.svelte src/pages/resources/components/forms/ramsell.svelte src/pages/resources/components/state/prices.svelte src/pages/resources/components/state/cpu.svelte src/pages/resources/components/state/index.svelte src/pages/resources/components/state/net.svelte src/pages/resources/components/state/ram.svelte src/pages/login.svelte src/pages/transfer/step/sending.svelte src/pages/transfer/step/receive.svelte src/pages/transfer/step/amount.svelte src/pages/transfer/step/confirm.svelte src/pages/transfer/step/recipient.svelte src/pages/transfer/step/token.svelte src/pages/transfer/fio.ts src/pages/transfer/index.svelte src/pages/transfer/field-container/index.svelte src/pages/transfer/field-container/status-icon.svelte src/pages/transfer/status/address.svelte src/pages/transfer/status/account.svelte src/pages/transfer/status/quantity.svelte src/pages/transfer/status/template/completed.svelte src/pages/transfer/status/template/change.svelte src/pages/transfer/status/template/container.svelte src/pages/transfer/status/fee.svelte src/pages/transfer/status/memo.svelte src/pages/transfer/status/recipient.svelte src/pages/transfer/status/token.svelte src/pages/transfer/transfer.ts src/pages/transfer/main.svelte src/pages/request/request.ts src/pages/request/index.svelte src/pages/request/requests/default.svelte src/pages/request/requests/loading.svelte src/pages/request/requests/newaccount.svelte src/pages/request/resources.ts src/pages/request/template.ts src/pages/dashboard/index.svelte src/pages/dashboard/number.svelte src/pages/dashboard/headerrow.svelte src/pages/dashboard/row.svelte src/pages/dashboard/table.svelte src/main.ts src/abi-types.ts src/preferences.ts src/config.ts src/ui-types.ts src/app.svelte src/price-ticker.ts src/store.ts src/stores/toast.ts src/stores/account-provider.ts src/stores/balances.ts src/stores/balances-provider.ts src/stores/tokens.ts src/style/global.scss src/style/reset.scss src/components/elements/image/token.svelte src/components/elements/toast.svelte src/components/elements/segment.svelte src/components/elements/unicove.svelte src/components/elements/card.svelte src/components/elements/button.svelte src/components/elements/text.svelte src/components/elements/input.svelte src/components/elements/modal/trigger.svelte src/components/elements/qrcode.svelte src/components/elements/toasts.svelte src/components/elements/nav.svelte src/components/elements/icon.svelte src/components/elements/logo.svelte src/components/elements/input/labelled.svelte src/components/elements/input/account/lookup.svelte src/components/elements/input/label.svelte src/components/elements/input/asset.svelte src/components/elements/input/account.svelte src/components/elements/input/publicKey.svelte src/components/elements/input/errorMessage.svelte src/components/elements/input/validators/presence.ts src/components/elements/input/validators/asset.ts src/components/elements/input/validators/account.ts src/components/elements/input/validators/publicKey.ts src/components/elements/input/token/selector.svelte src/components/elements/input/token/selector/row.svelte src/components/elements/clipboard.svelte src/components/elements/segment/group.svelte src/components/elements/progress.svelte src/components/elements/modal.svelte src/components/elements/gauge.svelte src/components/elements/form.svelte src/components/elements/form/balance.svelte src/components/elements/form/transaction.svelte src/components/elements/button/mode.svelte src/components/elements/button/login.svelte src/components/elements/unicove-animated.svelte src/components/elements/features.svelte src/components/elements/notification/transaction/success.svelte src/components/elements/image.svelte src/components/utils/media-query.svelte src/components/layout/account/button.svelte src/components/layout/account/list.svelte src/components/layout/account/sidebar.svelte src/components/layout/page.svelte src/components/layout/navigation/index.svelte src/components/layout/navigation/button.svelte src/components/layout/navigation/content.svelte src/components/layout/header.svelte src/components/tx-follower/index.svelte src/components/tx-follower/advanced.svelte src/components/tx-follower/summary.svelte src/components/tx-follower/utils.ts src/api-client.ts src/auth.ts src/helpers.ts node_modules package.json snowpack.config.js svelte.config.js tsconfig.json yarn.lock
+build: src/lib/readable-object.ts src/db.ts src/App.svelte src/pages/loading.svelte src/pages/_components/index.svelte src/pages/_components/icons.svelte src/pages/_components/qrcode.svelte src/pages/_components/modals.svelte src/pages/_components/progress.svelte src/pages/_components/buttons.svelte src/pages/_components/forms.svelte src/pages/_components/segments.svelte src/pages/_components/tx-follower.svelte src/pages/_components/inputs.svelte src/pages/resources/index.svelte src/pages/resources/pages/net/fuel.svelte src/pages/resources/pages/net/rex.svelte src/pages/resources/pages/net/staking.svelte src/pages/resources/pages/net/powerup.svelte src/pages/resources/pages/cpu.svelte src/pages/resources/pages/index.svelte src/pages/resources/pages/net.svelte src/pages/resources/pages/cpu/fuel.svelte src/pages/resources/pages/cpu/rex.svelte src/pages/resources/pages/cpu/staking.svelte src/pages/resources/pages/cpu/powerup.svelte src/pages/resources/pages/ram/buy.svelte src/pages/resources/pages/ram/sell.svelte src/pages/resources/resources.ts src/pages/resources/components/forms/rambuy.svelte src/pages/resources/components/forms/fuel.svelte src/pages/resources/components/forms/rex.svelte src/pages/resources/components/forms/staking.svelte src/pages/resources/components/forms/powerup.svelte src/pages/resources/components/forms/ramsell.svelte src/pages/resources/components/state/prices.svelte src/pages/resources/components/state/cpu.svelte src/pages/resources/components/state/index.svelte src/pages/resources/components/state/net.svelte src/pages/resources/components/state/ram.svelte src/pages/login.svelte src/pages/transfer/step/sending.svelte src/pages/transfer/step/receive.svelte src/pages/transfer/step/amount.svelte src/pages/transfer/step/confirm.svelte src/pages/transfer/step/recipient.svelte src/pages/transfer/step/token.svelte src/pages/transfer/fio.ts src/pages/transfer/index.svelte src/pages/transfer/field-container/index.svelte src/pages/transfer/field-container/status-icon.svelte src/pages/transfer/status/address.svelte src/pages/transfer/status/account.svelte src/pages/transfer/status/quantity.svelte src/pages/transfer/status/template/completed.svelte src/pages/transfer/status/template/change.svelte src/pages/transfer/status/template/container.svelte src/pages/transfer/status/fee.svelte src/pages/transfer/status/memo.svelte src/pages/transfer/status/recipient.svelte src/pages/transfer/status/token.svelte src/pages/transfer/transfer.ts src/pages/transfer/main.svelte src/pages/request/request.ts src/pages/request/index.svelte src/pages/request/requests/default.svelte src/pages/request/requests/loading.svelte src/pages/request/requests/newaccount.svelte src/pages/request/resources.ts src/pages/request/template.ts src/pages/dashboard/index.svelte src/pages/dashboard/number.svelte src/pages/dashboard/headerrow.svelte src/pages/dashboard/row.svelte src/pages/dashboard/table.svelte src/routes/+error.svelte src/routes/+page.ts src/routes/+page.svelte src/routes/+layout.svelte src/main.ts src/abi-types.ts src/preferences.ts src/app.html src/config.ts src/ui-types.ts src/price-ticker.ts src/store.ts src/stores/toast.ts src/stores/account-provider.ts src/stores/balances.ts src/stores/balances-provider.ts src/stores/tokens.ts src/style/global.scss src/style/reset.scss src/components/elements/image/token.svelte src/components/elements/toast.svelte src/components/elements/segment.svelte src/components/elements/unicove.svelte src/components/elements/card.svelte src/components/elements/button.svelte src/components/elements/text.svelte src/components/elements/input.svelte src/components/elements/modal/trigger.svelte src/components/elements/qrcode.svelte src/components/elements/toasts.svelte src/components/elements/nav.svelte src/components/elements/icon.svelte src/components/elements/logo.svelte src/components/elements/input/labelled.svelte src/components/elements/input/account/lookup.svelte src/components/elements/input/label.svelte src/components/elements/input/asset.svelte src/components/elements/input/account.svelte src/components/elements/input/publicKey.svelte src/components/elements/input/errorMessage.svelte src/components/elements/input/validators/presence.ts src/components/elements/input/validators/asset.ts src/components/elements/input/validators/account.ts src/components/elements/input/validators/publicKey.ts src/components/elements/input/token/selector.svelte src/components/elements/input/token/selector/row.svelte src/components/elements/clipboard.svelte src/components/elements/segment/group.svelte src/components/elements/progress.svelte src/components/elements/modal.svelte src/components/elements/gauge.svelte src/components/elements/form.svelte src/components/elements/form/balance.svelte src/components/elements/form/transaction.svelte src/components/elements/button/mode.svelte src/components/elements/button/login.svelte src/components/elements/unicove-animated.svelte src/components/elements/features.svelte src/components/elements/notification/transaction/success.svelte src/components/elements/image.svelte src/components/utils/media-query.svelte src/components/layout/account/button.svelte src/components/layout/account/list.svelte src/components/layout/account/sidebar.svelte src/components/layout/page.svelte src/components/layout/navigation/index.svelte src/components/layout/navigation/button.svelte src/components/layout/navigation/content.svelte src/components/layout/header.svelte src/components/tx-follower/index.svelte src/components/tx-follower/advanced.svelte src/components/tx-follower/summary.svelte src/components/tx-follower/utils.ts src/api-client.ts src/auth.ts src/helpers.ts node_modules package.json vite.config.js svelte.config.js tsconfig.json yarn.lock
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 9):
 	@echo "Starting build of $(BRANCH)-$(REV)"
-	@${BIN}/snowpack build || (rm -rf build && exit 1)
+	@${BIN}/vite build || (rm -rf build && exit 1)
 
 # Not a target:
 src/components/elements/icon.svelte:
@@ -921,6 +943,12 @@ src/pages/dashboard/number.svelte:
 
 # Not a target:
 src/preferences.ts:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/routes/+page.svelte:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -1011,6 +1039,7 @@ src/pages/transfer/status/recipient.svelte:
 #  File has not been updated.
 
 # Not a target:
+ 
 src/components/elements/card.svelte:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -1110,7 +1139,6 @@ src/components/elements/notification/transaction/success.svelte:
 src/pages/resources/pages/net.svelte:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 
 format: node_modules
@@ -1196,6 +1224,12 @@ src/pages/dashboard/index.svelte:
 #  File has not been updated.
 
 # Not a target:
+src/app.html:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 src/components/elements/input/token/selector/row.svelte:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -1208,7 +1242,7 @@ src/stores/toast.ts:
 #  File has not been updated.
 
 # Not a target:
-snowpack.config.js:
+src/routes/+error.svelte:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -1242,6 +1276,7 @@ src/pages/resources/components/state/prices.svelte:
 #  Modification time never checked.
 #  File has not been updated.
 
+ 
 # Not a target:
 src/config.ts:
 #  Implicit rule search has not been done.
@@ -1309,19 +1344,19 @@ src/pages/transfer/step/recipient.svelte:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=165/1024=16%, Rehash=0, Collisions=40/350=11%
+# Load=170/1024=17%, Rehash=0, Collisions=40/360=11%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 181 / storage = 5908 B / avg = 32 B
-# current buf: size = 8162 B / used = 5908 B / count = 181 / avg = 32 B
+# strcache buffers: 1 (0) / strings = 188 / storage = 6051 B / avg = 32 B
+# current buf: size = 8162 B / used = 6051 B / count = 188 / avg = 32 B
 
-# strcache performance: lookups = 223 / hit rate = 18%
+# strcache performance: lookups = 230 / hit rate = 18%
 # hash-table stats:
-# Load=181/8192=2%, Rehash=0, Collisions=1/223=0%
-# Finished Make data base on Tue Sep 27 08:39:45 2022
+# Load=188/8192=2%, Rehash=0, Collisions=1/230=0%
+# Finished Make data base on Wed Sep 28 08:49:48 2022
 
  
