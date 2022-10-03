@@ -1,0 +1,1 @@
+const s=!1,r=!1,t=!0,e=async()=>({}),o=Object.freeze(Object.defineProperty({__proto__:null,prerender:!1,ssr:!1,csr:!0,load:e},Symbol.toStringTag,{value:"Module"}));export{o as _,t as c,e as l,s as p,r as s};
