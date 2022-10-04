@@ -1,15 +1,19 @@
 {
+    "extends": "./.svelte-kit/tsconfig.json",
     "include": ["src", "types"],
     "compilerOptions": {
         "paths": {
-            "~/*": ["./src/*"],
-            "@/*": ["./public/*"]
+            "~/*": ["src/*"],
+            "~/": ["src/"],
+            "@/*": ["static/*"],
+            "$lib":["src/lib"],
+            "$lib/*":["src/lib/*"]
         },
-        "module": "es2020",
-        "target": "es2020",
+		"module": "esnext",
+		"target": "esnext",
         "moduleResolution": "node",
         "jsx": "preserve",
-        "baseUrl": "./",
+        // "baseUrl": ".",
         "types": ["svelte"],
         "noEmit": true,
         "strict": true,
@@ -21,5 +25,5 @@
         "allowSyntheticDefaultImports": true,
         "importsNotUsedAsValues": "error",
         "useUnknownInCatchVariables": false
-    }
+    },
 }
