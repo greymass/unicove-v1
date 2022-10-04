@@ -34,7 +34,7 @@
         !$router.path.startsWith('/request')
 </script>
 
-<style lang="scss" global>
+<!-- <style lang="scss" global>
     @import './style/reset.scss';
     @import './style/global.scss';
 
@@ -154,7 +154,7 @@
     main {
         min-height: 100vh;
     }
-</style>
+</style> -->
 
 <svelte:head>
     <script
