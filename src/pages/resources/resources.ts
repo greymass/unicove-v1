@@ -1,10 +1,13 @@
-import {derived, Readable} from 'svelte/store'
+import type {Readable} from 'svelte/store'
+import {derived} from 'svelte/store'
 import {API, Asset} from '@greymass/eosio'
-import {Resources, SampleUsage, PowerUpState, RAMState, REXState} from '@greymass/eosio-resources'
+import type {SampleUsage} from '@greymass/eosio-resources'
+import {Resources, PowerUpState, RAMState, REXState} from '@greymass/eosio-resources'
 import {activeBlockchain} from '~/store'
 
 import {getClient} from '../../api-client'
-import {ChainConfig, ChainFeatures, resourceFeatures} from '~/config'
+import type {ChainConfig} from '~/config'
+import {ChainFeatures, resourceFeatures} from '~/config'
 
 const getResourceClient = (chain: ChainConfig) => {
     const api = getClient(chain)

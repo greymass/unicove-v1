@@ -4,7 +4,8 @@ import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 
 import {activeBlockchain, activeSession, currentAccount} from '~/store'
-import {createTokenFromChainId, makeTokenKey, Token} from '~/stores/tokens'
+import type {Token} from '~/stores/tokens'
+import {createTokenFromChainId, makeTokenKey} from '~/stores/tokens'
 import {balancesProvider, updateBalances} from '~/stores/balances-provider'
 import {updateAccount} from './account-provider'
 

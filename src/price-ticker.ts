@@ -3,7 +3,8 @@ import {readable, derived, flatten, ReadableResult} from 'svelte-result-store'
 
 import {DelphiOracleDatapoint, DelphiOraclePair} from '~/abi-types'
 import {getClient} from '~/api-client'
-import {ChainConfig, ChainFeatures} from '~/config'
+import type {ChainConfig} from '~/config'
+import {ChainFeatures} from '~/config'
 import {cachedRead} from '~/db'
 
 /** How often to update prices.  */

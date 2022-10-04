@@ -5,9 +5,11 @@ import type {Writable} from 'svelte/store'
 
 import {BalanceProviders, chainConfig} from '~/config'
 import {activeSession} from '~/store'
-import {makeTokenKey, Token} from '~/stores/tokens'
+import type {Token} from '~/stores/tokens'
+import {makeTokenKey} from '~/stores/tokens'
 
-import {Balance, createBalanceFromToken} from '~/stores/balances'
+import type {Balance} from '~/stores/balances'
+import {createBalanceFromToken} from '~/stores/balances'
 
 interface RawTokenBalance {
     currency: string

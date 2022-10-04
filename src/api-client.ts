@@ -1,5 +1,6 @@
 import {APIClient, ChainId} from 'anchor-link'
-import {ChainConfig, chains} from './config'
+import type {ChainConfig} from './config'
+import {chains} from './config'
 
 const clients = new Map<string, APIClient>()
 
