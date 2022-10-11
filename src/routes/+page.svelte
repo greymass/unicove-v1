@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
     // import {browser} from '$app/environment'
     import {onMount} from 'svelte'
     // import App from '~/app.svelte'
@@ -22,9 +22,10 @@
 
 {#if loaded}
     <h1>Should be a component here</h1>
-    <!-- <svelte:component this={App} /> -->
+    <svelte:component this={App} />
 {:else}
     <div class="app-loading">I'm in page</div>
 {/if}
 
-<style lang="scss"></style>
+<style lang="scss"></style> -->
+<h1>hello</h1>
