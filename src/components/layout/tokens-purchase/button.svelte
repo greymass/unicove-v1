@@ -1,9 +1,23 @@
 <script>
     import Button from '~/components/elements/button.svelte'
-    import {openPopup} from '~/lib/token-purchase'
+    import {openPopupForAccount} from '~/lib/token-purchase'
     import {activeSession, activeBlockchain} from '~/store'
 
     $: shouldDisplayButton = $activeBlockchain?.id === 'eos'
+
+    let loadingPopup = false
+
+    function handleBuyingTokens() {
+        loadingPopup = true
+
+        openPopupForAccount($activeSession?.auth?.actor)
+            .catch((err) => {
+                console.error(err)
+            })
+            .finally(() => {
+                loadingPopup = false
+            })
+    }
 </script>
 
 <style type="scss">
@@ -16,8 +30,8 @@
 
 {#if shouldDisplayButton}
     <div class="buy-tokens-button">
-        <Button on:action={() => openPopup($activeSession?.auth?.actor)} style="primary">
-            Buy Tokens
+        <Button on:action={handleBuyingTokens} style="primary">
+            {loadingPopup ? 'Loading...' : 'Buy Tokens'}
         </Button>
     </div>
 {/if}
