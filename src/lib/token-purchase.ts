@@ -7,7 +7,7 @@ const unicoveUrl = import.meta.env.SNOWPACK_PUBLIC_UNICOVE_URL
 
 const tokenOrderUrl = `${creationServiceUrl}/api/tokens/order`
 
-export const openPopup = async (accountName: Name | undefined): Promise<void> => {
+export const openPopupForAccount = async (accountName: Name | undefined): Promise<void> => {
     let whalesplainerTokenOrderResponse
     let whalesplainerTokenOrder
 
@@ -27,6 +27,8 @@ export const openPopup = async (accountName: Name | undefined): Promise<void> =>
         })
 
         whalesplainerTokenOrder = await whalesplainerTokenOrderResponse.json()
+
+        console.log({whalesplainerTokenOrder})
     } catch (error) {
         addToast({
             title: 'An error occurred when creating your order.',
@@ -34,10 +36,14 @@ export const openPopup = async (accountName: Name | undefined): Promise<void> =>
         })
     }
 
-    const popup = window.open(
-        whalesplainerTokenOrder.checkout_url,
-        'targetWindow',
-        `toolbar=no,
+    const checkoutUrl = whalesplainerTokenOrder?.data?.order?.checkout_url
+
+    const popup =
+        checkoutUrl &&
+        window.open(
+            checkoutUrl,
+            'targetWindow',
+            `toolbar=no,
             location=no,
             status=no,
             menubar=no,
@@ -45,7 +51,7 @@ export const openPopup = async (accountName: Name | undefined): Promise<void> =>
             resizable=yes,
             width=400,
             height=600`
-    )!
+        )!
     if (popup) {
         popup.focus()
     } else {
