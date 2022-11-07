@@ -1,7 +1,7 @@
 <script>
     import {writable} from 'svelte/store'
     import Button from '~/components/elements/button.svelte'
-    import {generateWidget} from '~/lib/token-purchase'
+    import {generateWidget} from '~/lib/banxa'
     import {activeSession, activeBlockchain} from '~/store'
 
     import Modal from '~/components/elements/modal.svelte'
@@ -17,23 +17,24 @@
         loadingPopup = true
 
         generateWidget($activeSession?.auth?.actor).then(({ widgetUrl }) => {
-                tokenPurchaseUrl = widgetUrl
-                $displayModal = true
-                const banxaWindow = document.getElementById("banxa-widget") as HTMLIFrameElement
+            tokenPurchaseUrl = widgetUrl
+            $displayModal = true
+            const banxaWindow = document.getElementById("banxa-widget")
 
-                banxaWindow.addEventListener("message", (e) => {
-                    const data = e.data;
+            banxaWindow.addEventListener("message", (e) => {
+                const data = e.data;
 
-                    if (data === "close") {
-                        $displayModal = false
-                    }
-                });
-            .catch((err) => {
-                console.error(err)
-            })
-            .finally(() => {
-                loadingPopup = false
-            })
+                if (data === "close") {
+                    $displayModal = false
+                }
+            });
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+        .finally(() => {
+            loadingPopup = false
+        })
     }
 
     function handleClose() {

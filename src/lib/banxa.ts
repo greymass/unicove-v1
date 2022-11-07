@@ -29,7 +29,7 @@ export const generateWidget = async (accountName: Name | undefined): Promise<Wid
                 account_reference: accountName?.toString(),
                 fiat_code: 'USD',
                 coin_code: 'EOS',
-                return_url_on_success: unicoveUrl,
+                return_url_on_success: `${unicoveUrl}/banxa/success`,
                 iframe_domain: unicoveUrl,
             }),
         })
