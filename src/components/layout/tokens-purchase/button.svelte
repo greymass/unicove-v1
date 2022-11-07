@@ -19,7 +19,15 @@
         generateWidget($activeSession?.auth?.actor).then(({ widgetUrl }) => {
                 tokenPurchaseUrl = widgetUrl
                 $displayModal = true
-            })
+                const banxaWindow = document.getElementById("banxa-widget") as HTMLIFrameElement
+
+                banxaWindow.addEventListener("message", (e) => {
+                    const data = e.data;
+
+                    if (data === "close") {
+                        $displayModal = false
+                    }
+                });
             .catch((err) => {
                 console.error(err)
             })
@@ -50,7 +58,7 @@
 
 {#if shouldDisplayButton}
     <Modal header="Tokens Purchase" size="large" delegateClose onClose={handleClose} bind:display={displayModal}>
-        <iframe src={tokenPurchaseUrl} width="100%" height="100%" />
+        <iframe id="banxa-widget" src={tokenPurchaseUrl} width="100%" height="100%" />
     </Modal>
 
     <div class="buy-tokens-button">
