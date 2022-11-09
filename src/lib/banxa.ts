@@ -8,7 +8,7 @@ const unicoveUrl = import.meta.env.SNOWPACK_PUBLIC_UNICOVE_URL
 const tokenOrderUrl = `${creationServiceUrl}/api/tokens/order`
 
 interface WidgetData {
-    widgetUrl: URL
+    widgetUrl: string
     order: {
         [key: string]: any
     }

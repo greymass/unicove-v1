@@ -12,49 +12,52 @@
     $: shouldDisplayButton = $activeBlockchain?.id === 'eos'
 
     let loadingPopup = false
-    let tokenPurchaseUrl
+    let tokenPurchaseUrl: string | undefined
 
     function handleBuyingTokens() {
         loadingPopup = true
 
-        generateWidget($activeSession?.auth?.actor).then(({ widgetUrl }) => {
-            tokenPurchaseUrl = 'http://localhost:8080/banxa/success' // widgetUrl
+        generateWidget($activeSession?.auth?.actor)
+            .then((widgetData) => {
+                tokenPurchaseUrl = widgetData?.widgetUrl
 
-            $displayModal = true
-            allowClose = false
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-        .finally(() => {
-            loadingPopup = false
-        })
+                $displayModal = true
+                allowClose = false
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+            .finally(() => {
+                loadingPopup = false
+            })
     }
 
     function setupIframeListener() {
-        window.addEventListener("message", (e) => {
-            const data = e.data;
+        window.addEventListener('message', (e) => {
+            const data = e.data
 
-            if (data.command === "close") {
+            if (data.command === 'close') {
                 $displayModal = false
-            } else if (data.command === "allow-close") {
+            } else if (data.command === 'allow-close') {
                 allowClose = true
             }
-        });
+        })
     }
 
     function handleClose() {
         if (allowClose) {
-            close()
+            return close()
         }
-        const confirmed = window.confirm('Are you sure you want to close this modal and end the token purchase?')
+        const confirmed = window.confirm(
+            'Are you sure you want to close this modal and end the token purchase?'
+        )
 
-        if (confirmed) {
+        if (!!confirmed) {
             close()
         }
     }
 
-    close() {
+    function close() {
         $displayModal = false
         allowClose = true
 
@@ -71,8 +74,20 @@
 </style>
 
 {#if shouldDisplayButton}
-    <Modal header="Tokens Purchase" size="large" delegateClose onClose={handleClose} bind:display={displayModal}>
-        <iframe on:load={setupIframeListener} id="banxa-widget" src={tokenPurchaseUrl} width="100%" height="100%" />
+    <Modal
+        header="Tokens Purchase"
+        size="large"
+        delegateClose
+        onClose={handleClose}
+        bind:display={displayModal}
+    >
+        <iframe
+            on:load={setupIframeListener}
+            id="banxa-widget"
+            src={tokenPurchaseUrl}
+            width="100%"
+            height="100%"
+        />
     </Modal>
 
     <div class="buy-tokens-button">

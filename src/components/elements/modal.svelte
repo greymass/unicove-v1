@@ -72,8 +72,8 @@
         }
 
         .modal-content {
-          padding: 20px;
-          height: 75%;
+            padding: 20px;
+            height: 75%;
         }
 
         .button-container {
