@@ -11,8 +11,6 @@
     export let delegateClose: boolean = false
     export let onClose: () => void = () => {}
 
-    console.log({ delegateClose })
-
     export let close = () => {
         if (!delegateClose) {
             console.log('setting')
@@ -21,8 +19,6 @@
 
         onClose()
     }
-
-    $: console.log({ d: $display })
 </script>
 
 <style type="scss">

@@ -30,6 +30,7 @@ export const generateWidget = async (accountName: Name | undefined): Promise<Wid
                 fiat_code: 'USD',
                 coin_code: 'EOS',
                 return_url_on_success: `${unicoveUrl}/banxa/success`,
+                return_url_on_failure: `${unicoveUrl}/banxa/failure`,
                 iframe_domain: unicoveUrl,
             }),
         })

@@ -7,6 +7,7 @@
     import Modal from '~/components/elements/modal.svelte'
 
     let displayModal = writable<boolean>(false)
+    let allowClose = false
 
     $: shouldDisplayButton = $activeBlockchain?.id === 'eos'
 
@@ -17,17 +18,10 @@
         loadingPopup = true
 
         generateWidget($activeSession?.auth?.actor).then(({ widgetUrl }) => {
-            tokenPurchaseUrl = widgetUrl
+            tokenPurchaseUrl = 'http://localhost:8080/banxa/success' // widgetUrl
+
             $displayModal = true
-            const banxaWindow = document.getElementById("banxa-widget")
-
-            banxaWindow.addEventListener("message", (e) => {
-                const data = e.data;
-
-                if (data === "close") {
-                    $displayModal = false
-                }
-            });
+            allowClose = false
         })
         .catch((err) => {
             console.error(err)
@@ -37,15 +31,34 @@
         })
     }
 
+    function setupIframeListener() {
+        window.addEventListener("message", (e) => {
+            const data = e.data;
+
+            if (data.command === "close") {
+                $displayModal = false
+            } else if (data.command === "allow-close") {
+                allowClose = true
+            }
+        });
+    }
+
     function handleClose() {
+        if (allowClose) {
+            close()
+        }
         const confirmed = window.confirm('Are you sure you want to close this modal and end the token purchase?')
 
-        console.log({confirmed})
         if (confirmed) {
-            $displayModal = false
-
-            tokenPurchaseUrl = undefined
+            close()
         }
+    }
+
+    close() {
+        $displayModal = false
+        allowClose = true
+
+        tokenPurchaseUrl = undefined
     }
 </script>
 
@@ -59,7 +72,7 @@
 
 {#if shouldDisplayButton}
     <Modal header="Tokens Purchase" size="large" delegateClose onClose={handleClose} bind:display={displayModal}>
-        <iframe id="banxa-widget" src={tokenPurchaseUrl} width="100%" height="100%" />
+        <iframe on:load={setupIframeListener} id="banxa-widget" src={tokenPurchaseUrl} width="100%" height="100%" />
     </Modal>
 
     <div class="buy-tokens-button">
