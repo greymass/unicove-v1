@@ -29,9 +29,9 @@ export const generateWidget = async (accountName: Name | undefined): Promise<Wid
                 account_reference: accountName?.toString(),
                 fiat_code: 'USD',
                 coin_code: 'EOS',
-                return_url_on_success: `${unicoveUrl}/banxa/success`,
+                return_url_on_success: unicoveUrl,
                 return_url_on_failure: `${unicoveUrl}/banxa/failure`,
-                iframe_domain: unicoveUrl,
+                iframe_domain: unicoveUrl.replace('https://', ''),
             }),
         })
 
@@ -43,7 +43,7 @@ export const generateWidget = async (accountName: Name | undefined): Promise<Wid
         })
     }
 
-    const widgetUrl = whalesplainerTokenOrder?.data?.order?.checkout_url
+    const widgetUrl = whalesplainerTokenOrder?.data?.order?.checkout_iframe
 
     if (!widgetUrl) {
         return addToast({
