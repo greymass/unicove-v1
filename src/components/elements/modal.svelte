@@ -13,7 +13,6 @@
 
     export let close = () => {
         if (!delegateClose) {
-            console.log('setting')
             $display = false
         }
 

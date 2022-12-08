@@ -1,6 +1,14 @@
 <script lang="ts">
     import Page from '~/components/layout/page.svelte'
     import BanxaButton from '~/components/elements/banxa/button.svelte'
+    import {activeBlockchain} from '~/store'
+    import {banxaIsAvailable} from '~/lib/banxa'
+
+    $: {
+        if (!banxaIsAvailable($activeBlockchain)) {
+            window.location.href = window.origin
+        }
+    }
 </script>
 
 <style type="scss">

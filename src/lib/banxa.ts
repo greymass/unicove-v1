@@ -1,6 +1,9 @@
-import type {Name} from '@greymass/eosio'
+import type { Name } from '@greymass/eosio'
+import type { ChainId } from 'anchor-link'
 
-import {addToast} from '~/stores/toast'
+import { addToast } from '~/stores/toast'
+import type { ChainConfig } from '~/config'
+import { chainConfig } from '~/config'
 
 const creationServiceUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 const unicoveUrl = import.meta.env.SNOWPACK_PUBLIC_UNICOVE_URL
@@ -14,9 +17,19 @@ interface WidgetData {
     }
 }
 
-export const generateWidget = async (accountName: Name | undefined): Promise<WidgetData | void> => {
+export const banxaIsAvailable = (chainData: ChainConfig): boolean => {
+    return !!chainData?.banxaEnabled && !!chainData?.coreTokenSymbol
+}
+
+export const generateWidget = async (accountName: Name, targetChain: ChainId): Promise<WidgetData | void> => {
     let whalesplainerTokenOrderResponse
     let whalesplainerTokenOrder
+
+    const chainData = chainConfig(targetChain)
+
+    if (!banxaIsAvailable(chainData)) {
+        throw new Error('Banxa token purchase not available for this chain.')
+    }
 
     try {
         whalesplainerTokenOrderResponse = await fetch(tokenOrderUrl, {
@@ -25,10 +38,10 @@ export const generateWidget = async (accountName: Name | undefined): Promise<Wid
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                wallet_address: accountName?.toString(),
-                account_reference: accountName?.toString(),
+                wallet_address: String(accountName),
+                account_reference: String(accountName),
                 fiat_code: 'USD',
-                coin_code: 'EOS',
+                coin_code: chainData.coreTokenSymbol,
                 return_url_on_success: unicoveUrl,
                 return_url_on_failure: `${unicoveUrl}/banxa/failure`,
                 iframe_domain: unicoveUrl.replace('https://', ''),

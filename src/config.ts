@@ -78,6 +78,8 @@ export interface ChainConfig {
     bloksUrl: string
     /** Available Balance Providers */
     balanceProviders?: Set<BalanceProviders>
+    /** Is Banxa available for this chain */
+    banxaEnabled?: boolean
 }
 
 /** Supported chains. */
@@ -103,6 +105,7 @@ export const chains: ChainConfig[] = [
         testnet: false,
         bloksUrl: 'https://bloks.io',
         balanceProviders: new Set([BalanceProviders.Bloks]),
+        banxaEnabled: true,
     },
     {
         id: 'fio',
@@ -205,6 +208,7 @@ export const chains: ChainConfig[] = [
         testnet: false,
         bloksUrl: 'https://telos.bloks.io',
         balanceProviders: new Set([BalanceProviders.Bloks]),
+        banxaEnabled: true,
     },
     {
         id: 'telos-testnet',
@@ -247,6 +251,7 @@ export const chains: ChainConfig[] = [
         resourceSampleAccount: 'teamgreymass',
         testnet: false,
         bloksUrl: 'https://wax.bloks.io',
+        banxaEnabled: true,
     },
 ]
 
