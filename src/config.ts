@@ -1,5 +1,5 @@
-import {Asset, Name} from '@greymass/eosio'
-import {ChainId} from 'anchor-link'
+import { Asset, Name } from '@greymass/eosio'
+import { ChainId } from 'anchor-link'
 
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
@@ -148,6 +148,27 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://jungle3.greymass.com',
         testnet: true,
         bloksUrl: 'https://jungle3.bloks.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
+        id: 'jungle4',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.PowerUp,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: ChainId.from('73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d'),
+        coreTokenSymbol: Asset.Symbol.from('4,EOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Jungle 4 (Testnet)',
+        nodeUrl: 'https://jungle4.greymass.com',
+        testnet: true,
+        bloksUrl: 'https://eosauthority.com/?network=jungle',
         balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
