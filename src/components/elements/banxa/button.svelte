@@ -8,9 +8,6 @@
 
     let displayModal = writable<boolean>(false)
     let allowClose = false
-
-    $: shouldDisplayButton = $activeBlockchain?.id === 'eos'
-
     let loadingPopup = false
     let tokenPurchaseUrl: string | undefined
 
@@ -92,28 +89,26 @@
     }
 </style>
 
-{#if shouldDisplayButton}
-    <Modal
-        header="Tokens Purchase"
-        size="large"
-        delegateClose
-        onClose={handleClose}
-        bind:display={displayModal}
-    >
-        <iframe
-            on:load={setupIframeListener}
-            id="banxa-widget"
-            src={tokenPurchaseUrl}
-            width="100%"
-            height="90%"
-        />
+<Modal
+    header="Tokens Purchase"
+    size="large"
+    delegateClose
+    onClose={handleClose}
+    bind:display={displayModal}
+>
+    <iframe
+        on:load={setupIframeListener}
+        id="banxa-widget"
+        src={tokenPurchaseUrl}
+        width="100%"
+        height="90%"
+    />
 
-        <h2>This service is provided by <a href="https://banxa.com/">Banxa</a></h2>
-    </Modal>
+    <h2>This service is provided by <a href="https://banxa.com/">Banxa</a></h2>
+</Modal>
 
-    <div class="buy-tokens-button">
-        <Button size="large" style="secondary" on:action={handleBuyingTokens}>
-            {loadingPopup ? 'Loading...' : 'Banxa'}
-        </Button>
-    </div>
-{/if}
+<div class="buy-tokens-button">
+    <Button size="large" style="secondary" on:action={handleBuyingTokens}>
+        {loadingPopup ? 'Loading...' : 'Banxa'}
+    </Button>
+</div>

@@ -1,5 +1,5 @@
-import {Asset, Name} from '@greymass/eosio'
-import {ChainId} from 'anchor-link'
+import { Asset, Name } from '@greymass/eosio'
+import { ChainId } from 'anchor-link'
 
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
@@ -80,6 +80,8 @@ export interface ChainConfig {
     balanceProviders?: Set<BalanceProviders>
     /** Is Banxa available for this chain */
     banxaEnabled?: boolean
+    /** Banxa coin_code */
+    banxa_coin_code?: string
 }
 
 /** Supported chains. */
@@ -247,6 +249,7 @@ export const chains: ChainConfig[] = [
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
         name: 'WAX',
+        banxa_coin_code: 'WAXP',
         nodeUrl: 'https://wax.greymass.com',
         resourceSampleAccount: 'teamgreymass',
         testnet: false,

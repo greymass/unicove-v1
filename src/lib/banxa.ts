@@ -1,9 +1,9 @@
-import type {Name} from '@greymass/eosio'
-import type {ChainId} from 'anchor-link'
+import type { Name } from '@greymass/eosio'
+import type { ChainId } from 'anchor-link'
 
-import {addToast} from '~/stores/toast'
-import type {ChainConfig} from '~/config'
-import {chainConfig} from '~/config'
+import { addToast } from '~/stores/toast'
+import type { ChainConfig } from '~/config'
+import { chainConfig } from '~/config'
 
 const creationServiceUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 const unicoveUrl = import.meta.env.SNOWPACK_PUBLIC_UNICOVE_URL
@@ -44,7 +44,7 @@ export const generateWidget = async (
                 wallet_address: String(accountName),
                 account_reference: String(accountName),
                 fiat_code: 'USD',
-                coin_code: chainData?.coreTokenSymbol,
+                coin_code: chainData?.banxa_coin_code || chainData?.coreTokenSymbol?.name,
                 return_url_on_success: unicoveUrl,
                 return_url_on_failure: `${unicoveUrl}/banxa/failure`,
                 iframe_domain: unicoveUrl.replace('https://', ''),
