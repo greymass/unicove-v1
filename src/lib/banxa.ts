@@ -1,9 +1,9 @@
-import type { Name } from '@greymass/eosio'
-import type { ChainId } from 'anchor-link'
+import type {Name} from '@greymass/eosio'
+import type {ChainId} from 'anchor-link'
 
-import { addToast } from '~/stores/toast'
-import type { ChainConfig } from '~/config'
-import { chainConfig } from '~/config'
+import {addToast} from '~/stores/toast'
+import type {ChainConfig} from '~/config'
+import {chainConfig} from '~/config'
 
 const creationServiceUrl = import.meta.env.SNOWPACK_PUBLIC_WHALESPLAINER_URL
 const unicoveUrl = import.meta.env.SNOWPACK_PUBLIC_UNICOVE_URL
@@ -17,15 +17,18 @@ interface WidgetData {
     }
 }
 
-export const banxaIsAvailable = (chainData: ChainConfig): boolean => {
+export const banxaIsAvailable = (chainData: ChainConfig | undefined): boolean => {
     return !!chainData?.banxaEnabled && !!chainData?.coreTokenSymbol
 }
 
-export const generateWidget = async (accountName: Name, targetChain: ChainId): Promise<WidgetData | void> => {
+export const generateWidget = async (
+    accountName: Name | undefined,
+    targetChain: ChainId | undefined
+): Promise<WidgetData | void> => {
     let whalesplainerTokenOrderResponse
     let whalesplainerTokenOrder
 
-    const chainData = chainConfig(targetChain)
+    const chainData = targetChain && chainConfig(targetChain)
 
     if (!banxaIsAvailable(chainData)) {
         throw new Error('Banxa token purchase not available for this chain.')
@@ -41,7 +44,7 @@ export const generateWidget = async (accountName: Name, targetChain: ChainId): P
                 wallet_address: String(accountName),
                 account_reference: String(accountName),
                 fiat_code: 'USD',
-                coin_code: chainData.coreTokenSymbol,
+                coin_code: chainData?.coreTokenSymbol,
                 return_url_on_success: unicoveUrl,
                 return_url_on_failure: `${unicoveUrl}/banxa/failure`,
                 iframe_domain: unicoveUrl.replace('https://', ''),

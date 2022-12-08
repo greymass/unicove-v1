@@ -1,5 +1,5 @@
-import { Asset, Name } from '@greymass/eosio'
-import { ChainId } from 'anchor-link'
+import {Asset, Name} from '@greymass/eosio'
+import {ChainId} from 'anchor-link'
 
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
