@@ -28,7 +28,7 @@
         ...(banxaIsAvailable($activeBlockchain)
             ? [
                   {
-                      icon: 'link',
+                      icon: 'credit-card',
                       name: 'Get Tokens',
                       path: '/tokens/buy',
                   },
