@@ -24,6 +24,11 @@
             name: 'Send & Receive',
             path: '/transfer',
         },
+        {
+            icon: 'link',
+            name: 'Buy Tokens',
+            path: '/tokens/buy',
+        },
     ]
 
     const advancedNavigation: Readable<NavigationItem[]> = derived(

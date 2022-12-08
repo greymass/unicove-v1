@@ -6,7 +6,6 @@
     import Header from '~/components/layout/header.svelte'
     import NavigationSidebar from '~/components/layout/navigation/index.svelte'
     import NavigationSidebarButton from '~/components/layout/navigation/button.svelte'
-    import TokensPurchaseButton from '~/components/layout/tokens-purchase/button.svelte'
 
     /** Title of the page. */
     export let title: string = ''
@@ -175,7 +174,6 @@
             </div>
         {/if}
         <AccountSidebarButton bind:open={accountSidebar} />
-        <TokensPurchaseButton />
     </header>
     <AccountSidebar bind:open={accountSidebar} />
 

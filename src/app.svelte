@@ -10,6 +10,7 @@
     import Dashboard from '~/pages/dashboard/index.svelte'
     import Request from '~/pages/request/index.svelte'
     import Transfer from '~/pages/transfer/index.svelte'
+    import TokensPurchase from '~/pages/tokens/purchase/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from '~/pages/_components/index.svelte'
     import Loading from '~/pages/loading.svelte'
@@ -178,6 +179,9 @@
             </Route>
             <Route path="/transfer">
                 <Transfer />
+            </Route>
+            <Route path="/tokens/buy">
+                <TokensPurchase />
             </Route>
             <Route path="/transfer/:contract/:token" let:meta>
                 <Transfer {meta} />

@@ -70,6 +70,25 @@
         display: flex;
         align-items: center;
         padding: 10px;
+        width: 100%;
+    }
+
+    .warning-container {
+        display: absolute;
+        height: 10%;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 10px 0;
+
+        a {
+            color: var(--main-blue);
+            text-decoration: none;
+        }
     }
 </style>
 
@@ -86,13 +105,15 @@
             id="banxa-widget"
             src={tokenPurchaseUrl}
             width="100%"
-            height="100%"
+            height="90%"
         />
+
+        <h2>This service is provided by <a href="https://banxa.com/">Banxa</a></h2>
     </Modal>
 
     <div class="buy-tokens-button">
-        <Button on:action={handleBuyingTokens} style="primary">
-            {loadingPopup ? 'Loading...' : 'Buy Tokens'}
+        <Button size="large" style="secondary" on:action={handleBuyingTokens}>
+            {loadingPopup ? 'Loading...' : 'Banxa'}
         </Button>
     </div>
 {/if}
