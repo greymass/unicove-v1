@@ -174,7 +174,6 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://jungle4.greymass.com',
         testnet: true,
         bloksUrl: 'https://eosauthority.com/?network=jungle',
-        balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
         id: 'proton',
@@ -210,7 +209,6 @@ export const chains: ChainConfig[] = [
         testnet: false,
         bloksUrl: 'https://telos.bloks.io',
         balanceProviders: new Set([BalanceProviders.Bloks]),
-        banxaEnabled: true,
     },
     {
         id: 'telos-testnet',
