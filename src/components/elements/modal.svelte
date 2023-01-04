@@ -80,6 +80,15 @@
             flex-direction: column;
             padding: 17px;
         }
+
+        @media (max-width: 600px) {
+            .modal-content {
+                padding: 5px;
+            }
+            &.large {
+                width: 98%;
+            }
+        }
     }
 </style>
 
