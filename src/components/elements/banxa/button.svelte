@@ -104,7 +104,10 @@
         height="90%"
     />
 
-    <h2>This service is provided by <a href="https://banxa.com/">Banxa</a></h2>
+    <h2>
+        This service is provided by Banxa -
+        <a target="_blank" href="https://support.banxa.com/en/support/home"> Contact Support</a>
+    </h2>
 </Modal>
 
 <div class="buy-tokens-button">
