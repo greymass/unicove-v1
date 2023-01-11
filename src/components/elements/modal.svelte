@@ -8,8 +8,16 @@
     export let size: string = 'small'
     export let hideCloseButton: boolean = false
     export let disableDimmerClose: boolean = false
+    export let delegateClose: boolean = false
+    export let onClose: () => void = () => {}
 
-    export let close = () => ($display = false)
+    export let close = () => {
+        if (!delegateClose) {
+            $display = false
+        }
+
+        onClose()
+    }
 </script>
 
 <style type="scss">
@@ -49,7 +57,8 @@
         z-index: 2000;
 
         &.large {
-            max-width: 500px;
+            max-width: 800px;
+            height: 80vh;
         }
 
         .modal-header {
@@ -63,12 +72,22 @@
 
         .modal-content {
             padding: 20px;
+            height: 75%;
         }
 
         .button-container {
             display: flex;
             flex-direction: column;
             padding: 17px;
+        }
+
+        @media (max-width: 600px) {
+            .modal-content {
+                padding: 5px;
+            }
+            &.large {
+                width: 98%;
+            }
         }
     }
 </style>

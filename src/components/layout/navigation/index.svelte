@@ -5,6 +5,7 @@
     import {resourceFeatures} from '~/config'
     import {activeBlockchain, preferences} from '~/store'
     import type {NavigationItem} from '~/ui-types'
+    import {banxaIsAvailable} from '~/lib/banxa'
 
     import MediaQuery from '~/components/utils/media-query.svelte'
     import NavigationContent from '~/components/layout/navigation/content.svelte'
@@ -12,7 +13,7 @@
     export let open = false
     $: expand = $preferences.expandNavbar
 
-    const primaryNavigation: NavigationItem[] = [
+    $: primaryNavigation = [
         {
             exactPath: true,
             icon: 'layout',
@@ -24,6 +25,15 @@
             name: 'Send & Receive',
             path: '/transfer',
         },
+        ...(banxaIsAvailable($activeBlockchain)
+            ? [
+                  {
+                      icon: 'credit-card',
+                      name: 'Get Tokens',
+                      path: '/tokens/buy',
+                  },
+              ]
+            : []),
     ]
 
     const advancedNavigation: Readable<NavigationItem[]> = derived(

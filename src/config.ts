@@ -78,6 +78,10 @@ export interface ChainConfig {
     bloksUrl: string
     /** Available Balance Providers */
     balanceProviders?: Set<BalanceProviders>
+    /** Is Banxa available for this chain */
+    banxaEnabled?: boolean
+    /** Banxa coin_code */
+    banxa_coin_code?: string
 }
 
 /** Supported chains. */
@@ -103,6 +107,7 @@ export const chains: ChainConfig[] = [
         testnet: false,
         bloksUrl: 'https://bloks.io',
         balanceProviders: new Set([BalanceProviders.Bloks]),
+        banxaEnabled: true,
     },
     {
         id: 'fio',
@@ -149,6 +154,26 @@ export const chains: ChainConfig[] = [
         testnet: true,
         bloksUrl: 'https://jungle3.bloks.io',
         balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
+        id: 'jungle4',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.PowerUp,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: ChainId.from('73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d'),
+        coreTokenSymbol: Asset.Symbol.from('4,EOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Jungle 4 (Testnet)',
+        nodeUrl: 'https://jungle4.greymass.com',
+        testnet: true,
+        bloksUrl: 'https://eosauthority.com/?network=jungle',
     },
     {
         id: 'proton',
@@ -222,10 +247,12 @@ export const chains: ChainConfig[] = [
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
         name: 'WAX',
+        banxa_coin_code: 'WAXP',
         nodeUrl: 'https://wax.greymass.com',
         resourceSampleAccount: 'teamgreymass',
         testnet: false,
         bloksUrl: 'https://wax.bloks.io',
+        banxaEnabled: true,
     },
 ]
 
