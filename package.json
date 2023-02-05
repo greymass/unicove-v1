@@ -22,8 +22,6 @@
         "@greymass/eosio-resources": "0.7.0",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",
         "@types/feather-icons": "^4.7.0",
-        "anchor-link": "^3.3.0",
-        "anchor-link-browser-transport": "^3.2.0",
         "feather-icons": "^4.28.0",
         "idb": "^7.0.1",
         "inter-ui": "^3.15.0",
