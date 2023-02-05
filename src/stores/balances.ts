@@ -1,5 +1,5 @@
-import type {AccountName, ChainId, LinkSession, Name} from 'anchor-link'
-import {Asset} from 'anchor-link'
+import type {AccountName, Checksum256, LinkSession, Name} from '@greymass/eosio'
+import {Asset} from '@greymass/eosio'
 import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 
@@ -10,7 +10,7 @@ import {updateAccount} from './account-provider'
 
 export interface Balance {
     key: string
-    chainId: ChainId
+    chainId: Checksum256
     account: Name
     tokenKey: string
     quantity: Asset

@@ -1,6 +1,6 @@
 import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
-import type {AnyAction} from 'anchor-link'
+import type {AnyAction} from '@greymass/eosio'
 
 import {currentTransaction} from './request'
 

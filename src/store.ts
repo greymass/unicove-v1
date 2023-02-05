@@ -1,4 +1,4 @@
-import type {Asset, LinkSession} from 'anchor-link'
+import type {Asset, LinkSession} from '@greymass/eosio'
 import {derived, writable} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 import type {SessionLike} from './auth'

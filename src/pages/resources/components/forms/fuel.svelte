@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Checksum256Type} from 'anchor-link'
+    import type {Checksum256Type} from '@greymass/eosio'
     import {
         activeBlockchain,
         // activeSession

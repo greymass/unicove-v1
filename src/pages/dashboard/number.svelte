@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Asset} from 'anchor-link'
+    import type {Asset} from '@greymass/eosio'
 
     export let asset: Asset
 

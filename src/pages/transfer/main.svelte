@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Name} from 'anchor-link'
+    import {Name} from '@greymass/eosio'
     import {getContext} from 'svelte'
     import type {Readable} from 'svelte/store'
     import {derived, get} from 'svelte/store'

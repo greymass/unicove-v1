@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {ChainId} from 'anchor-link'
+    import {Checksum256} from '@greymass/eosio'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
@@ -34,7 +34,7 @@
     const getGroupings = (chainIds: string[]) =>
         chainIds
             .map((chainId) => {
-                const config = chainConfig(ChainId.from(chainId))
+                const config = chainConfig(Checksum256.from(chainId))
                 return {
                     chainId,
                     name: config.name,

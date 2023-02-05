@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type {AnyAction} from 'anchor-link'
-    import {Asset} from 'anchor-link'
+    import type {AnyAction} from '@greymass/eosio'
+    import {Asset} from '@greymass/eosio'
     import {getContext} from 'svelte'
     import type {Readable, Writable} from 'svelte/store'
     import {derived, writable} from 'svelte/store'

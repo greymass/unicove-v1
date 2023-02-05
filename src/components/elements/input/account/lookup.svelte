@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {LinkSession} from 'anchor-link'
+    import type {LinkSession} from '@greymass/eosio'
 
     import InputLabelled from '../labelled.svelte'
 

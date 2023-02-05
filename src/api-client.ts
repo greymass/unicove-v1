@@ -1,4 +1,4 @@
-import {APIClient, ChainId} from 'anchor-link'
+import {APIClient, Checksum256} from '@greymass/eosio'
 import {ChainConfig, chains} from './config'
 
 const clients = new Map<string, APIClient>()
@@ -6,9 +6,9 @@ const clients = new Map<string, APIClient>()
 /**
  * Get a APIClient instance for given chain config or chain id.
  */
-export function getClient(chainOrId: ChainConfig | ChainId): APIClient {
+export function getClient(chainOrId: ChainConfig | Checksum256): APIClient {
     let chain: ChainConfig
-    if (chainOrId instanceof ChainId) {
+    if (chainOrId instanceof Checksum256) {
         const id = String(chainOrId)
         chain = chains.find((cfg) => cfg.chainId.equals(id))!
         if (!chain) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Asset} from 'anchor-link'
+    import type {Asset} from '@greymass/eosio'
 
     import type {Token} from '~/stores/tokens'
     import TokenImage from '~/components/elements/image/token.svelte'

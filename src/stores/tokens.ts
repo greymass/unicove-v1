@@ -1,5 +1,5 @@
-import type {Asset} from 'anchor-link'
-import type {ChainId, NameType} from 'anchor-link'
+import type {Asset} from '@greymass/eosio'
+import type {Checksum256, NameType} from '@greymass/eosio'
 import {derived, get} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 
@@ -9,7 +9,7 @@ import {balancesProvider} from './balances-provider'
 
 export interface Token {
     key: string
-    chainId: ChainId
+    chainId: Checksum256
     contract: NameType
     symbol: Asset.Symbol
     name: NameType
@@ -18,7 +18,7 @@ export interface Token {
 }
 
 export interface TokenKeyParams {
-    chainId: ChainId
+    chainId: Checksum256
     contract: NameType
     name: NameType
 }
@@ -71,7 +71,7 @@ export const systemToken: Readable<Token | undefined> = derived(
 )
 
 export function createTokenFromChainId(
-    chainId: ChainId,
+    chainId: Checksum256,
     price: number | undefined = undefined
 ): Token {
     const chain = chainConfig(chainId)

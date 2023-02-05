@@ -1,5 +1,5 @@
 <script>
-    import {Asset} from 'anchor-link'
+    import {Asset} from '@greymass/eosio'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 

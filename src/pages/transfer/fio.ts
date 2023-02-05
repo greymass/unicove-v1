@@ -1,5 +1,5 @@
 import {writable, get} from 'svelte/store'
-import {Asset, UInt64, LinkSession} from 'anchor-link'
+import {Asset, UInt64, LinkSession} from '@greymass/eosio'
 import type {ChainConfig} from '~/config'
 import {activeBlockchain, activeSession} from '~/store'
 

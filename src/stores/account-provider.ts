@@ -1,5 +1,5 @@
-import {API, Asset, Name, Serializer} from 'anchor-link'
-import type {ChainId, NameType} from 'anchor-link'
+import {API, Asset, Name, Serializer} from '@greymass/eosio'
+import type {Checksum256, NameType} from '@greymass/eosio'
 import {get, writable} from 'svelte/store'
 import type {Readable, Writable} from 'svelte/store'
 
@@ -39,7 +39,7 @@ export const accountProvider: Writable<AccountResponse> = writable(initialAccoun
     }
 })
 
-export async function updateAccount(name: Name, chainId: ChainId, refresh: boolean = false) {
+export async function updateAccount(name: Name, chainId: Checksum256, refresh: boolean = false) {
     isLoading.set(true)
     loadAccount(
         name,
@@ -60,7 +60,7 @@ export async function updateAccount(name: Name, chainId: ChainId, refresh: boole
     isLoading.set(false)
 }
 
-function fetchBalance(name: Name, chainId: ChainId) {
+function fetchBalance(name: Name, chainId: Checksum256) {
     const chain = chainConfig(chainId)
     return getClient(chainId).v1.chain.get_currency_balance(chain.coreTokenContract, name)
 }
@@ -74,11 +74,11 @@ export interface AccountResponse {
     error?: Error
 }
 
-function accountKey(name: Name, chainId: ChainId) {
+function accountKey(name: Name, chainId: Checksum256) {
     return `${chainId}-${name}`
 }
 
-export async function storeAccount(account: API.v1.AccountObject, chainId: ChainId) {
+export async function storeAccount(account: API.v1.AccountObject, chainId: Checksum256) {
     const db = await dbPromise
     await db.put(
         'account-cache',
@@ -92,7 +92,7 @@ export async function storeAccount(account: API.v1.AccountObject, chainId: Chain
 
 export async function loadAccount(
     name: Name,
-    chainId: ChainId,
+    chainId: Checksum256,
     set: (v: AccountResponse) => void,
     refresh = false
 ) {
@@ -115,7 +115,7 @@ export async function loadAccount(
 /** Get an account, can be used to fetch other accounts than the logged in users. */
 export function getAccount(
     name: NameType,
-    chainId: ChainId,
+    chainId: Checksum256,
     refresh = false
 ): Readable<AccountResponse> {
     const store = writable<AccountResponse>({stale: true})

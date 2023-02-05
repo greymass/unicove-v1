@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Name} from 'anchor-link'
+    import type {Name} from '@greymass/eosio'
     import Completed from '~/pages/transfer/status/template/completed.svelte'
     import {transferData, Step} from '~/pages/transfer/transfer'
 

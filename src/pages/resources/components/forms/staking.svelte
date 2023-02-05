@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Asset} from 'anchor-link'
+    import {Asset} from '@greymass/eosio'
     import {getContext} from 'svelte'
     import type {Readable, Writable} from 'svelte/store'
     import {derived, writable} from 'svelte/store'

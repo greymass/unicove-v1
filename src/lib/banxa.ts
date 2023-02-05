@@ -1,5 +1,5 @@
 import type {Name} from '@greymass/eosio'
-import type {ChainId} from 'anchor-link'
+import type {Checksum256} from '@greymass/eosio'
 
 import {addToast} from '~/stores/toast'
 import type {ChainConfig} from '~/config'
@@ -23,7 +23,7 @@ export const banxaIsAvailable = (chainData: ChainConfig | undefined): boolean =>
 
 export const generateWidget = async (
     accountName: Name | undefined,
-    targetChain: ChainId | undefined
+    targetChain: Checksum256 | undefined
 ): Promise<WidgetData | void> => {
     let whalesplainerTokenOrderResponse
     let whalesplainerTokenOrder

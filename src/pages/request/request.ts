@@ -2,7 +2,7 @@ import {derived, writable} from 'svelte/store'
 import type {Readable, Writable} from 'svelte/store'
 import type {TinroRouteMeta} from 'tinro'
 
-import {ABIDef, APIClient, PermissionLevel, TransactionHeader} from 'anchor-link'
+import {ABIDef, APIClient, PermissionLevel, TransactionHeader} from '@greymass/eosio'
 import {AbiMap, ResolvedTransaction, SigningRequest} from 'eosio-signing-request'
 
 import {ChainConfig, chainConfig} from '~/config'

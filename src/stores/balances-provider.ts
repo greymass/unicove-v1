@@ -1,5 +1,5 @@
-import type {LinkSession} from 'anchor-link'
-import {Asset} from 'anchor-link'
+import type {LinkSession} from '@greymass/eosio'
+import {Asset} from '@greymass/eosio'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 

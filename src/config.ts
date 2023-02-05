@@ -1,5 +1,5 @@
 import {Asset, Name} from '@greymass/eosio'
-import {ChainId} from 'anchor-link'
+import {Checksum256} from '@greymass/eosio'
 
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
@@ -59,7 +59,7 @@ export interface ChainConfig {
     /** Chain Features */
     chainFeatures: Set<ChainFeatures>
     /** Chain ID. */
-    chainId: ChainId
+    chainId: Checksum256
     /** System Token Contract Name */
     coreTokenContract: Name
     /** System Token Symbol */
@@ -98,7 +98,9 @@ export const chains: ChainConfig[] = [
             ChainFeatures.VoteProducer,
             ChainFeatures.DelphiOracle,
         ]),
-        chainId: ChainId.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'),
+        chainId: Checksum256.from(
+            'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+        ),
         coreTokenSymbol: Asset.Symbol.from('4,EOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
@@ -112,7 +114,9 @@ export const chains: ChainConfig[] = [
     {
         id: 'fio',
         chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),
-        chainId: ChainId.from('21dcae42c0182200e93f954a074011f9048a7624c6fe81d3c9541a614a88bd1c'),
+        chainId: Checksum256.from(
+            '21dcae42c0182200e93f954a074011f9048a7624c6fe81d3c9541a614a88bd1c'
+        ),
         coreTokenSymbol: Asset.Symbol.from('9,FIO'),
         coreTokenContract: Name.from('fio.token'),
         coreTokenTransfer: Name.from('trnsfiopubky'),
@@ -125,7 +129,9 @@ export const chains: ChainConfig[] = [
     {
         id: 'fio-testnet',
         chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),
-        chainId: ChainId.from('b20901380af44ef59c5918439a1f9a41d83669020319a80574b804a5f95cbd7e'),
+        chainId: Checksum256.from(
+            'b20901380af44ef59c5918439a1f9a41d83669020319a80574b804a5f95cbd7e'
+        ),
         coreTokenSymbol: Asset.Symbol.from('9,FIO'),
         coreTokenContract: Name.from('fio.token'),
         coreTokenTransfer: Name.from('trnsfiopubky'),
@@ -145,7 +151,9 @@ export const chains: ChainConfig[] = [
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
         ]),
-        chainId: ChainId.from('2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840'),
+        chainId: Checksum256.from(
+            '2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840'
+        ),
         coreTokenSymbol: Asset.Symbol.from('4,EOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
@@ -166,7 +174,9 @@ export const chains: ChainConfig[] = [
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
         ]),
-        chainId: ChainId.from('73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d'),
+        chainId: Checksum256.from(
+            '73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d'
+        ),
         coreTokenSymbol: Asset.Symbol.from('4,EOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
@@ -178,7 +188,9 @@ export const chains: ChainConfig[] = [
     {
         id: 'proton',
         chainFeatures: new Set([ChainFeatures.Staking, ChainFeatures.VoteProducer]),
-        chainId: ChainId.from('384da888112027f0321850a169f737c33e53b388aad48b5adace4bab97f437e0'),
+        chainId: Checksum256.from(
+            '384da888112027f0321850a169f737c33e53b388aad48b5adace4bab97f437e0'
+        ),
         coreTokenSymbol: Asset.Symbol.from('4,XPR'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
@@ -198,7 +210,9 @@ export const chains: ChainConfig[] = [
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
         ]),
-        chainId: ChainId.from('4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11'),
+        chainId: Checksum256.from(
+            '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11'
+        ),
         coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
@@ -220,7 +234,9 @@ export const chains: ChainConfig[] = [
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
         ]),
-        chainId: ChainId.from('1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f'),
+        chainId: Checksum256.from(
+            '1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f'
+        ),
         coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
@@ -242,7 +258,9 @@ export const chains: ChainConfig[] = [
             ChainFeatures.VoteProducer,
             ChainFeatures.DelphiOracle,
         ]),
-        chainId: ChainId.from('1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4'),
+        chainId: Checksum256.from(
+            '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4'
+        ),
         coreTokenSymbol: Asset.Symbol.from('8,WAX'),
         coreTokenContract: Name.from('eosio.token'),
         coreTokenTransfer: Name.from('transfer'),
@@ -256,6 +274,6 @@ export const chains: ChainConfig[] = [
     },
 ]
 
-export function chainConfig(chainId: ChainId): ChainConfig {
+export function chainConfig(chainId: Checksum256): ChainConfig {
     return chains.find((c) => c.chainId.equals(chainId))!
 }

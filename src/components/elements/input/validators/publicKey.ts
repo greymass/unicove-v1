@@ -1,4 +1,4 @@
-import {PublicKey} from 'anchor-link'
+import {PublicKey} from '@greymass/eosio'
 
 export function validatePublicKey(value: string) {
     try {

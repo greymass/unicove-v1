@@ -1,5 +1,5 @@
 <script>
-    import {ChainId} from 'anchor-link'
+    import {Checksum256} from '@greymass/eosio'
 
     import type {Token} from '~/stores/tokens'
     import {tokens, createTokenFromChainId} from '~/stores/tokens'
@@ -27,7 +27,7 @@
     let selectedToken =
         $tokens[0] ||
         createTokenFromChainId(
-            ChainId.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906')
+            Checksum256.from('aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906')
         )
 
     const handleTokenSelect = (token: Token) => {
