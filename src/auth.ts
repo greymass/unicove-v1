@@ -1,24 +1,42 @@
-import {Link, ChainId, LinkSession, PermissionLevel} from 'anchor-link'
-import Transport from 'anchor-link-browser-transport'
+import {Checksum256, PermissionLevel} from '@greymass/eosio'
 import {get} from 'svelte/store'
 
 import {storeAccount} from './stores/account-provider'
 import {getClient} from './api-client'
 import {appId, chains} from './config'
 import {activeSession, availableSessions} from './store'
+import {Session, SessionKit} from '@wharfkit/session'
+import app from './main'
+import WebUIRenderer from '@wharfkit/web-ui-renderer'
+import {WalletPluginPrivateKey} from '@wharfkit/wallet-plugin-privatekey'
+import {WalletPluginAnchor} from '@wharfkit/wallet-plugin-anchor'
+import {WalletPluginWAX} from '@wharfkit/wallet-plugin-wax'
 
-const transport = new Transport({
-    requestStatus: false,
-})
-const link = new Link({
-    chains: chains.map((chain) => ({chainId: chain.chainId, nodeUrl: getClient(chain)})),
-    transport,
+const sessionKit = new SessionKit({
+    appName: 'unicove.gm',
+    chains: chains.map((chain) => {
+        return {
+            id: String(chain.chainId),
+            url: chain.nodeUrl,
+        }
+    }),
+    ui: new WebUIRenderer(),
+    walletPlugins: [
+        new WalletPluginAnchor(),
+        new WalletPluginWAX(),
+        new WalletPluginPrivateKey({
+            privateKey: '5KjRJdfnE22B5jSmXo2oat5NuJK8DUYQmJumpYuX2tnXYNSdr9f',
+        }),
+        new WalletPluginPrivateKey({
+            privateKey: '5KAdimGJQ8rNdA5tnx84ZjxU4v6ndzSCMTwqQn7ufigYiBauxrK',
+        }),
+    ],
 })
 
 /** Anchor Link session object or identifier. */
 export interface SessionLike {
     auth: PermissionLevel
-    chainId: ChainId
+    chainId: Checksum256
 }
 
 /** Compare two session-ish objects. */
@@ -28,18 +46,24 @@ export function sessionEquals(a: SessionLike, b: SessionLike) {
 
 /** Restore previous sessions. */
 export async function init() {
-    const list = await link.listSessions(appId)
-    let session: LinkSession | null = null
+    // TODO: List all existing sessions
+    // OLD CODE...
+    // const list = await link.listSessions(appId)
+    const list: SessionLike[] = []
+
+    let session: Session | null = null
     if (window.location.search.includes('auth=')) {
         // load active session from query string if present
         // prompt for login if an auth is requested but not available
         const qs = new URLSearchParams(window.location.search)
         const auth = PermissionLevel.from(qs.get('auth') || '')
-        let chainId: ChainId | undefined
+        let chainId: Checksum256
         if (qs.has('chain')) {
-            chainId = ChainId.from(qs.get('chain') || '')
+            chainId = Checksum256.from(qs.get('chain') || '')
         }
-        session = await link.restoreSession(appId, auth, chainId)
+        // TODO: Restore session found in URL
+        // OLD CODE...
+        // session = await link.restoreSession(appId, auth, chainId)
         const removeQuery = () => {
             if (window.history) {
                 window.history.replaceState(null, '', window.location.pathname)
@@ -51,7 +75,9 @@ export async function init() {
             removeQuery()
         }
     } else {
-        session = await link.restoreSession(appId)
+        // TODO: Restore session based on appId
+        // OLD CODE...
+        // session = await link.restoreSession(appId)
     }
     availableSessions.set(list)
     if (session) {
@@ -61,40 +87,59 @@ export async function init() {
 
 /** Create a new session. */
 export async function login() {
-    const result = await link.login(appId)
-    if (result.account) {
-        // populate account cache with the account returned by login so we don't need to re-fetch it
-        storeAccount(result.account, result.session.chainId)
-    }
-    const list = await link.listSessions(appId)
-    availableSessions.set(list)
+    const result = await sessionKit.login({
+        permissionLevel: 'test.gm@active',
+    })
+
+    // TODO: Reimplement when account kit is part of the Session
+    // if (result.account) {
+    //     // populate account cache with the account returned by login so we don't need to re-fetch it
+    //     storeAccount(result.account, result.session.chainId)
+    // }
+
+    // TODO: Reimplement when the session kit has an array of available sessions to return
+    // const list = await link.listSessions(appId)
+    // availableSessions.set(list)
+
     activeSession.set(result.session)
 }
 
 /** Remove existing session. */
 export async function logout(id: SessionLike) {
-    const session = await link.restoreSession(appId, id.auth, id.chainId)
+    // TODO: Restore session based on appId
+    // OLD CODE...
+    // const session = await link.restoreSession(appId, id.auth, id.chainId)
+    let session: Session | null = null
+
     if (session) {
-        await session.remove()
-        const list = await link.listSessions(appId)
+        // TODO: Reimplement when session kit storage has a removal method
+        // await session.remove()
+
+        // TODO: Reimplement when the session kit has an array of available sessions to return
+        // const list = await link.listSessions(appId)
+        const list: SessionLike[] = []
+
         let active = get(activeSession)
-        if (active && sessionEquals(active, session)) {
-            // update active session if we logged out from it
-            if (list.length > 0) {
-                activate(list[0])
-            } else {
-                activeSession.set(undefined)
-            }
-        }
+        // if (active && sessionEquals(active, session)) {
+        //     // update active session if we logged out from it
+        //     if (list.length > 0) {
+        //         activate(list[0])
+        //     } else {
+        //         activeSession.set(undefined)
+        //     }
+        // }
         availableSessions.set(list)
     }
 }
 
 /** Set active session. */
 export async function activate(id: SessionLike) {
-    const session = await link.restoreSession(appId, id.auth, id.chainId)
-    if (!session) {
-        throw new Error('No such session')
-    }
-    activeSession.set(session)
+    // TODO: Restore session based on appId
+    // OLD CODE...
+    // const session = await link.restoreSession(appId, id.auth, id.chainId)
+    // if (!session) {
+    //     throw new Error('No such session')
+    // }
+    // activeSession.set(session)
+    console.log('activate account', id)
 }
