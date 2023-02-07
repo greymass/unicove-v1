@@ -61,8 +61,8 @@
                         account: 'eosio',
                         name: 'delegatebw',
                         data: Stake.from({
-                            from: $activeSession!.auth.actor,
-                            receiver: $activeSession!.auth.actor,
+                            from: $activeSession!.actor,
+                            receiver: $activeSession!.actor,
                             stake_net_quantity: $amountNET,
                             stake_cpu_quantity: $amountCPU,
                             transfer: false,

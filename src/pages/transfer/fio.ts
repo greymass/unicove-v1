@@ -1,7 +1,8 @@
 import {writable, get} from 'svelte/store'
-import {Asset, UInt64, LinkSession} from '@greymass/eosio'
+import {Asset, UInt64} from '@greymass/eosio'
 import type {ChainConfig} from '~/config'
 import {activeBlockchain, activeSession} from '~/store'
+import type {Session} from '@wharfkit/session'
 
 let interval: any
 
@@ -20,7 +21,7 @@ export function stopSyncTxFee() {
 }
 
 export async function fetchTxFee() {
-    const session: LinkSession | undefined = get(activeSession)
+    const session: Session | undefined = get(activeSession)
     const blockchain: ChainConfig = get(activeBlockchain)
 
     let fee: Asset | undefined

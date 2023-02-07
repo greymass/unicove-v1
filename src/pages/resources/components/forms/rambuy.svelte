@@ -57,8 +57,8 @@
                         account: 'eosio',
                         name: 'buyrambytes',
                         data: BuyRamBytes.from({
-                            payer: $activeSession!.auth.actor,
-                            receiver: $activeSession!.auth.actor,
+                            payer: $activeSession!.actor,
+                            receiver: $activeSession!.actor,
                             bytes: Number($kb) * 1000,
                         }),
                     },

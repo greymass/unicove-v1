@@ -1,12 +1,12 @@
 <script lang="ts">
-    import type {LinkSession} from '@greymass/eosio'
+    import type {Session} from '@wharfkit/session'
 
     import InputLabelled from '../labelled.svelte'
 
     export let name: string = ''
     export let value: string = ''
     export let errorMessage: string | undefined = undefined
-    export let activeSession: LinkSession | undefined = undefined
+    export let activeSession: Session | undefined = undefined
     export let focus: boolean = false
     export let fluid: boolean = false
     export let loading = false

@@ -208,7 +208,7 @@
                                 <Icon name={isActive(session) ? 'user-check' : 'user'} />
                             </div>
                             <div class="account" on:click={() => onSelect(session)}>
-                                {session.auth.actor}
+                                {session.actor}
                             </div>
                             <div class="control" on:click={() => logout(session)}>
                                 <Icon name="log-out" size="large" />

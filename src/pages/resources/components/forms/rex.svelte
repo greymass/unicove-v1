@@ -64,8 +64,8 @@
             account: 'eosio',
             name: 'rentcpu',
             data: REXRentCPU.from({
-                from: $activeSession!.auth.actor,
-                receiver: $activeSession!.auth.actor,
+                from: $activeSession!.actor,
+                receiver: $activeSession!.actor,
                 loan_payment: $cost,
                 loan_fund: Asset.fromUnits(0, $activeBlockchain!.coreTokenSymbol),
             }),
@@ -78,8 +78,8 @@
             account: 'eosio',
             name: 'rentnet',
             data: REXRentNET.from({
-                from: $activeSession!.auth.actor,
-                receiver: $activeSession!.auth.actor,
+                from: $activeSession!.actor,
+                receiver: $activeSession!.actor,
                 loan_payment: $cost,
                 loan_fund: Asset.fromUnits(0, $activeBlockchain!.coreTokenSymbol),
             }),
@@ -93,7 +93,7 @@
                 account: 'eosio',
                 name: 'deposit',
                 data: REXDeposit.from({
-                    owner: $activeSession!.auth.actor,
+                    owner: $activeSession!.actor,
                     amount: $cost,
                 }),
             },

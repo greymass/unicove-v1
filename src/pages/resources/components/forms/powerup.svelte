@@ -79,8 +79,8 @@
                         account: 'eosio',
                         name: 'powerup',
                         data: PowerUp.from({
-                            payer: $activeSession!.auth.actor,
-                            receiver: $activeSession!.auth.actor,
+                            payer: $activeSession!.actor,
+                            receiver: $activeSession!.actor,
                             days: 1,
                             net_frac,
                             cpu_frac,

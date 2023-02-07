@@ -57,7 +57,7 @@
                         account: 'eosio',
                         name: 'sellram',
                         data: Sellram.from({
-                            account: $activeSession!.auth.actor,
+                            account: $activeSession!.actor,
                             bytes: Number($kb) * 1000,
                         }),
                     },

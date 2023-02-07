@@ -24,7 +24,7 @@
                     ...$balances.filter(
                         (b) =>
                             b.chainId.equals($activeSession.chainId) &&
-                            b.account.equals($activeSession.auth.actor) &&
+                            b.account.equals($activeSession.actor) &&
                             b.tokenKey !== $systemTokenKey
                     )
                 )
@@ -40,7 +40,7 @@
                 return $balances.find(
                     (b) =>
                         b.chainId.equals($activeSession.chainId) &&
-                        b.account.equals($activeSession.auth.actor) &&
+                        b.account.equals($activeSession.actor) &&
                         b.tokenKey === $systemTokenKey
                 )
             }

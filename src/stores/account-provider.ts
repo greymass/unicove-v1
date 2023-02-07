@@ -22,14 +22,14 @@ export const accountProvider: Writable<AccountResponse> = writable(initialAccoun
     const interval = setInterval(() => {
         const session = get(activeSession)
         if (session) {
-            updateAccount(session.auth.actor, session.chainId)
+            updateAccount(session.actor, session.chain.id)
         }
     }, 30000)
 
     // Subscribe to changes to the active session and update on change
     const unsubscribe = activeSession.subscribe((session) => {
         if (session) {
-            updateAccount(session.auth.actor, session.chainId)
+            updateAccount(session.actor, session.chain.id)
         }
     })
 

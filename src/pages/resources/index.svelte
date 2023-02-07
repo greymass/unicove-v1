@@ -34,7 +34,7 @@
 </script>
 
 {#if $activeBlockchain}
-    <Page title="Network Resources" subtitle={String($activeSession?.auth.actor)}>
+    <Page title="Network Resources" subtitle={String($activeSession?.actor)}>
         {#if $enabled}
             <Route path="/">
                 <ResourcesOverview />

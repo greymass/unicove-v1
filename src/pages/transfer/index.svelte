@@ -1,7 +1,6 @@
 <script lang="ts">
     import type {Readable} from 'svelte/store'
     import type {TinroRouteMeta} from 'tinro'
-    import type {LinkSession} from '@greymass/eosio'
 
     import {Name} from '@greymass/eosio'
     import {onMount} from 'svelte'
@@ -22,6 +21,7 @@
     import Page from '~/components/layout/page.svelte'
 
     import TransferMain from '~/pages/transfer/main.svelte'
+    import type {Session} from '@wharfkit/session'
 
     export let meta: TinroRouteMeta | undefined = undefined
 
@@ -61,13 +61,13 @@
         [activeSession, balances, token],
         ([$activeSession, $currentBalances, $token]) => {
             if ($token) {
-                const key = makeBalanceKey($token, $activeSession!.auth.actor)
+                const key = makeBalanceKey($token, $activeSession?.actor)
                 return $currentBalances.find((b) => b.key === key)
             }
         }
     )
 
-    let currentSession: LinkSession | undefined = $activeSession
+    let currentSession: Session | undefined = $activeSession
 
     $: {
         if ($activeSession !== currentSession) {

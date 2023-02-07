@@ -1,4 +1,4 @@
-import type {Asset, LinkSession} from '@greymass/eosio'
+import type {Asset} from '@greymass/eosio'
 import {derived, writable} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 import type {SessionLike} from './auth'
@@ -6,17 +6,18 @@ import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
 import {priceTicker} from './price-ticker'
 import {accountProvider} from './stores/account-provider'
+import type {Session} from '@wharfkit/session'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
 
 /** Active anchor link session, aka logged in user. */
-export const activeSession = writable<LinkSession | undefined>(undefined)
+export const activeSession = writable<Session | undefined>(undefined)
 
 /** Configuration of the currently selected blockchain */
 export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) => {
     if (session) {
-        return chainConfig(session.chainId)
+        return chainConfig(session.chain.id)
     } else {
         return chains[0]
     }

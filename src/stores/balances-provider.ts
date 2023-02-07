@@ -1,4 +1,3 @@
-import type {LinkSession} from '@greymass/eosio'
 import {Asset} from '@greymass/eosio'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
@@ -8,6 +7,7 @@ import {activeSession} from '~/store'
 import {makeTokenKey, Token} from '~/stores/tokens'
 
 import {Balance, createBalanceFromToken} from '~/stores/balances'
+import type {Session} from '@wharfkit/session'
 
 interface RawTokenBalance {
     currency: string
@@ -54,9 +54,9 @@ export const balancesProvider: Writable<BalancesProvider> = writable(initialBala
     }
 })
 
-export async function updateBalances(session: LinkSession) {
+export async function updateBalances(session: Session) {
     isLoading.set(true)
-    const chain = chainConfig(session.chainId)
+    const chain = chainConfig(session.chain.id)
     const {Bloks} = BalanceProviders
     if (chain.balanceProviders?.has(Bloks)) {
         const data = await fetchData(session)
@@ -70,10 +70,10 @@ export async function updateBalances(session: LinkSession) {
     isLoading.set(false)
 }
 
-async function fetchData(session: LinkSession) {
-    const chain = chainConfig(session.chainId)
+async function fetchData(session: Session) {
+    const chain = chainConfig(session.chain.id)
     const apiUrl = `https://www.api.bloks.io${chain.id === 'eos' ? '' : `/${chain.id}`}/account/${
-        session.auth.actor
+        session.actor
     }?type=getAccountTokens&coreSymbol=${chain.coreTokenSymbol}`
 
     return await fetch(apiUrl)
@@ -96,8 +96,8 @@ async function fetchData(session: LinkSession) {
         })
 }
 
-function parseTokenInfo(session: LinkSession, balance: RawTokenBalance): Token {
-    const chain = chainConfig(session.chainId)
+function parseTokenInfo(session: Session, balance: RawTokenBalance): Token {
+    const chain = chainConfig(session.chain.id)
     const symbol: Asset.Symbol = Asset.Symbol.from(`${balance.decimals},${balance.currency}`)
     const key = makeTokenKey({
         chainId: chain.chainId,
@@ -115,11 +115,11 @@ function parseTokenInfo(session: LinkSession, balance: RawTokenBalance): Token {
     }
 }
 
-function parseTokens(session: LinkSession, balances: RawTokenBalance[]) {
+function parseTokens(session: Session, balances: RawTokenBalance[]) {
     return balances.map((balance) => parseTokenInfo(session, balance))
 }
 
-function parseTokenBalances(session: LinkSession, balances: RawTokenBalance[]) {
+function parseTokenBalances(session: Session, balances: RawTokenBalance[]) {
     return balances.map((balance) => {
         const symbol: Asset.Symbol = Asset.Symbol.from(`${balance.decimals},${balance.currency}`)
         const token = parseTokenInfo(session, balance)

@@ -43,13 +43,13 @@
                     ),
                     amount: $transferData.quantity && $transferData.quantity!.units,
                     max_fee: $txFee!.units,
-                    actor: $activeSession!.auth.actor,
+                    actor: $activeSession!.actor,
                     tpid: 'tpid@greymass',
                 })
             }
             default: {
                 return Transfer.from({
-                    from: $activeSession!.auth.actor,
+                    from: $activeSession!.actor,
                     to: $transferData.toAccount,
                     quantity: $transferData.quantity,
                     memo: $transferData.memo || '',
@@ -95,7 +95,7 @@
             // Perform the transfer
             const result = await $activeSession!.transact({
                 action: {
-                    authorization: [$activeSession!.auth],
+                    authorization: [$activeSession!.permissionLevel],
                     account: get(tokenContract),
                     name: $activeBlockchain!.coreTokenTransfer,
                     data: getActionData(),

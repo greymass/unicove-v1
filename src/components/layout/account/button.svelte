@@ -46,7 +46,7 @@
         </span>
         <span class="text">
             {#if $activeSession}
-                {$activeSession?.auth.actor}
+                {$activeSession?.actor}
             {:else}
                 Login
             {/if}

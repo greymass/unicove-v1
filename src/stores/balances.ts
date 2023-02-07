@@ -1,4 +1,4 @@
-import type {AccountName, Checksum256, LinkSession, Name} from '@greymass/eosio'
+import type {Checksum256, Name} from '@greymass/eosio'
 import {Asset} from '@greymass/eosio'
 import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
@@ -7,6 +7,7 @@ import {activeBlockchain, activeSession, currentAccount} from '~/store'
 import {createTokenFromChainId, makeTokenKey, Token} from '~/stores/tokens'
 import {balancesProvider, updateBalances} from '~/stores/balances-provider'
 import {updateAccount} from './account-provider'
+import type {Session} from '@wharfkit/session'
 
 export interface Balance {
     key: string
@@ -37,7 +38,7 @@ export const balances: Readable<Balance[]> = derived(
     initialBalances
 )
 
-export function makeBalanceKey(token: Token, account: AccountName): string {
+export function makeBalanceKey(token: Token, account: Name): string {
     return [
         String(token.chainId),
         String(token.contract),
@@ -48,31 +49,27 @@ export function makeBalanceKey(token: Token, account: AccountName): string {
         .toLowerCase()
 }
 
-export function createBalanceFromCoreToken(session: LinkSession, balance: Asset): Balance {
-    const token = createTokenFromChainId(session.chainId)
+export function createBalanceFromCoreToken(session: Session, balance: Asset): Balance {
+    const token = createTokenFromChainId(session.chain.id)
     return createBalanceFromToken(session, token, balance)
 }
 
-export function createBalanceFromToken(
-    session: LinkSession,
-    token: Token,
-    balance: Asset
-): Balance {
-    const key = makeBalanceKey(token, session.auth.actor)
+export function createBalanceFromToken(session: Session, token: Token, balance: Asset): Balance {
+    const key = makeBalanceKey(token, session.actor)
     const record: Balance = {
         key,
-        chainId: session.chainId,
-        account: session.auth.actor,
+        chainId: session.chain.id,
+        account: session.actor,
         tokenKey: makeTokenKey(token),
         quantity: balance,
     }
     return record
 }
 
-export async function fetchBalances(session: LinkSession | undefined, refresh = false) {
+export async function fetchBalances(session: Session | undefined, refresh = false) {
     if (session) {
         // Refresh the sessions account data
-        updateAccount(session.auth.actor, session.chainId, refresh)
+        updateAccount(session.actor, session.chain.id, refresh)
         // Refresh balances from the balance provider
         updateBalances(session)
     }

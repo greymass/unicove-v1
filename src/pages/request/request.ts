@@ -89,7 +89,7 @@ export const currentTransaction: Readable<ResolvedTransaction> = derived(
             })
             // If an active session exists, use it instead
             if ($activeSession) {
-                auth = $activeSession.auth
+                auth = $activeSession.permissionLevel
             }
             // Resolve the transaction for the interface to display
             $apiClient.v1.chain.get_info().then((info: any) => {

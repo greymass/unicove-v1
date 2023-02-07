@@ -193,7 +193,7 @@
     }
 </style>
 
-<Page title="Account" subtitle={String($activeSession?.auth.actor)}>
+<Page title="Account" subtitle={String($activeSession?.actor)}>
     <span slot="header">
         <div class="options">
             <Button on:action={refresh}>
