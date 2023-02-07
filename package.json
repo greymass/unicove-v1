@@ -24,7 +24,7 @@
         "@types/feather-icons": "^4.7.0",
         "@wharfkit/session": "^0.3.0-ui-6",
         "@wharfkit/wallet-plugin-anchor": "^0.1.0",
-        "@wharfkit/wallet-plugin-privatekey": "^0.1.0",
+        "@wharfkit/wallet-plugin-privatekey": "^0.2.0",
         "@wharfkit/wallet-plugin-wax": "^0.1.0",
         "@wharfkit/web-ui-renderer": "^0.0.2",
         "feather-icons": "^4.28.0",
