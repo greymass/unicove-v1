@@ -1428,6 +1428,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
+"antelope-tokens@git+https://github.com/greymass/antelope-tokens.json.git":
+  version "0.0.1"
+  resolved "git+https://github.com/greymass/antelope-tokens.json.git#8ec8fbe55ffa670c95c491abbc120312c6f3b8f3"
+
 anymatch@~3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.2.tgz#c0557c096af32f106198f4f4e2a383537e378716"
