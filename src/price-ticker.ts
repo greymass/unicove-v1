@@ -64,31 +64,31 @@ function getOracleDatapoint(
     return derived(data, ($data) => DelphiOracleDatapoint.from($data))
 }
 
-function bloksFallback(chain: ChainConfig, pairName?: string): ReadableResult<number> {
-    const chainName = chain.id
-    return cachedRead({
-        store: 'price-ticker',
-        key: `${chainName}-fallback`,
-        load: async () => {
-            if (pairName) {
-                throw new Error('Fallback only supports core symbol')
-            }
-            let url = 'https://www.api.bloks.io/ticker/banana'
-            if (chainName !== 'eos') {
-                url = `https://www.api.bloks.io/${chainName}/ticker/banana`
-            }
-            const response = await fetch(url)
-            const data = await response.json()
-            if (typeof data === 'number') {
-                return data
-            } else {
-                throw new Error('Unexpected response from bloks')
-            }
-        },
-        maxAge: MAX_AGE,
-        refreshInterval: UPDATE_INTERVAL,
-    })
-}
+// function bloksFallback(chain: ChainConfig, pairName?: string): ReadableResult<number> {
+//     const chainName = chain.id
+//     return cachedRead({
+//         store: 'price-ticker',
+//         key: `${chainName}-fallback`,
+//         load: async () => {
+//             if (pairName) {
+//                 throw new Error('Fallback only supports core symbol')
+//             }
+//             let url = 'https://www.api.bloks.io/ticker/banana'
+//             if (chainName !== 'eos') {
+//                 url = `https://www.api.bloks.io/${chainName}/ticker/banana`
+//             }
+//             const response = await fetch(url)
+//             const data = await response.json()
+//             if (typeof data === 'number') {
+//                 return data
+//             } else {
+//                 throw new Error('Unexpected response from bloks')
+//             }
+//         },
+//         maxAge: MAX_AGE,
+//         refreshInterval: UPDATE_INTERVAL,
+//     })
+// }
 
 const tickerStores: Record<string, ReadableResult<number>> = {}
 
