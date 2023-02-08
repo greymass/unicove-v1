@@ -72,7 +72,14 @@
         [currentAccount, stateREX],
         ([$currentAccount, $stateREX]) => {
             if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
-                return $stateREX.value * $currentAccount.rex_info.rex_balance.value
+                if ($stateREX.value === 0.0001) {
+                    return (
+                        ($stateREX.total_lendable.value / $stateREX.total_rex.value) *
+                        $currentAccount.rex_info.rex_balance.value
+                    )
+                } else {
+                    return $stateREX.value * $currentAccount.rex_info.rex_balance.value
+                }
             }
             return 0
         }
