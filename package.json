@@ -17,6 +17,7 @@
         "acorn": "8.0.1"
     },
     "dependencies": {
+        "@greymass/antelope-tokens": "^0.0.1",
         "@greymass/create-account": "^0.0.9",
         "@greymass/eosio": "^0.6.0",
         "@greymass/eosio-resources": "0.7.0",
@@ -24,7 +25,6 @@
         "@types/feather-icons": "^4.7.0",
         "anchor-link": "^3.3.0",
         "anchor-link-browser-transport": "^3.2.0",
-        "antelope-tokens": "git+https://github.com/greymass/antelope-tokens.json.git",
         "feather-icons": "^4.28.0",
         "idb": "^7.0.1",
         "inter-ui": "^3.15.0",

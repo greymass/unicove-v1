@@ -909,6 +909,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@greymass/antelope-tokens@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@greymass/antelope-tokens/-/antelope-tokens-0.0.1.tgz#a245368adbad4e877d86f3fada0f22204fb6deb8"
+  integrity sha512-r/nBhanyDbwzfspa0ARSB2B1i1buZqOJPYCG1B6xuGrowgkelY5x9NKhdvjjdRgO1Kioy0QlLvH3nPk4/R/Ndg==
+
 "@greymass/create-account@^0.0.9":
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/@greymass/create-account/-/create-account-0.0.9.tgz#1f41b00e33508396fa3ece2f431213c80cfd9d7a"

@@ -1,6 +1,6 @@
 import type {ChainId, LinkSession, NameType} from 'anchor-link'
 import {Asset} from 'anchor-link'
-import AntelopeTokens from 'antelope-tokens'
+import AntelopeTokens from '@greymass/antelope-tokens'
 import {derived, writable, get} from 'svelte/store'
 import type {Writable, Readable, Unsubscriber} from 'svelte/store'
 
