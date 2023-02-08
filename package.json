@@ -17,6 +17,7 @@
         "acorn": "8.0.1"
     },
     "dependencies": {
+        "@greymass/antelope-tokens": "^0.0.1",
         "@greymass/create-account": "^0.0.9",
         "@greymass/eosio": "^0.6.0",
         "@greymass/eosio-resources": "0.7.0",
