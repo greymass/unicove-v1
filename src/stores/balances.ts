@@ -22,6 +22,7 @@ export const balances: Readable<Balance[]> = derived(
     [activeSession, activeBlockchain, balancesProvider, currentAccount],
     ([$activeSession, $activeBlockchain, $balancesProvider, $currentAccount], set) => {
         const records = []
+
         // Push any core balance information in from the current account
         if ($activeSession && $currentAccount) {
             let coreBalance = $currentAccount.core_liquid_balance
@@ -30,8 +31,15 @@ export const balances: Readable<Balance[]> = derived(
             }
             records.push(createBalanceFromCoreToken($activeSession, coreBalance))
         }
+
+        let newBalances = $balancesProvider.balances
+        if ($activeSession) {
+            const coreToken = createTokenFromChainId($activeSession.chainId)
+            newBalances = newBalances.filter((x) => x.tokenKey !== coreToken.key)
+        }
         // Push balances in as received by the balance provider
-        records.push(...$balancesProvider.balances)
+        records.push(...newBalances)
+
         set(records)
     },
     initialBalances
