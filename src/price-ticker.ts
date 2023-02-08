@@ -139,7 +139,9 @@ export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResu
                     $datapoint.median.toNumber() / Math.pow(10, $pair.quoted_precision.toNumber())
                 )
             } else {
-                return bloksFallback(chain, pairName)
+                return 0
+                // TODO: bloksFallback failing, CORS, needs replaced.
+                // return bloksFallback(chain, pairName)
             }
         })
     )
