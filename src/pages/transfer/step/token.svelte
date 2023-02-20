@@ -24,7 +24,7 @@
         ([$activeSession, $balances, $currentAccount, $query]) => {
             if ($activeSession && $balances && $currentAccount) {
                 return $balances.filter((b) => {
-                    const matchesChain = b.chainId.equals($activeSession.chainId)
+                    const matchesChain = b.chainId.equals($activeSession.chain.id)
                     const matchesAccount = b.account.equals($activeSession.actor)
                     let matchesQuery = true
                     if ($query) {

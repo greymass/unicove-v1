@@ -1,9 +1,9 @@
 <script lang="ts">
     import {Checksum256} from '@greymass/eosio'
+    import type {SerializedSession} from '@wharfkit/session'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
-    import type {SessionLike} from '~/auth'
     import {sessionEquals, login, logout} from '~/auth'
     import {chains, chainConfig} from '~/config'
     import {activeSession, availableSessions} from '~/store'
@@ -14,9 +14,10 @@
     import Segment from '~/components/elements/segment.svelte'
     import Text from '~/components/elements/text.svelte'
 
-    $: isActive = (session: SessionLike) => sessionEquals(session, $activeSession!)
+    $: isActive = (session: SerializedSession) =>
+        sessionEquals(session, $activeSession?.serialize()!)
 
-    export let onSelect: (session: SessionLike) => void
+    export let onSelect: (session: SerializedSession) => void
 
     function handleAdd() {
         login().catch((error: any) => {
@@ -28,7 +29,7 @@
     interface SessionGroup {
         chainId: string
         name: string
-        sessions: SessionLike[]
+        sessions: SerializedSession[]
     }
 
     const getGroupings = (chainIds: string[]) =>
@@ -38,7 +39,7 @@
                 return {
                     chainId,
                     name: config.name,
-                    sessions: $availableSessions.filter((s) => String(s.chainId) === chainId),
+                    sessions: $availableSessions.filter((s) => String(s.chain) === chainId),
                 }
             })
             .sort((a: SessionGroup, b: SessionGroup) => a.name.localeCompare(b.name))
@@ -46,7 +47,7 @@
     const groupings: Readable<SessionGroup[]> = derived(availableSessions, ($availableSessions) => {
         if ($availableSessions) {
             const chainIds = [
-                ...new Set($availableSessions.map((session) => String(session.chainId))),
+                ...new Set($availableSessions.map((session) => String(session.chain))),
             ]
             return getGroupings(chainIds)
         }

@@ -1,12 +1,11 @@
 import type {Asset} from '@greymass/eosio'
 import {derived, writable} from 'svelte/store'
 import type {Readable} from 'svelte/store'
-import type {SessionLike} from './auth'
 import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
 import {priceTicker} from './price-ticker'
 import {accountProvider} from './stores/account-provider'
-import type {Session} from '@wharfkit/session'
+import type {SerializedSession, Session} from '@wharfkit/session'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
@@ -35,7 +34,7 @@ export const activePriceTicker: Readable<number> = derived(
 )
 
 /** List of all available anchor link sessions. */
-export const availableSessions = writable<SessionLike[]>([])
+export const availableSessions = writable<SerializedSession[]>([])
 
 /** List of preferences. */
 export const preferences = Preferences.shared
