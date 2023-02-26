@@ -23,7 +23,7 @@
 
     function refreshAccount(account_name: Name) {
         // Refresh the account data
-        updateAccount(account_name, $activeSession!.chainId, true)
+        updateAccount(account_name, $activeSession!.chain.id, true)
     }
 
     // TODO: Needs reimplemented within transaction follower to reset the context
