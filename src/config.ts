@@ -48,7 +48,7 @@ export const resourceFeatures = [
 // Available Balance Providers
 export enum BalanceProviders {
     // https://www.api.explorer.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
-    explorer,
+    Bloks,
 }
 
 export interface ChainConfig {
