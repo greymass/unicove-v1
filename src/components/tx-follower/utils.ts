@@ -50,7 +50,8 @@ export function followTransaction(id: Checksum256, chain: ChainConfig) {
 }
 
 export function exporerUrl(id: Checksum256, chain: ChainConfig) {
-    return `${chain.bloksUrl}/transaction/${id}`
+    let path: string = chain.explorerPath || 'transaction'
+    return `${chain.explorerUrl}/${path}/${id}`
 }
 
 interface PollContext {

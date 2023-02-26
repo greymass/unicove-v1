@@ -8,7 +8,7 @@
     let txUrl: string = ''
 
     $: {
-        txUrl = `${activeBlockchain.bloksUrl}/transaction/${tx}`
+        txUrl = `${activeBlockchain.explorerUrl}/transaction/${tx}`
     }
 </script>
 
