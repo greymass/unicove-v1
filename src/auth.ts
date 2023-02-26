@@ -9,8 +9,10 @@ import {BrowserLocalStorage, SerializedSession, Session, SessionKit} from '@whar
 import app from './main'
 import WebUIRenderer from '@wharfkit/web-ui-renderer'
 import {WalletPluginPrivateKey} from '@wharfkit/wallet-plugin-privatekey'
-// import {WalletPluginAnchor} from '@wharfkit/wallet-plugin-anchor'
-// import {WalletPluginMock} from '@wharfkit/wallet-plugin-mock'
+import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
+import {WalletPluginAnchor} from '@wharfkit/wallet-plugin-anchor'
+import {WalletPluginMock} from '@wharfkit/wallet-plugin-mock'
+import {TransactPluginAutoCorrect} from '@wharfkit/transact-plugin-autocorrect'
 import {WalletPluginWAX} from '@wharfkit/wallet-plugin-wax'
 
 const sessionKit = new SessionKit({
@@ -22,14 +24,16 @@ const sessionKit = new SessionKit({
         }
     }),
     storage: new BrowserLocalStorage('unicove'),
+    transactPlugins: [
+        // new TransactPluginAutoCorrect(),
+        new TransactPluginResourceProvider(),
+    ],
     ui: new WebUIRenderer(),
     walletPlugins: [
         // new WalletPluginAnchor(),
         // new WalletPluginMock(),
-        new WalletPluginWAX(),
-        new WalletPluginPrivateKey({
-            privateKey: '5Jtoxgny5tT7NiNFp1MLogviuPJ9NniWjnU4wKzaX4t7pL4kJ8s',
-        }),
+        // new WalletPluginWAX(),
+        new WalletPluginPrivateKey('5Jtoxgny5tT7NiNFp1MLogviuPJ9NniWjnU4wKzaX4t7pL4kJ8s'),
     ],
 })
 
@@ -74,12 +78,13 @@ export async function init() {
         // TODO: Restore session based on appId
         // OLD CODE...
         // session = await link.restoreSession(appId)
-        session = await sessionKit.restore()
-        console.log(session)
+        const sessions = await sessionKit.getSessions()
+        if (sessions.length) {
+            session = await sessionKit.restore()
+        }
     }
     availableSessions.set(list)
     if (session) {
-        console.log('setting active session', session)
         activeSession.set(session)
     }
 }

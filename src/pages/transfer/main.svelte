@@ -104,9 +104,9 @@
             // Reset the form data
             resetData()
             // If the context exists and this is part of a FormTransaction
-            if (context) {
+            if (context && result.resolved) {
                 // Pass the transaction ID to the parent
-                const txid = String(result.transaction.id)
+                const txid = String(result.resolved.transaction.id)
                 context.setTransaction(txid)
                 // Await an update on the field expected for this transaction
                 context.awaitAccountUpdate(field)
