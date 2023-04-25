@@ -478,7 +478,7 @@
             <Unicove variant="white" />
         </div>
         <h2 class="description">
-            Unicove is your portal to EOSIO blockchains, a secure & easy to use web wallet
+            Unicove is your portal to Antelope blockchains, a secure & easy to use web wallet
         </h2>
         <div class="actions">
             <div class="action">
@@ -522,7 +522,7 @@
             <h3>The place where your blockchain transactions come to life</h3>
             <p>
                 Unicove is built for token holders. It’s a comprehensive interface for all of your
-                EOSIO account needs. Create transactions, manage your accounts, monitor your
+                Antelope account needs. Create transactions, manage your accounts, monitor your
                 activity, and so much more.
             </p>
             <h4>Supported Blockchains</h4>
@@ -583,7 +583,7 @@
         <div class="text">
             <h3>Your keys are always safely held by Anchor</h3>
             <p>
-                Use Anchor to seamlessly and securely interact with any supported EOSIO-based
+                Use Anchor to seamlessly and securely interact with any supported Antelope-based
                 blockchain. Anchor allows you to login to Unicove and manage your account.
             </p>
             <div class="link">
@@ -609,7 +609,7 @@
                 We fix the broken and complicated things in crypto so that you can realize the full
                 potential of blockchain while having fun and staying safe. Our team consists of
                 developers, designers, product experts, and more. Unicove is our newest project — a
-                one-stop-shop interface for EOSIO blockchains.
+                one-stop-shop interface for Antelope blockchains.
             </p>
             <p>We’re always looking for feedback, so if you have some get in touch!</p>
         </div>
