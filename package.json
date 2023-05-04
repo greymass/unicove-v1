@@ -31,7 +31,8 @@
         "pako": "^2.0.3",
         "svelte-qrcode": "^1.0.0",
         "svelte-result-store": "^1.0.6",
-        "tinro": "^0.6.0"
+        "tinro": "^0.6.0",
+        "ethers": "^5.6.9"
     },
     "devDependencies": {
         "@snowpack/plugin-svelte": "^3.4.0",
