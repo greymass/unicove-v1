@@ -25,6 +25,11 @@
             name: 'Send & Receive',
             path: '/transfer',
         },
+        {
+            icon: 'repeat',
+            name: 'EVM Swap',
+            path: '/swap-evm',
+        },
         ...(banxaIsAvailable($activeBlockchain)
             ? [
                   {
