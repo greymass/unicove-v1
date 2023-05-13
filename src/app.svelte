@@ -17,6 +17,7 @@
     import Toasts from '~/components/elements/toasts.svelte'
     import BanxaSuccess from '~/pages/banxa/success.svelte'
     import BanxaFailure from '~/pages/banxa/failure.svelte'
+    import EVMSwap from '~/pages/evm/swap.svelte'
 
     $: {
         document.body.classList.toggle('darkmode', $darkMode)
@@ -197,6 +198,9 @@
             </Route>
             <Route path="/banxa/failure">
                 <BanxaFailure />
+            </Route>
+            <Route path="/evm/swap">
+                <EVMSwap />
             </Route>
             <Route fallback>
                 <Page title="Page not found">
