@@ -13,7 +13,7 @@
 
     let quantity = 0;
 
-    async function transfer() {
+    async function nativeToEvmTransfer() {
         const action = Transfer.from({
             from: $activeSession.auth.actor,
             to: "eosio.evm",
@@ -35,7 +35,7 @@
 <div class="container">
     <!-- Add your tabs and content here -->
 
-    <form on:submit|preventDefault={transfer}>
+    <form on:submit|preventDefault={nativeToEvmTransfer}>
         <label for="quantity">Quantity:</label>
         <input type="number" id="quantity" bind:value={quantity} min="0" step="0.0001" required>
         <button type="submit">Transfer</button>
