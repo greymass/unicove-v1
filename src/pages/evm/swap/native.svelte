@@ -1,34 +1,41 @@
 <script lang="ts">
-    import { ethers } from 'ethers';
-    import { writable } from 'svelte/store';
+    import type { LinkSession } from 'anchor-link'
 
-    import { Transfer } from '~/utils/evm';
+    import { Transfer } from '~/abi-types';
     import Native from './native.svelte';
     import EVM from './evm.svelte';
+    import type { EthAccount } from '~/lib/evm'
 
-    import {Transfer} from '~/abi-types'
 
-    export let ethAccount 
-    export let nativeSession
+    export let ethAccount: EthAccount
+    export let nativeSession: LinkSession
 
     let quantity = 0;
 
     async function nativeToEvmTransfer() {
         const action = Transfer.from({
-            from: $activeSession.auth.actor,
+            from: nativeSession.auth.actor,
             to: "eosio.evm",
             quantity,
-            memo: ethAccount.toEOSAddress(),
+            memo: ethAccount.ethAddress(),
         });
 
-        const result = await $activeSession.transact({
-            action: {
-                authorization: [$activeSession.auth],
-                account: 'eosio.token',
-                name: 'EOS',
-                data: action,
-            },
-        });
+        let result;
+
+        try {
+            result = await nativeSession.transact({
+                action: {
+                    authorization: [nativeSession.auth],
+                    account: 'eosio.token',
+                    name: 'EOS',
+                    data: action,
+                },
+            });
+        } catch (error) {
+            throw new Error(`Transaction failed: ${error}`)
+        }
+        
+        alert(`Transaction executed.\n\n ID: ${result.transaction}`)
     }
 </script>
 

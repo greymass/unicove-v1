@@ -28,7 +28,7 @@
         {
             icon: 'repeat',
             name: 'EVM Bridge',
-            path: '/evm-bridge',
+            path: '/evm/swap',
         },
         ...(banxaIsAvailable($activeBlockchain)
             ? [

@@ -13,7 +13,7 @@
     import Native from './swap/native.svelte';
     import EVM from './swap/evm.svelte';
 
-    import { EthAccount } from "./utils/evm";
+    import { EthAccount } from "../../lib/evm";
 
     const ethAccount: Writable<EthAccount | null> = writable(null);
     let currentTab = 'native';
@@ -62,15 +62,15 @@
 </script>
 
 <Page divider={false}>
-    {#if $ethAccount}
+    {#if $ethAccount && $activeSession}
         <div class="container">
             <h3>Connected EVM Account:</h3>
             <strong>{$ethAccount.ethAddress()}</strong>
             <hr />
 
             <div class="tabs">
-                <button class:active={currentTab === 'native'} on:click={() => currentTab = 'native'}>Swap ETH for EOS</button>
-                <button class:active={currentTab === 'evm'} on:click={() => currentTab = 'evm'}>Swap EOS for ETH</button>
+                <button class:active={currentTab === 'native'} on:click={() => currentTab = 'native'}>Swap EOS for ETH</button>
+                <button class:active={currentTab === 'evm'} on:click={() => currentTab = 'evm'}>Swap ETH for EOS</button>
             </div>
 
             {#if currentTab === 'native'}
@@ -79,7 +79,7 @@
             </main>
             {:else if currentTab === 'evm'}
             <main>
-                <EVM nativeSession={$activeSession} ethAccount={$ethAccount} />
+                <EVM nativeSession={$activeSession} ethAccount={$ethAccount} {provider} />
             </main>
             {/if}
         </div>
