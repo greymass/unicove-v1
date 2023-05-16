@@ -14,6 +14,7 @@
     import EVM from './swap/evm.svelte';
 
     import { EthAccount } from "../../lib/evm";
+    import Button from '~/components/elements/button.svelte'
 
     const ethAccount: Writable<EthAccount | null> = writable(null);
     let currentTab = 'native';
@@ -68,9 +69,19 @@
             <strong>{$ethAccount.ethAddress()}</strong>
             <hr />
 
-            <div class="tabs">
-                <button class:active={currentTab === 'native'} on:click={() => currentTab = 'native'}>Swap EOS for ETH</button>
-                <button class:active={currentTab === 'evm'} on:click={() => currentTab = 'evm'}>Swap ETH for EOS</button>
+            <div class="options">
+                <Button
+                    disabled={currentTab === 'native'}
+                    on:action={() => (currentTab = 'native')}
+                >
+                    Swap EOS For Eth
+                </Button>
+                <Button
+                    disabled={currentTab === 'evm'}
+                    on:action={() => (currentTab = 'evm')}
+                >
+                    Swap Eth For EOS
+                </Button>
             </div>
 
             {#if currentTab === 'native'}
@@ -113,7 +124,7 @@
         margin: 3em 0;
     }
 
-    .tabs {
+    .options {
         display: flex;
         justify-content: space-between;
         margin-bottom: 2em;

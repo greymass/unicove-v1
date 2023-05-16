@@ -5,6 +5,10 @@
 <script>
     import { BigNumber, ethers } from 'ethers';
     import type { EthAccount } from "../../../lib/evm";
+    import Form from '~/components/elements/form.svelte'
+    import Input from '~/components/elements/input.svelte'
+    import Button from '~/components/elements/button.svelte'
+    import Label from '~/components/elements/input/label.svelte'
 
     export let nativeSession
     export let ethAccount: EthAccount
@@ -61,10 +65,10 @@
 <div class="container">
     <!-- Add your tabs and content here -->
 
-    <form on:submit|preventDefault={transferETHToEOS}>
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" bind:value={amount} min="0" step="0.0001" required>
+    <Form on:submit={transferETHToEOS}>
+        <Label>Transfer amount in ETH</Label>
+        <Input bind:value={amount} />
 
-        <button type="submit">Transfer</button>
-    </form>
+        <Button>Transfer</Button>
+    </Form>
 </div>

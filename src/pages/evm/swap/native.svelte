@@ -2,19 +2,23 @@
     import type { LinkSession } from 'anchor-link'
 
     import { Transfer } from '~/abi-types';
-    import type { EthAccount } from '~/lib/evm'
+    import Form from '~/components/elements/form.svelte'
+    import Input from '~/components/elements/input.svelte'
+    import Button from '~/components/elements/button.svelte'
 
+    import type { EthAccount } from '~/lib/evm'
+    import Label from '~/components/elements/input/label.svelte'
 
     export let ethAccount: EthAccount
     export let nativeSession: LinkSession
 
-    let quantity = 0;
+    let amount = '0.0000';
 
     async function transferETHToEOS() {
         const action = Transfer.from({
             from: nativeSession.auth.actor,
             to: "eosio.evm",
-            quantity,
+            quantity: Number(amount),
             memo: ethAccount.ethAddress(),
         });
 
@@ -40,10 +44,10 @@
 <div class="container">
     <!-- Add your tabs and content here -->
 
-    <form on:submit|preventDefault={transferETHToEOS}>
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" bind:value={quantity} min="0" step="0.0001" required>
-        <button type="submit">Transfer</button>
-    </form>
+    <Form on:submit={transferETHToEOS}>
+        <Label>Transfer amount in EOS</Label>
+        <Input bind:value={amount} />
+        <Button>Transfer</Button>
+    </Form>
 </div>
 
