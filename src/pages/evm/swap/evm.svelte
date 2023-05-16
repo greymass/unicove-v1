@@ -20,7 +20,7 @@
 
     const signer = provider.getSigner();
 
-    async function transferNativeToEOS() {
+    async function transferETHToEOS() {
         try {
             submitting = true;
             transactionHash = '';
@@ -61,7 +61,7 @@
 <div class="container">
     <!-- Add your tabs and content here -->
 
-    <form on:submit|preventDefault={transferNativeToEOS}>
+    <form on:submit|preventDefault={transferETHToEOS}>
         <label for="amount">Amount:</label>
         <input type="number" id="amount" bind:value={amount} min="0" step="0.0001" required>
 

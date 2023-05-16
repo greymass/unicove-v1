@@ -2,8 +2,6 @@
     import type { LinkSession } from 'anchor-link'
 
     import { Transfer } from '~/abi-types';
-    import Native from './native.svelte';
-    import EVM from './evm.svelte';
     import type { EthAccount } from '~/lib/evm'
 
 
@@ -12,7 +10,7 @@
 
     let quantity = 0;
 
-    async function nativeToEvmTransfer() {
+    async function transferETHToEOS() {
         const action = Transfer.from({
             from: nativeSession.auth.actor,
             to: "eosio.evm",
@@ -42,7 +40,7 @@
 <div class="container">
     <!-- Add your tabs and content here -->
 
-    <form on:submit|preventDefault={nativeToEvmTransfer}>
+    <form on:submit|preventDefault={transferETHToEOS}>
         <label for="quantity">Quantity:</label>
         <input type="number" id="quantity" bind:value={quantity} min="0" step="0.0001" required>
         <button type="submit">Transfer</button>
