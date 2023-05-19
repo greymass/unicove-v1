@@ -15,7 +15,7 @@
     export let provider: ethers.providers.Web3Provider
 
     let targetAddress = '';
-    let amount = '';
+    let amount = '0.0000';
     let gas: BigNumber | undefined;
     let transactionHash = '';
     let transactionError = '';
@@ -28,7 +28,7 @@
         try {
             submitting = true;
             transactionHash = '';
-            if (!window.confirm(`You are going to transfer ${amount} EOS to ${targetAddress}`)) {
+            if (!window.confirm(`You are going to transfer ${amount} EOS to ${ethAccount.ethAddress()}`)) {
                 return;
             }
             gas = await provider.estimateGas({
@@ -36,7 +36,7 @@
                 to: "eosio.evm",
                 value: ethers.utils.parseEther(amount),
                 gasPrice: await provider.getGasPrice(),
-                data: ethers.utils.formatBytes32String(''), // replace '' with your memo if needed
+                data: ethers.utils.formatBytes32String(''),
             });
             const result = await signer.sendTransaction({
                 from: ethAccount.ethAddress(),
@@ -44,7 +44,7 @@
                 value: ethers.utils.parseEther(amount),
                 gasPrice: await provider.getGasPrice(),
                 gasLimit: gas,
-                data: ethers.utils.formatBytes32String(''), // replace '' with your memo if needed
+                data: ethers.utils.formatBytes32String(''),
             });
             transactionHash = result.hash;
             amount = '';
@@ -63,12 +63,10 @@
 </script>
 
 <div class="container">
-    <!-- Add your tabs and content here -->
-
     <Form on:submit={transferETHToEOS}>
         <Label>Transfer amount in ETH</Label>
         <Input bind:value={amount} />
 
-        <Button>Transfer</Button>
+        <Button on:action={transferETHToEOS}>Transfer</Button>
     </Form>
 </div>

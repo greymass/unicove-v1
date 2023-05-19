@@ -92,6 +92,14 @@
             backStep: undefined,
         }))
         try {
+            console.log(JSON.stringify({
+                action: {
+                    authorization: [$activeSession!.auth],
+                    account: get(tokenContract),
+                    name: $activeBlockchain!.coreTokenTransfer,
+                    data: getActionData(),
+                },
+            }))
             // Perform the transfer
             const result = await $activeSession!.transact({
                 action: {

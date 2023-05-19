@@ -121,7 +121,7 @@
     }
 
     hr {
-        margin: 3em 0;
+        margin: 3em 0 1.5em 0;
     }
 
     .options {
