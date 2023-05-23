@@ -12,19 +12,18 @@ export class EthAccount {
         this._ethAddress = ethAddress
     }
 
-    // Placeholder for the function to convert Ethereum address to EOS address
-    convertToEvmAddress(eosAccountName: string): string {
-        const blockList = ['binancecleos', 'huobideposit', 'okbtothemoon']
-        if (blockList.includes(eosAccountName)) {
-            throw new Error('This CEX has not fully support the EOS-EVM bridge yet.')
-        }
-        return convertToEthAddress(eosAccountName)
-    }
-
     // Returns the Ethereum address
     ethAddress(): string {
         return this._ethAddress
     }
+}
+
+export function convertToEvmAddress(eosAccountName: string): string {
+    const blockList = ['binancecleos', 'huobideposit', 'okbtothemoon']
+    if (blockList.includes(eosAccountName)) {
+        throw new Error('This CEX has not fully support the EOS-EVM bridge yet.')
+    }
+    return convertToEthAddress(eosAccountName)
 }
 
 function convertToEthAddress(eosAddress: string) {
