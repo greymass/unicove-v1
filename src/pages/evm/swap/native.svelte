@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { LinkSession, Name } from 'anchor-link'
-    import { getContext } from 'svelte'
+    import {LinkSession, Name} from 'anchor-link'
+    import {getContext} from 'svelte'
     import {Asset} from '@greymass/eosio'
-    
+
     import type {FormTransaction} from '~/ui-types'
-    import { Transfer } from '~/abi-types';
+    import {Transfer} from '~/abi-types'
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
     import Button from '~/components/elements/button.svelte'
 
-    import type { EthAccount } from '~/lib/evm'
+    import type {EthAccount} from '~/lib/evm'
     import Label from '~/components/elements/input/label.svelte'
 
     export let ethAccount: EthAccount
@@ -17,19 +17,17 @@
 
     const context: FormTransaction = getContext('transaction')
 
-    let amount = '0.0000';
+    let amount = '0.0000'
 
     async function transferETHToEOS() {
         const action = Transfer.from({
             from: nativeSession.auth.actor,
-            to: "eosio.evm",
+            to: 'eosio.evm',
             quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
             memo: ethAccount.ethAddress(),
-        });
+        })
 
-        let result;
-
-        console.log({ asset: String(Asset.fromFloat(Number(amount), '4,EOS'))})
+        let result
 
         try {
             result = await nativeSession.transact({
@@ -39,7 +37,7 @@
                     name: Name.from('transfer'),
                     data: action,
                 },
-            });
+            })
 
             if (context) {
                 // Pass the transaction ID to the parent
@@ -47,10 +45,9 @@
                 context.setTransaction(txid)
             }
         } catch (error) {
-            console.log({error})
             throw new Error(`Transaction failed: ${error}`)
         }
-        
+
         alert(`Transaction executed.\n\n ID: ${result.transaction.id}`)
     }
 </script>
@@ -62,4 +59,3 @@
         <Button on:action={transferETHToEOS}>Transfer</Button>
     </Form>
 </div>
-

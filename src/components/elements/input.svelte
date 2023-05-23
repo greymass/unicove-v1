@@ -3,13 +3,16 @@
     import type {InputResponse} from 'src/ui-types'
     import type {Form} from '~/ui-types'
     import {createEventDispatcher} from 'svelte'
+    import type {inputType} from '~/ui-types'
 
     export let disabled: boolean = false
     export let focus: boolean = false
-    export let inputmode: string = ''
+    export let inputmode: inputType = undefined
     export let name: string = ''
     export let placeholder: string = ''
     export let value: string = ''
+
+    const inputmodeParam = inputmode as any
 
     /** Whether or not the button should go full width */
     export let fluid: boolean = false
@@ -19,7 +22,7 @@
     export let isValid: any = () => true
     export let assumeValid: boolean = false
 
-    let timer: number | undefined
+    let timer: NodeJS.Timeout | undefined
     let delay: number = 300
 
     // Get parent form context (if exists)
@@ -59,7 +62,7 @@
 
     type HTMLInputFormEvent = Event & {currentTarget: EventTarget & HTMLInputElement}
     const debounce = (e: HTMLInputFormEvent) => {
-        clearTimeout(timer)
+        timer && clearTimeout(timer)
         value = e.currentTarget.value
         // Immediately invalidate
         invalidate(name, value)
@@ -110,7 +113,7 @@
     type="text"
     {name}
     {disabled}
-    {inputmode}
+    inputmode={inputmodeParam}
     {placeholder}
     bind:this={ref}
     bind:value

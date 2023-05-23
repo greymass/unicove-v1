@@ -62,7 +62,7 @@ export async function updateAccount(name: Name, chainId: ChainId, refresh: boole
 
 function fetchBalance(name: Name, chainId: ChainId) {
     const chain = chainConfig(chainId)
-    return getClient(chainId).v1.chain.get_currency_balance(String(chain.coreTokenContract), name)
+    return getClient(chainId).v1.chain.get_currency_balance(chain.coreTokenContract, name)
 }
 
 export interface AccountResponse {
