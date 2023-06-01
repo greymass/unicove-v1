@@ -7,13 +7,13 @@ import {appId, chains} from './config'
 import {activeSession, availableSessions} from './store'
 import {BrowserLocalStorage, SerializedSession, Session, SessionKit} from '@wharfkit/session'
 import app from './main'
-import WebUIRenderer from '@wharfkit/web-ui-renderer'
+import WebUIRenderer from '@wharfkit/web-renderer'
 import {WalletPluginPrivateKey} from '@wharfkit/wallet-plugin-privatekey'
 import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
 import {WalletPluginAnchor} from '@wharfkit/wallet-plugin-anchor'
 import {WalletPluginMock} from '@wharfkit/wallet-plugin-mock'
 import {TransactPluginAutoCorrect} from '@wharfkit/transact-plugin-autocorrect'
-import {WalletPluginWAX} from '@wharfkit/wallet-plugin-wax'
+import {WalletPluginCloudWallet} from '@wharfkit/wallet-plugin-cloudwallet'
 
 const sessionKit = new SessionKit({
     appName: 'unicove.gm',
