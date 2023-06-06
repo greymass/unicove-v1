@@ -1,4 +1,16 @@
+import type {LinkSession} from 'anchor-link'
+import {Asset, Name} from 'anchor-link'
 import BN from 'bn.js'
+
+import {Transfer} from '~/abi-types'
+
+let provider: ethers.providers.Web3Provider
+
+declare global {
+    interface Window {
+        ethereum: any
+    }
+}
 
 export class EthAccount {
     private _ethAddress: string
@@ -76,4 +88,116 @@ function strToUint64(str: string) {
 
 function uint64ToAddr(str: string) {
     return '0xbbbbbbbbbbbbbbbbbbbbbbbb' + str
+}
+
+interface TransferEOSToEthParams {
+    amount: string
+    ethAccount: EthAccount
+    nativeSession: LinkSession
+}
+
+export async function transferEOSToEth({
+    nativeSession,
+    ethAccount,
+    amount,
+}: TransferEOSToEthParams) {
+    const action = Transfer.from({
+        from: nativeSession.auth.actor,
+        to: 'eosio.evm',
+        quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
+        memo: ethAccount.ethAddress(),
+    })
+
+    let result
+
+    try {
+        result = await nativeSession.transact({
+            action: {
+                authorization: [nativeSession.auth],
+                account: Name.from('eosio.token'),
+                name: Name.from('transfer'),
+                data: action,
+            },
+        })
+
+        return result
+    } catch (error) {
+        throw new Error(`Transaction failed: ${error}`)
+    }
+}
+
+export async function transferETHToEOS() {
+    try {
+        const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
+
+        gas = await provider.estimateGas({
+            from: ethAccount.ethAddress(),
+            to: targetEvmAddress,
+            value: ethers.utils.parseEther(amount),
+            gasPrice: await provider.getGasPrice(),
+            data: ethers.utils.formatBytes32String(''),
+        })
+        const result = await signer.sendTransaction({
+            from: ethAccount.ethAddress(),
+            to: targetEvmAddress,
+            value: ethers.utils.parseEther(amount),
+            gasPrice: await provider.getGasPrice(),
+            gasLimit: gas,
+            data: ethers.utils.formatBytes32String(''),
+        })
+        transactionHash = result.hash
+
+        window.alert(`Transaction executed.\n\n ID: ${transactionHash}`)
+        amount = '0.0000'
+        finished = true
+        setTimeout(() => {
+            finished = false
+        }, 2000)
+    } catch (err) {
+        console.error(err)
+        transactionError = err.message
+    } finally {
+        submitting = false
+    }
+}
+
+async function switchNetwork() {
+    await window.ethereum
+        .request({
+            method: 'wallet_switchEthereumChain',
+            params: [{chainId: '0x4571'}],
+        })
+        .catch(async (e: {code: number}) => {
+            if (e.code === 4902) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                        {
+                            chainId: '0x4571',
+                            chainName: 'EOS EVM Network',
+                            nativeCurrency: {name: 'EOS', symbol: 'EOS', decimals: 18},
+                            rpcUrls: ['https://api.evm.eosnetwork.com/'],
+                            blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
+                        },
+                    ],
+                })
+            }
+        })
+}
+
+async function connectEthWallet() {
+    if (window.ethereum) {
+        provider = new ethers.providers.Web3Provider(window.ethereum)
+        let networkId = await provider.getNetwork()
+        if (networkId.chainId !== 17777) {
+            await switchNetwork()
+            networkId = await provider.getNetwork()
+        }
+
+        await window.ethereum.request({method: 'eth_requestAccounts'})
+        const signer = provider.getSigner()
+        ethAccount.set(EthAccount.from(await signer.getAddress()))
+    } else {
+        alert('You need to install Metamask')
+    }
 }
