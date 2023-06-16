@@ -1,7 +1,8 @@
 import type {LinkSession} from 'anchor-link'
 import {Asset, Name} from 'anchor-link'
+import {ethers} from 'ethers'
+
 import BN from 'bn.js'
-import ethers from 'ethers'
 
 import {Transfer} from '~/abi-types'
 

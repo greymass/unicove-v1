@@ -1,30 +1,24 @@
-<script context="module">
-    declare let window: any
-</script>
+
 
 <script lang="ts">
     import {writable} from 'svelte/store'
     import type {Writable} from 'svelte/store'
     import {activeSession} from '~/store'
 
-    import Label from '~/components/elements/input/label.svelte'
-    import Input from '~/components/elements/input.svelte'
-    import Page from '~/components/layout/page.svelte'
-    import Form from '~/components/elements/form.svelte'
-    import Button from '~/components/elements/button.svelte'
-
     import {EthAccount, transferEOSToEth, transferETHToEOS, connectEthWallet} from '~/lib/evm'
+
+    import Page from '~/components/layout/page.svelte'
+    import Form from './swap/form.svelte'
+    import Confirm from './swap/confirm.svelte'
+    import Success from './swap/success.svelte'
+    import type { TransactResult } from 'anchor-link'
 
     const ethAccount: Writable<EthAccount | null> = writable(null)
 
-    let amount = '0.0000';
-        
-    let transferOption = 'eosToEth'
-
-    function handleChange(event: Event) {
-        const target = event.target as HTMLSelectElement;
-        transferOption = target.value;
-    }
+    let step = 'form'
+    let amount: string = '0.0000'
+    let transferOption: 'nativeToEvm' | 'evmToNative' = 'nativeToEvm'
+    let transactResult: TransactResult | ethers.providers.result | undefined
 
     async function transfer() {
         const ethWalletAccount = await connectEthWallet()
@@ -33,77 +27,35 @@
         }
         ethAccount.set(ethWalletAccount)
 
-        if (transferOption === 'eosToEth') {
-            transferEOSToEth({ nativeSession: $activeSession!, ethAccount: ethWalletAccount, amount })
+        if (transferOption === 'nativeToEvm') {
+            transactResult = await transferEOSToEth({ nativeSession: $activeSession!, ethAccount: ethWalletAccount, amount })
         } else {
-            transferETHToEOS({ nativeSession: $activeSession!, ethAccount: ethWalletAccount, amount })
+            transactResult = await transferETHToEOS({ nativeSession: $activeSession!, ethAccount: ethWalletAccount, amount })
+        }
+
+        if (transactResult) {
+            step = 'success'
+        } else {
+            throw new Error('Could not transfer.')
         }
     }
 </script>
 
-<style>
-    .container {
-        width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 1em;
-        text-align: center;
-        padding: 100px;
-    }
-
-    h3 {
-        margin-bottom: 2em;
-    }
-
-    strong {
-        font-weight: bold;
-    }
-
-    hr {
-        margin: 3em 0 1.5em 0;
-    }
-
-    .options {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2em;
-    }
-
-    button {
-        padding: 0.5em 1em;
-        font-size: 1em;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-        background-color: #ddd;
-    }
-
-    button.active {
-        background-color: #aaa;
-    }
+<style type="scss">
 </style>
 
 <Page divider={false}>
-    <div class="container">
-        <Form on:submit={transfer}>
-            <div class="left-section">
-                <!-- <Selector bind:value={token} /> -->
-                <Label>Amount</Label>
-                <Input bind:value={amount} />
-            </div>
-            <div class="right-section">
-                <select bind:value={transferOption} on:change={handleChange}>
-                    <option value="">Select an option...</option>
-                    <option value="eosToEth">EOS (Native)</option>
-                    <option value="ethToEos">EOS (EVM)</option>
-                </select>
-            </div>
-            <Button on:action={transfer}>Continue</Button>
-            <Button>Continue</Button>
-        </Form>
-    </div>
+    {#if step === 'form'}
+        <Form handleContinue={() => step = 'confirm'} bind:amount={amount} bind:transferOption={transferOption} />
+    {:else if step === 'confirm'}
+        <Confirm
+            amount={amount}
+            from={transferOption === 'nativeToEvm' ? 'EOS (Native)' : 'EOS (EVM)'}
+            to={transferOption === 'nativeToEvm' ? 'EOS (EVM)' : 'EOS (Native)'}
+            handleConfirm={transfer}
+            handleBack={() => step = 'form'}
+         />
+    {:else if step === 'success'}
+        <Success transferOption={transferOption} transactResult={transactResult} />
+    {/if}
 </Page>
