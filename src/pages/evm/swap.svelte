@@ -5,26 +5,39 @@
 <script lang="ts">
     import {writable} from 'svelte/store'
     import type {Writable} from 'svelte/store'
-   
+    import {activeSession} from '~/store'
+
     import Label from '~/components/elements/input/label.svelte'
     import Input from '~/components/elements/input.svelte'
     import Page from '~/components/layout/page.svelte'
     import Form from '~/components/elements/form.svelte'
     import Button from '~/components/elements/button.svelte'
-    import Selector from '~/components/elements/input/token/selector.svelte'
 
-    import type {EthAccount} from '~/lib/evm'
+    import {EthAccount, transferEOSToEth, transferETHToEOS, connectEthWallet} from '~/lib/evm'
 
     const ethAccount: Writable<EthAccount | null> = writable(null)
-        
-    let transferEosToEth = true
 
-    function swap() {
-        transferEosToEth = !transferEosToEth
+    let amount = '0.0000';
+        
+    let transferOption = 'eosToEth'
+
+    function handleChange(event: Event) {
+        const target = event.target as HTMLSelectElement;
+        transferOption = target.value;
     }
 
-    function transfer() {
-        console.log('transfer')
+    async function transfer() {
+        const ethWalletAccount = await connectEthWallet()
+        if (!ethWalletAccount) {
+            throw new Error('Could not connect to ETH wallet.')
+        }
+        ethAccount.set(ethWalletAccount)
+
+        if (transferOption === 'eosToEth') {
+            transferEOSToEth({ nativeSession: $activeSession!, ethAccount: ethWalletAccount, amount })
+        } else {
+            transferETHToEOS({ nativeSession: $activeSession!, ethAccount: ethWalletAccount, amount })
+        }
     }
 </script>
 
@@ -78,14 +91,18 @@
     <div class="container">
         <Form on:submit={transfer}>
             <div class="left-section">
-                <Selector bind:value={amount} />
+                <!-- <Selector bind:value={token} /> -->
                 <Label>Amount</Label>
                 <Input bind:value={amount} />
             </div>
             <div class="right-section">
-                <Selector bind:value={amount} />
+                <select bind:value={transferOption} on:change={handleChange}>
+                    <option value="">Select an option...</option>
+                    <option value="eosToEth">EOS (Native)</option>
+                    <option value="ethToEos">EOS (EVM)</option>
+                </select>
             </div>
-            <Button on:action={swap}>Swap</Button>
+            <Button on:action={transfer}>Continue</Button>
             <Button>Continue</Button>
         </Form>
     </div>
