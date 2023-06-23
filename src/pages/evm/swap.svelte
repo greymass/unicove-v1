@@ -3,6 +3,9 @@
 <script lang="ts">
     import {writable} from 'svelte/store'
     import type {Writable} from 'svelte/store'
+    import type { TransactResult } from 'anchor-link'
+    import { ethers } from 'ethers'
+
     import {activeSession} from '~/store'
 
     import {EthAccount, transferEOSToEth, transferETHToEOS, connectEthWallet} from '~/lib/evm'
@@ -11,14 +14,14 @@
     import Form from './swap/form.svelte'
     import Confirm from './swap/confirm.svelte'
     import Success from './swap/success.svelte'
-    import type { TransactResult } from 'anchor-link'
 
     const ethAccount: Writable<EthAccount | null> = writable(null)
 
     let step = 'form'
     let amount: string = '0.0000'
+    let error: string | undefined
     let transferOption: 'nativeToEvm' | 'evmToNative' = 'nativeToEvm'
-    let transactResult: TransactResult | ethers.providers.result | undefined
+    let transactResult: TransactResult | ethers.providers.TransactionResponse | undefined
 
     async function transfer() {
         const ethWalletAccount = await connectEthWallet()
@@ -36,26 +39,46 @@
         if (transactResult) {
             step = 'success'
         } else {
-            throw new Error('Could not transfer.')
+            error = 'Could not transfer.'
         }
     }
 </script>
 
 <style type="scss">
+     div {
+        max-width: 700px;
+        margin: 0 auto;
+    }
 </style>
 
 <Page divider={false}>
-    {#if step === 'form'}
-        <Form handleContinue={() => step = 'confirm'} bind:amount={amount} bind:transferOption={transferOption} />
-    {:else if step === 'confirm'}
-        <Confirm
-            amount={amount}
-            from={transferOption === 'nativeToEvm' ? 'EOS (Native)' : 'EOS (EVM)'}
-            to={transferOption === 'nativeToEvm' ? 'EOS (EVM)' : 'EOS (Native)'}
-            handleConfirm={transfer}
-            handleBack={() => step = 'form'}
-         />
-    {:else if step === 'success'}
-        <Success transferOption={transferOption} transactResult={transactResult} />
-    {/if}
+    <div class="container">
+      
+        {#if step === 'form'}
+            <Form handleContinue={() => step = 'confirm'} bind:amount={amount} bind:transferOption={transferOption} />
+        {:else if step === 'confirm'}
+            <Confirm
+                amount={amount}
+                from={transferOption === 'nativeToEvm' ? 'EOS (Native)' : 'EOS (EVM)'}
+                to={transferOption === 'nativeToEvm' ? 'EOS (EVM)' : 'EOS (Native)'}
+                handleConfirm={transfer}
+                handleBack={() => step = 'form'}
+            />
+        {:else if step === 'success' && transactResult}
+            <Success transferOption={transferOption} transactResult={transactResult} />
+        {:else if error}
+            <div class="container">
+                <div class="top-section">
+                    <h1>Transfer Failed</h1>
+                </div>
+
+                <table>
+                    <tr>
+                        <td>Error</td>
+                        <td>{error}</td>
+                    </tr>
+                </table>
+            </div>
+        {/if}
+    </div>
 </Page>

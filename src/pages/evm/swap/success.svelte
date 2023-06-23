@@ -2,9 +2,10 @@
     import Summary from "~/components/tx-follower/summary.svelte"
     import Button from "~/components/elements/button.svelte"
     import type { TransactResult } from "anchor-link"
+    import type { ethers } from "ethers";
 
     export let transferOption: string
-    export let transactResult: TransactResult
+    export let transactResult: TransactResult | ethers.providers.TransactionResponse
 </script>
 
 

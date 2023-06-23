@@ -6,12 +6,14 @@
 
     export let handleContinue: () => void
     export let amount: string
-    export let transferOption: string
+    export let transferOption: string = 'nativeToEvm'
 
     function handleChange(event: Event) {
         const target = event.target as HTMLSelectElement;
         transferOption = target.value;
     }
+
+    console.log(transferOption)
 </script>
 
 <style type="scss">
@@ -40,6 +42,20 @@
         .bottom-section {
             padding: 30px;
         }
+
+        select {
+            -webkit-appearance: none;  /* Remove default select dropdown indicator */
+            -moz-appearance: none;
+            appearance: none;
+            width: 170px;
+            padding: 10px 12px;
+            margin: 8px 0;
+            border: 1px solid var(--dark-grey);
+            border-radius: 12px;
+            background-color: var(--main-grey);
+            font-size: 12px;
+            color: var(--main-black)
+        }
     }
 </style>
 
@@ -53,17 +69,17 @@
             <div class="left-section">
                 <Label>From</Label>
                 <select bind:value={transferOption} on:change={handleChange}>
-                    <option value="eosToEth">EOS (Native)</option>
-                    <option value="ethToEos">EOS (EVM)</option>
+                    <option value="nativeToEvm">EOS (Native)</option>
+                    <option value="evmToNative">EOS (EVM)</option>
                 </select>
                 <Label>Amount</Label>
                 <Input bind:value={amount} />
             </div>
             <div class="right-section">
-                <Label>From</Label>
+                <Label>To</Label>
                 <select bind:value={transferOption} on:change={handleChange}>
-                    <option value="ethToEos">EOS (Native)</option>
-                    <option value="eosToEth">EOS (EVM)</option>
+                    <option value="evmToNative">EOS (Native)</option>
+                    <option value="nativeToEvm">EOS (EVM)</option>
                 </select>
             </div>
         </div>
