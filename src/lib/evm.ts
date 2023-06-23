@@ -110,7 +110,7 @@ interface TransferParams {
     nativeSession: LinkSession
 }
 
-export async function transferEOSToEth({nativeSession, evmAccount, amount}: TransferParams) {
+export async function transferNativeToEvm({nativeSession, evmAccount, amount}: TransferParams) {
     const action = Transfer.from({
         from: nativeSession.auth.actor,
         to: 'eosio.evm',
@@ -136,7 +136,7 @@ export async function transferEOSToEth({nativeSession, evmAccount, amount}: Tran
     }
 }
 
-export async function transferETHToEOS({nativeSession, evmAccount, amount}: TransferParams) {
+export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
     try {
         const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
 

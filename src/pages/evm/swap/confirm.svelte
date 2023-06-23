@@ -28,7 +28,7 @@
             <td>{Asset.from(Number(amount), "4,EOS")}</td>
         </tr>
     </table>
-    <Button on:click={handleConfirm}>
+    <Button on:action={handleConfirm}>
         Sign Transaction
     </Button>
 </div>

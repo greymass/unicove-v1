@@ -1,14 +1,12 @@
 
 
 <script lang="ts">
-    import {writable} from 'svelte/store'
-    import type {Writable} from 'svelte/store'
     import type { TransactResult } from 'anchor-link'
     import type { ethers } from 'ethers'
 
     import {activeSession, evmAccount} from '~/store'
 
-    import {transferEOSToEth, transferETHToEOS, connectEthWallet} from '~/lib/evm'
+    import {transferNativeToEvm, transferEvmToNative, connectEthWallet} from '~/lib/evm'
     import type { EvmAccount } from '~/lib/evm'
 
     import Page from '~/components/layout/page.svelte'
@@ -27,11 +25,17 @@
         if (!$evmAccount) {
             return error = 'An evm session is required.'
         }
-        if (transferOption === 'nativeToEvm') {
-            transactResult = await transferEOSToEth({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
-        } else {
-            transactResult = await transferETHToEOS({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
+
+        try {
+            if (transferOption === 'nativeToEvm') {
+                transactResult = await transferNativeToEvm({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
+            } else {
+                transactResult = await transferEvmToNative({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
+            }
+        } catch (error) {
+            return error = `Could not transfer. Error: ${error.message}`
         }
+        console.log({ transactResult })
 
         if (transactResult) {
             step = 'success'
