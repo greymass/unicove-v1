@@ -16,6 +16,8 @@
     import Success from './swap/success.svelte'
     import Error from './swap/error.svelte'
 
+    import { balances } from '~/stores/balances'
+
     const ethAccount: Writable<EthAccount | null> = writable(null)
 
     let step = 'form'
@@ -70,7 +72,6 @@
                 from={transferOption === 'nativeToEvm' ? 'EOS (Native)' : 'EOS (EVM)'}
                 to={transferOption === 'nativeToEvm' ? 'EOS (EVM)' : 'EOS (Native)'}
                 handleConfirm={transfer}
-                handleBack={() => step = 'form'}
             />
         {:else if step === 'success' && transactResult}
             <Success transferOption={transferOption} transactResult={transactResult} />

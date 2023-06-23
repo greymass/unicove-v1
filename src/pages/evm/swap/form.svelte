@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { currentAccountBalance } from '~/store'
+
     import Label from '~/components/elements/input/label.svelte'
     import Input from '~/components/elements/input.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -14,7 +16,8 @@
         transferOption = target.value;
     }
 
-    console.log(transferOption)
+    $: nativeToEVMLabel = `Native (${$currentAccountBalance})`
+    $: evmToNativeLabel = `EVM (not connected)`
 </script>
 
 <style type="scss">
@@ -74,7 +77,7 @@
                 <Select
                     bind:value={transferOption}
                     on:change={handleChange}
-                    options={[ {value: 'nativeToEvm', label: 'EOS (Native)'}, {value: 'evmToNative', label: 'EOS (EVM)'}]}
+                    options={[ {value: 'nativeToEvm', label: nativeToEVMLabel}, {value: 'evmToNative', label: evmToNativeLabel}]}
                 />
                 <Label>Amount</Label>
                 <Input bind:value={amount} />
@@ -84,7 +87,7 @@
                 <Select
                     bind:value={transferOption}
                     on:change={handleChange}
-                    options={[ {value: 'nativeToEvm', label: 'EOS (EVM)'}, {value: 'evmToNative', label: 'EOS (Native)'}]}
+                    options={[ {value: 'nativeToEvm', label: evmToNativeLabel}, {value: 'evmToNative', label: nativeToEVMLabel}]}
                 />
             </div>
         </div>
