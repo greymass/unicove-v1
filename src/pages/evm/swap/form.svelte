@@ -6,18 +6,28 @@
     import Form from '~/components/elements/form.svelte'
     import Button from '~/components/elements/button.svelte'
     import Select from '~/components/elements/select.svelte'
+    import { EvmAccount } from '~/lib/evm'
+    import {evmAccount} from '~/store'
 
     export let handleContinue: () => void
     export let amount: string
     export let transferOption: string = 'nativeToEvm'
 
+    let evmBalance: string
+
     function handleChange(event: Event) {
         const target = event.target as HTMLSelectElement;
         transferOption = target.value;
     }
-
+    
+    $: {
+        $evmAccount?.getBalance().then((balance) => {
+            evmBalance = String(balance)
+        })
+    }
+        
     $: nativeToEVMLabel = `Native (${$currentAccountBalance})`
-    $: evmToNativeLabel = `EVM (not connected)`
+    $: evmToNativeLabel = `EVM (${evmBalance ? evmBalance : 'not connected'})`
 </script>
 
 <style type="scss">

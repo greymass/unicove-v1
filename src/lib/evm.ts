@@ -14,23 +14,33 @@ declare global {
     }
 }
 
-interface EthAccountParams {
+interface EvmAccountParams {
     signer: ethers.providers.JsonRpcSigner
     address: string
 }
 
-export class EthAccount {
+export class EvmAccount {
     address: string
     signer: ethers.providers.JsonRpcSigner
 
-    static from(ethAccountParams: EthAccountParams) {
-        // Implement your logic here
-        return new EthAccount(ethAccountParams)
-    }
-
-    constructor({address, signer}: EthAccountParams) {
+    constructor({address, signer}: EvmAccountParams) {
         this.address = address
         this.signer = signer
+    }
+
+    static from(EvmAccountParams: EvmAccountParams) {
+        // Implement your logic here
+        return new EvmAccount(EvmAccountParams)
+    }
+
+    async sendTransaction(tx: ethers.providers.TransactionRequest) {
+        return this.signer.sendTransaction(tx)
+    }
+
+    async getBalance() {
+        const wei = await this.signer.getBalance()
+
+        return formatEOS(ethers.utils.formatEther(wei))
     }
 }
 
@@ -96,16 +106,16 @@ function uint64ToAddr(str: string) {
 
 interface TransferParams {
     amount: string
-    ethAccount: EthAccount
+    evmAccount: EvmAccount
     nativeSession: LinkSession
 }
 
-export async function transferEOSToEth({nativeSession, ethAccount, amount}: TransferParams) {
+export async function transferEOSToEth({nativeSession, evmAccount, amount}: TransferParams) {
     const action = Transfer.from({
         from: nativeSession.auth.actor,
         to: 'eosio.evm',
         quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
-        memo: ethAccount.address,
+        memo: evmAccount.address,
     })
 
     let result
@@ -126,19 +136,19 @@ export async function transferEOSToEth({nativeSession, ethAccount, amount}: Tran
     }
 }
 
-export async function transferETHToEOS({nativeSession, ethAccount, amount}: TransferParams) {
+export async function transferETHToEOS({nativeSession, evmAccount, amount}: TransferParams) {
     try {
         const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
 
         const gas = await provider.estimateGas({
-            from: ethAccount.address,
+            from: evmAccount.address,
             to: targetEvmAddress,
             value: ethers.utils.parseEther(amount),
             gasPrice: await provider.getGasPrice(),
             data: ethers.utils.formatBytes32String(''),
         })
-        const result = await ethAccount.signer.sendTransaction({
-            from: ethAccount.address,
+        const result = await evmAccount.sendTransaction({
+            from: evmAccount.address,
             to: targetEvmAddress,
             value: ethers.utils.parseEther(amount),
             gasPrice: await provider.getGasPrice(),
@@ -176,7 +186,7 @@ async function switchNetwork() {
         })
 }
 
-export async function connectEthWallet(): Promise<EthAccount | undefined> {
+export async function connectEthWallet(): Promise<EvmAccount> {
     if (window.ethereum) {
         provider = new ethers.providers.Web3Provider(window.ethereum)
         let networkId = await provider.getNetwork()
@@ -188,11 +198,17 @@ export async function connectEthWallet(): Promise<EthAccount | undefined> {
         await window.ethereum.request({method: 'eth_requestAccounts'})
         const signer = provider.getSigner()
 
-        return EthAccount.from({
+        await window.ethereum.get_currency_balance
+
+        return EvmAccount.from({
             address: await signer.getAddress(),
             signer,
         })
     } else {
-        alert('You need to install Metamask')
+        throw 'You need to install Metamask in order to use this feature.'
     }
+}
+
+function formatEOS(amount: String) {
+    return `${Number(amount).toFixed(4)} EOS`
 }

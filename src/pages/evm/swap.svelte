@@ -6,19 +6,16 @@
     import type { TransactResult } from 'anchor-link'
     import type { ethers } from 'ethers'
 
-    import {activeSession} from '~/store'
+    import {activeSession, evmAccount} from '~/store'
 
-    import {EthAccount, transferEOSToEth, transferETHToEOS, connectEthWallet} from '~/lib/evm'
+    import {transferEOSToEth, transferETHToEOS, connectEthWallet} from '~/lib/evm'
+    import type { EvmAccount } from '~/lib/evm'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './swap/form.svelte'
     import Confirm from './swap/confirm.svelte'
     import Success from './swap/success.svelte'
     import Error from './swap/error.svelte'
-
-    import { balances } from '~/stores/balances'
-
-    const ethAccount: Writable<EthAccount | null> = writable(null)
 
     let step = 'form'
     let amount: string = '0.0000'
@@ -27,16 +24,13 @@
     let transactResult: TransactResult | ethers.providers.TransactionResponse | undefined
 
     async function transfer() {
-        const ethWalletAccount = await connectEthWallet()
-        if (!ethWalletAccount) {
-            return error = 'Could not connect to ETH wallet.'
+        if (!$evmAccount) {
+            return error = 'An evm session is required.'
         }
-        ethAccount.set(ethWalletAccount)
-
         if (transferOption === 'nativeToEvm') {
-            transactResult = await transferEOSToEth({ nativeSession: $activeSession!, ethAccount: ethWalletAccount, amount })
+            transactResult = await transferEOSToEth({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
         } else {
-            transactResult = await transferETHToEOS({ nativeSession: $activeSession!, ethAccount: ethWalletAccount, amount })
+            transactResult = await transferETHToEOS({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
         }
 
         if (transactResult) {
@@ -50,6 +44,22 @@
         step = 'form'
         error = undefined
         transactResult = undefined
+    }
+
+    async function submitForm() {
+        if ($evmAccount) {
+            return step = 'confirm'
+        }
+
+        let ethWalletAccount: EvmAccount | undefined
+
+        try {
+            ethWalletAccount = await connectEthWallet()
+        } catch (e) {
+            return error = `Could not connect to ETH wallet. Error: ${e.message}`
+        }
+
+        evmAccount.set(ethWalletAccount)
     }
 </script>
 
@@ -65,7 +75,7 @@
         {#if error}
             <Error error={error} handleReset={handleReset} />
         {:else if step === 'form'}
-            <Form handleContinue={() => step = 'confirm'} bind:amount={amount} bind:transferOption={transferOption} />
+            <Form handleContinue={submitForm} bind:amount={amount} bind:transferOption={transferOption} />
         {:else if step === 'confirm'}
             <Confirm
                 amount={amount}
