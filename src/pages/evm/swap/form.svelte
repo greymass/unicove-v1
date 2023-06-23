@@ -6,7 +6,6 @@
     import Form from '~/components/elements/form.svelte'
     import Button from '~/components/elements/button.svelte'
     import Select from '~/components/elements/select.svelte'
-    import { EvmAccount } from '~/lib/evm'
     import {evmAccount} from '~/store'
 
     export let handleContinue: () => void
@@ -14,16 +13,20 @@
     export let transferOption: string = 'nativeToEvm'
 
     let evmBalance: string
+    let validAmount = false
 
-    function handleChange(event: Event) {
-        const target = event.target as HTMLSelectElement;
-        transferOption = target.value;
+    function handleChange(event: CustomEvent) {
+        transferOption = event.detail;
     }
     
     $: {
         $evmAccount?.getBalance().then((balance) => {
             evmBalance = String(balance)
         })
+    }
+
+    $: {
+       validAmount = Number(amount) > 0
     }
         
     $: nativeToEVMLabel = `Native (${$currentAccountBalance})`
@@ -102,7 +105,7 @@
             </div>
         </div>
         <div class="bottom-section">  
-            <Button on:action={handleContinue}>Continue</Button>
+            <Button disabled={!validAmount} on:action={handleContinue}>Continue</Button>
         </div>
     </Form>
 </div>
