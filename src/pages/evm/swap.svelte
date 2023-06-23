@@ -19,7 +19,8 @@
     let amount: string = '0.0000'
     let error: string | undefined
     let transferOption: 'nativeToEvm' | 'evmToNative' = 'nativeToEvm'
-    let transactResult: TransactResult | ethers.providers.TransactionResponse | undefined
+    let nativeTransactResult: TransactResult | undefined
+    let evmTransactResult: ethers.providers.TransactionResponse | undefined
 
     async function transfer() {
         if (!$evmAccount) {
@@ -28,16 +29,15 @@
 
         try {
             if (transferOption === 'nativeToEvm') {
-                transactResult = await transferNativeToEvm({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
+                nativeTransactResult = await transferNativeToEvm({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
             } else {
-                transactResult = await transferEvmToNative({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
+                evmTransactResult = await transferEvmToNative({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
             }
         } catch (error) {
             return error = `Could not transfer. Error: ${error.message}`
         }
-        console.log({ transactResult })
 
-        if (transactResult) {
+        if (nativeTransactResult || evmTransactResult) {
             step = 'success'
         } else {
             error = 'Could not transfer.'
@@ -47,7 +47,8 @@
     function handleReset() {
         step = 'form'
         error = undefined
-        transactResult = undefined
+        nativeTransactResult = undefined
+        evmTransactResult = undefined
     }
 
     async function submitForm() {
@@ -87,8 +88,8 @@
                 to={transferOption === 'nativeToEvm' ? 'EOS (EVM)' : 'EOS (Native)'}
                 handleConfirm={transfer}
             />
-        {:else if step === 'success' && transactResult}
-            <Success transferOption={transferOption} transactResult={transactResult} />
+        {:else if step === 'success' && nativeTransactResult || evmTransactResult}
+            <Success transferOption={transferOption} nativeTransactResult={nativeTransactResult} evmTransactResult={evmTransactResult} />
         {/if}
     </div>
 </Page>
