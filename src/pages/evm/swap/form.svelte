@@ -3,6 +3,7 @@
     import Input from '~/components/elements/input.svelte'
     import Form from '~/components/elements/form.svelte'
     import Button from '~/components/elements/button.svelte'
+    import Select from '~/components/elements/select.svelte'
 
     export let handleContinue: () => void
     export let amount: string
@@ -43,18 +44,20 @@
             padding: 30px;
         }
 
-        select {
-            -webkit-appearance: none;  /* Remove default select dropdown indicator */
-            -moz-appearance: none;
-            appearance: none;
-            width: 170px;
-            padding: 10px 12px;
-            margin: 8px 0;
-            border: 1px solid var(--dark-grey);
-            border-radius: 12px;
-            background-color: var(--main-grey);
-            font-size: 12px;
-            color: var(--main-black)
+        form {
+            select {
+                -webkit-appearance: none;  /* Remove default select dropdown indicator */
+                -moz-appearance: none;
+                appearance: none;
+                width: 170px;
+                padding: 10px 12px;
+                margin: 8px 0;
+                border: 1px solid var(--dark-grey);
+                border-radius: 12px;
+                background-color: var(--main-grey);
+                font-size: 12px;
+                color: var(--main-black)
+            }
         }
     }
 </style>
@@ -68,19 +71,21 @@
         <div class="middle-section">
             <div class="left-section">
                 <Label>From</Label>
-                <select bind:value={transferOption} on:change={handleChange}>
-                    <option value="nativeToEvm">EOS (Native)</option>
-                    <option value="evmToNative">EOS (EVM)</option>
-                </select>
+                <Select
+                    bind:value={transferOption}
+                    on:change={handleChange}
+                    options={[ {value: 'nativeToEvm', label: 'EOS (Native)'}, {value: 'evmToNative', label: 'EOS (EVM)'}]}
+                />
                 <Label>Amount</Label>
                 <Input bind:value={amount} />
             </div>
             <div class="right-section">
                 <Label>To</Label>
-                <select bind:value={transferOption} on:change={handleChange}>
-                    <option value="evmToNative">EOS (Native)</option>
-                    <option value="nativeToEvm">EOS (EVM)</option>
-                </select>
+                <Select
+                    bind:value={transferOption}
+                    on:change={handleChange}
+                    options={[ {value: 'nativeToEvm', label: 'EOS (EVM)'}, {value: 'evmToNative', label: 'EOS (Native)'}]}
+                />
             </div>
         </div>
         <div class="bottom-section">  

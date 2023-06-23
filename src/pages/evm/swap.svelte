@@ -4,7 +4,7 @@
     import {writable} from 'svelte/store'
     import type {Writable} from 'svelte/store'
     import type { TransactResult } from 'anchor-link'
-    import { ethers } from 'ethers'
+    import type { ethers } from 'ethers'
 
     import {activeSession} from '~/store'
 
@@ -14,6 +14,7 @@
     import Form from './swap/form.svelte'
     import Confirm from './swap/confirm.svelte'
     import Success from './swap/success.svelte'
+    import Error from './swap/error.svelte'
 
     const ethAccount: Writable<EthAccount | null> = writable(null)
 
@@ -26,7 +27,7 @@
     async function transfer() {
         const ethWalletAccount = await connectEthWallet()
         if (!ethWalletAccount) {
-            throw new Error('Could not connect to ETH wallet.')
+            return error = 'Could not connect to ETH wallet.'
         }
         ethAccount.set(ethWalletAccount)
 
@@ -42,6 +43,12 @@
             error = 'Could not transfer.'
         }
     }
+
+    function handleReset() {
+        step = 'form'
+        error = undefined
+        transactResult = undefined
+    }
 </script>
 
 <style type="scss">
@@ -52,9 +59,10 @@
 </style>
 
 <Page divider={false}>
-    <div class="container">
-      
-        {#if step === 'form'}
+    <div class="container"> 
+        {#if error}
+            <Error error={error} handleReset={handleReset} />
+        {:else if step === 'form'}
             <Form handleContinue={() => step = 'confirm'} bind:amount={amount} bind:transferOption={transferOption} />
         {:else if step === 'confirm'}
             <Confirm
@@ -66,19 +74,6 @@
             />
         {:else if step === 'success' && transactResult}
             <Success transferOption={transferOption} transactResult={transactResult} />
-        {:else if error}
-            <div class="container">
-                <div class="top-section">
-                    <h1>Transfer Failed</h1>
-                </div>
-
-                <table>
-                    <tr>
-                        <td>Error</td>
-                        <td>{error}</td>
-                    </tr>
-                </table>
-            </div>
         {/if}
     </div>
 </Page>
