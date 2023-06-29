@@ -7,7 +7,6 @@
     import {activeSession, evmAccount} from '~/store'
 
     import {transferNativeToEvm, transferEvmToNative, connectEthWallet} from '~/lib/evm'
-    import type { EvmAccount } from '~/lib/evm'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './swap/form.svelte'
@@ -44,11 +43,12 @@
         }
     }
 
-    function handleReset() {
+    function handleBack() {
         step = 'form'
         error = undefined
         nativeTransactResult = undefined
         evmTransactResult = undefined
+        amount = '0.0000'
     }
 
     async function submitForm() {
@@ -56,7 +56,11 @@
             return step = 'confirm'
         }
 
-        let ethWalletAccount: EvmAccount | undefined
+        connectEvmWallet()
+    }
+
+    async function connectEvmWallet() {
+        let ethWalletAccount
 
         try {
             ethWalletAccount = await connectEthWallet()
@@ -78,18 +82,29 @@
 <Page divider={false}>
     <div class="container"> 
         {#if error}
-            <Error error={error} handleReset={handleReset} />
+            <Error error={error} handleBack={handleBack} />
         {:else if step === 'form'}
-            <Form handleContinue={submitForm} bind:amount={amount} bind:transferOption={transferOption} />
+            <Form
+                handleContinue={submitForm}
+                connectEvmWallet={connectEvmWallet}
+                bind:amount={amount}
+                bind:transferOption={transferOption}
+            />
         {:else if step === 'confirm'}
             <Confirm
                 amount={amount}
-                from={transferOption === 'nativeToEvm' ? 'EOS (Native)' : 'EOS (EVM)'}
-                to={transferOption === 'nativeToEvm' ? 'EOS (EVM)' : 'EOS (Native)'}
+                from={transferOption === 'nativeToEvm' ? 'Native' : 'EVM'}
+                to={transferOption === 'nativeToEvm' ? 'EVM' : 'Native'}
                 handleConfirm={transfer}
+                handleBack={handleBack}
             />
         {:else if step === 'success' && nativeTransactResult || evmTransactResult}
-            <Success transferOption={transferOption} nativeTransactResult={nativeTransactResult} evmTransactResult={evmTransactResult} />
+            <Success 
+                transferOption={transferOption}
+                nativeTransactResult={nativeTransactResult}
+                evmTransactResult={evmTransactResult}
+                handleBack={handleBack}
+            />
         {/if}
     </div>
 </Page>

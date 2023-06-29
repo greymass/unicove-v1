@@ -1,11 +1,16 @@
 <script lang="ts">
     import { Asset } from "@greymass/eosio"
+    import { getAddress } from "ethers/lib/utils"
     import Button from "~/components/elements/button.svelte"
+
+    import {evmAccount, activeSession} from '~/store'
+
 
     export let from: string
     export let to: string
     export let amount: string
     export let handleConfirm: () => void
+    export let handleBack: () => void
 </script>
 
 <div class="container">
@@ -16,24 +21,30 @@
 
     <table>
         <tr>
-            <td>From</td>
-            <td>{from}</td>
+            <td>From {from}</td>
+            <td>{from === 'EVM' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
-            <td>To</td>
-            <td>{to}</td>
+            <td>To {to}</td>
+            <td>{from === 'Native' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
             <td>Amount</td>
             <td>{Asset.from(Number(amount), "4,EOS")}</td>
         </tr>
     </table>
-    <Button on:action={handleConfirm}>
-        Sign Transaction
-    </Button>
+    <div class="bottom-section">
+        <Button fluid style="primary" on:action={handleConfirm}>
+            Sign Transaction
+        </Button>
+        <br />
+        <Button fluid on:action={handleBack}>
+            Cancel
+        </Button>
+    </div>
 </div>
 
-<style>
+<style type="scss">
 .container {
     max-width: 500px;
     margin: auto;
@@ -41,23 +52,39 @@
     background-color: transparent;
     text-align: center;
     border: 2px solid var(--main-grey);
+
+    .top-section {
+        margin-bottom: 2em;
+    }
+
+    table {
+        width: 100%;
+        margin-bottom: 2em;
+
+        tr {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            border-top: 1px solid #ddd;
+
+
+            &:first-child {
+                border: none;
+            }
+
+            td {
+                padding: 1.5em;
+            }
+
+        }
+    }
+
+
+    .bottom-section {
+        max-width: 300px;
+        margin: auto;
+    }
 }
 
-.top-section {
-    margin-bottom: 2em;
-}
 
-table {
-    width: 100%;
-    margin-bottom: 2em;
-}
-
-table td {
-    padding: 1.5em;
-    border-top: 1px solid #ddd;
-}
-
-table tr:first-child td {
-    border: none;
-}
 </style>

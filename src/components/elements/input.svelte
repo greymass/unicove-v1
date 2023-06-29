@@ -29,7 +29,7 @@
     const form: Form = getContext('form')
 
     const setInitialFormValidation = async () => {
-        form.setInput(name, isValid ? await isValid(value) : true)
+        form.setInput(name, isValid ? false : true)
     }
 
     if (form) {

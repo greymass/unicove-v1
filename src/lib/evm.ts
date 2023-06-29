@@ -130,6 +130,8 @@ export async function transferNativeToEvm({nativeSession, evmAccount, amount}: T
             },
         })
 
+        console.log({result})
+
         return result
     } catch (error) {
         throw new Error(`Transaction failed: ${error}`)

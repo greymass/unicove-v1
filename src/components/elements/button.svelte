@@ -31,6 +31,7 @@
         if (href === undefined) {
             event.preventDefault()
         }
+
         if (!formValidation || (!$formDisabled && !disabled)) {
             dispatch('action', event)
         }
@@ -195,6 +196,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
         &.loading {
             :global(.content .icon:not(.loading)) {

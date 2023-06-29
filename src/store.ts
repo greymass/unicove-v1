@@ -11,7 +11,7 @@ import type {EvmAccount} from './lib/evm'
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
 
-/** Active anchor link session, aka logged in user. */
+/** Active anchor link seactiveSessionssion, aka logged in user. */
 export const activeSession = writable<LinkSession | undefined>(undefined)
 
 /** Active EVM account, aka logged in user. */

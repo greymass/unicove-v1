@@ -1,32 +1,47 @@
 <script lang="ts">
-    import { currentAccountBalance } from '~/store'
+    import { Asset as CoreAsset } from '@greymass/eosio'
+    import { currentAccountBalance, evmAccount } from '~/store'
 
     import Label from '~/components/elements/input/label.svelte'
-    import Input from '~/components/elements/input.svelte'
     import Form from '~/components/elements/form.svelte'
     import Button from '~/components/elements/button.svelte'
     import Select from '~/components/elements/select.svelte'
-    import {evmAccount} from '~/store'
+    import Asset from '~/components/elements/input/asset.svelte'
 
     export let handleContinue: () => void
-    export let amount: string
+    export let connectEvmWallet: () => void
+    export let amount: string = '0.0001'
     export let transferOption: string = 'nativeToEvm'
 
-    let evmBalance: string
+    let evmBalance: CoreAsset | undefined
     let validAmount = false
 
-    function handleChange(event: CustomEvent) {
+    function handleSelectChange(event: CustomEvent) {
         transferOption = event.detail;
+
+        if (!$evmAccount) {
+            connectEvmWallet()
+        }
+    }
+
+    function useEntireBalance() {
+        if (transferOption === 'nativeToEvm') {
+            amount = $currentAccountBalance?.value.toFixed(4) || '0.0000'
+        } else {
+            amount = evmBalance?.value.toFixed(4) || '0.0000'
+        }
+    }
+
+    function onContinue() {
+        if (validAmount) {
+            handleContinue()
+        }
     }
     
     $: {
         $evmAccount?.getBalance().then((balance) => {
-            evmBalance = String(balance)
+            evmBalance = CoreAsset.from(Number(balance.split(' ')[0]), '4,EOS')
         })
-    }
-
-    $: {
-       validAmount = Number(amount) > 0
     }
         
     $: nativeToEVMLabel = `Native (${$currentAccountBalance})`
@@ -41,39 +56,44 @@
         text-align: center;
 
         .top-section {
-            padding: 20px;
+            padding: 10px;
+
+            h1 {
+                margin-bottom: 10px;
+            }
         }
         .middle-section {
             display: flex;
             justify-content: space-between;
 
             .left-section, .right-section {
-                width: 50%;  /* or set a flex-basis instead */
-            }
+                border: 2px solid var(--main-grey);
+                border-radius: 10px;
+                width: 44%;  /* or set a flex-basis instead */
+                margin: 3%;
+                padding: 20px;
 
-            .left-section {
-                border-right: 1px solid #ddd;
+                button {
+                    cursor: pointer;
+                    color: var(--main-blue);
+                    font-size: 0.7em;
+                    margin: 10px 15px;
+                    display: block;
+                    float: right;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    background: none;
+                    border: none;
+                    padding: 0;
+                }
             }
+            
         }
 
         .bottom-section {
             padding: 30px;
-        }
-
-        form {
-            select {
-                -webkit-appearance: none;  /* Remove default select dropdown indicator */
-                -moz-appearance: none;
-                appearance: none;
-                width: 170px;
-                padding: 10px 12px;
-                margin: 8px 0;
-                border: 1px solid var(--dark-grey);
-                border-radius: 12px;
-                background-color: var(--main-grey);
-                font-size: 12px;
-                color: var(--main-black)
-            }
+            max-width: 300px;
+            margin: auto;
         }
     }
 </style>
@@ -86,26 +106,36 @@
     <Form>
         <div class="middle-section">
             <div class="left-section">
-                <Label>From</Label>
+                <Label align="left">From</Label>
                 <Select
                     bind:value={transferOption}
-                    on:change={handleChange}
+                    on:change={handleSelectChange}
                     options={[ {value: 'nativeToEvm', label: nativeToEVMLabel}, {value: 'evmToNative', label: evmToNativeLabel}]}
+                    fluid
                 />
-                <Label>Amount</Label>
-                <Input bind:value={amount} />
+                <Label align="left">Amount</Label>
+                <Asset
+                    fluid
+                    balance={transferOption === 'nativeToEvm' ? $currentAccountBalance : evmBalance}
+                    bind:valid={validAmount}
+                    bind:value={amount}
+                />
+                <button on:click={useEntireBalance}>
+                    Entire Balance
+                </button>
             </div>
             <div class="right-section">
-                <Label>To</Label>
+                <Label align="left">To</Label>
                 <Select
                     bind:value={transferOption}
-                    on:change={handleChange}
+                    on:change={handleSelectChange}
                     options={[ {value: 'nativeToEvm', label: evmToNativeLabel}, {value: 'evmToNative', label: nativeToEVMLabel}]}
+                    fluid
                 />
             </div>
         </div>
         <div class="bottom-section">  
-            <Button disabled={!validAmount} on:action={handleContinue}>Continue</Button>
+            <Button fluid style="primary" disabled={!validAmount} on:action={onContinue}>Continue</Button>
         </div>
     </Form>
 </div>

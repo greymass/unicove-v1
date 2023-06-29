@@ -2,7 +2,7 @@
     import Button from "~/components/elements/button.svelte"
 
     export let error: string
-    export let handleReset: () => void
+    export let handleBack: () => void
 </script>
 
 <div class="container">
@@ -17,7 +17,7 @@
         </tr>
     </table>
 
-    <Button on:click={handleReset}>
+    <Button on:click={handleBack}>
         Retry
     </Button>
 </div>

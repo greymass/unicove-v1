@@ -9,6 +9,7 @@
     export let transferOption: string
     export let nativeTransactResult: TransactResult | undefined
     export let evmTransactResult: ethers.providers.TransactionResponse | undefined
+    export let handleBack: () => void
 </script>
 
 
@@ -27,7 +28,7 @@
             </tr>
             <tr>
                 <td>
-                    <Button>
+                    <Button style="primary" on:action={handleBack}>
                         New Transfer
                     </Button>
                 </td>
@@ -42,35 +43,30 @@
 {/if}
 
 <style>
-.container {
-    font-family: Arial, sans-serif;
-    max-width: 500px;
-    margin: auto;
-    padding: 3em;
-    background-color: transparent;
-    text-align: center;
-}
+    .container {
+        font-family: Arial, sans-serif;
+        max-width: 500px;
+        margin: auto;
+        padding: 3em;
+        background-color: transparent;
+        text-align: center;
+    }
 
-.top-section {
-    margin-bottom: 2em;
-}
+    .top-section {
+        margin-bottom: 2em;
+    }
 
-table {
-    width: 100%;
-    margin-bottom: 2em;
-}
+    table {
+        width: 100%;
+        margin-bottom: 2em;
+    }
 
-table td {
-    padding: 1em;
-    border-bottom: 1px solid #ddd;
-}
+    table td {
+        padding: 1em;
+        border-bottom: 1px solid #ddd;
+    }
 
-table tr:first-child td {
-    border-top: 1px solid #ddd;
-}
-
-Button {
-    display: block;
-    margin: 1em auto;
-}
+    table tr:first-child td {
+        border-top: 1px solid #ddd;
+    }
 </style>
