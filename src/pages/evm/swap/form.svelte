@@ -9,7 +9,6 @@
     import Asset from '~/components/elements/input/asset.svelte'
 
     export let handleContinue: () => void
-    export let connectEvmWallet: () => void
     export let amount: string = '0.0001'
     export let transferOption: string = 'nativeToEvm'
 
@@ -20,10 +19,6 @@
         transferOption = event.detail
 
         amount = ''
-
-        if (!$evmAccount) {
-            connectEvmWallet()
-        }
     }
 
     function useEntireBalance() {

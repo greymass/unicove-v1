@@ -56,11 +56,7 @@
     }
 
     async function submitForm() {
-        if ($evmAccount) {
-            return (step = 'confirm')
-        }
-
-        connectEvmWallet()
+        step = 'confirm'
     }
 
     async function connectEvmWallet() {
@@ -74,6 +70,8 @@
 
         evmAccount.set(ethWalletAccount)
     }
+
+    connectEvmWallet()
 </script>
 
 <style type="scss">
@@ -88,7 +86,7 @@
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
         {:else if step === 'form'}
-            <Form handleContinue={submitForm} {connectEvmWallet} bind:amount bind:transferOption />
+            <Form handleContinue={submitForm} bind:amount bind:transferOption />
         {:else if step === 'confirm'}
             <Confirm
                 {amount}
