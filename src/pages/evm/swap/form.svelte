@@ -19,6 +19,8 @@
     function handleSelectChange(event: CustomEvent) {
         transferOption = event.detail
 
+        amount = ''
+
         if (!$evmAccount) {
             connectEvmWallet()
         }
@@ -119,6 +121,7 @@
                 <Label align="left">Amount</Label>
                 <Asset
                     fluid
+                    placeholder="0.0000"
                     balance={transferOption === 'nativeToEvm' ? $currentAccountBalance : evmBalance}
                     bind:valid={validAmount}
                     bind:value={amount}

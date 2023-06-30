@@ -118,50 +118,35 @@ export async function transferNativeToEvm({nativeSession, evmAccount, amount}: T
         memo: evmAccount.address,
     })
 
-    let result
-
-    try {
-        result = await nativeSession.transact({
-            action: {
-                authorization: [nativeSession.auth],
-                account: Name.from('eosio.token'),
-                name: Name.from('transfer'),
-                data: action,
-            },
-        })
-
-        console.log({result})
-
-        return result
-    } catch (error) {
-        throw new Error(`Transaction failed: ${error}`)
-    }
+    return nativeSession.transact({
+        action: {
+            authorization: [nativeSession.auth],
+            account: Name.from('eosio.token'),
+            name: Name.from('transfer'),
+            data: action,
+        },
+    })
 }
 
 export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
-    try {
-        const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
+    const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
 
-        const gas = await provider.estimateGas({
-            from: evmAccount.address,
-            to: targetEvmAddress,
-            value: ethers.utils.parseEther(amount),
-            gasPrice: await provider.getGasPrice(),
-            data: ethers.utils.formatBytes32String(''),
-        })
-        const result = await evmAccount.sendTransaction({
-            from: evmAccount.address,
-            to: targetEvmAddress,
-            value: ethers.utils.parseEther(amount),
-            gasPrice: await provider.getGasPrice(),
-            gasLimit: gas,
-            data: ethers.utils.formatBytes32String(''),
-        })
+    const gas = await provider.estimateGas({
+        from: evmAccount.address,
+        to: targetEvmAddress,
+        value: ethers.utils.parseEther(amount),
+        gasPrice: await provider.getGasPrice(),
+        data: ethers.utils.formatBytes32String(''),
+    })
 
-        return result
-    } catch (err) {
-        console.error(err)
-    }
+    return evmAccount.sendTransaction({
+        from: evmAccount.address,
+        to: targetEvmAddress,
+        value: ethers.utils.parseEther(amount),
+        gasPrice: await provider.getGasPrice(),
+        gasLimit: gas,
+        data: ethers.utils.formatBytes32String(''),
+    })
 }
 
 async function switchNetwork() {

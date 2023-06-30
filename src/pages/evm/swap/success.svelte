@@ -10,34 +10,41 @@
     export let nativeTransactResult: TransactResult | undefined
     export let evmTransactResult: ethers.providers.TransactionResponse | undefined
     export let handleBack: () => void
+
+    const blockExplorerUrl = 'https://explorer.evm.eosnetwork.com/tx/'
 </script>
 
-<style>
+<style type="scss">
     .container {
         font-family: Arial, sans-serif;
-        max-width: 500px;
         margin: auto;
         padding: 3em;
         background-color: transparent;
         text-align: center;
-    }
 
-    .top-section {
-        margin-bottom: 2em;
-    }
+        .top-section {
+            margin-bottom: 2em;
+        }
 
-    table {
-        width: 100%;
-        margin-bottom: 2em;
-    }
+        table {
+            width: 100%;
+            margin-bottom: 2em;
 
-    table td {
-        padding: 1em;
-        border-bottom: 1px solid #ddd;
-    }
+            tr:first-child td {
+                border-top: 1px solid #ddd;
+            }
 
-    table tr:first-child td {
-        border-top: 1px solid #ddd;
+            tr td {
+                padding: 1em;
+                border-bottom: 1px solid #ddd;
+            }
+        }
+
+        .bottom-section {
+            display: flex;
+            justify-content: center;
+            gap: 1em;
+        }
     }
 </style>
 
@@ -54,14 +61,13 @@
                 <td>Transaction ID</td>
                 <td>{evmTransactResult?.hash}</td>
             </tr>
-            <tr>
-                <td>
-                    <Button style="primary" on:action={handleBack}>New Transfer</Button>
-                </td>
-                <td>
-                    <Button>View on Block Explorer</Button>
-                </td>
-            </tr>
         </table>
+
+        <div class="bottom-section">
+            <Button style="primary" on:action={handleBack}>New Transfer</Button>
+            <Button on:action={() => window.open(`${blockExplorerUrl}${evmTransactResult?.hash}`)}
+                >View on Block Explorer</Button
+            >
+        </div>
     </div>
 {/if}

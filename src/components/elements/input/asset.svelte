@@ -33,7 +33,7 @@
                 validateNonZero(value, symbol)
             }
             if (balance) {
-                // validateBalance(value, balance)
+                validateBalance(value, balance)
             }
         } catch (errorObject) {
             errorMessage = errorObject.message

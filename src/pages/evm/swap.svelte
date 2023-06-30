@@ -13,15 +13,15 @@
     import Error from './swap/error.svelte'
 
     let step = 'form'
-    let amount: string = '0.0000'
-    let error: string | undefined
+    let amount: string = ''
+    let errorMessage: string | undefined
     let transferOption: 'nativeToEvm' | 'evmToNative' = 'nativeToEvm'
     let nativeTransactResult: TransactResult | undefined
     let evmTransactResult: ethers.providers.TransactionResponse | undefined
 
     async function transfer() {
         if (!$evmAccount) {
-            return (error = 'An evm session is required.')
+            return (errorMessage = 'An evm session is required.')
         }
 
         try {
@@ -39,22 +39,20 @@
                 })
             }
         } catch (error) {
-            return (error = `Could not transfer. Error: ${error.message}`)
+            return (errorMessage = `Could not transfer. Error: ${
+                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+            }`)
         }
 
-        if (nativeTransactResult || evmTransactResult) {
-            step = 'success'
-        } else {
-            error = 'Could not transfer.'
-        }
+        step = 'success'
     }
 
     function handleBack() {
         step = 'form'
-        error = undefined
+        errorMessage = undefined
         nativeTransactResult = undefined
         evmTransactResult = undefined
-        amount = '0.0000'
+        amount = ''
     }
 
     async function submitForm() {
@@ -71,7 +69,7 @@
         try {
             ethWalletAccount = await connectEthWallet()
         } catch (e) {
-            return (error = `Could not connect to ETH wallet. Error: ${e.message}`)
+            return (errorMessage = `Could not connect to ETH wallet. Error: ${e.message}`)
         }
 
         evmAccount.set(ethWalletAccount)
@@ -87,8 +85,8 @@
 
 <Page divider={false}>
     <div class="container">
-        {#if error}
-            <Error {error} {handleBack} />
+        {#if errorMessage}
+            <Error error={errorMessage} {handleBack} />
         {:else if step === 'form'}
             <Form handleContinue={submitForm} {connectEvmWallet} bind:amount bind:transferOption />
         {:else if step === 'confirm'}
