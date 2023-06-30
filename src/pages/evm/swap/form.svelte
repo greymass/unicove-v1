@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Asset as CoreAsset } from '@greymass/eosio'
-    import { currentAccountBalance, evmAccount } from '~/store'
+    import {Asset as CoreAsset} from '@greymass/eosio'
+    import {currentAccountBalance, evmAccount} from '~/store'
 
     import Label from '~/components/elements/input/label.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -17,7 +17,7 @@
     let validAmount = false
 
     function handleSelectChange(event: CustomEvent) {
-        transferOption = event.detail;
+        transferOption = event.detail
 
         if (!$evmAccount) {
             connectEvmWallet()
@@ -37,13 +37,13 @@
             handleContinue()
         }
     }
-    
+
     $: {
         $evmAccount?.getBalance().then((balance) => {
             evmBalance = CoreAsset.from(Number(balance.split(' ')[0]), '4,EOS')
         })
     }
-        
+
     $: nativeToEVMLabel = `Native (${$currentAccountBalance})`
     $: evmToNativeLabel = `EVM (${evmBalance ? evmBalance : 'not connected'})`
 </script>
@@ -66,10 +66,11 @@
             display: flex;
             justify-content: space-between;
 
-            .left-section, .right-section {
+            .left-section,
+            .right-section {
                 border: 2px solid var(--main-grey);
                 border-radius: 10px;
-                width: 44%;  /* or set a flex-basis instead */
+                width: 44%; /* or set a flex-basis instead */
                 margin: 3%;
                 padding: 20px;
 
@@ -87,7 +88,6 @@
                     padding: 0;
                 }
             }
-            
         }
 
         .bottom-section {
@@ -110,7 +110,10 @@
                 <Select
                     bind:value={transferOption}
                     on:change={handleSelectChange}
-                    options={[ {value: 'nativeToEvm', label: nativeToEVMLabel}, {value: 'evmToNative', label: evmToNativeLabel}]}
+                    options={[
+                        {value: 'nativeToEvm', label: nativeToEVMLabel},
+                        {value: 'evmToNative', label: evmToNativeLabel},
+                    ]}
                     fluid
                 />
                 <Label align="left">Amount</Label>
@@ -120,22 +123,25 @@
                     bind:valid={validAmount}
                     bind:value={amount}
                 />
-                <button on:click={useEntireBalance}>
-                    Entire Balance
-                </button>
+                <button on:click={useEntireBalance}> Entire Balance </button>
             </div>
             <div class="right-section">
                 <Label align="left">To</Label>
                 <Select
                     bind:value={transferOption}
                     on:change={handleSelectChange}
-                    options={[ {value: 'nativeToEvm', label: evmToNativeLabel}, {value: 'evmToNative', label: nativeToEVMLabel}]}
+                    options={[
+                        {value: 'nativeToEvm', label: evmToNativeLabel},
+                        {value: 'evmToNative', label: nativeToEVMLabel},
+                    ]}
                     fluid
                 />
             </div>
         </div>
-        <div class="bottom-section">  
-            <Button fluid style="primary" disabled={!validAmount} on:action={onContinue}>Continue</Button>
+        <div class="bottom-section">
+            <Button fluid style="primary" disabled={!validAmount} on:action={onContinue}
+                >Continue</Button
+            >
         </div>
     </Form>
 </div>

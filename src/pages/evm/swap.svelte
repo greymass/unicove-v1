@@ -1,8 +1,6 @@
-
-
 <script lang="ts">
-    import type { TransactResult } from 'anchor-link'
-    import type { ethers } from 'ethers'
+    import type {TransactResult} from 'anchor-link'
+    import type {ethers} from 'ethers'
 
     import {activeSession, evmAccount} from '~/store'
 
@@ -23,17 +21,25 @@
 
     async function transfer() {
         if (!$evmAccount) {
-            return error = 'An evm session is required.'
+            return (error = 'An evm session is required.')
         }
 
         try {
             if (transferOption === 'nativeToEvm') {
-                nativeTransactResult = await transferNativeToEvm({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
+                nativeTransactResult = await transferNativeToEvm({
+                    nativeSession: $activeSession!,
+                    evmAccount: $evmAccount,
+                    amount,
+                })
             } else {
-                evmTransactResult = await transferEvmToNative({ nativeSession: $activeSession!, evmAccount: $evmAccount, amount })
+                evmTransactResult = await transferEvmToNative({
+                    nativeSession: $activeSession!,
+                    evmAccount: $evmAccount,
+                    amount,
+                })
             }
         } catch (error) {
-            return error = `Could not transfer. Error: ${error.message}`
+            return (error = `Could not transfer. Error: ${error.message}`)
         }
 
         if (nativeTransactResult || evmTransactResult) {
@@ -53,7 +59,7 @@
 
     async function submitForm() {
         if ($evmAccount) {
-            return step = 'confirm'
+            return (step = 'confirm')
         }
 
         connectEvmWallet()
@@ -65,7 +71,7 @@
         try {
             ethWalletAccount = await connectEthWallet()
         } catch (e) {
-            return error = `Could not connect to ETH wallet. Error: ${e.message}`
+            return (error = `Could not connect to ETH wallet. Error: ${e.message}`)
         }
 
         evmAccount.set(ethWalletAccount)
@@ -73,38 +79,28 @@
 </script>
 
 <style type="scss">
-     div {
+    div {
         max-width: 700px;
         margin: 0 auto;
     }
 </style>
 
 <Page divider={false}>
-    <div class="container"> 
+    <div class="container">
         {#if error}
-            <Error error={error} handleBack={handleBack} />
+            <Error {error} {handleBack} />
         {:else if step === 'form'}
-            <Form
-                handleContinue={submitForm}
-                connectEvmWallet={connectEvmWallet}
-                bind:amount={amount}
-                bind:transferOption={transferOption}
-            />
+            <Form handleContinue={submitForm} {connectEvmWallet} bind:amount bind:transferOption />
         {:else if step === 'confirm'}
             <Confirm
-                amount={amount}
+                {amount}
                 from={transferOption === 'nativeToEvm' ? 'Native' : 'EVM'}
                 to={transferOption === 'nativeToEvm' ? 'EVM' : 'Native'}
                 handleConfirm={transfer}
-                handleBack={handleBack}
+                {handleBack}
             />
-        {:else if step === 'success' && nativeTransactResult || evmTransactResult}
-            <Success 
-                transferOption={transferOption}
-                nativeTransactResult={nativeTransactResult}
-                evmTransactResult={evmTransactResult}
-                handleBack={handleBack}
-            />
+        {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
+            <Success {transferOption} {nativeTransactResult} {evmTransactResult} {handleBack} />
         {/if}
     </div>
 </Page>

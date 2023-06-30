@@ -1,5 +1,5 @@
 <script>
-    export let align: 'center' | 'left' | 'right' = 'center';
+    export let align: 'center' | 'left' | 'right' = 'center'
 </script>
 
 <style type="scss">

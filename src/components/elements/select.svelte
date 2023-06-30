@@ -1,30 +1,22 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
+    import {createEventDispatcher} from 'svelte'
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher()
 
     interface Option {
-        value: string;
-        label: string;
+        value: string
+        label: string
     }
 
-    export let value = '';
-    export let options: Option[]  = [];
-    export let fluid: boolean = false;
+    export let value = ''
+    export let options: Option[] = []
+    export let fluid: boolean = false
 
     function handleChange(event: Event) {
-        value = (event.target as HTMLSelectElement).value;
-        dispatch('change', value);
+        value = (event.target as HTMLSelectElement).value
+        dispatch('change', value)
     }
 </script>
-
-<select class={fluid ? "fullWidth" : ""} bind:value={value} on:change={handleChange}>
-    {#each options as option (option.value)}
-        <option value={option.value}>
-            {option.label}
-        </option>
-    {/each}
-</select>
 
 <style type="scss">
     select {
@@ -45,3 +37,11 @@
         }
     }
 </style>
+
+<select class={fluid ? 'fullWidth' : ''} bind:value on:change={handleChange}>
+    {#each options as option (option.value)}
+        <option value={option.value}>
+            {option.label}
+        </option>
+    {/each}
+</select>

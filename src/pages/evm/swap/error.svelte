@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Button from "~/components/elements/button.svelte"
+    import Button from '~/components/elements/button.svelte'
 
     export let error: string
     export let handleBack: () => void
@@ -17,7 +17,5 @@
         </tr>
     </table>
 
-    <Button on:click={handleBack}>
-        Retry
-    </Button>
+    <Button on:click={handleBack}>Retry</Button>
 </div>
