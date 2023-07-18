@@ -22,6 +22,7 @@
         "@greymass/eosio-resources": "0.7.0",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",
         "@types/feather-icons": "^4.7.0",
+        "@wharfkit/contract": "^0.1.0",
         "@wharfkit/session": "^0.5.0",
         "@wharfkit/transact-plugin-autocorrect": "^0.3.4",
         "@wharfkit/transact-plugin-resource-provider": "^0.4.1",
