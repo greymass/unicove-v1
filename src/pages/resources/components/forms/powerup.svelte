@@ -75,7 +75,7 @@
             const result = await $activeSession!.transact({
                 actions: [
                     {
-                        authorization: [$activeSession!.auth],
+                        authorization: [$activeSession!.permissionLevel],
                         account: 'eosio',
                         name: 'powerup',
                         data: PowerUp.from({

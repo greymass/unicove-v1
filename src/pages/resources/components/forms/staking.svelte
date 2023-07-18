@@ -57,7 +57,7 @@
             const result = await $activeSession!.transact({
                 actions: [
                     {
-                        authorization: [$activeSession!.auth],
+                        authorization: [$activeSession!.permissionLevel],
                         account: 'eosio',
                         name: 'delegatebw',
                         data: Stake.from({

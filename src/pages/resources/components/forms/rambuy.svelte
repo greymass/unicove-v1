@@ -53,7 +53,7 @@
             const result = await $activeSession!.transact({
                 actions: [
                     {
-                        authorization: [$activeSession!.auth],
+                        authorization: [$activeSession!.permissionLevel],
                         account: 'eosio',
                         name: 'buyrambytes',
                         data: BuyRamBytes.from({

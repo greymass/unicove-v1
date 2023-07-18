@@ -30,7 +30,7 @@
             const abis = await $currentRequest!.fetchAbis()
             const transaction = $currentRequest!.resolveTransaction(
                 abis,
-                $activeSession.auth,
+                $activeSession.permissionLevel,
                 header
             )
             $activeSession!.transact({

@@ -60,7 +60,7 @@
 
     function cpu() {
         return {
-            authorization: [$activeSession!.auth],
+            authorization: [$activeSession!.permissionLevel],
             account: 'eosio',
             name: 'rentcpu',
             data: REXRentCPU.from({
@@ -74,7 +74,7 @@
 
     function net() {
         return {
-            authorization: [$activeSession!.auth],
+            authorization: [$activeSession!.permissionLevel],
             account: 'eosio',
             name: 'rentnet',
             data: REXRentNET.from({
@@ -89,7 +89,7 @@
     async function rex() {
         const actions: AnyAction[] = [
             {
-                authorization: [$activeSession!.auth],
+                authorization: [$activeSession!.permissionLevel],
                 account: 'eosio',
                 name: 'deposit',
                 data: REXDeposit.from({
