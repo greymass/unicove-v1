@@ -23,17 +23,13 @@ const sessionKit = new SessionKit({
             url: chain.nodeUrl,
         }
     }),
-    storage: new BrowserLocalStorage('unicove'),
-    transactPlugins: [
-        // new TransactPluginAutoCorrect(),
-        new TransactPluginResourceProvider(),
-    ],
+    transactPlugins: [new TransactPluginResourceProvider()],
     ui: new WebUIRenderer(),
     walletPlugins: [
-        // new WalletPluginAnchor(),
+        new WalletPluginAnchor(),
         // new WalletPluginMock(),
         // new WalletPluginWAX(),
-        new WalletPluginPrivateKey('5Jtoxgny5tT7NiNFp1MLogviuPJ9NniWjnU4wKzaX4t7pL4kJ8s'),
+        // new WalletPluginPrivateKey('5Jtoxgny5tT7NiNFp1MLogviuPJ9NniWjnU4wKzaX4t7pL4kJ8s'),
     ],
 })
 
@@ -50,7 +46,7 @@ export function sessionEquals(a: SerializedSession, b: SerializedSession) {
 export async function init() {
     const list: SerializedSession[] = await sessionKit.getSessions()
 
-    let session: Session | null = null
+    let session: Session | undefined
     if (window.location.search.includes('auth=')) {
         // load active session from query string if present
         // prompt for login if an auth is requested but not available
@@ -63,7 +59,11 @@ export async function init() {
         }
         // TODO: Restore session found in URL
         // OLD CODE...
-        // session = await link.restoreSession(appId, auth, chainId)
+        session = await sessionKit.restore({
+            actor: auth.actor,
+            permission: auth.permission,
+            chain: chainId,
+        })
         const removeQuery = () => {
             if (window.history) {
                 window.history.replaceState(null, '', window.location.pathname)
