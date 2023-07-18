@@ -14,7 +14,7 @@
     function handleBuyingTokens() {
         loadingPopup = true
 
-        generateWidget($activeSession?.auth?.actor, $activeSession?.chainId)
+        generateWidget($activeSession?.actor, $activeSession?.chain.id)
             .then((widgetData) => {
                 tokenPurchaseUrl = widgetData?.widgetUrl
 
