@@ -1,5 +1,5 @@
 <script>
-    import {Asset} from '@greymass/eosio'
+    import {Asset, Name} from '@greymass/eosio'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
@@ -21,29 +21,35 @@
     import TokenImage from '~/components/elements/image/token.svelte'
 
     import TokenTable from '~/pages/dashboard/table.svelte'
+    import {systemContract} from '~/stores/contracts'
 
     interface Delegations {
         rows: DelegatedBandwidth[]
     }
 
     const delegations: Readable<Delegations> = derived(
-        [activeBlockchain, currentAccount],
-        ([$activeBlockchain, $currentAccount], set) => {
+        [activeBlockchain, currentAccount, systemContract],
+        ([$activeBlockchain, $currentAccount, $systemContract], set) => {
             if (
                 $activeBlockchain &&
                 $activeBlockchain.chainFeatures.has(ChainFeatures.Staking) &&
-                $currentAccount
+                $currentAccount &&
+                $systemContract
             ) {
-                getClient($activeBlockchain.chainId)
-                    .v1.chain.get_table_rows({
-                        code: 'eosio',
-                        table: 'delband',
-                        scope: $currentAccount.account_name,
-                        type: DelegatedBandwidth,
-                    })
-                    .then((result) => {
-                        set(result)
-                    })
+                $systemContract
+                    .table('delband')
+                    .query(
+                        {
+                            from: '',
+                            to: '',
+                        },
+                        {
+                            limit: 1000,
+                            scope: $currentAccount.account_name,
+                        }
+                    )
+                    .all()
+                    .then((result) => set({rows: result}))
                     .catch((err) => {
                         console.warn('Error retrieving delegations', err)
                         set({rows: []})
@@ -58,10 +64,10 @@
             let delegated = 0
             if ($currentAccount && $delegations && $delegations.rows.length > 0) {
                 $delegations.rows
-                    .filter((record) => record.from.equals($currentAccount.account_name))
+                    .filter((record) => Name.from(record.from).equals($currentAccount.account_name))
                     .forEach((record) => {
-                        delegated += record.cpu_weight.value
-                        delegated += record.net_weight.value
+                        delegated += Asset.from(record.cpu_weight).value
+                        delegated += Asset.from(record.net_weight).value
                     })
             }
             return delegated
