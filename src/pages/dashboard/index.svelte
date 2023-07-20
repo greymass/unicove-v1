@@ -29,27 +29,17 @@
 
     const delegations: Readable<Delegations> = derived(
         [activeBlockchain, currentAccount, systemContract],
-        ([$activeBlockchain, $currentAccount, $systemContract], set) => {
-            if (
-                $activeBlockchain &&
-                $activeBlockchain.chainFeatures.has(ChainFeatures.Staking) &&
-                $currentAccount &&
-                $systemContract
-            ) {
-                $systemContract
+        ([$chain, $account, $contract], set) => {
+            if ($chain.chainFeatures.has(ChainFeatures.Staking) && $account && $contract) {
+                $contract
                     .table('delband')
-                    .query(
-                        {
-                            from: '',
-                            to: '',
-                        },
-                        {
-                            limit: 1000,
-                            scope: $currentAccount.account_name,
-                        }
-                    )
+                    .query({
+                        from: '',
+                        to: '',
+                        scope: $account.account_name,
+                    })
                     .all()
-                    .then((result) => set({rows: result}))
+                    .then((rows) => set({rows}))
                     .catch((err) => {
                         console.warn('Error retrieving delegations', err)
                         set({rows: []})
