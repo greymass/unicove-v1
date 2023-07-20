@@ -102,7 +102,7 @@
 <div class="container">
     <div class="top-section">
         <h1>Transfer</h1>
-        <h3>Select your accounts and amount</h3>
+        <h3>Transfer tokens between your accounts</h3>
     </div>
     <Form>
         <div class="middle-section">
@@ -125,7 +125,7 @@
                     bind:valid={validAmount}
                     bind:value={amount}
                 />
-                <button on:click={useEntireBalance}> Entire Balance </button>
+                <button on:click={useEntireBalance}>Entire Balance</button>
             </div>
             <div class="right-section">
                 <Label align="left">To</Label>
@@ -141,7 +141,7 @@
             </div>
         </div>
         <div class="bottom-section">
-            <Button fluid style="primary" disabled={!validAmount} on:action={onContinue}
+            <Button fluid style="primary" disabled={!validAmount || !$evmAccount} on:action={onContinue}
                 >Continue</Button
             >
             {#if !$evmAccount}

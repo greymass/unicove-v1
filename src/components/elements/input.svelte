@@ -81,6 +81,10 @@
         }, delay)
     }
     const handleInput = (e: HTMLInputFormEvent): void => debounce(e)
+
+    $: {
+        isValid(value)
+    }
 </script>
 
 <style type="scss">
