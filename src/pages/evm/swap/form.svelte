@@ -89,8 +89,12 @@
 
         .bottom-section {
             padding: 30px;
-            max-width: 300px;
+            max-width: 350px;
             margin: auto;
+
+            h3 {
+                margin: 5px;
+            }
         }
     }
 </style>
@@ -140,6 +144,11 @@
             <Button fluid style="primary" disabled={!validAmount} on:action={onContinue}
                 >Continue</Button
             >
+            {#if !$evmAccount}
+                <h3>
+                    Connect to metamask wallet to continue
+                </h3>
+            {/if}
         </div>
     </Form>
 </div>

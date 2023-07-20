@@ -59,19 +59,45 @@
         step = 'confirm'
     }
 
+    let connectInterval: number | undefined;
+    let connectingToEvmWallet = false;
+
     async function connectEvmWallet() {
         let ethWalletAccount
+
+        console.log({connectingToEvmWallet})
+
+        if (connectingToEvmWallet || !!$evmAccount) {
+            return
+        }
+
+        connectingToEvmWallet = true;
 
         try {
             ethWalletAccount = await connectEthWallet()
         } catch (e) {
+            console.log({code: e.code})
+
+            if (e.code === -32002) {
+                return
+            }
+
+            if (!e.message) {
+                return connectingToEvmWallet = false;
+            }
+
             return (errorMessage = `Could not connect to ETH wallet. Error: ${e.message}`)
         }
 
-        evmAccount.set(ethWalletAccount)
+        if (ethWalletAccount) {
+            evmAccount.set(ethWalletAccount)
+            connectInterval && clearInterval(connectInterval); 
+            connectingToEvmWallet = false;
+        }
     }
 
-    connectEvmWallet()
+    connectInterval = window.setInterval(connectEvmWallet, 3000);
+    connectEvmWallet();
 </script>
 
 <style type="scss">
