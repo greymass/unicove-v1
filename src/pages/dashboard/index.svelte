@@ -34,8 +34,6 @@
                 $contract
                     .table('delband')
                     .query({
-                        from: '',
-                        to: '',
                         scope: $account.account_name,
                     })
                     .all()
