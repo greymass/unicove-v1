@@ -23,11 +23,7 @@
     import TokenTable from '~/pages/dashboard/table.svelte'
     import {systemContract} from '~/stores/contracts'
 
-    interface Delegations {
-        rows: DelegatedBandwidth[]
-    }
-
-    const delegations: Readable<Delegations> = derived(
+    const delegations: Readable<DelegatedBandwidth[]> = derived(
         [activeBlockchain, currentAccount, systemContract],
         ([$chain, $account, $contract], set) => {
             if ($chain.chainFeatures.has(ChainFeatures.Staking) && $account && $contract) {
@@ -37,11 +33,13 @@
                         scope: $account.account_name,
                     })
                     .all()
-                    .then((rows) => set({rows}))
+                    .then((rows) => set(rows))
                     .catch((err) => {
                         console.warn('Error retrieving delegations', err)
-                        set({rows: []})
+                        set([])
                     })
+            } else {
+                set([])
             }
         }
     )
@@ -50,8 +48,8 @@
         [currentAccount, delegations],
         ([$currentAccount, $delegations]) => {
             let delegated = 0
-            if ($currentAccount && $delegations && $delegations.rows.length > 0) {
-                $delegations.rows
+            if ($currentAccount && $delegations && $delegations.length > 0) {
+                $delegations
                     .filter((record) => Name.from(record.from).equals($currentAccount.account_name))
                     .forEach((record) => {
                         delegated += Asset.from(record.cpu_weight).value
