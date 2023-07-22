@@ -14,7 +14,7 @@
 
 <style type="scss">
     .container {
-        max-width: 500px;
+        width: 100%;
         margin: auto;
         padding: 3em;
         background-color: transparent;

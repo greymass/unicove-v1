@@ -16,6 +16,7 @@
 
 <style type="scss">
     .container {
+        width: 100%;
         font-family: Arial, sans-serif;
         margin: auto;
         padding: 3em;
