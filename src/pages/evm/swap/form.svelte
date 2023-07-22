@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
-    import {currentAccountBalance, evmAccount} from '~/store'
+    import {currentAccountBalance, evmAccount, activeSession} from '~/store'
 
     import Label from '~/components/elements/input/label.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -10,7 +10,7 @@
 
     export let handleContinue: () => void
     export let amount: string = '0.0001'
-    export let transferOption: string = 'nativeToEvm'
+    export let transferOption: string | undefined
 
     let evmBalance: CoreAsset | undefined
     let validAmount = false
@@ -35,6 +35,11 @@
         }
     }
 
+    function resetForm() {
+        transferOption = undefined
+        amount = ''
+    }
+
     $: {
         $evmAccount?.getBalance().then((balance) => {
             evmBalance = CoreAsset.from(Number(balance.split(' ')[0]), '4,EOS')
@@ -43,6 +48,11 @@
 
     $: nativeToEVMLabel = `Native (${$currentAccountBalance})`
     $: evmToNativeLabel = `EVM (${evmBalance ? evmBalance : 'not connected'})`
+    $: {
+        if ($activeSession?.identifier) {
+            resetForm()
+        }
+    }
 </script>
 
 <style type="scss">
