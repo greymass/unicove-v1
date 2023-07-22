@@ -14,6 +14,7 @@
 
     export let defaultToken: Token
     export let onTokenSelect: (token: Token) => void
+    export let tokenOptions: Token[]
 
     let selectedToken = defaultToken
     let displayModal = writable<boolean>(false)
@@ -34,6 +35,9 @@
     let filteredTokens: Token[] = []
 
     $: {
+        if (tokenOptions) {
+            return filteredTokens = tokenOptions
+        }
         filteredTokens =
             ($tokens &&
                 $tokens.filter((token) => {
@@ -107,16 +111,18 @@
         <Icon name="x" />
     </div>
     <h2>Select Token</h2>
-    <Form>
-        <Input
-            on:changed={updateQuery}
-            value={query}
-            name="query"
-            focus
-            fluid
-            placeholder="Search tokens..."
-        />
-    </Form>
+    {#if !tokenOptions}
+        <Form>
+            <Input
+                on:changed={updateQuery}
+                value={query}
+                name="query"
+                focus
+                fluid
+                placeholder="Search tokens..."
+            />
+        </Form>
+    {/if}
     <div class="table-container">
         <table>
             <tr>

@@ -14,6 +14,9 @@
     let balance
 
     $: {
+        if (token.balance) {
+            formattedTokenBalance = formatBalanceString(token.balance)
+        }
         balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)
 
         if (balance) {

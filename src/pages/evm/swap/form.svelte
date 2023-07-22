@@ -1,12 +1,13 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
     import {currentAccountBalance, evmAccount, activeSession} from '~/store'
+    import {Token, systemToken} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
     import Form from '~/components/elements/form.svelte'
     import Button from '~/components/elements/button.svelte'
-    import Select from '~/components/elements/select.svelte'
     import Asset from '~/components/elements/input/asset.svelte'
+    import Selector from '~/components/elements/input/token/selector.svelte'
 
     export let handleContinue: () => void
     export let amount: string = '0.0001'
@@ -16,15 +17,15 @@
     let evmBalance: CoreAsset | undefined
     let validAmount = false
 
-    function handleFromChange(event: CustomEvent) {
-        from = event.detail
+    function handleFromChange(token: Token) {
+        from = token
         to = undefined
 
         amount = ''
     }
 
-    function handleToChange(event: CustomEvent) {
-        to = event.detail
+    function handleToChange(token: Token) {
+        to = token
     }
 
     function useEntireBalance() {
@@ -60,25 +61,22 @@
     }
 
     $: nativeLabel = `Native (${$currentAccountBalance})`
-    $: evmLabel = `EVM (${evmBalance ? evmBalance : 'not connected'})`
-    
-    $: fromOptions = [
-        {value: 'Native', label: nativeLabel},
-        {value: 'EVM', label: evmLabel},
-    ]
+    $: evmLabel = `EVM (${evmBalance ? evmBalance : 'not connected'})` 
 
-    const toOptions: {value:string, label:string}[] = []
+    const fromOptions: Token[] = []
+    const toOptions: Token[] = []
 
     $: {
+        if (!$systemToken) {
+            return
+        }
+        fromOptions.push($systemToken, $systemToken)
         if (to === 'Native') {
-            toOptions.push({value: 'EVM', label: evmLabel})
+            toOptions.push()
         } else if (to === 'EVM') {
-            toOptions.push({value: 'Native', label: nativeLabel})
+            toOptions.push($systemToken)
         } else {
-            toOptions.push(
-                {value: 'Native', label: nativeLabel},
-                {value: 'EVM', label: evmLabel},
-            )
+            toOptions.push(...fromOptions)
         }
     }
 
@@ -147,11 +145,9 @@
         <div class="middle-section">
             <div class="left-section">
                 <Label align="left">From</Label>
-                <Select
-                    bind:value={from}
-                    on:change={handleFromChange}
-                    options={fromOptions}
-                    fluid
+                <Selector
+                    onTokenSelect={handleFromChange}
+                    tokenOptions={fromOptions}
                 />
                 <Label align="left">Amount</Label>
                 <Asset
@@ -165,11 +161,9 @@
             </div>
             <div class="right-section">
                 <Label align="left">To</Label>
-                <Select
-                    bind:value={to}
-                    on:change={handleToChange}
-                    options={toOptions}
-                    fluid
+                <Selector
+                    onTokenSelect={handleToChange}
+                    tokenOptions={toOptions}
                 />
             </div>
         </div>
