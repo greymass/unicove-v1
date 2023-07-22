@@ -12,10 +12,13 @@
     import Success from './swap/success.svelte'
     import Error from './swap/error.svelte'
 
+    type AccountType = 'Native' | 'EVM'
+
     let step = 'form'
     let amount: string = ''
     let errorMessage: string | undefined
-    let transferOption: 'nativeToEvm' | 'evmToNative' = 'nativeToEvm'
+    let from: AccountType | undefined
+    let to: AccountType | undefined
     let nativeTransactResult: TransactResult | undefined
     let evmTransactResult: ethers.providers.TransactionResponse | undefined
 
@@ -25,13 +28,13 @@
         }
 
         try {
-            if (transferOption === 'nativeToEvm') {
+            if (from === 'Native') {
                 nativeTransactResult = await transferNativeToEvm({
                     nativeSession: $activeSession!,
                     evmAccount: $evmAccount,
                     amount,
                 })
-            } else {
+            } else if (from === 'EVM') {
                 evmTransactResult = await transferEvmToNative({
                     nativeSession: $activeSession!,
                     evmAccount: $evmAccount,
@@ -64,8 +67,6 @@
 
     async function connectEvmWallet() {
         let ethWalletAccount
-
-        console.log({connectingToEvmWallet})
 
         if (connectingToEvmWallet || !!$evmAccount) {
             return
@@ -111,18 +112,18 @@
     <div class="container">
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
-        {:else if step === 'form'}
-            <Form handleContinue={submitForm} bind:amount bind:transferOption />
+        {:else if step === 'form' || !from || !to}
+            <Form handleContinue={submitForm} bind:amount bind:from bind:to />
         {:else if step === 'confirm'}
             <Confirm
                 {amount}
-                from={transferOption === 'nativeToEvm' ? 'Native' : 'EVM'}
-                to={transferOption === 'nativeToEvm' ? 'EVM' : 'Native'}
+                {from}
+                {to}
                 handleConfirm={transfer}
                 {handleBack}
             />
         {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
-            <Success {transferOption} {nativeTransactResult} {evmTransactResult} {handleBack} />
+            <Success {from} {to} {nativeTransactResult} {evmTransactResult} {handleBack} />
         {/if}
     </div>
 </Page>

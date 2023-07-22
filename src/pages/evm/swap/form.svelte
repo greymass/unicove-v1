@@ -10,21 +10,27 @@
 
     export let handleContinue: () => void
     export let amount: string = '0.0001'
-    export let transferOption: string | undefined
+    export let from: string | undefined
+    export let to: string | undefined
 
     let evmBalance: CoreAsset | undefined
     let validAmount = false
 
-    function handleSelectChange(event: CustomEvent) {
-        transferOption = event.detail
+    function handleFromChange(event: CustomEvent) {
+        from = event.detail
+        to = undefined
 
         amount = ''
     }
 
+    function handleToChange(event: CustomEvent) {
+        to = event.detail
+    }
+
     function useEntireBalance() {
-        if (transferOption === 'nativeToEvm') {
+        if (from === 'evm') {
             amount = $currentAccountBalance?.value.toFixed(4) || '0.0000'
-        } else {
+        } else if (from === 'native') {
             amount = evmBalance?.value.toFixed(4) || '0.0000'
         }
     }
@@ -36,8 +42,15 @@
     }
 
     function resetForm() {
-        transferOption = undefined
+        from = undefined
+        to = undefined
         amount = ''
+    }
+
+    $: {
+        if ($activeSession?.identifier) {
+            resetForm()
+        }
     }
 
     $: {
@@ -46,13 +59,29 @@
         })
     }
 
-    $: nativeToEVMLabel = `Native (${$currentAccountBalance})`
-    $: evmToNativeLabel = `EVM (${evmBalance ? evmBalance : 'not connected'})`
+    $: nativeLabel = `Native (${$currentAccountBalance})`
+    $: evmLabel = `EVM (${evmBalance ? evmBalance : 'not connected'})`
+    
+    $: fromOptions = [
+        {value: 'Native', label: nativeLabel},
+        {value: 'EVM', label: evmLabel},
+    ]
+
+    const toOptions: {value:string, label:string}[] = []
+
     $: {
-        if ($activeSession?.identifier) {
-            resetForm()
+        if (to === 'Native') {
+            toOptions.push({value: 'EVM', label: evmLabel})
+        } else if (to === 'EVM') {
+            toOptions.push({value: 'Native', label: nativeLabel})
+        } else {
+            toOptions.push(
+                {value: 'Native', label: nativeLabel},
+                {value: 'EVM', label: evmLabel},
+            )
         }
     }
+
 </script>
 
 <style type="scss">
@@ -119,19 +148,16 @@
             <div class="left-section">
                 <Label align="left">From</Label>
                 <Select
-                    bind:value={transferOption}
-                    on:change={handleSelectChange}
-                    options={[
-                        {value: 'nativeToEvm', label: nativeToEVMLabel},
-                        {value: 'evmToNative', label: evmToNativeLabel},
-                    ]}
+                    bind:value={from}
+                    on:change={handleFromChange}
+                    options={fromOptions}
                     fluid
                 />
                 <Label align="left">Amount</Label>
                 <Asset
                     fluid
                     placeholder="0.0000"
-                    balance={transferOption === 'nativeToEvm' ? $currentAccountBalance : evmBalance}
+                    balance={from === 'Native' ? $currentAccountBalance : evmBalance}
                     bind:valid={validAmount}
                     bind:value={amount}
                 />
@@ -140,12 +166,9 @@
             <div class="right-section">
                 <Label align="left">To</Label>
                 <Select
-                    bind:value={transferOption}
-                    on:change={handleSelectChange}
-                    options={[
-                        {value: 'nativeToEvm', label: evmToNativeLabel},
-                        {value: 'evmToNative', label: nativeToEVMLabel},
-                    ]}
+                    bind:value={to}
+                    on:change={handleToChange}
+                    options={toOptions}
                     fluid
                 />
             </div>

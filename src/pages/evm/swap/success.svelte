@@ -6,7 +6,8 @@
 
     import {activeBlockchain} from '~/store'
 
-    export let transferOption: string
+    export let from: string
+    export let to: string
     export let nativeTransactResult: TransactResult | undefined
     export let evmTransactResult: ethers.providers.TransactionResponse | undefined
     export let handleBack: () => void
