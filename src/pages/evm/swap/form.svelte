@@ -122,6 +122,10 @@
                     border: none;
                     padding: 0;
                 }
+
+                .selector-container {
+                    margin-bottom: 15px;
+                }
             }
         }
 
@@ -146,11 +150,13 @@
         <div class="middle-section">
             <div class="left-section">
                 <Label align="left">From</Label>
-                <Selector
-                    onTokenSelect={handleFromChange}
-                    defaultToken={from || fromOptions[0]}
-                    tokenOptions={fromOptions}
-                />
+                <div class="selector-container">
+                    <Selector
+                        onTokenSelect={handleFromChange}
+                        defaultToken={from || fromOptions[0]}
+                        tokenOptions={fromOptions}
+                    />
+                </div>  
                 <Label align="left">Amount</Label>
                 <Asset
                     fluid
@@ -163,11 +169,13 @@
             </div>
             <div class="right-section">
                 <Label align="left">To</Label>
-                <Selector
-                    onTokenSelect={handleToChange}
-                    defaultToken={to || toOptions[1]}
-                    tokenOptions={toOptions}
-                />
+                <div class="selector-container">
+                    <Selector
+                        onTokenSelect={handleToChange}
+                        defaultToken={to || toOptions[1]}
+                        tokenOptions={toOptions}
+                    />
+                </div>
             </div>
         </div>
         <div class="bottom-section">
