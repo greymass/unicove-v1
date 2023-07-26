@@ -5,7 +5,7 @@
     import type {ethers} from 'ethers'
 
     import {activeBlockchain} from '~/store'
-    import type { Token } from '~/stores/tokens'
+    import type {Token} from '~/stores/tokens'
 
     export let from: Token
     export let to: Token
@@ -49,7 +49,7 @@
             gap: 1em;
         }
 
-         /* Media Query for Mobile */
+        /* Media Query for Mobile */
         @media screen and (max-width: 768px) {
             padding: 1em;
 

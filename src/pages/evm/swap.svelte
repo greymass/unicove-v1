@@ -11,7 +11,7 @@
     import Confirm from './swap/confirm.svelte'
     import Success from './swap/success.svelte'
     import Error from './swap/error.svelte'
-    import type { Token } from '~/stores/tokens'
+    import type {Token} from '~/stores/tokens'
 
     type AccountType = 'Native' | 'EVM'
 
@@ -63,8 +63,8 @@
         step = 'confirm'
     }
 
-    let connectInterval: number | undefined;
-    let connectingToEvmWallet = false;
+    let connectInterval: number | undefined
+    let connectingToEvmWallet = false
 
     async function connectEvmWallet() {
         let ethWalletAccount
@@ -73,7 +73,7 @@
             return
         }
 
-        connectingToEvmWallet = true;
+        connectingToEvmWallet = true
 
         try {
             ethWalletAccount = await connectEthWallet()
@@ -85,7 +85,7 @@
             }
 
             if (!e.message) {
-                return connectingToEvmWallet = false;
+                return (connectingToEvmWallet = false)
             }
 
             return (errorMessage = `Could not connect to ETH wallet. Error: ${e.message}`)
@@ -93,13 +93,13 @@
 
         if (ethWalletAccount) {
             evmAccount.set(ethWalletAccount)
-            connectInterval && clearInterval(connectInterval); 
-            connectingToEvmWallet = false;
+            connectInterval && clearInterval(connectInterval)
+            connectingToEvmWallet = false
         }
     }
 
-    connectInterval = window.setInterval(connectEvmWallet, 3000);
-    connectEvmWallet();
+    connectInterval = window.setInterval(connectEvmWallet, 3000)
+    connectEvmWallet()
 </script>
 
 <style type="scss">
@@ -116,13 +116,7 @@
         {:else if step === 'form' || !from || !to}
             <Form handleContinue={submitForm} bind:amount bind:from bind:to />
         {:else if step === 'confirm'}
-            <Confirm
-                {amount}
-                {from}
-                {to}
-                handleConfirm={transfer}
-                {handleBack}
-            />
+            <Confirm {amount} {from} {to} handleConfirm={transfer} {handleBack} />
         {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
             <Success {from} {to} {nativeTransactResult} {evmTransactResult} {handleBack} />
         {/if}

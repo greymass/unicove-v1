@@ -128,7 +128,7 @@
                 }
             }
 
-             /* Media Query for Mobile */
+            /* Media Query for Mobile */
             @media screen and (max-width: 768px) {
                 flex-direction: column;
 
@@ -167,7 +167,7 @@
                         selectedToken={from}
                         tokenOptions={fromOptions}
                     />
-                </div>  
+                </div>
                 <Label align="left">Amount</Label>
                 <Asset
                     fluid
@@ -190,13 +190,14 @@
             </div>
         </div>
         <div class="bottom-section">
-            <Button fluid style="primary" disabled={!from || !to || !validAmount || !$evmAccount} on:action={onContinue}
-                >Continue</Button
+            <Button
+                fluid
+                style="primary"
+                disabled={!from || !to || !validAmount || !$evmAccount}
+                on:action={onContinue}>Continue</Button
             >
             {#if !$evmAccount}
-                <h3>
-                    Connect to metamask wallet to continue
-                </h3>
+                <h3>Connect to metamask wallet to continue</h3>
             {/if}
         </div>
     </Form>

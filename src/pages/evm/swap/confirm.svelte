@@ -4,7 +4,7 @@
     import Button from '~/components/elements/button.svelte'
 
     import {evmAccount, activeSession} from '~/store'
-    import type { Token } from '~/stores/tokens'
+    import type {Token} from '~/stores/tokens'
 
     export let from: Token
     export let to: Token
@@ -51,7 +51,7 @@
             margin: auto;
         }
 
-         /* Media Query for Mobile */
+        /* Media Query for Mobile */
         @media screen and (max-width: 768px) {
             padding: 1em;
 
@@ -78,7 +78,8 @@
     <table>
         <tr>
             <td>From {from.name}</td>
-            <td>{from?.name === 'EOS (EVM)' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
+            <td>{from?.name === 'EOS (EVM)' ? $evmAccount?.address : $activeSession?.auth.actor}</td
+            >
         </tr>
         <tr>
             <td>To {to.name}</td>

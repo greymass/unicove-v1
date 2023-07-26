@@ -17,7 +17,8 @@
         if (token.balance) {
             balance = token.balance
         } else {
-            balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)?.quantity
+            balance =
+                $balances && $balances.find((balance) => balance.tokenKey === token.key)?.quantity
         }
 
         if (balance) {

@@ -14,8 +14,8 @@
 
     export let defaultToken: Token | undefined = undefined
     export let selectedToken: Token | undefined = undefined
+    export let tokenOptions: Token[] | undefined = undefined
     export let onTokenSelect: (token: Token) => void
-    export let tokenOptions: Token[]
 
     let displayModal = writable<boolean>(false)
     let query: string = ''
@@ -39,18 +39,17 @@
             filteredTokens = tokenOptions
         } else {
             filteredTokens =
-            ($tokens &&
-                $tokens.filter((token) => {
-                    const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
-                    const queryExists = query.length === 0
-                    const queryMatches = String(token.name)
-                        .toLowerCase()
-                        .includes(query.toLowerCase())
-                    return blockchainMatches && (queryExists || queryMatches)
-                })) ||
-            []
+                ($tokens &&
+                    $tokens.filter((token) => {
+                        const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
+                        const queryExists = query.length === 0
+                        const queryMatches = String(token.name)
+                            .toLowerCase()
+                            .includes(query.toLowerCase())
+                        return blockchainMatches && (queryExists || queryMatches)
+                    })) ||
+                []
         }
-       
     }
 </script>
 
@@ -183,14 +182,15 @@
 </Modal>
 
 {#if selectedToken}
-    <TokenSelectorRow onClick={() => ($displayModal = true)} token={selectedToken || defaultToken} />
+    <TokenSelectorRow
+        onClick={() => ($displayModal = true)}
+        token={selectedToken || defaultToken}
+    />
 {:else}
     <div class="placeholder" on:click={() => ($displayModal = true)}>
-        <span class="text-container">
-            Select Token
-        </span>
+        <span class="text-container"> Select Token </span>
         <div class="arrow-container">
             <Icon name="chevron-right" size="large" />
         </div>
-    </div>  
+    </div>
 {/if}
