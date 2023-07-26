@@ -4,9 +4,10 @@
     import Button from '~/components/elements/button.svelte'
 
     import {evmAccount, activeSession} from '~/store'
+    import type { Token } from '~/stores/tokens'
 
-    export let from: string
-    export let to: string
+    export let from: Token
+    export let to: Token
     export let amount: string
     export let handleConfirm: () => void
     export let handleBack: () => void
@@ -61,11 +62,11 @@
     <table>
         <tr>
             <td>From {from}</td>
-            <td>{from === 'EVM' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
+            <td>{from?.name === 'EOS (EVM)' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
             <td>To {to}</td>
-            <td>{from === 'Native' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
+            <td>{from?.name === 'EOS' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
             <td>Amount</td>

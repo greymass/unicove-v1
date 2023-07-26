@@ -11,14 +11,15 @@
     import Confirm from './swap/confirm.svelte'
     import Success from './swap/success.svelte'
     import Error from './swap/error.svelte'
+    import type { Token } from '~/stores/tokens'
 
     type AccountType = 'Native' | 'EVM'
 
     let step = 'form'
     let amount: string = ''
     let errorMessage: string | undefined
-    let from: AccountType | undefined
-    let to: AccountType | undefined
+    let from: Token | undefined
+    let to: Token | undefined
     let nativeTransactResult: TransactResult | undefined
     let evmTransactResult: ethers.providers.TransactionResponse | undefined
 
@@ -28,13 +29,13 @@
         }
 
         try {
-            if (from === 'Native') {
+            if (from?.name === 'EOS') {
                 nativeTransactResult = await transferNativeToEvm({
                     nativeSession: $activeSession!,
                     evmAccount: $evmAccount,
                     amount,
                 })
-            } else if (from === 'EVM') {
+            } else {
                 evmTransactResult = await transferEvmToNative({
                     nativeSession: $activeSession!,
                     evmAccount: $evmAccount,

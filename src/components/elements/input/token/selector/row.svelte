@@ -15,13 +15,14 @@
 
     $: {
         if (token.balance) {
-            formattedTokenBalance = formatBalanceString(token.balance)
+            balance = token.balance
+        } else {
+            balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)?.quantity
         }
-        balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)
 
         if (balance) {
-            const tokenPrecision = balance.quantity.symbol.precision
-            const unitValue = balance.quantity.units.value
+            const tokenPrecision = balance.symbol.precision
+            const unitValue = balance.units.value
             const fullTokenBalanceString = (
                 Number(unitValue) / Math.pow(10, tokenPrecision)
             ).toFixed(tokenPrecision)

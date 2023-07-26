@@ -36,9 +36,9 @@
 
     $: {
         if (tokenOptions) {
-            return filteredTokens = tokenOptions
-        }
-        filteredTokens =
+            filteredTokens = tokenOptions
+        } else {
+            filteredTokens =
             ($tokens &&
                 $tokens.filter((token) => {
                     const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
@@ -49,6 +49,8 @@
                     return blockchainMatches && (queryExists || queryMatches)
                 })) ||
             []
+        }
+       
     }
 </script>
 

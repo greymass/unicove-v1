@@ -11,8 +11,8 @@
 
     export let handleContinue: () => void
     export let amount: string = '0.0001'
-    export let from: string | undefined
-    export let to: string | undefined
+    export let from: Token | undefined
+    export let to: Token | undefined
 
     let evmBalance: CoreAsset | undefined
     let validAmount = false
@@ -29,10 +29,10 @@
     }
 
     function useEntireBalance() {
-        if (from === 'evm') {
-            amount = $currentAccountBalance?.value.toFixed(4) || '0.0000'
-        } else if (from === 'native') {
+        if (String(from?.name) === 'EOS (EVM)') {
             amount = evmBalance?.value.toFixed(4) || '0.0000'
+        } else {
+            amount = $currentAccountBalance?.value.toFixed(4) || '0.0000'
         }
     }
 
@@ -60,26 +60,27 @@
         })
     }
 
-    $: nativeLabel = `Native (${$currentAccountBalance})`
-    $: evmLabel = `EVM (${evmBalance ? evmBalance : 'not connected'})` 
-
-    const fromOptions: Token[] = []
-    const toOptions: Token[] = []
+    let fromOptions: Token[] = []
+    let toOptions: Token[] = []
 
     $: {
-        if (!$systemToken) {
-            return
-        }
-        fromOptions.push($systemToken, $systemToken)
-        if (to === 'Native') {
-            toOptions.push()
-        } else if (to === 'EVM') {
-            toOptions.push($systemToken)
-        } else {
-            toOptions.push(...fromOptions)
+        if ($systemToken) {
+            const evmToken = {
+                ...$systemToken,
+                name: 'EOS (EVM)',
+                contract: 'eosio.evm',
+                balance: evmBalance,
+            }
+            fromOptions = [$systemToken, evmToken]
+            if (from?.name === 'EOS (EVM)') {
+                toOptions = [evmToken]
+            } else if (to?.name === 'EOS') {
+                toOptions = [$systemToken]
+            } else {
+                toOptions = fromOptions
+            }
         }
     }
-
 </script>
 
 <style type="scss">
@@ -147,13 +148,14 @@
                 <Label align="left">From</Label>
                 <Selector
                     onTokenSelect={handleFromChange}
+                    defaultToken={from || fromOptions[0]}
                     tokenOptions={fromOptions}
                 />
                 <Label align="left">Amount</Label>
                 <Asset
                     fluid
                     placeholder="0.0000"
-                    balance={from === 'Native' ? $currentAccountBalance : evmBalance}
+                    balance={from?.name === 'EOS' ? $currentAccountBalance : evmBalance}
                     bind:valid={validAmount}
                     bind:value={amount}
                 />
@@ -163,6 +165,7 @@
                 <Label align="left">To</Label>
                 <Selector
                     onTokenSelect={handleToChange}
+                    defaultToken={to || toOptions[1]}
                     tokenOptions={toOptions}
                 />
             </div>
