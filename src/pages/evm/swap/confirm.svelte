@@ -50,6 +50,22 @@
             max-width: 300px;
             margin: auto;
         }
+
+         /* Media Query for Mobile */
+        @media screen and (max-width: 768px) {
+            padding: 1em;
+
+            table {
+                tr {
+                    flex-direction: column;
+                    align-items: start;
+                }
+            }
+
+            .bottom-section {
+                max-width: 100%;
+            }
+        }
     }
 </style>
 
@@ -61,11 +77,11 @@
 
     <table>
         <tr>
-            <td>From {from}</td>
+            <td>From {from.name}</td>
             <td>{from?.name === 'EOS (EVM)' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
-            <td>To {to}</td>
+            <td>To {to.name}</td>
             <td>{from?.name === 'EOS' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>

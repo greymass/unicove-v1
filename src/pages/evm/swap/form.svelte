@@ -127,6 +127,17 @@
                     margin-bottom: 15px;
                 }
             }
+
+             /* Media Query for Mobile */
+            @media screen and (max-width: 768px) {
+                flex-direction: column;
+
+                .left-section,
+                .right-section {
+                    width: 90%; /* Adjust width for mobile */
+                    margin: 3% auto; /* Centers the sections */
+                }
+            }
         }
 
         .bottom-section {

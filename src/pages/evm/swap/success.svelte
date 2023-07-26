@@ -48,6 +48,41 @@
             justify-content: center;
             gap: 1em;
         }
+
+         /* Media Query for Mobile */
+        @media screen and (max-width: 768px) {
+            padding: 1em;
+
+            table {
+                width: 300px;
+                margin: auto;
+
+                tr:first-child td {
+                    border: none;
+                }
+
+                tr {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                tr td {
+                    border: none;
+                    word-wrap: break-word;
+                    width: 300px;
+                }
+
+                tr td:last-child {
+                    padding-top: 0;
+                    margin-bottom: 20px;
+                }
+            }
+
+            .bottom-section {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     }
 </style>
 
@@ -61,7 +96,7 @@
 
         <table>
             <tr>
-                <td>Transaction ID</td>
+                <td>Transaction ID:</td>
                 <td>{evmTransactResult?.hash}</td>
             </tr>
         </table>
