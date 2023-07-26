@@ -21,7 +21,9 @@
                 $balances && $balances.find((balance) => balance.tokenKey === token.key)?.quantity
         }
 
-        if (balance) {
+        if (typeof balance === 'string') {
+            formattedTokenBalance = balance
+        } else if (balance) {
             const tokenPrecision = balance.symbol.precision
             const unitValue = balance.units.value
             const fullTokenBalanceString = (

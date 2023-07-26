@@ -78,8 +78,6 @@
         try {
             ethWalletAccount = await connectEthWallet()
         } catch (e) {
-            console.log({code: e.code})
-
             if (e.code === -32002) {
                 return
             }

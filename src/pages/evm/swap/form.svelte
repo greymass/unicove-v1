@@ -69,7 +69,7 @@
                 ...$systemToken,
                 name: 'EOS (EVM)',
                 contract: 'eosio.evm',
-                balance: evmBalance,
+                balance: evmBalance || 'Connect',
             }
             fromOptions = [$systemToken, evmToken]
             if (from?.name === 'EOS (EVM)') {
