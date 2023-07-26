@@ -10,7 +10,7 @@
     import Selector from '~/components/elements/input/token/selector.svelte'
 
     export let handleContinue: () => void
-    export let amount: string = '0.0001'
+    export let amount: string = ''
     export let from: Token | undefined
     export let to: Token | undefined
 
@@ -29,7 +29,7 @@
     }
 
     function useEntireBalance() {
-        if (String(from?.name) === 'EOS (EVM)') {
+        if (from?.name === 'EOS (EVM)') {
             amount = evmBalance?.value.toFixed(4) || '0.0000'
         } else {
             amount = $currentAccountBalance?.value.toFixed(4) || '0.0000'
@@ -73,9 +73,9 @@
             }
             fromOptions = [$systemToken, evmToken]
             if (from?.name === 'EOS (EVM)') {
-                toOptions = [evmToken]
-            } else if (to?.name === 'EOS') {
                 toOptions = [$systemToken]
+            } else if (from?.name === 'EOS') {
+                toOptions = [evmToken]
             } else {
                 toOptions = fromOptions
             }
@@ -153,7 +153,7 @@
                 <div class="selector-container">
                     <Selector
                         onTokenSelect={handleFromChange}
-                        defaultToken={from || fromOptions[0]}
+                        selectedToken={from}
                         tokenOptions={fromOptions}
                     />
                 </div>  
@@ -172,7 +172,7 @@
                 <div class="selector-container">
                     <Selector
                         onTokenSelect={handleToChange}
-                        defaultToken={to || toOptions[1]}
+                        selectedToken={to}
                         tokenOptions={toOptions}
                     />
                 </div>
