@@ -31,7 +31,7 @@
     function useEntireBalance() {
         if (from?.name === 'EOS (EVM)') {
             amount = evmBalance?.value.toFixed(4) || '0.0000'
-        } else {
+        } else if (from?.name === 'EOS') {
             amount = $currentAccountBalance?.value.toFixed(4) || '0.0000'
         }
     }
@@ -179,7 +179,7 @@
             </div>
         </div>
         <div class="bottom-section">
-            <Button fluid style="primary" disabled={!validAmount || !$evmAccount} on:action={onContinue}
+            <Button fluid style="primary" disabled={!from || !to || !validAmount || !$evmAccount} on:action={onContinue}
                 >Continue</Button
             >
             {#if !$evmAccount}
