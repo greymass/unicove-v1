@@ -1,5 +1,5 @@
 import {writable, get} from 'svelte/store'
-import {Asset, UInt64} from '@greymass/eosio'
+import {Asset, UInt64} from '@wharfkit/antelope'
 import type {ChainConfig} from '~/config'
 import {activeBlockchain, activeSession} from '~/store'
 import type {Session} from '@wharfkit/session'

@@ -1,5 +1,5 @@
-import type {Name} from '@greymass/eosio'
-import type {Checksum256} from '@greymass/eosio'
+import type {Name} from '@wharfkit/antelope'
+import type {Checksum256} from '@wharfkit/antelope'
 
 import {addToast} from '~/stores/toast'
 import type {ChainConfig} from '~/config'

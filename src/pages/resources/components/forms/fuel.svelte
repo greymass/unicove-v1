@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Checksum256Type} from '@greymass/eosio'
+    import type {Checksum256Type} from '@wharfkit/antelope'
     import {
         activeBlockchain,
         // activeSession

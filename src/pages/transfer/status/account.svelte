@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Name} from '@greymass/eosio'
+    import type {Name} from '@wharfkit/antelope'
     import Completed from '~/pages/transfer/status/template/completed.svelte'
     import {transferData, Step} from '~/pages/transfer/transfer'
 

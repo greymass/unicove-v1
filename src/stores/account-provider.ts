@@ -1,5 +1,5 @@
-import {API, Asset, Name, Serializer} from '@greymass/eosio'
-import type {Checksum256, NameType} from '@greymass/eosio'
+import {API, Asset, Name, Serializer} from '@wharfkit/antelope'
+import type {Checksum256, NameType} from '@wharfkit/antelope'
 import {get, writable} from 'svelte/store'
 import type {Readable, Writable} from 'svelte/store'
 

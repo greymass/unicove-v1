@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Checksum256} from '@greymass/eosio'
+    import {Checksum256} from '@wharfkit/antelope'
     import type {SerializedSession} from '@wharfkit/session'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
@@ -38,7 +38,7 @@
                 const config = chainConfig(Checksum256.from(chainId))
                 return {
                     chainId,
-                    name: config.name,
+                    name: config ? config.name : 'Unusable Accounts',
                     sessions: $availableSessions.filter((s) => String(s.chain) === chainId),
                 }
             })

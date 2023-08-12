@@ -1,6 +1,6 @@
 import {derived, Readable} from 'svelte/store'
-import {API, Asset} from '@greymass/eosio'
-import {Resources, SampleUsage, PowerUpState, RAMState, REXState} from '@greymass/eosio-resources'
+import {API, Asset} from '@wharfkit/antelope'
+import {Resources, SampleUsage, PowerUpState, RAMState, REXState} from '@wharfkit/resources'
 import {activeBlockchain} from '~/store'
 
 import {getClient} from '../../api-client'

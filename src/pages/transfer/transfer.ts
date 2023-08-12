@@ -1,6 +1,6 @@
 import {writable} from 'svelte/store'
 
-import type {Asset, Name, PublicKey} from '@greymass/eosio'
+import type {Asset, Name, PublicKey} from '@wharfkit/antelope'
 
 export const enum Step {
     Token,

@@ -1,4 +1,4 @@
-import type {Asset} from '@greymass/eosio'
+import type {Asset} from '@wharfkit/antelope'
 import {derived, writable} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 import {ChainConfig, chainConfig, chains} from './config'

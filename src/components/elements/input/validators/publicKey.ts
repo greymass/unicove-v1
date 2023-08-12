@@ -1,4 +1,4 @@
-import {PublicKey} from '@greymass/eosio'
+import {PublicKey} from '@wharfkit/antelope'
 
 export function validatePublicKey(value: string) {
     try {

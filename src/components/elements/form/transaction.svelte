@@ -1,7 +1,7 @@
 <script lang="ts">
     import {setContext} from 'svelte'
     import {get, writable} from 'svelte/store'
-    import type {Name} from '@greymass/eosio'
+    import type {Name} from '@wharfkit/antelope'
 
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {updateAccount} from '~/stores/account-provider'

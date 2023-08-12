@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Asset} from '@greymass/eosio'
+    import {Asset} from '@wharfkit/antelope'
 
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'

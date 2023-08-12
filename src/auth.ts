@@ -1,37 +1,30 @@
-import {Checksum256, Name, PermissionLevel} from '@greymass/eosio'
+import {Checksum256, Name, PermissionLevel} from '@wharfkit/antelope'
 import {get} from 'svelte/store'
 
 import {storeAccount} from './stores/account-provider'
-import {getClient} from './api-client'
-import {appId, chains} from './config'
+import {chains} from './config'
 import {activeSession, availableSessions} from './store'
-import {BrowserLocalStorage, SerializedSession, Session, SessionKit} from '@wharfkit/session'
-import app from './main'
+import {ChainDefinition, SerializedSession, Session, SessionKit} from '@wharfkit/session'
 import WebUIRenderer from '@wharfkit/web-renderer'
-import {WalletPluginPrivateKey} from '@wharfkit/wallet-plugin-privatekey'
 import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
 import {WalletPluginAnchor} from '@wharfkit/wallet-plugin-anchor'
-import {WalletPluginMock} from '@wharfkit/wallet-plugin-mock'
-import {TransactPluginAutoCorrect} from '@wharfkit/transact-plugin-autocorrect'
-import {WalletPluginCloudWallet} from '@wharfkit/wallet-plugin-cloudwallet'
 
-const sessionKit = new SessionKit({
-    appName: 'unicove.gm',
-    chains: chains.map((chain) => {
-        return {
-            id: String(chain.chainId),
-            url: chain.nodeUrl,
-        }
-    }),
-    transactPlugins: [new TransactPluginResourceProvider()],
-    ui: new WebUIRenderer(),
-    walletPlugins: [
-        new WalletPluginAnchor(),
-        // new WalletPluginMock(),
-        // new WalletPluginWAX(),
-        // new WalletPluginPrivateKey('5Jtoxgny5tT7NiNFp1MLogviuPJ9NniWjnU4wKzaX4t7pL4kJ8s'),
-    ],
-})
+const sessionKit = new SessionKit(
+    {
+        appName: 'unicove.gm',
+        chains: chains.map((chain) =>
+            ChainDefinition.from({
+                id: String(chain.chainId),
+                url: chain.nodeUrl,
+            })
+        ),
+        ui: new WebUIRenderer(),
+        walletPlugins: [new WalletPluginAnchor()],
+    },
+    {
+        transactPlugins: [new TransactPluginResourceProvider()],
+    }
+)
 
 /** Compare two session-ish objects. */
 export function sessionEquals(a: SerializedSession, b: SerializedSession) {
@@ -52,18 +45,20 @@ export async function init() {
         // prompt for login if an auth is requested but not available
         // https://unicove.com/?auth=jesta.game@active&chain=aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906
         const qs = new URLSearchParams(window.location.search)
+        let restoreArgs = undefined
         const auth = PermissionLevel.from(qs.get('auth') || '')
-        let chainId: Checksum256
-        if (qs.has('chain')) {
-            chainId = Checksum256.from(qs.get('chain') || '')
+        if (auth) {
+            let chainId: Checksum256 | undefined
+            if (qs.has('chain')) {
+                chainId = Checksum256.from(qs.get('chain') || '')
+                restoreArgs = {
+                    actor: auth.actor,
+                    permission: auth.permission,
+                    chain: chainId,
+                }
+            }
         }
-        // TODO: Restore session found in URL
-        // OLD CODE...
-        session = await sessionKit.restore({
-            actor: auth.actor,
-            permission: auth.permission,
-            chain: chainId,
-        })
+        session = await sessionKit.restore(restoreArgs)
         const removeQuery = () => {
             if (window.history) {
                 window.history.replaceState(null, '', window.location.pathname)
@@ -75,9 +70,6 @@ export async function init() {
             removeQuery()
         }
     } else {
-        // TODO: Restore session based on appId
-        // OLD CODE...
-        // session = await link.restoreSession(appId)
         const sessions = await sessionKit.getSessions()
         if (sessions.length) {
             session = await sessionKit.restore()
@@ -93,11 +85,11 @@ export async function init() {
 export async function login() {
     const result = await sessionKit.login()
 
-    // TODO: Reimplement when account kit is part of the Session
-    // if (result.account) {
-    //     // populate account cache with the account returned by login so we don't need to re-fetch it
-    //     storeAccount(result.account, result.session.chainId)
-    // }
+    // TODO: Utilize Account Kit data returned from Session once available
+    if (result.session) {
+        const accountData = await result.session.client.v1.chain.get_account(result.session.actor)
+        storeAccount(accountData, result.session.chain.id)
+    }
 
     const list = await sessionKit.getSessions()
     availableSessions.set(list)
@@ -107,43 +99,32 @@ export async function login() {
 
 /** Remove existing session. */
 export async function logout(id: SerializedSession) {
-    // TODO: Restore session based on appId
-    // OLD CODE...
-    const session = await sessionKit.restore(id)
-    // let session: Session | null = null
+    // Logout based on ID provided
+    await sessionKit.logout(id)
 
-    if (session) {
-        // TODO: Reimplement when session kit storage has a removal method
-        await sessionKit.logout(session)
+    // Get the value of the currently active session
+    const active = get(activeSession)
 
-        // TODO: Reimplement when the session kit has an array of available sessions to return
-        // const list = await link.listSessions(appId)
-        const list: SerializedSession[] = await sessionKit.getSessions()
+    // Refresh available Sessions from kit
+    const list: SerializedSession[] = await sessionKit.getSessions()
 
-        let active = get(activeSession)
-        console.log(active)
-        if (active && sessionEquals(active.serialize(), session.serialize())) {
-            // update active session if we logged out from it
-            if (list.length > 0) {
-                activate(list[0])
-            } else {
-                activeSession.set(undefined)
-            }
+    // If the logged out session was the current session, activate another session automatically
+    if (active && sessionEquals(active.serialize(), id)) {
+        if (list.length > 0) {
+            activate(list[0])
+        } else {
+            activeSession.set(undefined)
         }
-        availableSessions.set(list)
     }
+
+    availableSessions.set(list)
 }
 
 /** Set active session. */
 export async function activate(id: SerializedSession) {
-    // TODO: Restore session based on appId
-    // OLD CODE...
-    console.log(id)
     const session = await sessionKit.restore(id)
-    // const session = await link.restoreSession(appId, id.auth, id.chainId)
     if (!session) {
         throw new Error('No such session')
     }
     activeSession.set(session)
-    console.log('activate account', id)
 }

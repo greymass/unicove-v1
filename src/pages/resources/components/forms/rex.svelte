@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type {AnyAction} from '@greymass/eosio'
-    import {Asset} from '@greymass/eosio'
+    import type {AnyAction} from '@wharfkit/antelope'
+    import {Asset} from '@wharfkit/antelope'
     import {getContext} from 'svelte'
     import type {Readable, Writable} from 'svelte/store'
     import {derived, writable} from 'svelte/store'

@@ -1,5 +1,5 @@
 <script>
-    import {Asset} from '@greymass/eosio'
+    import {Asset} from '@wharfkit/antelope'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
@@ -23,7 +23,7 @@
                 results.push(
                     ...$balances.filter(
                         (b) =>
-                            b.chainId.equals($activeSession.chainId) &&
+                            b.chainId.equals($activeSession.chain.id) &&
                             b.account.equals($activeSession.actor) &&
                             b.tokenKey !== $systemTokenKey
                     )
@@ -39,7 +39,7 @@
             if ($activeSession && $balances) {
                 return $balances.find(
                     (b) =>
-                        b.chainId.equals($activeSession.chainId) &&
+                        b.chainId.equals($activeSession.chain.id) &&
                         b.account.equals($activeSession.actor) &&
                         b.tokenKey === $systemTokenKey
                 )

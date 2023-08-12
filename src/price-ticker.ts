@@ -1,4 +1,4 @@
-import {Serializer} from '@greymass/eosio'
+import {Serializer} from '@wharfkit/antelope'
 import {readable, derived, flatten, ReadableResult} from 'svelte-result-store'
 
 import {DelphiOracleDatapoint, DelphiOraclePair} from '~/abi-types'

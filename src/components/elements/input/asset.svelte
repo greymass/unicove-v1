@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Asset} from '@greymass/eosio'
+    import type {Asset} from '@wharfkit/antelope'
 
     import {activeBlockchain} from '~/store'
     import InputLabelled from '~/components/elements/input/labelled.svelte'

@@ -1,5 +1,5 @@
-import {Asset, Name} from '@greymass/eosio'
-import {Checksum256} from '@greymass/eosio'
+import {Asset, Name} from '@wharfkit/antelope'
+import {Checksum256} from '@wharfkit/antelope'
 
 const branch = import.meta.env.SNOWPACK_PUBLIC_BRANCH || 'local'
 const rev = import.meta.env.SNOWPACK_PUBLIC_REV || 'head'
@@ -88,31 +88,31 @@ export interface ChainConfig {
 
 /** Supported chains. */
 export const chains: ChainConfig[] = [
-    // {
-    //     id: 'eos',
-    //     chainFeatures: new Set([
-    //         ChainFeatures.BidName,
-    //         ChainFeatures.BuyRAM,
-    //         ChainFeatures.Fuel,
-    //         ChainFeatures.PowerUp,
-    //         ChainFeatures.REX,
-    //         ChainFeatures.Staking,
-    //         ChainFeatures.VoteProducer,
-    //         ChainFeatures.DelphiOracle,
-    //     ]),
-    //     chainId: Checksum256.from(
-    //         'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
-    //     ),
-    //     coreTokenSymbol: Asset.Symbol.from('4,EOS'),
-    //     coreTokenContract: Name.from('eosio.token'),
-    //     coreTokenTransfer: Name.from('transfer'),
-    //     name: 'EOS',
-    //     nodeUrl: 'https://eos.greymass.com',
-    //     testnet: false,
-    //     explorerUrl: 'https://explorer.io',
-    //     balanceProviders: new Set([BalanceProviders.explorer]),
-    //     banxaEnabled: true,
-    // },
+    {
+        id: 'eos',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.PowerUp,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+            ChainFeatures.DelphiOracle,
+        ]),
+        chainId: Checksum256.from(
+            'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+        ),
+        coreTokenSymbol: Asset.Symbol.from('4,EOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'EOS',
+        nodeUrl: 'https://eos.greymass.com',
+        testnet: false,
+        explorerUrl: 'https://explorer.io',
+        balanceProviders: new Set([BalanceProviders.explorer]),
+        banxaEnabled: true,
+    },
     // {
     //     id: 'fio',
     //     chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),

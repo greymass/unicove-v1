@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Name} from '@greymass/eosio'
+    import {Name} from '@wharfkit/antelope'
     import {getContext} from 'svelte'
     import type {Readable} from 'svelte/store'
     import {derived, get} from 'svelte/store'

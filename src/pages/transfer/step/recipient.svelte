@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {PublicKey, Name} from '@greymass/eosio'
+    import {PublicKey, Name} from '@wharfkit/antelope'
     import type {Readable} from 'svelte/store'
 
     import {activeBlockchain, activeSession} from '~/store'

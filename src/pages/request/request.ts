@@ -2,8 +2,8 @@ import {derived, writable} from 'svelte/store'
 import type {Readable, Writable} from 'svelte/store'
 import type {TinroRouteMeta} from 'tinro'
 
-import {ABIDef, APIClient, PermissionLevel, TransactionHeader} from '@greymass/eosio'
-import {AbiMap, ResolvedTransaction, SigningRequest} from 'eosio-signing-request'
+import {ABIDef, APIClient, PermissionLevel, TransactionHeader} from '@wharfkit/antelope'
+import {AbiMap, ResolvedTransaction, SigningRequest} from '@wharfkit/signing-request'
 
 import {ChainConfig, chainConfig} from '~/config'
 import {activeSession} from '~/store'

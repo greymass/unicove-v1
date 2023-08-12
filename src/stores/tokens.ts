@@ -1,5 +1,5 @@
-import type {Asset} from '@greymass/eosio'
-import type {Checksum256, NameType} from '@greymass/eosio'
+import type {Asset} from '@wharfkit/antelope'
+import type {Checksum256, NameType} from '@wharfkit/antelope'
 import {derived, get} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 

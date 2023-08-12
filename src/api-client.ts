@@ -1,4 +1,4 @@
-import {APIClient, Checksum256} from '@greymass/eosio'
+import {APIClient, Checksum256} from '@wharfkit/antelope'
 import {ChainConfig, chains} from './config'
 
 const clients = new Map<string, APIClient>()

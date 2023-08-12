@@ -1,6 +1,6 @@
 import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
-import type {AnyAction} from '@greymass/eosio'
+import type {AnyAction} from '@wharfkit/antelope'
 
 import {currentTransaction} from './request'
 

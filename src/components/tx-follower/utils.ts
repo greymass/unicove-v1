@@ -1,4 +1,4 @@
-import {AnyAction, APIClient, BlockTimestamp, Checksum256, Struct, UInt32} from '@greymass/eosio'
+import {AnyAction, APIClient, BlockTimestamp, Checksum256, Struct, UInt32} from '@wharfkit/antelope'
 import {readable, ReadableResult} from 'svelte-result-store'
 
 import {getClient} from '~/api-client'

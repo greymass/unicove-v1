@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Asset} from '@greymass/eosio'
+    import {Asset} from '@wharfkit/antelope'
 
     import {activeBlockchain} from '~/store'
     import Completed from '~/pages/transfer/status/template/completed.svelte'

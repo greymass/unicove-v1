@@ -1,7 +1,7 @@
 <script lang="ts">
     import {onMount} from 'svelte'
     import {meta} from 'tinro'
-    import type {API, TransactionHeader} from '@greymass/eosio'
+    import type {API, TransactionHeader} from '@wharfkit/antelope'
 
     import {activeSession} from '~/store'
     import Page from '~/components/layout/page.svelte'

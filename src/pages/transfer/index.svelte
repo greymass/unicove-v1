@@ -2,7 +2,7 @@
     import type {Readable} from 'svelte/store'
     import type {TinroRouteMeta} from 'tinro'
 
-    import {Name} from '@greymass/eosio'
+    import {Name} from '@wharfkit/antelope'
     import {onMount} from 'svelte'
     import {derived} from 'svelte/store'
     import {router} from 'tinro'

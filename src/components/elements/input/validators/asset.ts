@@ -1,4 +1,4 @@
-import {Asset} from '@greymass/eosio'
+import {Asset} from '@wharfkit/antelope'
 
 export function validateBalance(value: string, balance: Asset) {
     const {units} = Asset.from(Number(value), balance.symbol)

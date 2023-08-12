@@ -1,8 +1,8 @@
 <script lang="ts">
     import type {ChainConfig} from '~/config'
-    import type {Checksum256Type} from '@greymass/eosio'
+    import type {Checksum256Type} from '@wharfkit/antelope'
 
-    import {Checksum256} from '@greymass/eosio'
+    import {Checksum256} from '@wharfkit/antelope'
     import {router} from 'tinro'
 
     import Icon from '~/components/elements/icon.svelte'

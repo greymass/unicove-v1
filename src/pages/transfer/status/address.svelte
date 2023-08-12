@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {PublicKey} from '@greymass/eosio'
+    import type {PublicKey} from '@wharfkit/antelope'
     import {activeBlockchain} from '~/store'
     import Completed from '~/pages/transfer/status/template/completed.svelte'
     import {Step, transferData} from '../transfer'

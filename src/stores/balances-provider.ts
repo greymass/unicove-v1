@@ -1,4 +1,4 @@
-import {Asset} from '@greymass/eosio'
+import {Asset} from '@wharfkit/antelope'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 

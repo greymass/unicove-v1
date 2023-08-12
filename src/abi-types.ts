@@ -11,7 +11,7 @@ import {
     UInt16,
     UInt32,
     UInt64,
-} from '@greymass/eosio'
+} from '@wharfkit/antelope'
 
 @Struct.type('buyrambytes')
 export class BuyRamBytes extends Struct {

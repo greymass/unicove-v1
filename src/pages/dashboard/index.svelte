@@ -1,5 +1,5 @@
 <script>
-    import {Asset, Name} from '@greymass/eosio'
+    import {Asset, Name} from '@wharfkit/antelope'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
@@ -28,7 +28,7 @@
         ([$chain, $account, $contract], set) => {
             if ($chain.chainFeatures.has(ChainFeatures.Staking) && $account && $contract) {
                 $contract
-                    .table('delband')
+                    .table<DelegatedBandwidth>('delband')
                     .query({
                         scope: $account.account_name,
                     })
@@ -48,9 +48,12 @@
         [currentAccount, delegations],
         ([$currentAccount, $delegations]) => {
             let delegated = 0
+            if ($delegations) {
+                console.log($delegations.length)
+            }
             if ($currentAccount && $delegations && $delegations.length > 0) {
                 $delegations
-                    .filter((record) => Name.from(record.from).equals($currentAccount.account_name))
+                    .filter((record) => record.from.equals($currentAccount.account_name))
                     .forEach((record) => {
                         delegated += Asset.from(record.cpu_weight).value
                         delegated += Asset.from(record.net_weight).value

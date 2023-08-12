@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Asset} from '@greymass/eosio'
+    import type {Asset} from '@wharfkit/antelope'
 
     export let asset: Asset
 

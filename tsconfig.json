@@ -19,7 +19,6 @@
         "experimentalDecorators": true,
         "useDefineForClassFields": true,
         "allowSyntheticDefaultImports": true,
-        "importsNotUsedAsValues": "error",
         "useUnknownInCatchVariables": false
     }
 }

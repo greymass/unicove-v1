@@ -1,5 +1,5 @@
 <script>
-    import {Checksum256} from '@greymass/eosio'
+    import {Checksum256} from '@wharfkit/antelope'
 
     import type {Token} from '~/stores/tokens'
     import {tokens, createTokenFromChainId} from '~/stores/tokens'

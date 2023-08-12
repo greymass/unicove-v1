@@ -1,7 +1,7 @@
 <script lang="ts">
     import {readable} from 'svelte/store'
-    import type {Action} from '@greymass/eosio'
-    import {Asset, Transaction} from '@greymass/eosio'
+    import type {Action} from '@wharfkit/antelope'
+    import {Asset, Transaction} from '@wharfkit/antelope'
 
     import Button from '~/components/elements/button.svelte'
     import QRCode from '~/components/elements/qrcode.svelte'

@@ -1,7 +1,7 @@
 import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 
-import {Resources, RAMState} from '@greymass/eosio-resources'
+import {Resources, RAMState} from '@wharfkit/resources'
 
 import {apiClient} from './request'
 
