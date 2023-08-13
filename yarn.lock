@@ -909,10 +909,15 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@greymass/buoy@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@greymass/buoy/-/buoy-1.0.3.tgz#1bc6f104d51860033ec40e54a8a10293cefc0dca"
-  integrity sha512-hL/+Hj5noB5n5lfZXJKdSJABpeFKtWlFDjSzPzOzw1SKhXNIGX7waW12ew49necdsNC5VN2AQOs1hHBGLENP7g==
+"@greymass/antelope-tokens@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@greymass/antelope-tokens/-/antelope-tokens-0.0.1.tgz#a245368adbad4e877d86f3fada0f22204fb6deb8"
+  integrity sha512-r/nBhanyDbwzfspa0ARSB2B1i1buZqOJPYCG1B6xuGrowgkelY5x9NKhdvjjdRgO1Kioy0QlLvH3nPk4/R/Ndg==
+
+"@greymass/create-account@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@greymass/create-account/-/create-account-0.0.9.tgz#1f41b00e33508396fa3ece2f431213c80cfd9d7a"
+  integrity sha512-cWzqB5fYHmT5f5V5Kfgu/vF98+5YBIH4hk0XzsfbkC2FqoVy+918fpMx12gx654Effnc8q5stIdluDm/dnjlHw==
   dependencies:
     eventemitter3 "^4.0.7"
     tslib "^2.1.0"
@@ -1516,6 +1521,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   integrity sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==
   dependencies:
     color-convert "^2.0.1"
+
+"antelope-tokens@git+https://github.com/greymass/antelope-tokens.json.git":
+  version "0.0.1"
+  resolved "git+https://github.com/greymass/antelope-tokens.json.git#8ec8fbe55ffa670c95c491abbc120312c6f3b8f3"
 
 anymatch@~3.1.2:
   version "3.1.2"

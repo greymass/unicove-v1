@@ -17,6 +17,8 @@
     },
     "dependencies": {
         "@greymass/create-account": "^1.0.0",
+        "@greymass/antelope-tokens": "^0.0.1",
+        "@greymass/eosio-resources": "0.7.0",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",
         "@types/feather-icons": "^4.7.0",
         "@wharfkit/contract": "^0.3.4",

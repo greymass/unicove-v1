@@ -64,31 +64,31 @@ function getOracleDatapoint(
     return derived(data, ($data) => DelphiOracleDatapoint.from($data))
 }
 
-function bloksFallback(chain: ChainConfig, pairName?: string): ReadableResult<number> {
-    const chainName = chain.id
-    return cachedRead({
-        store: 'price-ticker',
-        key: `${chainName}-fallback`,
-        load: async () => {
-            if (pairName) {
-                throw new Error('Fallback only supports core symbol')
-            }
-            let url = 'https://www.api.bloks.io/ticker/banana'
-            if (chainName !== 'eos') {
-                url = `https://www.api.bloks.io/${chainName}/ticker/banana`
-            }
-            const response = await fetch(url)
-            const data = await response.json()
-            if (typeof data === 'number') {
-                return data
-            } else {
-                throw new Error('Unexpected response from bloks')
-            }
-        },
-        maxAge: MAX_AGE,
-        refreshInterval: UPDATE_INTERVAL,
-    })
-}
+// function bloksFallback(chain: ChainConfig, pairName?: string): ReadableResult<number> {
+//     const chainName = chain.id
+//     return cachedRead({
+//         store: 'price-ticker',
+//         key: `${chainName}-fallback`,
+//         load: async () => {
+//             if (pairName) {
+//                 throw new Error('Fallback only supports core symbol')
+//             }
+//             let url = 'https://www.api.bloks.io/ticker/banana'
+//             if (chainName !== 'eos') {
+//                 url = `https://www.api.bloks.io/${chainName}/ticker/banana`
+//             }
+//             const response = await fetch(url)
+//             const data = await response.json()
+//             if (typeof data === 'number') {
+//                 return data
+//             } else {
+//                 throw new Error('Unexpected response from bloks')
+//             }
+//         },
+//         maxAge: MAX_AGE,
+//         refreshInterval: UPDATE_INTERVAL,
+//     })
+// }
 
 const tickerStores: Record<string, ReadableResult<number>> = {}
 
@@ -106,6 +106,7 @@ export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResu
     )
         ? getOraclePairs(chain)
         : readable({value: []})
+
     const pair = derived(pairs, ($pairs) => {
         let pair: DelphiOraclePair | undefined
         if (!pairName) {
@@ -116,6 +117,7 @@ export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResu
         } else {
             pair = $pairs.find((p) => p.name.equals(pairName))
         }
+
         return pair || null
     })
     const datapoint = flatten(
@@ -137,10 +139,13 @@ export function priceTicker(chain: ChainConfig, pairName?: string): ReadableResu
                     $datapoint.median.toNumber() / Math.pow(10, $pair.quoted_precision.toNumber())
                 )
             } else {
-                return bloksFallback(chain, pairName)
+                return 0
+                // TODO: bloksFallback failing, CORS, needs replaced.
+                // return bloksFallback(chain, pairName)
             }
         })
     )
+
     tickerStores[tickerName] = ticker
     return ticker
 }

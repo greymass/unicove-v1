@@ -10,7 +10,7 @@
     import {activeSession, activeBlockchain, currentAccount, activePriceTicker} from '~/store'
     import {balances, fetchBalances} from '~/stores/balances'
     import {isLoading} from '~/stores/balances-provider'
-    import {getToken, systemTokenKey} from '~/stores/tokens'
+    import {getToken, systemTokenKey, tokens} from '~/stores/tokens'
     import {stateREX} from '~/pages/resources/resources'
 
     import Page from '~/components/layout/page.svelte'
@@ -67,15 +67,22 @@
         [currentAccount, stateREX],
         ([$currentAccount, $stateREX]) => {
             if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
-                return $stateREX.value * $currentAccount.rex_info.rex_balance.value
+                if ($stateREX.value === 0.0001) {
+                    return (
+                        ($stateREX.total_lendable.value / $stateREX.total_rex.value) *
+                        $currentAccount.rex_info.rex_balance.value
+                    )
+                } else {
+                    return $stateREX.value * $currentAccount.rex_info.rex_balance.value
+                }
             }
             return 0
         }
     )
 
     const totalUsdValue: Readable<number> = derived(
-        [balances, currentAccount, delegatedTokens, activePriceTicker, rexTokens],
-        ([$balances, $currentAccount, $delegated, $price, $rex]) => {
+        [balances, currentAccount, delegatedTokens, tokens, activePriceTicker, rexTokens],
+        ([$balances, $currentAccount, $delegated, $tokens, $price, $rex]) => {
             let value = 0
             if ($currentAccount && $price !== undefined) {
                 value += $rex * $price

@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import {Asset} from '@wharfkit/antelope'
+=======
+import type {LinkSession} from 'anchor-link'
+>>>>>>> dev
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 
-import {BalanceProviders, chainConfig} from '~/config'
+import {chainConfig} from '~/config'
 import {activeSession} from '~/store'
+<<<<<<< HEAD
 import {makeTokenKey, Token} from '~/stores/tokens'
 
 import {Balance, createBalanceFromToken} from '~/stores/balances'
@@ -19,17 +24,19 @@ interface RawTokenBalance {
         logo?: string
     }
 }
+=======
+import type {Balance} from '~/stores/balances'
+import {getBalanceProvider} from '~/lib/balance-providers/utils'
+>>>>>>> dev
 
 export const isLoading: Writable<boolean> = writable(false)
 
 interface BalancesProvider {
     balances: Balance[]
-    tokens: Token[]
 }
 
 const initialBalances: BalancesProvider = {
     balances: [],
-    tokens: [],
 }
 
 export const balancesProvider: Writable<BalancesProvider> = writable(initialBalances, () => {
@@ -56,6 +63,7 @@ export const balancesProvider: Writable<BalancesProvider> = writable(initialBala
 
 export async function updateBalances(session: Session) {
     isLoading.set(true)
+<<<<<<< HEAD
     const chain = chainConfig(session.chain.id)
     const {Bloks} = BalanceProviders
     if (chain.balanceProviders?.has(Bloks)) {
@@ -127,3 +135,20 @@ function parseTokenBalances(session: Session, balances: RawTokenBalance[]) {
         return createBalanceFromToken(session, token, asset)
     })
 }
+=======
+    const chain = chainConfig(session.chainId)
+    if (chain.balanceProviders) {
+        for (const p of chain.balanceProviders) {
+            const provider = getBalanceProvider(p, chain)
+            if (provider) {
+                const balances = await provider.fetchBalances(session.auth.actor)
+                balancesProvider.set({
+                    balances: balances,
+                })
+                break
+            }
+        }
+    }
+    isLoading.set(false)
+}
+>>>>>>> dev

@@ -1,11 +1,13 @@
 import type {Asset} from '@wharfkit/antelope'
 import type {Checksum256, NameType} from '@wharfkit/antelope'
-import {derived, get} from 'svelte/store'
-import type {Readable} from 'svelte/store'
+import AntelopeTokens from '@greymass/antelope-tokens'
+import {derived, writable, get} from 'svelte/store'
+import type {Writable, Readable, Unsubscriber} from 'svelte/store'
 
-import {chainConfig} from '~/config'
+import {chainConfig, ChainConfig} from '~/config'
 import {activeBlockchain, activePriceTicker, activeSession} from '~/store'
-import {balancesProvider} from './balances-provider'
+import {priceTicker} from '~/price-ticker'
+import {Balance, balances} from '~/stores/balances'
 
 export interface Token {
     key: string
@@ -25,23 +27,30 @@ export interface TokenKeyParams {
 
 const initialTokens: Token[] = []
 
-export const tokens: Readable<Token[]> = derived(
-    [activePriceTicker, activeSession, balancesProvider],
-    ([$activePriceTicker, $activeSession, $balancesProvider], set) => {
-        const records = []
-
-        // Push any core balance information in from the current account
-        if ($activeSession) {
-            records.push(createTokenFromChainId($activeSession.chain.id, $activePriceTicker))
+export const tokens: Writable<Token[]> = writable(initialTokens, () => {
+    // Subscribe to changes to the active session and update on change
+    const unsubscribeSession = activeSession.subscribe((session) => {
+        if (session) {
+            loadTokenMetadata(session)
         }
+    })
 
-        // Push tokens in as received by the balance provider
-        records.push(...$balancesProvider.tokens)
+    let unsubscribePrices: () => void | undefined
+    const unsubscribeBalance = balances.subscribe((balances) => {
+        const chain = get(activeBlockchain)
+        if (chain) {
+            unsubscribePrices = loadTokenPrices(chain, balances)
+        }
+    })
 
-        set(records)
-    },
-    initialTokens
-)
+    return () => {
+        if (unsubscribePrices) {
+            unsubscribePrices()
+        }
+        unsubscribeBalance()
+        unsubscribeSession()
+    }
+})
 
 export function makeTokenKey(token: TokenKeyParams): string {
     return [String(token.chainId), String(token.contract), String(token.name)]
@@ -93,4 +102,66 @@ export function createTokenFromChainId(
 export function getToken(key: string) {
     const existing = get(tokens)
     return existing.find((t) => t.key === key)
+}
+
+export function loadTokenMetadata(session: LinkSession) {
+    const records: Token[] = []
+
+    const sysToken = createTokenFromChainId(session.chainId, get(activePriceTicker))
+    records.push(sysToken)
+
+    for (const t of AntelopeTokens) {
+        const chain = chainConfig(session.chainId)
+
+        if (chain.id === t.chain) {
+            if (t.supply && t.supply.precision && t.symbol) {
+                const symbol: Asset.Symbol = Asset.Symbol.from(`${t.supply.precision},${t.symbol}`)
+                const token = {
+                    chainId: session.chainId,
+                    contract: t.account,
+                    symbol: symbol,
+                    name: t.metadata.name,
+                    logo: t.metadata.logo,
+                }
+
+                if (token.symbol.equals(sysToken.symbol) && token.contract === token.contract) {
+                    continue
+                }
+
+                records.push({
+                    ...token,
+                    key: makeTokenKey(token),
+                })
+            }
+        }
+    }
+
+    tokens.set(records)
+}
+
+export function loadTokenPrices(chain: ChainConfig, currentBalances: Balance[]) {
+    const unsubscribers: Unsubscriber[] = []
+
+    for (const balance of currentBalances) {
+        const token = getToken(balance.tokenKey)
+        if (token) {
+            const pairName = token.symbol.name.toLowerCase() + 'usd'
+            const unsubscribe = priceTicker(chain, pairName).value.subscribe((v) => {
+                if (v !== undefined) {
+                    setTokenPrice(token, v)
+                }
+            })
+            unsubscribers.push(unsubscribe)
+        }
+    }
+    return () => {
+        for (const unsubs of unsubscribers) {
+            unsubs()
+        }
+    }
+}
+
+export function setTokenPrice(token: Token, price: number) {
+    const existing = get(tokens)
+    tokens.set([...existing.filter((t) => t.key !== token.key), {...token, price: price}])
 }
