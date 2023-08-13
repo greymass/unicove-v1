@@ -5,8 +5,15 @@
 
     import {activeSession} from '~/store'
     import Page from '~/components/layout/page.svelte'
+    import ErrorMessage from '~/components/elements/input/errorMessage.svelte'
 
-    import {currentChain, currentRequest, currentRoute, currentTransaction} from './request'
+    import {
+        currentChain,
+        currentRequest,
+        currentRoute,
+        currentTransaction,
+        requestError,
+    } from './request'
     import {currentTemplate} from './template'
 
     import Default from './requests/default.svelte'
@@ -46,12 +53,16 @@
 </style>
 
 <Page>
-    <svelte:component
-        this={templates[$currentTemplate] || Default}
-        chain={currentChain}
-        request={currentRequest}
-        session={activeSession}
-        transaction={currentTransaction}
-        {sign}
-    />
+    {#if $requestError}
+        <ErrorMessage errorMessage={$requestError} />
+    {:else}
+        <svelte:component
+            this={templates[$currentTemplate] || Default}
+            chain={currentChain}
+            request={currentRequest}
+            session={activeSession}
+            transaction={currentTransaction}
+            {sign}
+        />
+    {/if}
 </Page>

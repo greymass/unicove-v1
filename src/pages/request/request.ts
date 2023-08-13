@@ -2,22 +2,50 @@ import {derived, writable} from 'svelte/store'
 import type {Readable, Writable} from 'svelte/store'
 import type {TinroRouteMeta} from 'tinro'
 
-import {ABIDef, APIClient, PermissionLevel, TransactionHeader} from '@wharfkit/antelope'
-import {AbiMap, ResolvedTransaction, SigningRequest} from '@wharfkit/signing-request'
+import {APIClient, PermissionLevel, TransactionHeader} from '@wharfkit/antelope'
+import {
+    AbiMap,
+    PlaceholderName,
+    PlaceholderPermission,
+    ResolvedTransaction,
+    SigningRequest,
+} from '@wharfkit/signing-request'
+import zlib from 'pako'
 
 import {ChainConfig, chainConfig} from '~/config'
 import {activeSession} from '~/store'
-
-import zlib from 'pako'
 import {getClient} from '~/api-client'
+import {ABICache} from '@wharfkit/session'
 
 // The current route being passed in from the component
 export let currentRoute = writable<TinroRouteMeta | undefined>(undefined)
 
-// The chain configuration that matches the current request
+// The current chain configuration derived from the current request
 export let currentChain: Writable<ChainConfig | undefined> = writable(undefined)
-let currentChainConfig: ChainConfig | undefined
-currentChain.subscribe((value) => (currentChainConfig = value))
+
+// Storage for any errors we need to expose to the user
+export const requestError: Writable<string | undefined> = writable(undefined)
+
+// The currently loaded request, derived from the current route
+export const currentRequest: Readable<SigningRequest | undefined> = derived(
+    [currentRoute],
+    ([$currentRoute]) => {
+        if ($currentRoute) {
+            const request = SigningRequest.from(`esr:${$currentRoute.params.payload}`, {
+                zlib,
+            })
+            if (request.isMultiChain()) {
+                const ids = request.getChainIds()
+                if (ids) {
+                    currentChain.set(chainConfig(ids[0]))
+                }
+            } else {
+                currentChain.set(chainConfig(request.getChainId()))
+            }
+            return request
+        }
+    }
+)
 
 // The API client to fulfill the request
 export let apiClient: Readable<APIClient | undefined> = derived(currentChain, ($currentChain) => {
@@ -27,35 +55,9 @@ export let apiClient: Readable<APIClient | undefined> = derived(currentChain, ($
 })
 
 // The ABI Provider derived from the API Client to resolve requests
-export let abiProvider: Readable<any> = derived(apiClient, ($apiClient) => {
+export let abiProvider: Readable<ABICache | undefined> = derived(apiClient, ($apiClient) => {
     if ($apiClient) {
-        return {
-            getAbi: async (account: any) => {
-                return (await $apiClient.v1.chain.get_abi(account)).abi as ABIDef
-            },
-        }
-    }
-})
-
-// The currently loaded request, derived from the current route
-export const currentRequest: Readable<SigningRequest | undefined> = derived(
-    currentRoute,
-    ($currentRoute) => {
-        if ($currentRoute) {
-            return SigningRequest.from(`esr:${$currentRoute.params.payload}`, {
-                zlib,
-            })
-        }
-    }
-)
-
-// Set the current chain based on the current request
-currentRequest.subscribe((request) => {
-    if (request) {
-        const id = request.getChainId()
-        if (!currentChainConfig || !currentChainConfig.chainId.equals(id)) {
-            currentChain.set(chainConfig(id))
-        }
+        return new ABICache($apiClient)
     }
 })
 
@@ -63,29 +65,21 @@ currentRequest.subscribe((request) => {
 export const abis: Readable<AbiMap | undefined> = derived(
     [abiProvider, currentRequest],
     ([$abiProvider, $currentRequest], set) => {
-        if ($currentRequest && currentChainConfig) {
+        if ($abiProvider && $currentRequest) {
             $currentRequest.fetchAbis($abiProvider).then((abis) => set(abis))
         }
     }
 )
 
-// Whether or not this is a multichain request
-export const multichain: Readable<boolean> = derived(currentRequest, ($currentRequest) => {
-    if ($currentRequest) {
-        return $currentRequest.isMultiChain()
-    }
-    return false
-})
-
 // The current transaction resolved from the current request
 export const currentTransaction: Readable<ResolvedTransaction> = derived(
     [abis, activeSession, apiClient, currentRequest],
     ([$abis, $activeSession, $apiClient, $currentRequest], set) => {
-        if ($apiClient && $abis && $currentRequest) {
+        if ($abis && $apiClient && $currentRequest) {
             // Create a dummy permission level for resolution without an active session
             let auth: PermissionLevel = PermissionLevel.from({
-                actor: 'test',
-                permission: 'active',
+                actor: PlaceholderName,
+                permission: PlaceholderPermission,
             })
             // If an active session exists, use it instead
             if ($activeSession) {
