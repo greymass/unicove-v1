@@ -60,8 +60,8 @@
     const balance: Readable<Balance | undefined> = derived(
         [activeSession, balances, token],
         ([$activeSession, $currentBalances, $token]) => {
-            if ($token) {
-                const key = makeBalanceKey($token, $activeSession?.actor)
+            if ($activeSession && $token) {
+                const key = makeBalanceKey($token, $activeSession.actor)
                 return $currentBalances.find((b) => b.key === key)
             }
         }

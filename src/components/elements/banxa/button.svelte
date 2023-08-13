@@ -2,7 +2,7 @@
     import {writable} from 'svelte/store'
     import Button from '~/components/elements/button.svelte'
     import {generateWidget} from '~/lib/banxa'
-    import {activeSession, activeBlockchain} from '~/store'
+    import {activeSession} from '~/store'
 
     import Modal from '~/components/elements/modal.svelte'
 
@@ -97,6 +97,7 @@
     bind:display={displayModal}
 >
     <iframe
+        title="Banxa"
         on:load={setupIframeListener}
         id="banxa-widget"
         src={tokenPurchaseUrl}

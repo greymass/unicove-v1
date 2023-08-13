@@ -1,16 +1,16 @@
 <script>
-    import {Asset, Name} from '@wharfkit/antelope'
-    import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
-    import {getClient} from '~/api-client'
+    import {Asset} from '@wharfkit/antelope'
+    import {derived} from 'svelte/store'
+
     import {DelegatedBandwidth} from '~/abi-types'
     import {ChainFeatures} from '~/config'
-
     import {activeSession, activeBlockchain, currentAccount, activePriceTicker} from '~/store'
     import {balances, fetchBalances} from '~/stores/balances'
     import {isLoading} from '~/stores/balances-provider'
-    import {getToken, systemTokenKey, tokens} from '~/stores/tokens'
+    import {getToken, systemTokenKey} from '~/stores/tokens'
+
     import {stateREX} from '~/pages/resources/resources'
 
     import Page from '~/components/layout/page.svelte'
@@ -81,8 +81,8 @@
     )
 
     const totalUsdValue: Readable<number> = derived(
-        [balances, currentAccount, delegatedTokens, tokens, activePriceTicker, rexTokens],
-        ([$balances, $currentAccount, $delegated, $tokens, $price, $rex]) => {
+        [balances, currentAccount, delegatedTokens, activePriceTicker, rexTokens],
+        ([$balances, $currentAccount, $delegated, $price, $rex]) => {
             let value = 0
             if ($currentAccount && $price !== undefined) {
                 value += $rex * $price

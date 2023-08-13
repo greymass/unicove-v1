@@ -1,14 +1,13 @@
 <script>
+    import {SerializedSession} from '@wharfkit/session'
     import {activate} from '~/auth'
-    import type {SessionLike} from '~/auth'
 
     import Icon from '~/components/elements/icon.svelte'
-
     import List from './list.svelte'
 
     export let open = false
 
-    function onSelect(session: SessionLike) {
+    function onSelect(session: SerializedSession) {
         activate(session)
         open = false
     }

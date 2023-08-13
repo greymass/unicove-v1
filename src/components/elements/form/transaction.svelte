@@ -42,7 +42,7 @@
             // Set the current value equal to the initial value
             let currentValue: any = initialValue
 
-            // Start an interval to continously monitor for changes to that value
+            // Start an interval to continuously monitor for changes to that value
             refreshInterval = setInterval(() => {
                 // Refresh the account
                 refreshAccount($currentAccount!.account_name)
