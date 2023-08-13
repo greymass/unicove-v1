@@ -16,8 +16,8 @@
         "acorn": "8.0.1"
     },
     "dependencies": {
-        "@greymass/create-account": "^1.0.0",
         "@greymass/antelope-tokens": "^0.0.1",
+        "@greymass/create-account": "^1.0.0",
         "@greymass/eosio-resources": "0.7.0",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",
         "@types/feather-icons": "^4.7.0",
@@ -26,6 +26,7 @@
         "@wharfkit/transact-plugin-autocorrect": "^1.0.0",
         "@wharfkit/transact-plugin-resource-provider": "^1.0.0",
         "@wharfkit/wallet-plugin-anchor": "^1.0.0",
+        "@wharfkit/wallet-plugin-cleos": "^1.0.0",
         "@wharfkit/wallet-plugin-cloudwallet": "^1.0.0",
         "@wharfkit/wallet-plugin-mock": "^1.0.0",
         "@wharfkit/wallet-plugin-privatekey": "^1.0.0",

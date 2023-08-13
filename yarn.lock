@@ -1412,6 +1412,13 @@
     isomorphic-ws "^5.0.0"
     ws "^8.13.0"
 
+"@wharfkit/wallet-plugin-cleos@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/wallet-plugin-cleos/-/wallet-plugin-cleos-1.0.0.tgz#49f27dcc6c1ecc7907d5c7181ac93ed29ccd36d2"
+  integrity sha512-alPLC/sGzZx211z3HKCYLkEuiO/AWg3KeyFrVabTvLBsscKM/kkbmIuo5WEFq37TFH0ILv5mjbo2XeVJHVog/A==
+  dependencies:
+    tslib "^2.1.0"
+
 "@wharfkit/wallet-plugin-cloudwallet@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@wharfkit/wallet-plugin-cloudwallet/-/wallet-plugin-cloudwallet-1.0.0.tgz#a460e66ff6eac37435c6da81a14371e75c2c9dbf"

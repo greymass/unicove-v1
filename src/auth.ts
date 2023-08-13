@@ -8,6 +8,8 @@ import {ChainDefinition, SerializedSession, Session, SessionKit} from '@wharfkit
 import WebUIRenderer from '@wharfkit/web-renderer'
 import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
 import {WalletPluginAnchor} from '@wharfkit/wallet-plugin-anchor'
+import {WalletPluginCleos} from '@wharfkit/wallet-plugin-cleos'
+import {WalletPluginCloudWallet} from '@wharfkit/wallet-plugin-cloudwallet'
 
 const sessionKit = new SessionKit(
     {
@@ -19,7 +21,11 @@ const sessionKit = new SessionKit(
             })
         ),
         ui: new WebUIRenderer(),
-        walletPlugins: [new WalletPluginAnchor()],
+        walletPlugins: [
+            new WalletPluginAnchor(),
+            new WalletPluginCloudWallet(),
+            new WalletPluginCleos(),
+        ],
     },
     {
         transactPlugins: [new TransactPluginResourceProvider()],
