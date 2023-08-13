@@ -1,4 +1,4 @@
-import type {Name} from 'anchor-link'
+import type {Name} from '@wharfkit/antelope'
 
 import type {Balance} from '~/stores/balances'
 

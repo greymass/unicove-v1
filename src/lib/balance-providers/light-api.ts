@@ -1,4 +1,4 @@
-import {Asset, Name} from 'anchor-link'
+import {Asset, Name} from '@wharfkit/antelope'
 
 import type {ChainConfig} from '~/config'
 import {makeTokenKey, Token} from '~/stores/tokens'

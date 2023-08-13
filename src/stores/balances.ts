@@ -35,7 +35,7 @@ export const balances: Readable<Balance[]> = derived(
 
         let newBalances = $balancesProvider.balances
         if ($activeSession) {
-            const coreToken = createTokenFromChainId($activeSession.chainId)
+            const coreToken = createTokenFromChainId($activeSession.chain.id)
             newBalances = newBalances.filter((x) => x.tokenKey !== coreToken.key)
         }
         // Push balances in as received by the balance provider

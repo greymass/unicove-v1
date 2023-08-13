@@ -1,4 +1,4 @@
-import type {Asset} from '@wharfkit/antelope'
+import {Asset} from '@wharfkit/antelope'
 import type {Checksum256, NameType} from '@wharfkit/antelope'
 import AntelopeTokens from '@greymass/antelope-tokens'
 import {derived, writable, get} from 'svelte/store'
@@ -8,6 +8,7 @@ import {chainConfig, ChainConfig} from '~/config'
 import {activeBlockchain, activePriceTicker, activeSession} from '~/store'
 import {priceTicker} from '~/price-ticker'
 import {Balance, balances} from '~/stores/balances'
+import {Session} from '@wharfkit/session'
 
 export interface Token {
     key: string
@@ -104,20 +105,20 @@ export function getToken(key: string) {
     return existing.find((t) => t.key === key)
 }
 
-export function loadTokenMetadata(session: LinkSession) {
+export function loadTokenMetadata(session: Session) {
     const records: Token[] = []
 
-    const sysToken = createTokenFromChainId(session.chainId, get(activePriceTicker))
+    const sysToken = createTokenFromChainId(session.chain.id, get(activePriceTicker))
     records.push(sysToken)
 
     for (const t of AntelopeTokens) {
-        const chain = chainConfig(session.chainId)
+        const chain = chainConfig(session.chain.id)
 
         if (chain.id === t.chain) {
             if (t.supply && t.supply.precision && t.symbol) {
                 const symbol: Asset.Symbol = Asset.Symbol.from(`${t.supply.precision},${t.symbol}`)
                 const token = {
-                    chainId: session.chainId,
+                    chainId: session.chain.id,
                     contract: t.account,
                     symbol: symbol,
                     name: t.metadata.name,

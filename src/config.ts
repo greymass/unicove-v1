@@ -1,5 +1,5 @@
-import {Asset, Name} from '@wharfkit/antelope'
-import {Checksum256} from '@wharfkit/antelope'
+import {Asset, Checksum256, Name} from '@wharfkit/antelope'
+import {ChainId} from '@wharfkit/session'
 
 import {BalanceProviders} from '~/lib/balance-providers/types'
 
@@ -46,12 +46,6 @@ export const resourceFeatures = [
     ChainFeatures.REX,
     ChainFeatures.PowerUp,
 ]
-
-// Available Balance Providers
-export enum BalanceProviders {
-    // https://www.api.explorer.io/account/teamgreymass?type=getAccountTokens&coreSymbol=4,EOS
-    Bloks,
-}
 
 export interface ChainConfig {
     /** Short identifier. */
@@ -111,62 +105,62 @@ export const chains: ChainConfig[] = [
         name: 'EOS',
         nodeUrl: 'https://eos.greymass.com',
         testnet: false,
-        bloksUrl: 'https://bloks.io',
+        explorerUrl: 'https://bloks.io',
         balanceProviders: new Set([BalanceProviders.LightAPI]),
         banxaEnabled: true,
     },
-    // {
-    //     id: 'fio',
-    //     chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),
-    //     chainId: Checksum256.from(
-    //         '21dcae42c0182200e93f954a074011f9048a7624c6fe81d3c9541a614a88bd1c'
-    //     ),
-    //     coreTokenSymbol: Asset.Symbol.from('9,FIO'),
-    //     coreTokenContract: Name.from('fio.token'),
-    //     coreTokenTransfer: Name.from('trnsfiopubky'),
-    //     name: 'FIO',
-    //     nodeUrl: 'https://fio.greymass.com',
-    //     testnet: false,
-    //     explorerUrl: 'https://fio.explorer.io',
-    //     balanceProviders: new Set([BalanceProviders.explorer]),
-    // },
-    // {
-    //     id: 'fio-testnet',
-    //     chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),
-    //     chainId: Checksum256.from(
-    //         'b20901380af44ef59c5918439a1f9a41d83669020319a80574b804a5f95cbd7e'
-    //     ),
-    //     coreTokenSymbol: Asset.Symbol.from('9,FIO'),
-    //     coreTokenContract: Name.from('fio.token'),
-    //     coreTokenTransfer: Name.from('trnsfiopubky'),
-    //     name: 'FIO (Testnet)',
-    //     nodeUrl: 'https://fiotestnet.greymass.com',
-    //     testnet: true,
-    //     explorerUrl: 'https://fio-test.explorer.io',
-    // },
-    // {
-    //     id: 'jungle3',
-    //     chainFeatures: new Set([
-    //         ChainFeatures.BidName,
-    //         ChainFeatures.BuyRAM,
-    //         ChainFeatures.Fuel,
-    //         ChainFeatures.PowerUp,
-    //         ChainFeatures.REX,
-    //         ChainFeatures.Staking,
-    //         ChainFeatures.VoteProducer,
-    //     ]),
-    //     chainId: Checksum256.from(
-    //         '2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840'
-    //     ),
-    //     coreTokenSymbol: Asset.Symbol.from('4,EOS'),
-    //     coreTokenContract: Name.from('eosio.token'),
-    //     coreTokenTransfer: Name.from('transfer'),
-    //     name: 'Jungle 3 (Testnet)',
-    //     nodeUrl: 'https://jungle3.greymass.com',
-    //     testnet: true,
-    //     explorerUrl: 'https://jungle3.explorer.io',
-    //     balanceProviders: new Set([BalanceProviders.explorer]),
-    // },
+    {
+        id: 'fio',
+        chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),
+        chainId: Checksum256.from(
+            '21dcae42c0182200e93f954a074011f9048a7624c6fe81d3c9541a614a88bd1c'
+        ),
+        coreTokenSymbol: Asset.Symbol.from('9,FIO'),
+        coreTokenContract: Name.from('fio.token'),
+        coreTokenTransfer: Name.from('trnsfiopubky'),
+        name: 'FIO',
+        nodeUrl: 'https://fio.greymass.com',
+        testnet: false,
+        explorerUrl: 'https://fio.explorer.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
+        id: 'fio-testnet',
+        chainFeatures: new Set([ChainFeatures.FIOBundledFees, ChainFeatures.VoteProducer]),
+        chainId: Checksum256.from(
+            'b20901380af44ef59c5918439a1f9a41d83669020319a80574b804a5f95cbd7e'
+        ),
+        coreTokenSymbol: Asset.Symbol.from('9,FIO'),
+        coreTokenContract: Name.from('fio.token'),
+        coreTokenTransfer: Name.from('trnsfiopubky'),
+        name: 'FIO (Testnet)',
+        nodeUrl: 'https://fiotestnet.greymass.com',
+        testnet: true,
+        explorerUrl: 'https://fio-test.explorer.io',
+    },
+    {
+        id: 'jungle3',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.PowerUp,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: Checksum256.from(
+            '2a02a0053e5a8cf73a56ba0fda11e4d92e0238a4a2aa74fccf46d5a910746840'
+        ),
+        coreTokenSymbol: Asset.Symbol.from('4,EOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Jungle 3 (Testnet)',
+        nodeUrl: 'https://jungle3.greymass.com',
+        testnet: true,
+        explorerUrl: 'https://jungle3.explorer.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
     {
         id: 'jungle4',
         chainFeatures: new Set([
@@ -189,7 +183,6 @@ export const chains: ChainConfig[] = [
         testnet: true,
         explorerUrl: 'https://jungle4.eosq.eosnation.io',
         explorerPath: 'tx',
-        bloksUrl: 'https://eosauthority.com/?network=jungle',
     },
     {
         id: 'proton',
@@ -201,7 +194,7 @@ export const chains: ChainConfig[] = [
         name: 'Proton',
         nodeUrl: 'https://proton.greymass.com',
         testnet: false,
-        bloksUrl: 'https://proton.bloks.io',
+        explorerUrl: 'https://proton.bloks.io',
         balanceProviders: new Set([BalanceProviders.LightAPI]),
     },
     {
@@ -223,7 +216,7 @@ export const chains: ChainConfig[] = [
         resourceSampleAccount: 'greymassfuel',
         resourceSampleMilliseconds: 1000,
         testnet: false,
-        bloksUrl: 'https://telos.bloks.io',
+        explorerUrl: 'https://telos.bloks.io',
         balanceProviders: new Set([BalanceProviders.LightAPI]),
     },
     {
@@ -245,7 +238,7 @@ export const chains: ChainConfig[] = [
         resourceSampleAccount: 'greymassfuel',
         resourceSampleMilliseconds: 1000,
         testnet: true,
-        bloksUrl: 'https://telos-test.bloks.io',
+        explorerUrl: 'https://telos-test.bloks.io',
         balanceProviders: new Set([BalanceProviders.Bloks]),
     },
     {
@@ -267,97 +260,97 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://wax.greymass.com',
         resourceSampleAccount: 'teamgreymass',
         testnet: false,
-        bloksUrl: 'https://wax.bloks.io',
+        explorerUrl: 'https://wax.bloks.io',
         balanceProviders: new Set([BalanceProviders.LightAPI]),
         banxaEnabled: true,
     },
-    // {
-    //     id: 'proton',
-    //     chainFeatures: new Set([ChainFeatures.Staking, ChainFeatures.VoteProducer]),
-    //     chainId: Checksum256.from(
-    //         '384da888112027f0321850a169f737c33e53b388aad48b5adace4bab97f437e0'
-    //     ),
-    //     coreTokenSymbol: Asset.Symbol.from('4,XPR'),
-    //     coreTokenContract: Name.from('eosio.token'),
-    //     coreTokenTransfer: Name.from('transfer'),
-    //     name: 'Proton',
-    //     nodeUrl: 'https://proton.greymass.com',
-    //     testnet: false,
-    //     explorerUrl: 'https://proton.explorer.io',
-    //     balanceProviders: new Set([BalanceProviders.Bloks]),
-    // },
-    // {
-    //     id: 'telos',
-    //     chainFeatures: new Set([
-    //         ChainFeatures.BidName,
-    //         ChainFeatures.BuyRAM,
-    //         ChainFeatures.Fuel,
-    //         ChainFeatures.REX,
-    //         ChainFeatures.Staking,
-    //         ChainFeatures.VoteProducer,
-    //     ]),
-    //     chainId: Checksum256.from(
-    //         '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11'
-    //     ),
-    //     coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
-    //     coreTokenContract: Name.from('eosio.token'),
-    //     coreTokenTransfer: Name.from('transfer'),
-    //     name: 'Telos',
-    //     nodeUrl: 'https://telos.greymass.com',
-    //     resourceSampleAccount: 'greymassfuel',
-    //     resourceSampleMilliseconds: 1000,
-    //     testnet: false,
-    //     explorerUrl: 'https://telos.explorer.io',
-    //     balanceProviders: new Set([BalanceProviders.explorer]),
-    // },
-    // {
-    //     id: 'telos-testnet',
-    //     chainFeatures: new Set([
-    //         ChainFeatures.BidName,
-    //         ChainFeatures.BuyRAM,
-    //         ChainFeatures.Fuel,
-    //         ChainFeatures.REX,
-    //         ChainFeatures.Staking,
-    //         ChainFeatures.VoteProducer,
-    //     ]),
-    //     chainId: Checksum256.from(
-    //         '1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f'
-    //     ),
-    //     coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
-    //     coreTokenContract: Name.from('eosio.token'),
-    //     coreTokenTransfer: Name.from('transfer'),
-    //     name: 'Telos (Testnet)',
-    //     nodeUrl: 'https://testnet.telos.net',
-    //     resourceSampleAccount: 'greymassfuel',
-    //     resourceSampleMilliseconds: 1000,
-    //     testnet: true,
-    //     explorerUrl: 'https://telos-test.explorer.io',
-    //     balanceProviders: new Set([BalanceProviders.explorer]),
-    // },
-    // {
-    //     id: 'wax',
-    //     chainFeatures: new Set([
-    //         ChainFeatures.BidName,
-    //         ChainFeatures.BuyRAM,
-    //         ChainFeatures.Fuel,
-    //         ChainFeatures.Staking,
-    //         ChainFeatures.VoteProducer,
-    //         ChainFeatures.DelphiOracle,
-    //     ]),
-    //     chainId: Checksum256.from(
-    //         '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4'
-    //     ),
-    //     coreTokenSymbol: Asset.Symbol.from('8,WAX'),
-    //     coreTokenContract: Name.from('eosio.token'),
-    //     coreTokenTransfer: Name.from('transfer'),
-    //     name: 'WAX',
-    //     banxa_coin_code: 'WAXP',
-    //     nodeUrl: 'https://wax.greymass.com',
-    //     resourceSampleAccount: 'teamgreymass',
-    //     testnet: false,
-    //     explorerUrl: 'https://wax.explorer.io',
-    //     banxaEnabled: true,
-    // },
+    {
+        id: 'proton',
+        chainFeatures: new Set([ChainFeatures.Staking, ChainFeatures.VoteProducer]),
+        chainId: Checksum256.from(
+            '384da888112027f0321850a169f737c33e53b388aad48b5adace4bab97f437e0'
+        ),
+        coreTokenSymbol: Asset.Symbol.from('4,XPR'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Proton',
+        nodeUrl: 'https://proton.greymass.com',
+        testnet: false,
+        explorerUrl: 'https://proton.explorer.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
+        id: 'telos',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: Checksum256.from(
+            '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11'
+        ),
+        coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Telos',
+        nodeUrl: 'https://telos.greymass.com',
+        resourceSampleAccount: 'greymassfuel',
+        resourceSampleMilliseconds: 1000,
+        testnet: false,
+        explorerUrl: 'https://telos.explorer.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
+        id: 'telos-testnet',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.REX,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
+        chainId: Checksum256.from(
+            '1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f'
+        ),
+        coreTokenSymbol: Asset.Symbol.from('4,TLOS'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'Telos (Testnet)',
+        nodeUrl: 'https://testnet.telos.net',
+        resourceSampleAccount: 'greymassfuel',
+        resourceSampleMilliseconds: 1000,
+        testnet: true,
+        explorerUrl: 'https://telos-test.explorer.io',
+        balanceProviders: new Set([BalanceProviders.Bloks]),
+    },
+    {
+        id: 'wax',
+        chainFeatures: new Set([
+            ChainFeatures.BidName,
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Fuel,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+            ChainFeatures.DelphiOracle,
+        ]),
+        chainId: Checksum256.from(
+            '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4'
+        ),
+        coreTokenSymbol: Asset.Symbol.from('8,WAX'),
+        coreTokenContract: Name.from('eosio.token'),
+        coreTokenTransfer: Name.from('transfer'),
+        name: 'WAX',
+        banxa_coin_code: 'WAXP',
+        nodeUrl: 'https://wax.greymass.com',
+        resourceSampleAccount: 'teamgreymass',
+        testnet: false,
+        explorerUrl: 'https://wax.explorer.io',
+        banxaEnabled: true,
+    },
 ]
 
 export function chainConfig(chainId: Checksum256): ChainConfig {
