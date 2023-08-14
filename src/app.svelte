@@ -9,7 +9,7 @@
     import Login from '~/pages/login.svelte'
     import Dashboard from '~/pages/dashboard/index.svelte'
     import Request from '~/pages/request/index.svelte'
-    import Transfer from '~/pages/transfer/index.svelte'
+    import Send from '~/pages/send/index.svelte'
     import TokensPurchase from '~/pages/tokens/purchase/index.svelte'
     import Resources from '~/pages/resources/index.svelte'
     import Components from '~/pages/_components/index.svelte'
@@ -17,7 +17,7 @@
     import Toasts from '~/components/elements/toasts.svelte'
     import BanxaSuccess from '~/pages/banxa/success.svelte'
     import BanxaFailure from '~/pages/banxa/failure.svelte'
-    import EVMSwap from '~/pages/evm/swap.svelte'
+    import Transfer from '~/pages/transfer/index.svelte'
 
     $: {
         document.body.classList.toggle('darkmode', $darkMode)
@@ -178,14 +178,14 @@
             <Route path="/">
                 <Dashboard />
             </Route>
-            <Route path="/transfer">
-                <Transfer />
+            <Route path="/send">
+                <Send />
             </Route>
             <Route path="/tokens/buy">
                 <TokensPurchase />
             </Route>
-            <Route path="/transfer/:contract/:token" let:meta>
-                <Transfer {meta} />
+            <Route path="/send/:contract/:token" let:meta>
+                <Send {meta} />
             </Route>
             <Route path="/request/:payload">
                 <Request />
@@ -199,8 +199,8 @@
             <Route path="/banxa/failure">
                 <BanxaFailure />
             </Route>
-            <Route path="/evm/swap">
-                <EVMSwap />
+            <Route path="/transfer">
+                <Transfer />
             </Route>
             <Route fallback>
                 <Page title="Page not found">

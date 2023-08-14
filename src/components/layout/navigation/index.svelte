@@ -23,12 +23,12 @@
         {
             icon: 'arrow-right',
             name: 'Send & Receive',
-            path: '/transfer',
+            path: '/send',
         },
         {
             icon: 'repeat',
             name: 'Transfer',
-            path: '/evm/swap',
+            path: '/transfer',
         },
         ...(banxaIsAvailable($activeBlockchain)
             ? [

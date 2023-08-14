@@ -6,12 +6,12 @@
     import Text from '~/components/elements/text.svelte'
     import Input from '~/components/elements/input.svelte'
 
-    import {transferData} from '~/pages/transfer/transfer'
-    import {txFee} from '~/pages/transfer/fio'
-    import StatusAddress from '~/pages/transfer/status/address.svelte'
-    import StatusAccount from '~/pages/transfer/status/account.svelte'
-    import StatusQuantity from '~/pages/transfer/status/quantity.svelte'
-    import StatusFee from '~/pages/transfer/status/fee.svelte'
+    import {transferData} from '~/pages/send/transfer'
+    import {txFee} from '~/pages/send/fio'
+    import StatusAddress from '~/pages/send/status/address.svelte'
+    import StatusAccount from '~/pages/send/status/account.svelte'
+    import StatusQuantity from '~/pages/send/status/quantity.svelte'
+    import StatusFee from '~/pages/send/status/fee.svelte'
 
     export let handleTransfer: () => void
     export let token: Token

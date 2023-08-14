@@ -12,7 +12,7 @@
     import InputPublicKey from '~/components/elements/input/publicKey.svelte'
     import Form from '~/components/elements/form.svelte'
 
-    import {transferData, Step} from '~/pages/transfer/transfer'
+    import {transferData, Step} from '~/pages/send/transfer'
     import Text from '~/components/elements/text.svelte'
     import Icon from '~/components/elements/icon.svelte'
 

@@ -1,174 +1,120 @@
 <script lang="ts">
-    import type {Readable} from 'svelte/store'
-    import type {TinroRouteMeta} from 'tinro'
-    import type {LinkSession} from 'anchor-link'
+    import type {TransactResult} from 'anchor-link'
+    import type {ethers} from 'ethers'
 
-    import {Name} from 'anchor-link'
-    import {onMount} from 'svelte'
-    import {derived} from 'svelte/store'
-    import {router} from 'tinro'
+    import {activeSession, evmAccount} from '~/store'
 
-    import {activeBlockchain, activeSession} from '~/store'
-    import type {Token, TokenKeyParams} from '~/stores/tokens'
-    import type {Balance} from '~/stores/balances'
-    import {balances, makeBalanceKey} from '~/stores/balances'
-    import {tokens, makeTokenKey} from '~/stores/tokens'
-    import {systemTokenKey} from '~/stores/tokens'
-    import {transferData, Step} from '~/pages/transfer/transfer'
-    import {syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/transfer/fio'
+    import {transferNativeToEvm, transferEvmToNative, connectEthWallet} from '~/lib/evm'
 
-    import Text from '~/components/elements/text.svelte'
-    import TransactionForm from '~/components/elements/form/transaction.svelte'
     import Page from '~/components/layout/page.svelte'
+    import Form from './form.svelte'
+    import Confirm from './confirm.svelte'
+    import Success from './success.svelte'
+    import Error from './error.svelte'
+    import type {Token} from '~/stores/tokens'
 
-    import TransferMain from '~/pages/transfer/main.svelte'
+    let step = 'form'
+    let amount: string = ''
+    let errorMessage: string | undefined
+    let from: Token | undefined
+    let to: Token | undefined
+    let nativeTransactResult: TransactResult | undefined
+    let evmTransactResult: ethers.providers.TransactionResponse | undefined
 
-    export let meta: TinroRouteMeta | undefined = undefined
-
-    onMount(() => {
-        resetData()
-        syncTxFee()
-        return () => {
-            stopSyncTxFee()
+    async function transfer() {
+        if (!$evmAccount) {
+            return (errorMessage = 'An evm session is required.')
         }
-    })
 
-    const token: Readable<Token | undefined> = derived(
-        [activeSession, systemTokenKey, transferData, tokens],
-        ([$activeSession, $systemTokenKey, $transferData, $tokens]) => {
-            if ($activeSession && $systemTokenKey && $tokens) {
-                // If this transfer session data has a token key, use it first
-                if ($transferData.tokenKey) {
-                    return $tokens.find((t) => t.key === $transferData.tokenKey)
-                }
-                // If the URL has a token key, use it second
-                if (meta) {
-                    const params: TokenKeyParams = {
-                        chainId: $activeBlockchain!.chainId,
-                        contract: Name.from(meta.params.contract),
-                        name: Name.from(meta.params.token),
-                    }
-                    const key = makeTokenKey(params)
-                    return $tokens.find((t) => t.key === key)
-                }
-                // Otherwise return the system token key
-                return $tokens.find((t) => t.key === $systemTokenKey)
+        try {
+            if (from?.name === 'EOS') {
+                nativeTransactResult = await transferNativeToEvm({
+                    nativeSession: $activeSession!,
+                    evmAccount: $evmAccount,
+                    amount,
+                })
+            } else {
+                evmTransactResult = await transferEvmToNative({
+                    nativeSession: $activeSession!,
+                    evmAccount: $evmAccount,
+                    amount,
+                })
             }
+        } catch (error) {
+            return (errorMessage = `Could not transfer. Error: ${
+                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+            }`)
         }
-    )
 
-    const balance: Readable<Balance | undefined> = derived(
-        [activeSession, balances, token],
-        ([$activeSession, $currentBalances, $token]) => {
-            if ($token) {
-                const key = makeBalanceKey($token, $activeSession!.auth.actor)
-                return $currentBalances.find((b) => b.key === key)
+        step = 'success'
+    }
+
+    function handleBack() {
+        step = 'form'
+        errorMessage = undefined
+        nativeTransactResult = undefined
+        evmTransactResult = undefined
+        amount = ''
+    }
+
+    async function submitForm() {
+        step = 'confirm'
+    }
+
+    let connectInterval: number | undefined
+    let connectingToEvmWallet = false
+
+    async function connectEvmWallet() {
+        let ethWalletAccount
+
+        if (connectingToEvmWallet || !!$evmAccount) {
+            return
+        }
+
+        connectingToEvmWallet = true
+
+        try {
+            ethWalletAccount = await connectEthWallet()
+        } catch (e) {
+            if (e.code === -32002) {
+                return
             }
+
+            if (!e.message) {
+                return (connectingToEvmWallet = false)
+            }
+
+            return (errorMessage = `Could not connect to ETH wallet. Error: ${e.message}`)
         }
-    )
 
-    let currentSession: LinkSession | undefined = $activeSession
-
-    $: {
-        if ($activeSession !== currentSession) {
-            resetData()
-            router.goto('/transfer')
-            currentSession = $activeSession
+        if (ethWalletAccount) {
+            evmAccount.set(ethWalletAccount)
+            connectInterval && clearInterval(connectInterval)
+            connectingToEvmWallet = false
         }
     }
 
-    function resetData() {
-        transferData.set({
-            step: Step.Recipient,
-        })
-        fetchTxFee()
-    }
-
-    function retryCallback() {
-        // Upon retry, move back to the confirm step to allow the user to retry
-        $transferData.step = Step.Confirm
-    }
-
-    function resetCallback() {
-        // Upon retry, move back to the confirm step to allow the user to retry
-        $transferData.step = Step.Recipient
-    }
+    connectInterval = window.setInterval(connectEvmWallet, 3000)
+    connectEvmWallet()
 </script>
 
 <style type="scss">
-    .container {
-        border: 1px solid var(--divider-grey);
-        border-radius: 20px;
-        padding: 26px;
-        :global(.button) {
-            margin-top: 31px;
-        }
-    }
-    .options {
-        display: inline-flex;
-        padding: 22px 0px 15px;
-        text-align: right;
-        .toggle {
-            font-weight: bold;
-            margin-right: 10px;
-            font-size: 10px;
-            line-height: 12px;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            letter-spacing: 0.1px;
-            text-transform: uppercase;
-            padding: 10px;
-            cursor: pointer;
-            color: var(--main-blue);
-            border-radius: 8px;
-            &.active {
-                opacity: 1;
-                background-color: var(--main-grey);
-                color: var(--main-black);
-            }
-            &:last-child {
-                margin-right: 0;
-            }
-        }
-    }
-    @media only screen and (max-width: 999px) {
-        .container {
-            margin: 0 32px;
-        }
-    }
-
-    @media only screen and (max-width: 600px) {
-        .container {
-            border: none;
-            padding: 12px;
-            margin: 0 8px;
-        }
+    div {
+        max-width: 800px;
+        margin: 0 auto;
     }
 </style>
 
 <Page divider={false}>
-    <span slot="submenu">
-        <div class="options">
-            <span
-                class="toggle"
-                class:active={$transferData.step !== Step.Receive}
-                on:click={() => ($transferData.step = Step.Recipient)}
-            >
-                <Text>↑ Send</Text>
-            </span>
-            <span
-                class="toggle"
-                class:active={$transferData.step === Step.Receive}
-                on:click={() => ($transferData.step = Step.Receive)}
-            >
-                <Text>↓ Receive</Text>
-            </span>
-        </div>
-    </span>
-    <TransactionForm {resetCallback} {retryCallback}>
-        <div class="container">
-            <TransferMain {balance} {token} {resetData} />
-        </div>
-    </TransactionForm>
+    <div class="container">
+        {#if errorMessage}
+            <Error error={errorMessage} {handleBack} />
+        {:else if step === 'form' || !from || !to}
+            <Form handleContinue={submitForm} bind:amount bind:from bind:to />
+        {:else if step === 'confirm'}
+            <Confirm {amount} {from} {to} handleConfirm={transfer} {handleBack} />
+        {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
+            <Success {from} {to} {nativeTransactResult} {evmTransactResult} {handleBack} />
+        {/if}
+    </div>
 </Page>

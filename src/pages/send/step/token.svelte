@@ -8,7 +8,7 @@
     import {activeSession, currentAccount} from '~/store'
     import {balances} from '~/stores/balances'
     import {tokens} from '~/stores/tokens'
-    import {Step, transferData} from '~/pages/transfer/transfer'
+    import {Step, transferData} from '~/pages/send/transfer'
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
 
