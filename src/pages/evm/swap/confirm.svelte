@@ -20,7 +20,6 @@
         padding: 3em;
         background-color: transparent;
         text-align: center;
-        border: 2px solid var(--main-grey);
 
         .top-section {
             margin-bottom: 2em;
