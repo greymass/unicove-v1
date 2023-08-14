@@ -8,7 +8,7 @@ import BN from 'bn.js'
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
 
-let provider: ethers.providers.Web3Provider
+let evmProvider: ethers.providers.Web3Provider
 
 declare global {
     interface Window {
@@ -19,6 +19,19 @@ declare global {
 interface EvmAccountParams {
     signer: ethers.providers.JsonRpcSigner
     address: string
+}
+
+function getProvider() {
+    if (evmProvider) {
+        return evmProvider
+    }
+
+    if (window.ethereum) {
+        evmProvider = new ethers.providers.Web3Provider(window.ethereum)
+        return evmProvider
+    }
+
+    throw new Error('No provider found')
 }
 
 export class EvmAccount {
@@ -131,6 +144,8 @@ export async function transferNativeToEvm({nativeSession, evmAccount, amount}: T
 }
 
 export async function estimateGas({nativeSession, evmAccount, amount}: TransferParams) {
+    const provider = getProvider()
+
     const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
 
     const gasPrice = await provider.getGasPrice()
@@ -194,7 +209,7 @@ export async function transferEvmToNative({nativeSession, evmAccount, amount}: T
         from: evmAccount.address,
         to: targetEvmAddress,
         value: ethers.utils.parseEther(amount),
-        gasPrice: await provider.getGasPrice(),
+        gasPrice: await  getProvider().getGasPrice(),
         gasLimit: gas,
         data: ethers.utils.formatBytes32String(''),
     })
@@ -226,7 +241,7 @@ async function switchNetwork() {
 
 export async function connectEthWallet(): Promise<EvmAccount> {
     if (window.ethereum) {
-        provider = new ethers.providers.Web3Provider(window.ethereum)
+        const provider = getProvider()
         let networkId = await provider.getNetwork()
         if (networkId.chainId !== 17777) {
             await switchNetwork()
