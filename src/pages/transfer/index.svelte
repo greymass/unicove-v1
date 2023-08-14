@@ -8,7 +8,6 @@
         transferNativeToEvm,
         transferEvmToNative,
         connectEthWallet,
-        estimateGas,
         getGasAmount,
         getNativeTransferFee,
     } from '~/lib/evm'
@@ -19,6 +18,7 @@
     import Success from './success.svelte'
     import Error from './error.svelte'
     import type {Token} from '~/stores/tokens'
+    import { updateAccount } from '~/stores/account-provider'
 
     let step = 'form'
     let deposit: string = ''
@@ -29,6 +29,7 @@
     let nativeTransactResult: TransactResult | undefined
     let evmTransactResult: ethers.providers.TransactionResponse | undefined
     let transferFee: Asset | undefined
+    let evmBalance: Asset | undefined
 
     async function transfer() {
         if (!$evmAccount) {
@@ -54,6 +55,8 @@
                 JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
             }`)
         }
+
+        setTimeout(updateBalances, 20000) // Waiting a 20 seconds and then updating the balances
 
         step = 'success'
     }
@@ -128,6 +131,24 @@
         }
     }
 
+    function getEvmBalance() {
+        $evmAccount?.getBalance().then((balance) => {
+            evmBalance = Asset.from(Number(balance.split(' ')[0]), '4,EOS')
+        })
+    }
+
+    function updateBalances() {
+        console.log('updateBalances')
+        updateAccount($activeSession!.auth.actor, $activeSession!.chainId)
+        getEvmBalance()
+    }
+
+    $: {
+        if ($evmAccount) {
+            getEvmBalance()
+        }
+    }
+
     connectInterval = window.setInterval(connectEvmWallet, 3000)
     connectEvmWallet()
 </script>
@@ -144,7 +165,7 @@
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
         {:else if step === 'form' || !from || !to || !deposit || !received}
-            <Form handleContinue={submitForm} bind:amount={deposit} bind:from bind:to />
+            <Form handleContinue={submitForm} {evmBalance} bind:amount={deposit} bind:from bind:to />
         {:else if step === 'confirm'}
             <Confirm
                 depositAmount={Asset.from(Number(deposit), '4,EOS')}

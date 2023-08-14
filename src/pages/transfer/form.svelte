@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Asset as CoreAsset} from '@greymass/eosio'
+    import type {Asset as CoreAsset} from '@greymass/eosio'
     import {currentAccountBalance, evmAccount, activeSession} from '~/store'
     import {Token, systemToken} from '~/stores/tokens'
 
@@ -13,8 +13,8 @@
     export let amount: string = ''
     export let from: Token | undefined
     export let to: Token | undefined
+    export let evmBalance: CoreAsset | undefined
 
-    let evmBalance: CoreAsset | undefined
     let validAmount = false
 
     function handleFromChange(token: Token) {
@@ -54,12 +54,6 @@
         if ($activeSession?.identifier) {
             resetForm()
         }
-    }
-
-    $: {
-        $evmAccount?.getBalance().then((balance) => {
-            evmBalance = CoreAsset.from(Number(balance.split(' ')[0]), '4,EOS')
-        })
     }
 
     let fromOptions: Token[] = []
