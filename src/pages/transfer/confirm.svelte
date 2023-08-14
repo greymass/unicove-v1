@@ -1,6 +1,5 @@
 <script lang="ts">
     import {Asset} from '@greymass/eosio'
-    import {getAddress} from 'ethers/lib/utils'
     import Button from '~/components/elements/button.svelte'
 
     import {evmAccount, activeSession} from '~/store'
@@ -8,7 +7,8 @@
 
     export let from: Token
     export let to: Token
-    export let amount: string
+    export let depositAmount: Asset
+    export let feeAmount: Asset | undefined
     export let handleConfirm: () => void
     export let handleBack: () => void
 </script>
@@ -85,8 +85,16 @@
             <td>{from?.name === 'EOS' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
-            <td>Amount</td>
-            <td>{Asset.from(Number(amount), '4,EOS')}</td>
+            <td>Deposit Amount</td>
+            <td>{depositAmount}</td>
+        </tr>
+        <tr>
+            <td>Fee Amount</td>
+            <td>{feeAmount}</td>
+        </tr>
+        <tr>
+            <td>Received Amount</td>
+            <td>{feeAmount ? Asset.from(depositAmount.value - feeAmount.value, '4,EOS') : '0 EOS'}</td>
         </tr>
     </table>
     <div class="bottom-section">

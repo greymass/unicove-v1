@@ -1,10 +1,10 @@
 <script lang="ts">
-    import type {TransactResult} from 'anchor-link'
+    import {Asset, TransactResult} from 'anchor-link'
     import type {ethers} from 'ethers'
 
     import {activeSession, evmAccount} from '~/store'
 
-    import {transferNativeToEvm, transferEvmToNative, connectEthWallet} from '~/lib/evm'
+    import {transferNativeToEvm, transferEvmToNative, connectEthWallet, estimateGas, getGasAmount} from '~/lib/evm'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './form.svelte'
@@ -20,6 +20,7 @@
     let to: Token | undefined
     let nativeTransactResult: TransactResult | undefined
     let evmTransactResult: ethers.providers.TransactionResponse | undefined
+    let transferFee: Asset | undefined
 
     async function transfer() {
         if (!$evmAccount) {
@@ -58,7 +59,17 @@
     }
 
     async function submitForm() {
+        if (!$evmAccount) {
+            return (errorMessage = 'An evm session is required.')
+        }
+        
         step = 'confirm'
+
+        transferFee = await getGasAmount({
+            nativeSession: $activeSession!,
+            evmAccount: $evmAccount,
+            amount,
+        })
     }
 
     let connectInterval: number | undefined
@@ -109,10 +120,10 @@
     <div class="container">
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
-        {:else if step === 'form' || !from || !to}
+        {:else if step === 'form' || !from || !to || !amount}
             <Form handleContinue={submitForm} bind:amount bind:from bind:to />
         {:else if step === 'confirm'}
-            <Confirm {amount} {from} {to} handleConfirm={transfer} {handleBack} />
+            <Confirm depositAmount={Asset.from(Number(amount), '4,EOS')} feeAmount={transferFee} {from} {to} handleConfirm={transfer} {handleBack} />
         {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
             <Success {from} {to} {nativeTransactResult} {evmTransactResult} {handleBack} />
         {/if}

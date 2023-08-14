@@ -128,16 +128,34 @@ export async function transferNativeToEvm({nativeSession, evmAccount, amount}: T
     })
 }
 
-export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
+export async function estimateGas({nativeSession, evmAccount, amount}: TransferParams) {
     const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
+
+    const gasPrice = await provider.getGasPrice()
 
     const gas = await provider.estimateGas({
         from: evmAccount.address,
         to: targetEvmAddress,
         value: ethers.utils.parseEther(amount),
-        gasPrice: await provider.getGasPrice(),
+        gasPrice,
         data: ethers.utils.formatBytes32String(''),
     })
+
+    return {gas, gasPrice}
+}
+
+export async function getGasAmount({nativeSession, evmAccount, amount}: TransferParams): Promise<Asset> {
+    const { gas, gasPrice } = await estimateGas({nativeSession, evmAccount, amount})
+
+    const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
+
+    return Asset.fromFloat(Number(eosAmount), '4,EOS')
+}
+
+export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
+    const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
+
+    const { gas } = await estimateGas({nativeSession, evmAccount, amount})
 
     return evmAccount.sendTransaction({
         from: evmAccount.address,
