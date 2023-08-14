@@ -36,8 +36,10 @@
         }
     }
 
+    $: readyToContinue = from && to && validAmount && $evmAccount
+
     function onContinue() {
-        if (validAmount) {
+        if (readyToContinue) {
             handleContinue()
         }
     }
@@ -193,7 +195,7 @@
             <Button
                 fluid
                 style="primary"
-                disabled={!from || !to || !validAmount || !$evmAccount}
+                disabled={!readyToContinue}
                 on:action={onContinue}>Continue</Button
             >
             {#if !$evmAccount}
