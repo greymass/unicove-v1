@@ -1,10 +1,12 @@
 import type {LinkSession} from 'anchor-link'
 import {Asset, Name} from 'anchor-link'
 import {ethers} from 'ethers'
+import { API } from 'anchor-link'
 
 import BN from 'bn.js'
 
 import {Transfer} from '~/abi-types'
+import { getClient } from '~/api-client'
 
 let provider: ethers.providers.Web3Provider
 
@@ -133,15 +135,38 @@ export async function estimateGas({nativeSession, evmAccount, amount}: TransferP
 
     const gasPrice = await provider.getGasPrice()
 
+    // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
+    const reducedAmount = String(Number(amount) - 0.005) 
+    
     const gas = await provider.estimateGas({
         from: evmAccount.address,
         to: targetEvmAddress,
-        value: ethers.utils.parseEther(amount),
+        value: ethers.utils.parseEther(reducedAmount),
         gasPrice,
         data: ethers.utils.formatBytes32String(''),
     })
 
     return {gas, gasPrice}
+}
+
+export async function getNativeTransferFee({nativeSession}: { nativeSession: LinkSession }): Promise<Asset> {
+    const apiClient = getClient(nativeSession.chainId)
+
+    let apiResponse
+
+    try {
+        apiResponse = await apiClient.v1.chain.get_table_rows({
+            code: 'eosio.evm',
+            scope: 'eosio.evm',
+            table: 'config',
+        })
+    } catch (err) {
+        throw new Error('Failed to get config table from eosio.evm. Full error: ' + err)
+    }
+
+    const config = apiResponse.rows[0]
+
+    return Asset.from(config.ingress_bridge_fee)
 }
 
 export async function getGasAmount({nativeSession, evmAccount, amount}: TransferParams): Promise<Asset> {

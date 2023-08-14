@@ -4,7 +4,7 @@
 
     import {activeSession, evmAccount} from '~/store'
 
-    import {transferNativeToEvm, transferEvmToNative, connectEthWallet, estimateGas, getGasAmount} from '~/lib/evm'
+    import {transferNativeToEvm, transferEvmToNative, connectEthWallet, estimateGas, getGasAmount, getNativeTransferFee} from '~/lib/evm'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './form.svelte'
@@ -14,7 +14,8 @@
     import type {Token} from '~/stores/tokens'
 
     let step = 'form'
-    let amount: string = ''
+    let deposit: string = ''
+    let received: string = ''
     let errorMessage: string | undefined
     let from: Token | undefined
     let to: Token | undefined
@@ -32,13 +33,13 @@
                 nativeTransactResult = await transferNativeToEvm({
                     nativeSession: $activeSession!,
                     evmAccount: $evmAccount,
-                    amount,
+                    amount: deposit,
                 })
             } else {
                 evmTransactResult = await transferEvmToNative({
                     nativeSession: $activeSession!,
                     evmAccount: $evmAccount,
-                    amount,
+                    amount: received,
                 })
             }
         } catch (error) {
@@ -55,21 +56,38 @@
         errorMessage = undefined
         nativeTransactResult = undefined
         evmTransactResult = undefined
-        amount = ''
+        deposit = ''
+        received = ''
     }
 
     async function submitForm() {
         if (!$evmAccount) {
             return (errorMessage = 'An evm session is required.')
         }
-        
+
         step = 'confirm'
 
-        transferFee = await getGasAmount({
-            nativeSession: $activeSession!,
-            evmAccount: $evmAccount,
-            amount,
-        })
+       
+
+        try {
+            if (from?.name === 'EOS') {
+                transferFee = await getNativeTransferFee({
+                    nativeSession: $activeSession!,
+                })
+            } else {
+                transferFee = await getGasAmount({
+                    nativeSession: $activeSession!,
+                    evmAccount: $evmAccount,
+                    amount: deposit,
+                })
+            }
+        } catch (error) {
+            return (errorMessage = `Could not estimate transfer fee. Error: ${
+                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+            }`)
+        }
+       
+        received = (parseFloat(deposit) - parseFloat(transferFee.value.toFixed(4))).toFixed(4)
     }
 
     let connectInterval: number | undefined
@@ -120,10 +138,18 @@
     <div class="container">
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
-        {:else if step === 'form' || !from || !to || !amount}
-            <Form handleContinue={submitForm} bind:amount bind:from bind:to />
+        {:else if step === 'form' || !from || !to || !deposit || !received}
+            <Form handleContinue={submitForm} bind:amount={deposit} bind:from bind:to />
         {:else if step === 'confirm'}
-            <Confirm depositAmount={Asset.from(Number(amount), '4,EOS')} feeAmount={transferFee} {from} {to} handleConfirm={transfer} {handleBack} />
+            <Confirm
+                depositAmount={Asset.from(Number(deposit), '4,EOS')}
+                receivedAmount={Asset.from(Number(received), '4,EOS')}
+                feeAmount={transferFee}
+                {from}
+                {to}
+                handleConfirm={transfer}
+                {handleBack}
+            />
         {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
             <Success {from} {to} {nativeTransactResult} {evmTransactResult} {handleBack} />
         {/if}
