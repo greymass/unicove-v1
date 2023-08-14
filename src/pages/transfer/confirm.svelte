@@ -91,7 +91,7 @@
         </tr>
         <tr>
             <td>Fee Amount</td>
-            <td>{feeAmount || '0.0000 EOS' }</td>
+            <td>{feeAmount || '0.0000 EOS'}</td>
         </tr>
         <tr>
             <td>Received Amount</td>

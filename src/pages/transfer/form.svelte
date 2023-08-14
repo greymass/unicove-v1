@@ -192,11 +192,8 @@
             </div>
         </div>
         <div class="bottom-section">
-            <Button
-                fluid
-                style="primary"
-                disabled={!readyToContinue}
-                on:action={onContinue}>Continue</Button
+            <Button fluid style="primary" disabled={!readyToContinue} on:action={onContinue}
+                >Continue</Button
             >
             {#if !$evmAccount}
                 <h3>Connect to metamask wallet to continue</h3>

@@ -1,12 +1,12 @@
 import type {LinkSession} from 'anchor-link'
 import {Asset, Name} from 'anchor-link'
 import {ethers} from 'ethers'
-import { API } from 'anchor-link'
+import {API} from 'anchor-link'
 
 import BN from 'bn.js'
 
 import {Transfer} from '~/abi-types'
-import { getClient } from '~/api-client'
+import {getClient} from '~/api-client'
 
 let provider: ethers.providers.Web3Provider
 
@@ -136,8 +136,8 @@ export async function estimateGas({nativeSession, evmAccount, amount}: TransferP
     const gasPrice = await provider.getGasPrice()
 
     // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
-    const reducedAmount = String(Number(amount) - 0.005) 
-    
+    const reducedAmount = String(Number(amount) - 0.005)
+
     const gas = await provider.estimateGas({
         from: evmAccount.address,
         to: targetEvmAddress,
@@ -149,7 +149,11 @@ export async function estimateGas({nativeSession, evmAccount, amount}: TransferP
     return {gas, gasPrice}
 }
 
-export async function getNativeTransferFee({nativeSession}: { nativeSession: LinkSession }): Promise<Asset> {
+export async function getNativeTransferFee({
+    nativeSession,
+}: {
+    nativeSession: LinkSession
+}): Promise<Asset> {
     const apiClient = getClient(nativeSession.chainId)
 
     let apiResponse
@@ -169,8 +173,12 @@ export async function getNativeTransferFee({nativeSession}: { nativeSession: Lin
     return Asset.from(config.ingress_bridge_fee)
 }
 
-export async function getGasAmount({nativeSession, evmAccount, amount}: TransferParams): Promise<Asset> {
-    const { gas, gasPrice } = await estimateGas({nativeSession, evmAccount, amount})
+export async function getGasAmount({
+    nativeSession,
+    evmAccount,
+    amount,
+}: TransferParams): Promise<Asset> {
+    const {gas, gasPrice} = await estimateGas({nativeSession, evmAccount, amount})
 
     const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
 
@@ -180,7 +188,7 @@ export async function getGasAmount({nativeSession, evmAccount, amount}: Transfer
 export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
     const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
 
-    const { gas } = await estimateGas({nativeSession, evmAccount, amount})
+    const {gas} = await estimateGas({nativeSession, evmAccount, amount})
 
     return evmAccount.sendTransaction({
         from: evmAccount.address,

@@ -4,7 +4,14 @@
 
     import {activeSession, evmAccount} from '~/store'
 
-    import {transferNativeToEvm, transferEvmToNative, connectEthWallet, estimateGas, getGasAmount, getNativeTransferFee} from '~/lib/evm'
+    import {
+        transferNativeToEvm,
+        transferEvmToNative,
+        connectEthWallet,
+        estimateGas,
+        getGasAmount,
+        getNativeTransferFee,
+    } from '~/lib/evm'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './form.svelte'
@@ -67,8 +74,6 @@
 
         step = 'confirm'
 
-       
-
         try {
             if (from?.name === 'EOS') {
                 transferFee = await getNativeTransferFee({
@@ -86,7 +91,7 @@
                 JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
             }`)
         }
-       
+
         received = (parseFloat(deposit) - parseFloat(transferFee.value.toFixed(4))).toFixed(4)
     }
 
