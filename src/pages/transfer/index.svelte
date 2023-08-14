@@ -18,7 +18,7 @@
     import Success from './success.svelte'
     import Error from './error.svelte'
     import type {Token} from '~/stores/tokens'
-    import { updateAccount } from '~/stores/account-provider'
+    import {updateAccount} from '~/stores/account-provider'
 
     let step = 'form'
     let deposit: string = ''
@@ -165,7 +165,13 @@
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
         {:else if step === 'form' || !from || !to || !deposit || !received}
-            <Form handleContinue={submitForm} {evmBalance} bind:amount={deposit} bind:from bind:to />
+            <Form
+                handleContinue={submitForm}
+                {evmBalance}
+                bind:amount={deposit}
+                bind:from
+                bind:to
+            />
         {:else if step === 'confirm'}
             <Confirm
                 depositAmount={Asset.from(Number(deposit), '4,EOS')}

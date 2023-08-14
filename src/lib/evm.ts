@@ -1,7 +1,6 @@
 import type {LinkSession} from 'anchor-link'
 import {Asset, Name} from 'anchor-link'
 import {ethers} from 'ethers'
-import {API} from 'anchor-link'
 
 import BN from 'bn.js'
 
@@ -209,7 +208,7 @@ export async function transferEvmToNative({nativeSession, evmAccount, amount}: T
         from: evmAccount.address,
         to: targetEvmAddress,
         value: ethers.utils.parseEther(amount),
-        gasPrice: await  getProvider().getGasPrice(),
+        gasPrice: await getProvider().getGasPrice(),
         gasLimit: gas,
         data: ethers.utils.formatBytes32String(''),
     })
