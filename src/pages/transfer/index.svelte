@@ -71,11 +71,18 @@
     }
 
     async function submitForm() {
-        if (!$evmAccount) {
-            return (errorMessage = 'An evm session is required.')
-        }
-
         step = 'confirm'
+
+        const transferFee = await estimateTransferFee()
+
+        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(4)
+    }
+
+    async function estimateTransferFee(): Promise<Asset | void> {
+        if (!$evmAccount) {
+            errorMessage = 'An evm session is required.'
+            return
+        }
 
         try {
             if (from?.name === 'EOS') {
@@ -90,12 +97,13 @@
                 })
             }
         } catch (error) {
-            return (errorMessage = `Could not estimate transfer fee. Error: ${
+             errorMessage = `Could not estimate transfer fee. Error: ${
                 JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
-            }`)
+            }`
+            return
         }
 
-        received = (parseFloat(deposit) - parseFloat(transferFee.value.toFixed(4))).toFixed(4)
+        return transferFee
     }
 
     let connectInterval: number | undefined
@@ -167,8 +175,9 @@
         {:else if step === 'form' || !from || !to || !deposit || !received}
             <Form
                 handleContinue={submitForm}
+                feeAmount={transferFee}
                 {evmBalance}
-                bind:amount={deposit}
+                bind:amount={received}
                 bind:from
                 bind:to
             />

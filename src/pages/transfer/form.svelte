@@ -14,6 +14,7 @@
     export let from: Token | undefined
     export let to: Token | undefined
     export let evmBalance: CoreAsset | undefined
+    export let feeAmount: CoreAsset | undefined
 
     let validAmount = false
 
@@ -29,11 +30,13 @@
     }
 
     function useEntireBalance() {
+        let value
         if (from?.name === 'EOS (EVM)') {
-            amount = evmBalance?.value.toFixed(4) || '0.0000'
+            value = evmBalance?.value
         } else if (from?.name === 'EOS') {
-            amount = $currentAccountBalance?.value.toFixed(4) || '0.0000'
+            value = $currentAccountBalance?.value
         }
+        amount = ((value || 0) - (feeAmount?.value || 0))?.toFixed(4)
     }
 
     $: readyToContinue = from && to && validAmount && $evmAccount
