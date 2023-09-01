@@ -21,9 +21,23 @@
         padding: 3em;
         background-color: transparent;
         text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        
 
         .top-section {
             margin-bottom: 2em;
+
+            h1 {
+                font-weight: bold;
+                font-size: 1.8em;
+            }
+
+            h3 {
+                margin-top: 10px;
+                font-weight: normal;
+                font-size: 1.5em;
+            }
         }
 
         table {
@@ -35,6 +49,7 @@
                 justify-content: space-between;
                 font-size: 11px;
                 border-top: 1px solid #ddd;
+                padding: 10px;
 
                 &:first-child {
                     border: none;
@@ -42,6 +57,10 @@
 
                 td {
                     padding: 1.5em;
+
+                    &:first-of-type {
+                        font-weight: bold;
+                    }
                 }
             }
         }
