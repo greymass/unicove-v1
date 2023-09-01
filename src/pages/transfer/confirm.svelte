@@ -23,7 +23,6 @@
         text-align: center;
         border: 1px solid #ddd;
         border-radius: 30px;
-        
 
         .top-section {
             margin-bottom: 2em;

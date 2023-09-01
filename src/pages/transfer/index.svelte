@@ -73,12 +73,13 @@
     async function submitForm() {
         step = 'confirm'
 
-        const transferFee = await estimateTransferFee()
+        await estimateTransferFee()
 
         deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(4)
     }
 
-    async function estimateTransferFee(): Promise<Asset | void> {
+    async function estimateTransferFee(): Promise<Asset | undefined> {
+        console.log({from, to, deposit})
         if (!$evmAccount) {
             errorMessage = 'An evm session is required.'
             return
@@ -159,6 +160,12 @@
 
     connectInterval = window.setInterval(connectEvmWallet, 3000)
     connectEvmWallet()
+
+    $: {
+        if (from && to && deposit !== '') {
+            estimateTransferFee()
+        }
+    }
 </script>
 
 <style type="scss">

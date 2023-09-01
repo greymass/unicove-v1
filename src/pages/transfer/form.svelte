@@ -191,7 +191,7 @@
                         tokenOptions={toOptions}
                     />
                 </div>
-                {#if receivedAmount && receivedAmount.value > 0}
+                {#if receivedAmount && receivedAmount.value > 0 && feeAmount && feeAmount.value > 0}
                     <div class="label-container">
                         <Label align="left" >Amount Received:  {String(receivedAmount)}</Label>
                     </div>  
