@@ -2,7 +2,7 @@
     import {Asset, TransactResult} from 'anchor-link'
     import type {ethers} from 'ethers'
 
-    import {activeSession, evmAccount} from '~/store'
+    import {currentAccountBalance, evmAccount, activeSession} from '~/store'
 
     import {
         transferNativeToEvm,
@@ -30,6 +30,21 @@
     let evmTransactResult: ethers.providers.TransactionResponse | undefined
     let transferFee: Asset | undefined
     let evmBalance: Asset | undefined
+
+    async function useEntireBalance() {
+        if (!from || !to) return
+
+        let value
+        if (from?.name === 'EOS (EVM)') {
+            value = evmBalance?.value
+        } else if (from?.name === 'EOS') {
+            value = $currentAccountBalance?.value
+        }
+
+        await estimateTransferFee(String(value))
+
+        received = ((value || 0) - (transferFee?.value || 0))?.toFixed(4)
+    }
 
     async function transfer() {
         if (!$evmAccount) {
@@ -78,8 +93,7 @@
         deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(4)
     }
 
-    async function estimateTransferFee(): Promise<Asset | undefined> {
-        console.log({from, to, deposit})
+    async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
         if (!$evmAccount) {
             errorMessage = 'An evm session is required.'
             return
@@ -94,7 +108,7 @@
                 transferFee = await getGasAmount({
                     nativeSession: $activeSession!,
                     evmAccount: $evmAccount,
-                    amount: deposit,
+                    amount: transferAmount || received,
                 })
             }
         } catch (error) {
@@ -147,7 +161,6 @@
     }
 
     function updateBalances() {
-        console.log('updateBalances')
         updateAccount($activeSession!.auth.actor, $activeSession!.chainId)
         getEvmBalance()
     }
@@ -162,10 +175,19 @@
     connectEvmWallet()
 
     $: {
-        if (from && to && deposit !== '') {
+        if (from && to && received !== '' && Number(received) > 0) {
             estimateTransferFee()
         }
     }
+
+    $: {
+        if (transferFee && received !== '') {
+            deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4))).toFixed(4)
+        }
+    }
+
+    $: receivedAmount = Asset.from(Number(received), '4,EOS')
+    $: depositAmount = Asset.from(Number(deposit), '4,EOS')
 </script>
 
 <style type="scss">
@@ -183,16 +205,18 @@
             <Form
                 handleContinue={submitForm}
                 feeAmount={transferFee}
-                receivedAmount={Asset.from(Number(received), '4,EOS')}
+                {depositAmount}
+                {receivedAmount}
                 {evmBalance}
+                {useEntireBalance}
                 bind:amount={received}
                 bind:from
                 bind:to
             />
         {:else if step === 'confirm'}
             <Confirm
-                depositAmount={Asset.from(Number(deposit), '4,EOS')}
-                receivedAmount={Asset.from(Number(received), '4,EOS')}
+                {depositAmount}
+                {receivedAmount}
                 feeAmount={transferFee}
                 {from}
                 {to}

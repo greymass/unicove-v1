@@ -15,7 +15,9 @@
     export let to: Token | undefined
     export let evmBalance: CoreAsset | undefined
     export let feeAmount: CoreAsset | undefined
+    export let depositAmount: CoreAsset | undefined
     export let receivedAmount: CoreAsset | undefined
+    export let useEntireBalance: () => void
 
     let validAmount = false
 
@@ -28,16 +30,6 @@
 
     function handleToChange(token: Token) {
         to = token
-    }
-
-    function useEntireBalance() {
-        let value
-        if (from?.name === 'EOS (EVM)') {
-            value = evmBalance?.value
-        } else if (from?.name === 'EOS') {
-            value = $currentAccountBalance?.value
-        }
-        amount = ((value || 0) - (feeAmount?.value || 0))?.toFixed(4)
     }
 
     $: readyToContinue = from && to && validAmount && $evmAccount
@@ -128,7 +120,7 @@
                 }
 
                 .label-container {
-                    padding: 10px 20px; 
+                    padding: 3px 8px; 
                 }
             }
 
@@ -197,6 +189,9 @@
                     </div>  
                     <div class="label-container">
                         <Label align="left" >Transfer Fee:  {String(feeAmount) }</Label>
+                    </div>
+                    <div class="label-container">
+                        <Label align="left" >Total transferred:  {String(depositAmount) }</Label>
                     </div>
                 {/if}
             </div>
