@@ -15,6 +15,7 @@
     export let to: Token | undefined
     export let evmBalance: CoreAsset | undefined
     export let feeAmount: CoreAsset | undefined
+    export let receivedAmount: CoreAsset | undefined
 
     let validAmount = false
 
@@ -125,6 +126,10 @@
                 .selector-container {
                     margin-bottom: 15px;
                 }
+
+                .label-container {
+                    padding: 10px 20px; 
+                }
             }
 
             /* Media Query for Mobile */
@@ -186,6 +191,14 @@
                         tokenOptions={toOptions}
                     />
                 </div>
+                {#if receivedAmount && receivedAmount.value > 0}
+                    <div class="label-container">
+                        <Label align="left" >Amount Received:  {String(receivedAmount)}</Label>
+                    </div>  
+                    <div class="label-container">
+                        <Label align="left" >Transfer Fee:  {String(feeAmount) }</Label>
+                    </div>
+                {/if}
             </div>
         </div>
         <div class="bottom-section">

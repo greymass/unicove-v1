@@ -176,6 +176,7 @@
             <Form
                 handleContinue={submitForm}
                 feeAmount={transferFee}
+                receivedAmount={Asset.from(Number(received), '4,EOS')}
                 {evmBalance}
                 bind:amount={received}
                 bind:from
