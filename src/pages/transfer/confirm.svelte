@@ -1,8 +1,9 @@
 <script lang="ts">
     import type {Asset} from '@greymass/eosio'
     import Button from '~/components/elements/button.svelte'
+    import { valueInFiat } from '~/lib/fiat'
 
-    import {evmAccount, activeSession} from '~/store'
+    import {evmAccount, activeSession, activePriceTicker} from '~/store'
     import type {Token} from '~/stores/tokens'
 
     export let from: Token
@@ -59,6 +60,14 @@
 
                     &:first-of-type {
                         font-weight: bold;
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .fiat-value {
+                        margin-top: 5px;
+                        font-size: 1em;
+                        color: gray;
                     }
                 }
             }
@@ -97,8 +106,7 @@
     <table>
         <tr>
             <td>From {from.name === 'EOS (EVM)' ? 'EVM' : from.name}</td>
-            <td>{from?.name === 'EVM' ? $evmAccount?.address : $activeSession?.auth.actor}</td
-            >
+            <td>{from?.name === 'EVM' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
             <td>To {to.name}</td>
@@ -106,15 +114,36 @@
         </tr>
         <tr>
             <td>Deposit Amount</td>
-            <td>{depositAmount}</td>
+            <td>
+                <div>
+                    {depositAmount}
+                </div>
+                <div class="fiat-value">
+                    ~{ valueInFiat(depositAmount?.value, $activePriceTicker)}
+                </div>
+            </td>
         </tr>
         <tr>
             <td>Fee Amount</td>
-            <td>{feeAmount || '0.0000 EOS'}</td>
+            <td>
+                <div>
+                    {feeAmount || '0.0000 EOS'}
+                </div>
+                <div class="fiat-value">
+                    ~{ valueInFiat(feeAmount?.value || 0, $activePriceTicker)}
+                </div>
+            </td>
         </tr>
         <tr>
             <td>Received Amount</td>
-            <td>{receivedAmount}</td>
+            <td>
+                <div>
+                    {receivedAmount}
+                </div>
+                <div class="fiat-value">
+                    ~{ valueInFiat(receivedAmount?.value, $activePriceTicker)}
+                </div>
+            </td>
         </tr>
     </table>
     <div class="bottom-section">
