@@ -22,10 +22,8 @@
     let validAmount = false
 
     function handleFromChange(token: Token) {
+        resetForm() // reset form when changing from token
         from = token
-        to = undefined
-
-        amount = ''
     }
 
     function handleToChange(token: Token) {
@@ -44,6 +42,7 @@
         from = undefined
         to = undefined
         amount = ''
+        feeAmount = undefined
     }
 
     $: {

@@ -186,7 +186,7 @@
         }
     }
 
-    $: receivedAmount = Asset.from(Number(received), '4,EOS')
+    $: receivedAmount = isNaN(Number(received)) ?  undefined : Asset.from(Number(received), '4,EOS')
     $: depositAmount = Asset.from(Number(deposit), '4,EOS')
 </script>
 
@@ -204,16 +204,16 @@
         {:else if step === 'form' || !from || !to || !deposit || !received}
             <Form
                 handleContinue={submitForm}
-                feeAmount={transferFee}
                 {depositAmount}
                 {receivedAmount}
                 {evmBalance}
                 {useEntireBalance}
+                bind:feeAmount={transferFee}
                 bind:amount={received}
                 bind:from
                 bind:to
             />
-        {:else if step === 'confirm'}
+        {:else if step === 'confirm' && receivedAmount}
             <Confirm
                 {depositAmount}
                 {receivedAmount}
