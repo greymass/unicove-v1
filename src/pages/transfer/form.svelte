@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Asset as CoreAsset} from '@greymass/eosio'
+    import {Asset as CoreAsset} from '@greymass/eosio'
     import {currentAccountBalance, evmAccount, activeSession} from '~/store'
     import {Token, systemToken} from '~/stores/tokens'
 
@@ -73,6 +73,9 @@
             }
         }
     }
+
+    $: balance = from?.name === 'EOS' ? $currentAccountBalance : evmBalance
+    $: availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), '4,EOS')
 </script>
 
 <style type="scss">
@@ -100,6 +103,7 @@
                 width: 44%; /* or set a flex-basis instead */
                 margin: 3%;
                 padding: 20px;
+                min-height: 220px;
 
                 button {
                     cursor: pointer;
@@ -168,11 +172,13 @@
                 <Asset
                     fluid
                     placeholder="0.0000"
-                    balance={from?.name === 'EOS' ? $currentAccountBalance : evmBalance}
+                    balance={availableToReceive}
                     bind:valid={validAmount}
                     bind:value={amount}
                 />
-                <button on:click={useEntireBalance}>Entire Balance</button>
+                {#if from && to}
+                    <button on:click={useEntireBalance}>Entire Balance</button>
+                {/if}
             </div>
             <div class="right-section">
                 <Label align="left">To</Label>
