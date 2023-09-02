@@ -1,6 +1,10 @@
 <script lang="ts">
     import type {Asset} from '@greymass/eosio'
+
     import Button from '~/components/elements/button.svelte'
+    import TokenImage from '~/components/elements/image/token.svelte'
+    import {systemTokenKey} from '~/stores/tokens'
+
     import { valueInFiat } from '~/lib/fiat'
 
     import {evmAccount, activeSession, activePriceTicker} from '~/store'
@@ -50,6 +54,7 @@
                 font-size: 11px;
                 border-top: 1px solid #ddd;
                 padding: 10px;
+                min-height: 80px;
 
                 &:first-child {
                     border: none;
@@ -57,17 +62,25 @@
 
                 td {
                     padding: 1.5em;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    align-self: center;  
 
                     &:first-of-type {
                         font-weight: bold;
-                        display: flex;
-                        align-items: center;
+                    }
+
+                    .image-container {
+                        display: inline-block;
+                        vertical-align: middle;
+                        margin-right: 3px;
                     }
 
                     .fiat-value {
-                        margin-top: 5px;
                         font-size: 1em;
                         color: gray;
+                        display: block;
                     }
                 }
             }
@@ -116,10 +129,13 @@
             <td>Deposit Amount</td>
             <td>
                 <div>
+                    <div class="image-container">
+                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+                    </div>
                     {depositAmount}
                 </div>
                 <div class="fiat-value">
-                    ~{ valueInFiat(depositAmount?.value, $activePriceTicker)}
+                    ~{valueInFiat(depositAmount?.value, $activePriceTicker)}
                 </div>
             </td>
         </tr>
@@ -127,10 +143,13 @@
             <td>Fee Amount</td>
             <td>
                 <div>
+                    <div class="image-container">
+                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+                    </div>
                     {feeAmount || '0.0000 EOS'}
                 </div>
                 <div class="fiat-value">
-                    ~{ valueInFiat(feeAmount?.value || 0, $activePriceTicker)}
+                    ~{valueInFiat(feeAmount?.value || 0, $activePriceTicker)}
                 </div>
             </td>
         </tr>
@@ -138,10 +157,13 @@
             <td>Received Amount</td>
             <td>
                 <div>
+                    <div class="image-container">
+                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+                    </div>
                     {receivedAmount}
                 </div>
                 <div class="fiat-value">
-                    ~{ valueInFiat(receivedAmount?.value, $activePriceTicker)}
+                    ~{valueInFiat(receivedAmount?.value, $activePriceTicker)}
                 </div>
             </td>
         </tr>
