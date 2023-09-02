@@ -72,6 +72,7 @@
         /* Media Query for Mobile */
         @media screen and (max-width: 768px) {
             padding: 1em;
+            border: none;
 
             table {
                 tr {
@@ -95,8 +96,8 @@
 
     <table>
         <tr>
-            <td>From {from.name}</td>
-            <td>{from?.name === 'EOS (EVM)' ? $evmAccount?.address : $activeSession?.auth.actor}</td
+            <td>From {from.name === 'EOS (EVM)' ? 'EVM' : from.name}</td>
+            <td>{from?.name === 'EVM' ? $evmAccount?.address : $activeSession?.auth.actor}</td
             >
         </tr>
         <tr>

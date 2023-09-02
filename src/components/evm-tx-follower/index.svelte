@@ -1,7 +1,4 @@
 <script lang="ts">
-    import type {ChainConfig} from '~/config'
-    import type {Checksum256Type} from '@greymass/eosio'
-
     import {Checksum256} from '@greymass/eosio'
     import {router} from 'tinro'
 
@@ -11,8 +8,6 @@
 
     import type { ethers } from 'ethers'
 
-    /** The chain where the transaction was submitted */
-    export let chain: ChainConfig
     /** Title, e.g. Tokens sent */
     export let title = 'Transaction sent'
     /** The EVM transaction result */
@@ -24,18 +19,12 @@
         router.goto('/')
     }
 
-    $: console.log({ evmTransactResult })
-
-    let txId: Checksum256
-    $: {
-        try {
-            txId = Checksum256.from(evmTransactResult?.hash || '')
-        } catch (error) {
-            console.warn('Invalid transaction id passed to TxFollower', error)
-            txId = Checksum256.from(
-                '0000000000000000000000000000000000000000000000000000000000000000'
-            )
-        }
+    let txId: string
+    if (evmTransactResult?.hash) {
+        txId = evmTransactResult?.hash
+    } else {
+        console.warn('Invalid EVM Transact Result data passed to EvmTxFollower. Missing transaction hash.')
+        txId = '0000000000000000000000000000000000000000000000000000000000000000'
     }
 
     const blockExplorerUrl = 'https://explorer.evm.eosnetwork.com/tx/'
