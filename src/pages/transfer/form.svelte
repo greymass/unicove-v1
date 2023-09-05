@@ -123,7 +123,7 @@
                 }
 
                 .label-container {
-                    padding: 3px 8px; 
+                    padding: 3px 8px;
                 }
             }
 
@@ -190,13 +190,13 @@
                 </div>
                 {#if receivedAmount && receivedAmount.value > 0 && feeAmount && feeAmount.value > 0}
                     <div class="label-container">
-                        <Label align="left" >Amount Received:  {String(receivedAmount)}</Label>
-                    </div>  
-                    <div class="label-container">
-                        <Label align="left" >Transfer Fee:  {String(feeAmount) }</Label>
+                        <Label align="left">Amount Received: {String(receivedAmount)}</Label>
                     </div>
                     <div class="label-container">
-                        <Label align="left" >Total transferred:  {String(depositAmount) }</Label>
+                        <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
+                    </div>
+                    <div class="label-container">
+                        <Label align="left">Total transferred: {String(depositAmount)}</Label>
                     </div>
                 {/if}
             </div>

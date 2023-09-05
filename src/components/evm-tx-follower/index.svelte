@@ -6,14 +6,14 @@
     import Button from '~/components/elements/button.svelte'
     import Card from '~/components/elements/card.svelte'
 
-    import type { ethers } from 'ethers'
+    import type {ethers} from 'ethers'
 
     /** Title, e.g. Tokens sent */
     export let title = 'Transaction sent'
     /** The EVM transaction result */
     export let evmTransactResult: ethers.providers.TransactionResponse | undefined
-     /** The text of the primary button at the bottom of the page */
-     export let primaryButtonText = 'Done'
+    /** The text of the primary button at the bottom of the page */
+    export let primaryButtonText = 'Done'
     /** The function to call when the primary button is clicked */
     export let handlePrimaryButtonClick: () => void = () => {
         router.goto('/')
@@ -23,7 +23,9 @@
     if (evmTransactResult?.hash) {
         txId = evmTransactResult?.hash
     } else {
-        console.warn('Invalid EVM Transact Result data passed to EvmTxFollower. Missing transaction hash.')
+        console.warn(
+            'Invalid EVM Transact Result data passed to EvmTxFollower. Missing transaction hash.'
+        )
         txId = '0000000000000000000000000000000000000000000000000000000000000000'
     }
 

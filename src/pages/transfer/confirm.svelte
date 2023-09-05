@@ -5,7 +5,7 @@
     import TokenImage from '~/components/elements/image/token.svelte'
     import {systemTokenKey} from '~/stores/tokens'
 
-    import { valueInFiat } from '~/lib/fiat'
+    import {valueInFiat} from '~/lib/fiat'
 
     import {evmAccount, activeSession, activePriceTicker} from '~/store'
     import type {Token} from '~/stores/tokens'
@@ -65,7 +65,7 @@
                     display: flex;
                     align-items: center;
                     flex-direction: column;
-                    align-self: center;  
+                    align-self: center;
 
                     &:first-of-type {
                         font-weight: bold;

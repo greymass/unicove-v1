@@ -5,10 +5,7 @@
     import type {ethers} from 'ethers'
 
     import {activeBlockchain} from '~/store'
-    import type {Token} from '~/stores/tokens'
 
-    export let from: Token
-    export let to: Token
     export let nativeTransactResult: TransactResult | undefined
     export let evmTransactResult: ethers.providers.TransactionResponse | undefined
     export let handleBack: () => void
@@ -25,7 +22,7 @@
 {:else}
     <EvmTxFollower
         title="Transfer Sent"
-        evmTransactResult={evmTransactResult}
+        {evmTransactResult}
         primaryButtonText="New Transfer"
         handlePrimaryButtonClick={handleBack}
     />

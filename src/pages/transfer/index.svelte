@@ -90,7 +90,9 @@
 
         await estimateTransferFee()
 
-        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(4)
+        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(
+            4
+        )
     }
 
     async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
@@ -112,7 +114,7 @@
                 })
             }
         } catch (error) {
-             errorMessage = `Could not estimate transfer fee. Error: ${
+            errorMessage = `Could not estimate transfer fee. Error: ${
                 JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
             }`
             return
@@ -186,7 +188,7 @@
         }
     }
 
-    $: receivedAmount = isNaN(Number(received)) ?  undefined : Asset.from(Number(received), '4,EOS')
+    $: receivedAmount = isNaN(Number(received)) ? undefined : Asset.from(Number(received), '4,EOS')
     $: depositAmount = Asset.from(Number(deposit), '4,EOS')
 </script>
 
@@ -224,7 +226,7 @@
                 {handleBack}
             />
         {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
-            <Success {from} {to} {nativeTransactResult} {evmTransactResult} {handleBack} />
+            <Success {nativeTransactResult} {evmTransactResult} {handleBack} />
         {/if}
     </div>
 </Page>
