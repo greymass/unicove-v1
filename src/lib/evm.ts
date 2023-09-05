@@ -7,6 +7,31 @@ import BN from 'bn.js'
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
 
+interface EvmChainConfig {
+    chainId: string
+    chainName: string
+    nativeCurrency: {name: string; symbol: string; decimals: number}
+    rpcUrls: string[]
+    blockExplorerUrls: string[]
+}
+
+const evmChainConfigs: {[key: string]: EvmChainConfig} = {
+    'eos-mainnet': {
+        chainId: '0x4571',
+        chainName: 'EOS EVM Network',
+        nativeCurrency: {name: 'EOS', symbol: '4,EOS', decimals: 18},
+        rpcUrls: ['https://api.evm.eosnetwork.com/'],
+        blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
+    },
+    'telos': {
+        chainId: '40(0x28)',
+        chainName: 'Telos EVM Network',
+        nativeCurrency: {name: 'TLOS', symbol: '4,TLOS', decimals: 18},
+        rpcUrls: ['https://mainnet.telos.net/evm'],
+        blockExplorerUrls: ['https://www.teloscan.io/'],
+    },
+}
+
 let evmProvider: ethers.providers.Web3Provider
 
 declare global {
@@ -18,6 +43,7 @@ declare global {
 interface EvmAccountParams {
     signer: ethers.providers.JsonRpcSigner
     address: string
+    chainName: string
 }
 
 function getProvider() {
@@ -36,10 +62,16 @@ function getProvider() {
 export class EvmAccount {
     address: string
     signer: ethers.providers.JsonRpcSigner
+    chainName: string
 
-    constructor({address, signer}: EvmAccountParams) {
+    constructor({address, signer, chainName}: EvmAccountParams) {
         this.address = address
         this.signer = signer
+        this.chainName = chainName
+    }
+
+    get chainConfig() {
+        return evmChainConfigs[this.chainName]
     }
 
     static from(EvmAccountParams: EvmAccountParams) {
@@ -54,7 +86,9 @@ export class EvmAccount {
     async getBalance() {
         const wei = await this.signer.getBalance()
 
-        return formatEOS(ethers.utils.formatEther(wei))
+        const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
+
+        return formatEOS(ethers.utils.formatEther(wei), tokenName)
     }
 }
 
@@ -182,9 +216,13 @@ export async function getNativeTransferFee({
         throw new Error('Failed to get config table from eosio.evm. Full error: ' + err)
     }
 
+    console.log({apiResponse})
+
     const config = apiResponse.rows[0]
 
-    return Asset.from(config.ingress_bridge_fee)
+    console.log({config})
+
+    return Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
 }
 
 export async function getGasAmount({
@@ -196,7 +234,7 @@ export async function getGasAmount({
 
     const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
 
-    return Asset.fromFloat(Number(eosAmount), '4,EOS')
+    return Asset.fromFloat(Number(eosAmount), evmAccount.chainConfig.nativeCurrency.symbol)
 }
 
 export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
@@ -214,36 +252,32 @@ export async function transferEvmToNative({nativeSession, evmAccount, amount}: T
     })
 }
 
-async function switchNetwork() {
+async function switchNetwork(chainName: string) {
+    const evmNodeConfig = evmChainConfigs[chainName]
+    console.log({evmNodeConfig})
     await window.ethereum
         .request({
             method: 'wallet_switchEthereumChain',
-            params: [{chainId: '0x4571'}],
+            params: [{chainId: evmNodeConfig.chainId}],
         })
         .catch(async (e: {code: number}) => {
             if (e.code === 4902) {
                 await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [
-                        {
-                            chainId: '0x4571',
-                            chainName: 'EOS EVM Network',
-                            nativeCurrency: {name: 'EOS', symbol: 'EOS', decimals: 18},
-                            rpcUrls: ['https://api.evm.eosnetwork.com/'],
-                            blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
-                        },
+                        evmNodeConfig
                     ],
                 })
             }
         })
 }
 
-export async function connectEthWallet(): Promise<EvmAccount> {
+export async function connectEthWallet(chainName: string): Promise<EvmAccount> {
     if (window.ethereum) {
         const provider = getProvider()
         let networkId = await provider.getNetwork()
         if (networkId.chainId !== 17777) {
-            await switchNetwork()
+            await switchNetwork(chainName)
             networkId = await provider.getNetwork()
         }
 
@@ -255,12 +289,13 @@ export async function connectEthWallet(): Promise<EvmAccount> {
         return EvmAccount.from({
             address: await signer.getAddress(),
             signer,
+            chainName,
         })
     } else {
         throw 'You need to install Metamask in order to use this feature.'
     }
 }
 
-function formatEOS(amount: String) {
-    return `${Number(amount).toFixed(4)} EOS`
+function formatEOS(amount: String, tokenSymbol: String) {
+    return `${Number(amount).toFixed(4)} ${tokenSymbol}`
 }

@@ -19,6 +19,10 @@
     export let receivedAmount: CoreAsset | undefined
     export let useEntireBalance: () => void
 
+    $: nativeAccountName = String($systemToken?.symbol.code)
+    $: evmAccountName = `${nativeAccountName} (EVM)`
+    $: systemContractSymbol = String($systemToken?.symbol)
+
     let validAmount = false
 
     function handleFromChange(token: Token) {
@@ -58,14 +62,14 @@
         if ($systemToken) {
             const evmToken = {
                 ...$systemToken,
-                name: 'EOS (EVM)',
+                name: evmAccountName,
                 contract: 'eosio.evm',
                 balance: evmBalance || 'Connect',
             }
             fromOptions = [$systemToken, evmToken]
-            if (from?.name === 'EOS (EVM)') {
+            if (from?.name === evmAccountName) {
                 toOptions = [$systemToken]
-            } else if (from?.name === 'EOS') {
+            } else if (from?.name === nativeAccountName) {
                 toOptions = [evmToken]
             } else {
                 toOptions = fromOptions
@@ -73,8 +77,8 @@
         }
     }
 
-    $: balance = from?.name === 'EOS' ? $currentAccountBalance : evmBalance
-    $: availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), '4,EOS')
+    $: balance = from?.name === nativeAccountName ? $currentAccountBalance : evmBalance
+    $: availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), systemContractSymbol)
 </script>
 
 <style type="scss">

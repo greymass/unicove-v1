@@ -2,7 +2,7 @@
     import {Asset, TransactResult} from 'anchor-link'
     import type {ethers} from 'ethers'
 
-    import {currentAccountBalance, evmAccount, activeSession} from '~/store'
+    import {currentAccountBalance, evmAccount, activeSession, activeBlockchain} from '~/store'
 
     import {
         transferNativeToEvm,
@@ -19,6 +19,7 @@
     import Error from './error.svelte'
     import type {Token} from '~/stores/tokens'
     import {updateAccount} from '~/stores/account-provider'
+    import {systemToken} from '~/stores/tokens'
 
     let step = 'form'
     let deposit: string = ''
@@ -31,13 +32,17 @@
     let transferFee: Asset | undefined
     let evmBalance: Asset | undefined
 
+    $: nativeAccountName = String($systemToken?.symbol.code)
+    $: evmAccountName = `${nativeAccountName} (EVM)`
+    $: systemContractSymbol = String($systemToken?.symbol)
+
     async function useEntireBalance() {
         if (!from || !to) return
 
         let value
-        if (from?.name === 'EOS (EVM)') {
+        if (from?.name === evmAccountName) {
             value = evmBalance?.value
-        } else if (from?.name === 'EOS') {
+        } else if (from?.name === nativeAccountName) {
             value = $currentAccountBalance?.value
         }
 
@@ -52,7 +57,7 @@
         }
 
         try {
-            if (from?.name === 'EOS') {
+            if (from?.name === nativeAccountName) {
                 nativeTransactResult = await transferNativeToEvm({
                     nativeSession: $activeSession!,
                     evmAccount: $evmAccount,
@@ -102,7 +107,7 @@
         }
 
         try {
-            if (from?.name === 'EOS') {
+            if (from?.name === nativeAccountName) {
                 transferFee = await getNativeTransferFee({
                     nativeSession: $activeSession!,
                 })
@@ -114,6 +119,7 @@
                 })
             }
         } catch (error) {
+            console.log({error})
             if (!error?.data?.message?.includes('insufficient funds for transfer')) {
                 errorMessage = `Could not estimate transfer fee. Error: ${
                     JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
@@ -125,22 +131,24 @@
         return transferFee
     }
 
-    let connectInterval: number | undefined
     let connectingToEvmWallet = false
 
     async function connectEvmWallet() {
-        let ethWalletAccount
+        let evmWalletAccount
 
         if (connectingToEvmWallet || !!$evmAccount) {
+            setTimeout(connectEvmWallet, 5000)
             return
         }
 
         connectingToEvmWallet = true
 
         try {
-            ethWalletAccount = await connectEthWallet()
+            console.log({ chainName: $activeBlockchain?.id})
+            evmWalletAccount = await connectEthWallet(String($activeBlockchain?.id))
         } catch (e) {
             if (e.code === -32002) {
+                setTimeout(connectEvmWallet, 5000)
                 return
             }
 
@@ -148,19 +156,18 @@
                 return (connectingToEvmWallet = false)
             }
 
-            return (errorMessage = `Could not connect to ETH wallet. Error: ${e.message}`)
+            return (errorMessage = `Could not connect to EVM wallet. Error: ${e.message}`)
         }
 
-        if (ethWalletAccount) {
-            evmAccount.set(ethWalletAccount)
-            connectInterval && clearInterval(connectInterval)
+        if (evmWalletAccount) {
+            evmAccount.set(evmWalletAccount)
             connectingToEvmWallet = false
         }
     }
 
     function getEvmBalance() {
         $evmAccount?.getBalance().then((balance) => {
-            evmBalance = Asset.from(Number(balance.split(' ')[0]), '4,EOS')
+            evmBalance = Asset.from(Number(balance.split(' ')[0]), systemContractSymbol)
         })
     }
 
@@ -175,7 +182,6 @@
         }
     }
 
-    connectInterval = window.setInterval(connectEvmWallet, 3000)
     connectEvmWallet()
 
     $: {
@@ -190,8 +196,8 @@
         }
     }
 
-    $: receivedAmount = isNaN(Number(received)) ? undefined : Asset.from(Number(received), '4,EOS')
-    $: depositAmount = Asset.from(Number(deposit), '4,EOS')
+    $: receivedAmount = isNaN(Number(received)) ? undefined : Asset.from(Number(received), systemContractSymbol)
+    $: depositAmount = Asset.from(Number(deposit), systemContractSymbol)
 </script>
 
 <style type="scss">
