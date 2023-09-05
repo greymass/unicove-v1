@@ -114,9 +114,11 @@
                 })
             }
         } catch (error) {
-            errorMessage = `Could not estimate transfer fee. Error: ${
-                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
-            }`
+            if (!error?.data?.message?.includes('insufficient funds for transfer')) {
+                errorMessage = `Could not estimate transfer fee. Error: ${
+                    JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+                }`
+            }
             return
         }
 
