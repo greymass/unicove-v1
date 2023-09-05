@@ -1,174 +1,232 @@
 <script lang="ts">
-    import type {Readable} from 'svelte/store'
-    import type {TinroRouteMeta} from 'tinro'
-    import type {LinkSession} from 'anchor-link'
+    import {Asset, TransactResult} from 'anchor-link'
+    import type {ethers} from 'ethers'
 
-    import {Name} from 'anchor-link'
-    import {onMount} from 'svelte'
-    import {derived} from 'svelte/store'
-    import {router} from 'tinro'
+    import {currentAccountBalance, evmAccount, activeSession} from '~/store'
 
-    import {activeBlockchain, activeSession} from '~/store'
-    import type {Token, TokenKeyParams} from '~/stores/tokens'
-    import type {Balance} from '~/stores/balances'
-    import {balances, makeBalanceKey} from '~/stores/balances'
-    import {tokens, makeTokenKey} from '~/stores/tokens'
-    import {systemTokenKey} from '~/stores/tokens'
-    import {transferData, Step} from '~/pages/transfer/transfer'
-    import {syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/transfer/fio'
+    import {
+        transferNativeToEvm,
+        transferEvmToNative,
+        connectEthWallet,
+        getGasAmount,
+        getNativeTransferFee,
+    } from '~/lib/evm'
 
-    import Text from '~/components/elements/text.svelte'
-    import TransactionForm from '~/components/elements/form/transaction.svelte'
     import Page from '~/components/layout/page.svelte'
+    import Form from './form.svelte'
+    import Confirm from './confirm.svelte'
+    import Success from './success.svelte'
+    import Error from './error.svelte'
+    import type {Token} from '~/stores/tokens'
+    import {updateAccount} from '~/stores/account-provider'
 
-    import TransferMain from '~/pages/transfer/main.svelte'
+    let step = 'form'
+    let deposit: string = ''
+    let received: string = ''
+    let errorMessage: string | undefined
+    let from: Token | undefined
+    let to: Token | undefined
+    let nativeTransactResult: TransactResult | undefined
+    let evmTransactResult: ethers.providers.TransactionResponse | undefined
+    let transferFee: Asset | undefined
+    let evmBalance: Asset | undefined
 
-    export let meta: TinroRouteMeta | undefined = undefined
+    async function useEntireBalance() {
+        if (!from || !to) return
 
-    onMount(() => {
-        resetData()
-        syncTxFee()
-        return () => {
-            stopSyncTxFee()
+        let value
+        if (from?.name === 'EOS (EVM)') {
+            value = evmBalance?.value
+        } else if (from?.name === 'EOS') {
+            value = $currentAccountBalance?.value
         }
-    })
 
-    const token: Readable<Token | undefined> = derived(
-        [activeSession, systemTokenKey, transferData, tokens],
-        ([$activeSession, $systemTokenKey, $transferData, $tokens]) => {
-            if ($activeSession && $systemTokenKey && $tokens) {
-                // If this transfer session data has a token key, use it first
-                if ($transferData.tokenKey) {
-                    return $tokens.find((t) => t.key === $transferData.tokenKey)
-                }
-                // If the URL has a token key, use it second
-                if (meta) {
-                    const params: TokenKeyParams = {
-                        chainId: $activeBlockchain!.chainId,
-                        contract: Name.from(meta.params.contract),
-                        name: Name.from(meta.params.token),
-                    }
-                    const key = makeTokenKey(params)
-                    return $tokens.find((t) => t.key === key)
-                }
-                // Otherwise return the system token key
-                return $tokens.find((t) => t.key === $systemTokenKey)
+        await estimateTransferFee(String(value))
+
+        received = ((value || 0) - (transferFee?.value || 0))?.toFixed(4)
+    }
+
+    async function transfer() {
+        if (!$evmAccount) {
+            return (errorMessage = 'An evm session is required.')
+        }
+
+        try {
+            if (from?.name === 'EOS') {
+                nativeTransactResult = await transferNativeToEvm({
+                    nativeSession: $activeSession!,
+                    evmAccount: $evmAccount,
+                    amount: deposit,
+                })
+            } else {
+                evmTransactResult = await transferEvmToNative({
+                    nativeSession: $activeSession!,
+                    evmAccount: $evmAccount,
+                    amount: received,
+                })
             }
+        } catch (error) {
+            return (errorMessage = `Could not transfer. Error: ${
+                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+            }`)
         }
-    )
 
-    const balance: Readable<Balance | undefined> = derived(
-        [activeSession, balances, token],
-        ([$activeSession, $currentBalances, $token]) => {
-            if ($token) {
-                const key = makeBalanceKey($token, $activeSession!.auth.actor)
-                return $currentBalances.find((b) => b.key === key)
+        setTimeout(updateBalances, 20000) // Waiting a 20 seconds and then updating the balances
+
+        step = 'success'
+    }
+
+    function handleBack() {
+        step = 'form'
+        errorMessage = undefined
+        nativeTransactResult = undefined
+        evmTransactResult = undefined
+        deposit = ''
+        received = ''
+    }
+
+    async function submitForm() {
+        step = 'confirm'
+
+        await estimateTransferFee()
+
+        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(
+            4
+        )
+    }
+
+    async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
+        if (!$evmAccount) {
+            errorMessage = 'An evm session is required.'
+            return
+        }
+
+        try {
+            if (from?.name === 'EOS') {
+                transferFee = await getNativeTransferFee({
+                    nativeSession: $activeSession!,
+                })
+            } else {
+                transferFee = await getGasAmount({
+                    nativeSession: $activeSession!,
+                    evmAccount: $evmAccount,
+                    amount: transferAmount || received,
+                })
             }
+        } catch (error) {
+            errorMessage = `Could not estimate transfer fee. Error: ${
+                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+            }`
+            return
         }
-    )
 
-    let currentSession: LinkSession | undefined = $activeSession
+        return transferFee
+    }
+
+    let connectInterval: number | undefined
+    let connectingToEvmWallet = false
+
+    async function connectEvmWallet() {
+        let ethWalletAccount
+
+        if (connectingToEvmWallet || !!$evmAccount) {
+            return
+        }
+
+        connectingToEvmWallet = true
+
+        try {
+            ethWalletAccount = await connectEthWallet()
+        } catch (e) {
+            if (e.code === -32002) {
+                return
+            }
+
+            if (!e.message) {
+                return (connectingToEvmWallet = false)
+            }
+
+            return (errorMessage = `Could not connect to ETH wallet. Error: ${e.message}`)
+        }
+
+        if (ethWalletAccount) {
+            evmAccount.set(ethWalletAccount)
+            connectInterval && clearInterval(connectInterval)
+            connectingToEvmWallet = false
+        }
+    }
+
+    function getEvmBalance() {
+        $evmAccount?.getBalance().then((balance) => {
+            evmBalance = Asset.from(Number(balance.split(' ')[0]), '4,EOS')
+        })
+    }
+
+    function updateBalances() {
+        updateAccount($activeSession!.auth.actor, $activeSession!.chainId)
+        getEvmBalance()
+    }
 
     $: {
-        if ($activeSession !== currentSession) {
-            resetData()
-            router.goto('/transfer')
-            currentSession = $activeSession
+        if ($evmAccount) {
+            getEvmBalance()
         }
     }
 
-    function resetData() {
-        transferData.set({
-            step: Step.Recipient,
-        })
-        fetchTxFee()
+    connectInterval = window.setInterval(connectEvmWallet, 3000)
+    connectEvmWallet()
+
+    $: {
+        if (from && to && received !== '' && Number(received) > 0) {
+            estimateTransferFee()
+        }
     }
 
-    function retryCallback() {
-        // Upon retry, move back to the confirm step to allow the user to retry
-        $transferData.step = Step.Confirm
+    $: {
+        if (transferFee && received !== '') {
+            deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4))).toFixed(4)
+        }
     }
 
-    function resetCallback() {
-        // Upon retry, move back to the confirm step to allow the user to retry
-        $transferData.step = Step.Recipient
-    }
+    $: receivedAmount = isNaN(Number(received)) ? undefined : Asset.from(Number(received), '4,EOS')
+    $: depositAmount = Asset.from(Number(deposit), '4,EOS')
 </script>
 
 <style type="scss">
-    .container {
-        border: 1px solid var(--divider-grey);
-        border-radius: 20px;
-        padding: 26px;
-        :global(.button) {
-            margin-top: 31px;
-        }
-    }
-    .options {
-        display: inline-flex;
-        padding: 22px 0px 15px;
-        text-align: right;
-        .toggle {
-            font-weight: bold;
-            margin-right: 10px;
-            font-size: 10px;
-            line-height: 12px;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            letter-spacing: 0.1px;
-            text-transform: uppercase;
-            padding: 10px;
-            cursor: pointer;
-            color: var(--main-blue);
-            border-radius: 8px;
-            &.active {
-                opacity: 1;
-                background-color: var(--main-grey);
-                color: var(--main-black);
-            }
-            &:last-child {
-                margin-right: 0;
-            }
-        }
-    }
-    @media only screen and (max-width: 999px) {
-        .container {
-            margin: 0 32px;
-        }
-    }
-
-    @media only screen and (max-width: 600px) {
-        .container {
-            border: none;
-            padding: 12px;
-            margin: 0 8px;
-        }
+    div {
+        max-width: 800px;
+        margin: 0 auto;
     }
 </style>
 
 <Page divider={false}>
-    <span slot="submenu">
-        <div class="options">
-            <span
-                class="toggle"
-                class:active={$transferData.step !== Step.Receive}
-                on:click={() => ($transferData.step = Step.Recipient)}
-            >
-                <Text>↑ Send</Text>
-            </span>
-            <span
-                class="toggle"
-                class:active={$transferData.step === Step.Receive}
-                on:click={() => ($transferData.step = Step.Receive)}
-            >
-                <Text>↓ Receive</Text>
-            </span>
-        </div>
-    </span>
-    <TransactionForm {resetCallback} {retryCallback}>
-        <div class="container">
-            <TransferMain {balance} {token} {resetData} />
-        </div>
-    </TransactionForm>
+    <div class="container">
+        {#if errorMessage}
+            <Error error={errorMessage} {handleBack} />
+        {:else if step === 'form' || !from || !to || !deposit || !received}
+            <Form
+                handleContinue={submitForm}
+                {depositAmount}
+                {receivedAmount}
+                {evmBalance}
+                {useEntireBalance}
+                bind:feeAmount={transferFee}
+                bind:amount={received}
+                bind:from
+                bind:to
+            />
+        {:else if step === 'confirm' && receivedAmount}
+            <Confirm
+                {depositAmount}
+                {receivedAmount}
+                feeAmount={transferFee}
+                {from}
+                {to}
+                handleConfirm={transfer}
+                {handleBack}
+            />
+        {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
+            <Success {nativeTransactResult} {evmTransactResult} {handleBack} />
+        {/if}
+    </div>
 </Page>

@@ -9,17 +9,17 @@
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
     import {txFee} from './fio'
-    import {transferData, Step} from '~/pages/transfer/transfer'
+    import {transferData, Step} from '~/pages/send/transfer'
 
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
 
     import type {FormTransaction} from '~/ui-types'
-    import TransferRecipient from '~/pages/transfer/step/recipient.svelte'
-    import TransferAmount from '~/pages/transfer/step/amount.svelte'
-    import TransferConfirm from '~/pages/transfer/step/confirm.svelte'
-    import TransferReceive from '~/pages/transfer/step/receive.svelte'
-    import TransferSending from '~/pages/transfer/step/sending.svelte'
+    import TransferRecipient from '~/pages/send/step/recipient.svelte'
+    import TransferAmount from '~/pages/send/step/amount.svelte'
+    import TransferConfirm from '~/pages/send/step/confirm.svelte'
+    import TransferReceive from '~/pages/send/step/receive.svelte'
+    import TransferSending from '~/pages/send/step/sending.svelte'
 
     export let balance: Readable<Balance | undefined>
     export let token: Readable<Token | undefined>

@@ -3,7 +3,7 @@
 
     import type {Token} from '~/stores/tokens'
     import TokenImage from '~/components/elements/image/token.svelte'
-    import Completed from '~/pages/transfer/status/template/completed.svelte'
+    import Completed from '~/pages/send/status/template/completed.svelte'
     import {transferData, Step} from '../transfer'
 
     export let quantity: Asset

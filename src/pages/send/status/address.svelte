@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {PublicKey} from 'anchor-link'
     import {activeBlockchain} from '~/store'
-    import Completed from '~/pages/transfer/status/template/completed.svelte'
+    import Completed from '~/pages/send/status/template/completed.svelte'
     import {Step, transferData} from '../transfer'
 
     export let toAddress: PublicKey

@@ -14,11 +14,18 @@
     let balance
 
     $: {
-        balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)
+        if (token.balance) {
+            balance = token.balance
+        } else {
+            balance =
+                $balances && $balances.find((balance) => balance.tokenKey === token.key)?.quantity
+        }
 
-        if (balance) {
-            const tokenPrecision = balance.quantity.symbol.precision
-            const unitValue = balance.quantity.units.value
+        if (typeof balance === 'string') {
+            formattedTokenBalance = balance
+        } else if (balance) {
+            const tokenPrecision = balance.symbol.precision
+            const unitValue = balance.units.value
             const fullTokenBalanceString = (
                 Number(unitValue) / Math.pow(10, tokenPrecision)
             ).toFixed(tokenPrecision)

@@ -12,10 +12,11 @@
 
     import TokenSelectorRow from './selector/row.svelte'
 
-    export let defaultToken: Token
+    export let defaultToken: Token | undefined = undefined
+    export let selectedToken: Token | undefined = undefined
+    export let tokenOptions: Token[] | undefined = undefined
     export let onTokenSelect: (token: Token) => void
 
-    let selectedToken = defaultToken
     let displayModal = writable<boolean>(false)
     let query: string = ''
 
@@ -34,17 +35,21 @@
     let filteredTokens: Token[] = []
 
     $: {
-        filteredTokens =
-            ($tokens &&
-                $tokens.filter((token) => {
-                    const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
-                    const queryExists = query.length === 0
-                    const queryMatches = String(token.name)
-                        .toLowerCase()
-                        .includes(query.toLowerCase())
-                    return blockchainMatches && (queryExists || queryMatches)
-                })) ||
-            []
+        if (tokenOptions) {
+            filteredTokens = tokenOptions
+        } else {
+            filteredTokens =
+                ($tokens &&
+                    $tokens.filter((token) => {
+                        const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
+                        const queryExists = query.length === 0
+                        const queryMatches = String(token.name)
+                            .toLowerCase()
+                            .includes(query.toLowerCase())
+                        return blockchainMatches && (queryExists || queryMatches)
+                    })) ||
+                []
+        }
     }
 </script>
 
@@ -100,6 +105,33 @@
             }
         }
     }
+
+    .placeholder {
+        padding: 10px 12px;
+        border-radius: 12px;
+        max-width: 400px;
+        border: 1px solid var(--divider-grey);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        .text-container {
+            flex: 1;
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: -0.04px;
+            color: var(--main-black);
+            display: inline;
+            text-align: left;
+        }
+
+        .arrow-container {
+            display: flex;
+            width: 20px;
+        }
+    }
 </style>
 
 <Modal display={displayModal} hideCloseButton>
@@ -107,16 +139,18 @@
         <Icon name="x" />
     </div>
     <h2>Select Token</h2>
-    <Form>
-        <Input
-            on:changed={updateQuery}
-            value={query}
-            name="query"
-            focus
-            fluid
-            placeholder="Search tokens..."
-        />
-    </Form>
+    {#if !tokenOptions}
+        <Form>
+            <Input
+                on:changed={updateQuery}
+                value={query}
+                name="query"
+                focus
+                fluid
+                placeholder="Search tokens..."
+            />
+        </Form>
+    {/if}
     <div class="table-container">
         <table>
             <tr>
@@ -147,4 +181,16 @@
     </div>
 </Modal>
 
-<TokenSelectorRow onClick={() => ($displayModal = true)} token={selectedToken} />
+{#if selectedToken}
+    <TokenSelectorRow
+        onClick={() => ($displayModal = true)}
+        token={selectedToken || defaultToken}
+    />
+{:else}
+    <div class="placeholder" on:click={() => ($displayModal = true)}>
+        <span class="text-container"> Select Token </span>
+        <div class="arrow-container">
+            <Icon name="chevron-right" size="large" />
+        </div>
+    </div>
+{/if}
