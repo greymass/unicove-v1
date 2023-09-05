@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Container from '~/pages/transfer/status/template/container.svelte'
-    import StatusChange from '~/pages/transfer/status/template/change.svelte'
+    import Container from '~/pages/send/status/template/container.svelte'
+    import StatusChange from '~/pages/send/status/template/change.svelte'
 
     export let header: string
     export let subheader: string | undefined = undefined

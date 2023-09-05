@@ -23,3 +23,15 @@ export interface NavigationItem {
     name: string
     path: string
 }
+
+export type inputType =
+    | 'text'
+    | 'search'
+    | 'none'
+    | 'tel'
+    | 'url'
+    | 'email'
+    | 'numeric'
+    | 'decimal'
+    | null
+    | undefined

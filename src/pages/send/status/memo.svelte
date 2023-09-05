@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Completed from '~/pages/transfer/status/template/completed.svelte'
+    import Completed from '~/pages/send/status/template/completed.svelte'
     import {Step, transferData} from '../transfer'
     export let memo: string | undefined
     export let editable: boolean = false

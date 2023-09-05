@@ -1,7 +1,7 @@
 <script lang="ts">
     import Button from '~/components/elements/button.svelte'
-    import {Step, transferData} from '~/pages/transfer/transfer'
-    import StatusContainer from '~/pages/transfer/status/template/container.svelte'
+    import {Step, transferData} from '~/pages/send/transfer'
+    import StatusContainer from '~/pages/send/status/template/container.svelte'
     import Icon from '~/components/elements/icon.svelte'
 
     function changeRecipient() {

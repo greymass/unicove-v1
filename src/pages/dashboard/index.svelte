@@ -6,6 +6,7 @@
     import {getClient} from '~/api-client'
     import {DelegatedBandwidth} from '~/abi-types'
     import {ChainFeatures} from '~/config'
+    import {fiatFormat} from '~/lib/fiat'
 
     import {activeSession, activeBlockchain, currentAccount, activePriceTicker} from '~/store'
     import {balances, fetchBalances} from '~/stores/balances'
@@ -129,11 +130,6 @@
             return Asset.from(amount, $activeBlockchain.coreTokenSymbol)
         }
     )
-
-    const currencyFormatter = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'})
-    function fiatFormat(value: number) {
-        return currencyFormatter.format(value)
-    }
 
     function refresh() {
         if ($activeSession) {

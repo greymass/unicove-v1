@@ -19,7 +19,7 @@
     let error: boolean = false
     let errorMessage: string = ''
     let transaction_id = writable<string | undefined>(undefined)
-    let refreshInterval: number
+    let refreshInterval: NodeJS.Timeout
 
     function refreshAccount(account_name: Name) {
         // Refresh the account data

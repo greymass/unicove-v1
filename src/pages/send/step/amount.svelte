@@ -11,7 +11,7 @@
     import Form from '~/components/elements/form.svelte'
     import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
-    import {transferData, Step} from '~/pages/transfer/transfer'
+    import {transferData, Step} from '~/pages/send/transfer'
 
     export let balance: Readable<Balance | undefined>
     export let token: Token
