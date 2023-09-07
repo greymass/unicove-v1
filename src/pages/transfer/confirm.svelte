@@ -7,7 +7,7 @@
 
     import {valueInFiat} from '~/lib/fiat'
 
-    import {evmAccount, activeSession, activePriceTicker} from '~/store'
+    import {EvmSession, activeSession, activePriceTicker} from '~/store'
     import type {Token} from '~/stores/tokens'
 
     export let from: Token
@@ -119,11 +119,11 @@
     <table>
         <tr>
             <td>From {from.name === 'EOS (EVM)' ? 'EVM' : from.name}</td>
-            <td>{from?.name === 'EVM' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
+            <td>{from?.name === 'EVM' ? $EvmSession?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
             <td>To {to.name}</td>
-            <td>{from?.name === 'EOS' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
+            <td>{from?.name === 'EOS' ? $EvmSession?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
             <td>Deposit Amount</td>

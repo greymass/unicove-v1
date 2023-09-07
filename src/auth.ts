@@ -98,3 +98,15 @@ export async function activate(id: SessionLike) {
     }
     activeSession.set(session)
 }
+
+export function getActiveSession(): Promise<LinkSession> {
+    let unsubscribe: () => void
+    return new Promise((resolve) => {
+        unsubscribe = activeSession.subscribe((session) => {
+            if (session) {
+                unsubscribe()
+                resolve(session)
+            }
+        })
+    })
+}

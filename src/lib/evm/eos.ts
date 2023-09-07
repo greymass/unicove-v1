@@ -6,77 +6,92 @@ import BN from 'bn.js'
 
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
-import { TransferParams, convertToEvmAddress, estimateGas, getProvider } from '../evm'
+import { EvmBridge, convertToEvmAddress, getProvider } from '../evm'
 
-export async function transferNativeToEvm({nativeSession, evmAccount, amount}: TransferParams) {
-    const action = Transfer.from({
-        from: nativeSession.auth.actor,
-        to: 'eosio.evm',
-        quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
-        memo: evmAccount.address,
-    })
-
-    return nativeSession.transact({
-        action: {
-            authorization: [nativeSession.auth],
-            account: Name.from('eosio.token'),
-            name: Name.from('transfer'),
-            data: action,
-        },
-    })
-}
-
-export async function getNativeTransferFee({
-    nativeSession,
-}: {
-    nativeSession: LinkSession
-}): Promise<Asset> {
-    const apiClient = getClient(nativeSession.chainId)
-
-    let apiResponse
-
-    try {
-        apiResponse = await apiClient.v1.chain.get_table_rows({
-            code: 'eosio.evm',
-            scope: 'eosio.evm',
-            table: 'config',
-        })
-    } catch (err) {
-        throw new Error('Failed to get config table from eosio.evm. Full error: ' + err)
+export class EvmEosBridge extends EvmBridge {
+    static async connect(): Promise<EvmBridge> {
+        return super.connect('eos-mainnet')
     }
 
-    console.log({apiResponse})
+    async nativeTransferFee() {
+        const apiClient = getClient(this.nativeSession.chainId)
 
-    const config = apiResponse.rows[0]
+        let apiResponse
+    
+        try {
+            apiResponse = await apiClient.v1.chain.get_table_rows({
+                code: 'eosio.evm',
+                scope: 'eosio.evm',
+                table: 'config',
+            })
+        } catch (err) {
+            throw new Error('Failed to get config table from eosio.evm. Full error: ' + err)
+        }
+        
+        const config = apiResponse.rows[0]
+        
+        return Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
+    }
 
-    console.log({config})
+    nativeTransfer(amount: string) {
+        const action = Transfer.from({
+            from: this.nativeSession.auth.actor,
+            to: 'eosio.evm',
+            quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
+            memo: this.EvmSession.address,
+        })
+    
+        return this.nativeSession.transact({
+            action: {
+                authorization: [this.nativeSession.auth],
+                account: Name.from('eosio.token'),
+                name: Name.from('transfer'),
+                data: action,
+            },
+        })
+    }
 
-    return Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
-}
+    async evmTransferFee(amount: string) {
+        const {gas, gasPrice} = await this.estimateGas({nativeSession: this.nativeSession, EvmSession: this.EvmSession, amount})
+    
+        const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
+    
+        return Asset.fromFloat(Number(eosAmount), this.EvmSession.chainConfig.nativeCurrency.symbol)
+    }
 
-export async function getGasAmount({
-    nativeSession,
-    evmAccount,
-    amount,
-}: TransferParams): Promise<Asset> {
-    const {gas, gasPrice} = await estimateGas({nativeSession, evmAccount, amount})
+    async evmTransfer(amount: string) {
+        const targetEvmAddress = convertToEvmAddress(String(this.nativeSession.auth.actor))
+    
+        const {gas} = await this.estimateGas({nativeSession: this.nativeSession, EvmSession: this.EvmSession, amount})
+    
+        return this.EvmSession.sendTransaction({
+            from: this.EvmSession.address,
+            to: targetEvmAddress,
+            value: ethers.utils.parseEther(amount),
+            gasPrice: await getProvider().getGasPrice(),
+            gasLimit: gas,
+            data: ethers.utils.formatBytes32String(''),
+        })
+    }
 
-    const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
-
-    return Asset.fromFloat(Number(eosAmount), evmAccount.chainConfig.nativeCurrency.symbol)
-}
-
-export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
-    const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
-
-    const {gas} = await estimateGas({nativeSession, evmAccount, amount})
-
-    return evmAccount.sendTransaction({
-        from: evmAccount.address,
-        to: targetEvmAddress,
-        value: ethers.utils.parseEther(amount),
-        gasPrice: await getProvider().getGasPrice(),
-        gasLimit: gas,
-        data: ethers.utils.formatBytes32String(''),
-    })
+    private async estimateGas({nativeSession, EvmSession, amount}: TransferParams) {
+        const provider = getProvider()
+    
+        const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
+    
+        const gasPrice = await provider.getGasPrice()
+    
+        // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
+        const reducedAmount = String(Number(amount) - 0.005)
+    
+        const gas = await provider.estimateGas({
+            from: EvmSession.address,
+            to: targetEvmAddress,
+            value: ethers.utils.parseEther(reducedAmount),
+            gasPrice,
+            data: ethers.utils.formatBytes32String(''),
+        })
+    
+        return {gas, gasPrice}
+    }
 }

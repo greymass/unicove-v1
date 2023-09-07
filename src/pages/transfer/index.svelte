@@ -2,15 +2,7 @@
     import {Asset, TransactResult} from 'anchor-link'
     import type {ethers} from 'ethers'
 
-    import {currentAccountBalance, evmAccount, activeSession, activeBlockchain} from '~/store'
-
-    import {
-        transferNativeToEvm,
-        transferEvmToNative,
-        connectEvmWallet,
-        getGasAmount,
-        getNativeTransferFee,
-    } from '~/lib/evm/eos'
+    import {currentAccountBalance, EvmSession, activeSession, activeBlockchain} from '~/store'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './form.svelte'
@@ -20,6 +12,7 @@
     import type {Token} from '~/stores/tokens'
     import {updateAccount} from '~/stores/account-provider'
     import {systemToken} from '~/stores/tokens'
+    import { EvmBridge, createEvmBridge } from '~/lib/evm'
 
     let step = 'form'
     let deposit: string = ''
@@ -31,16 +24,17 @@
     let evmTransactResult: ethers.providers.TransactionResponse | undefined
     let transferFee: Asset | undefined
     let evmBalance: Asset | undefined
+    let evmBridge: EvmBridge | undefined
 
     $: nativeAccountName = String($systemToken?.symbol.code)
-    $: evmAccountName = `${nativeAccountName} (EVM)`
+    $: EvmSessionName = `${nativeAccountName} (EVM)`
     $: systemContractSymbol = String($systemToken?.symbol)
 
     async function useEntireBalance() {
         if (!from || !to) return
 
         let value
-        if (from?.name === evmAccountName) {
+        if (from?.name === EvmSessionName) {
             value = evmBalance?.value
         } else if (from?.name === nativeAccountName) {
             value = $currentAccountBalance?.value
@@ -52,7 +46,7 @@
     }
 
     async function transfer() {
-        if (!$evmAccount) {
+        if (!$EvmSession) {
             return (errorMessage = 'An evm session is required.')
         }
 
@@ -60,13 +54,13 @@
             if (from?.name === nativeAccountName) {
                 nativeTransactResult = await transferNativeToEvm({
                     nativeSession: $activeSession!,
-                    evmAccount: $evmAccount,
+                    EvmSession: $EvmSession,
                     amount: deposit,
                 })
             } else {
                 evmTransactResult = await transferEvmToNative({
                     nativeSession: $activeSession!,
-                    evmAccount: $evmAccount,
+                    EvmSession: $EvmSession,
                     amount: received,
                 })
             }
@@ -101,20 +95,20 @@
     }
 
     async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
-        if (!$evmAccount) {
+        if (!$EvmSession) {
             errorMessage = 'An evm session is required.'
             return
         }
 
         try {
             if (from?.name === nativeAccountName) {
-                transferFee = await getNativeTransferFee({
+                transferFee = await evmBridge?.nativeTransferFee({
                     nativeSession: $activeSession!,
                 })
             } else {
-                transferFee = await getGasAmount({
+                transferFee = await evmBridge?.evmTransferFee({
                     nativeSession: $activeSession!,
-                    evmAccount: $evmAccount,
+                    EvmSession: $EvmSession,
                     amount: transferAmount || received,
                 })
             }
@@ -131,42 +125,16 @@
         return transferFee
     }
 
-    let connectingToEvmWallet = false
-
-    async function connectEvmWallet() {
-        let evmWalletAccount
-
-        if (connectingToEvmWallet || !!$evmAccount) {
-            setTimeout(connectEvmWallet, 5000)
-            return
-        }
-
-        connectingToEvmWallet = true
-
+    async function connectToEvmWallet() {
         try {
-            console.log({ chainName: $activeBlockchain?.id})
-            evmWalletAccount = await connectEthWallet(String($activeBlockchain?.id))
+            evmBridge = await createEvmBridge()
         } catch (e) {
-            if (e.code === -32002) {
-                setTimeout(connectEvmWallet, 5000)
-                return
-            }
-
-            if (!e.message) {
-                return (connectingToEvmWallet = false)
-            }
-
-            return (errorMessage = `Could not connect to EVM wallet. Error: ${e.message}`)
-        }
-
-        if (evmWalletAccount) {
-            evmAccount.set(evmWalletAccount)
-            connectingToEvmWallet = false
+            return (errorMessage = e.message)
         }
     }
 
     function getEvmBalance() {
-        $evmAccount?.getBalance().then((balance) => {
+        $EvmSession?.getBalance().then((balance) => {
             evmBalance = Asset.from(Number(balance.split(' ')[0]), systemContractSymbol)
         })
     }
@@ -177,12 +145,12 @@
     }
 
     $: {
-        if ($evmAccount) {
+        if ($EvmSession) {
             getEvmBalance()
         }
     }
 
-    connectEvmWallet()
+    connectToEvmWallet()
 
     $: {
         if (from && to && received !== '' && Number(received) > 0) {

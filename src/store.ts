@@ -6,7 +6,7 @@ import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
 import {priceTicker} from './price-ticker'
 import {accountProvider} from './stores/account-provider'
-import type {EvmAccount} from './lib/evm'
+import type {EvmSession} from './lib/evm'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
@@ -15,7 +15,7 @@ export const appReady = writable<boolean>(false)
 export const activeSession = writable<LinkSession | undefined>(undefined)
 
 /** Active EVM account, aka logged in user. */
-export const evmAccount = writable<EvmAccount | null>(null)
+export const EvmSession = writable<EvmSession | null>(null)
 
 /** Configuration of the currently selected blockchain */
 export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) => {
@@ -25,6 +25,18 @@ export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (s
         return chains[0]
     }
 })
+
+export function getActiveBlockchain(): Promise<ChainConfig> {
+    let unsubscribe: () => void
+    return new Promise((resolve) => {
+        unsubscribe = activeBlockchain.subscribe((chain) => {
+            if (chain) {
+                unsubscribe()
+                resolve(chain)
+            }
+        })
+    })
+}
 
 /** Active price ticker for the currently selected blockchain */
 export const activePriceTicker: Readable<number> = derived(

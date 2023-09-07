@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
-    import {currentAccountBalance, evmAccount, activeSession} from '~/store'
+    import {currentAccountBalance, EvmSession, activeSession} from '~/store'
     import {Token, systemToken} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
@@ -20,7 +20,7 @@
     export let useEntireBalance: () => void
 
     $: nativeAccountName = String($systemToken?.symbol.code)
-    $: evmAccountName = `${nativeAccountName} (EVM)`
+    $: EvmSessionName = `${nativeAccountName} (EVM)`
     $: systemContractSymbol = String($systemToken?.symbol)
 
     let validAmount = false
@@ -34,7 +34,7 @@
         to = token
     }
 
-    $: readyToContinue = from && to && validAmount && $evmAccount
+    $: readyToContinue = from && to && validAmount && $EvmSession
 
     function onContinue() {
         if (readyToContinue) {
@@ -62,12 +62,12 @@
         if ($systemToken) {
             const evmToken = {
                 ...$systemToken,
-                name: evmAccountName,
+                name: EvmSessionName,
                 contract: 'eosio.evm',
                 balance: evmBalance || 'Connect',
             }
             fromOptions = [$systemToken, evmToken]
-            if (from?.name === evmAccountName) {
+            if (from?.name === EvmSessionName) {
                 toOptions = [$systemToken]
             } else if (from?.name === nativeAccountName) {
                 toOptions = [evmToken]
@@ -209,7 +209,7 @@
             <Button fluid style="primary" disabled={!readyToContinue} on:action={onContinue}
                 >Continue</Button
             >
-            {#if !$evmAccount}
+            {#if !$EvmSession}
                 <h3>Connect to metamask wallet to continue</h3>
             {/if}
         </div>
