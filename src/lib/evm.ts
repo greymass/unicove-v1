@@ -1,18 +1,27 @@
-import type {LinkSession} from 'anchor-link'
-import {Asset, Name} from 'anchor-link'
-import {ethers} from 'ethers'
+import type { LinkSession } from "anchor-link";
+import { BN } from "bn.js";
+import { ethers } from "ethers";
 
-import BN from 'bn.js'
-
-import {Transfer} from '~/abi-types'
-import {getClient} from '~/api-client'
-
-interface EvmChainConfig {
+export interface EvmChainConfig {
     chainId: string
     chainName: string
     nativeCurrency: {name: string; symbol: string; decimals: number}
     rpcUrls: string[]
     blockExplorerUrls: string[]
+}
+
+let evmProvider: ethers.providers.Web3Provider
+
+declare global {
+    interface Window {
+        ethereum: any
+    }
+}
+
+interface EvmAccountParams {
+    signer: ethers.providers.JsonRpcSigner
+    address: string
+    chainName: string
 }
 
 const evmChainConfigs: {[key: string]: EvmChainConfig} = {
@@ -32,21 +41,7 @@ const evmChainConfigs: {[key: string]: EvmChainConfig} = {
     },
 }
 
-let evmProvider: ethers.providers.Web3Provider
-
-declare global {
-    interface Window {
-        ethereum: any
-    }
-}
-
-interface EvmAccountParams {
-    signer: ethers.providers.JsonRpcSigner
-    address: string
-    chainName: string
-}
-
-function getProvider() {
+export function getProvider() {
     if (evmProvider) {
         return evmProvider
     }
@@ -88,7 +83,7 @@ export class EvmAccount {
 
         const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
 
-        return formatEOS(ethers.utils.formatEther(wei), tokenName)
+        return formatToken(ethers.utils.formatEther(wei), tokenName)
     }
 }
 
@@ -152,127 +147,17 @@ function uint64ToAddr(str: string) {
     return '0xbbbbbbbbbbbbbbbbbbbbbbbb' + str
 }
 
-interface TransferParams {
+export interface TransferParams {
     amount: string
     evmAccount: EvmAccount
     nativeSession: LinkSession
 }
 
-export async function transferNativeToEvm({nativeSession, evmAccount, amount}: TransferParams) {
-    const action = Transfer.from({
-        from: nativeSession.auth.actor,
-        to: 'eosio.evm',
-        quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
-        memo: evmAccount.address,
-    })
-
-    return nativeSession.transact({
-        action: {
-            authorization: [nativeSession.auth],
-            account: Name.from('eosio.token'),
-            name: Name.from('transfer'),
-            data: action,
-        },
-    })
+function formatToken(amount: String, tokenSymbol: String) {
+    return `${Number(amount).toFixed(4)} ${tokenSymbol}`
 }
 
-export async function estimateGas({nativeSession, evmAccount, amount}: TransferParams) {
-    const provider = getProvider()
-
-    const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
-
-    const gasPrice = await provider.getGasPrice()
-
-    // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
-    const reducedAmount = String(Number(amount) - 0.005)
-
-    const gas = await provider.estimateGas({
-        from: evmAccount.address,
-        to: targetEvmAddress,
-        value: ethers.utils.parseEther(reducedAmount),
-        gasPrice,
-        data: ethers.utils.formatBytes32String(''),
-    })
-
-    return {gas, gasPrice}
-}
-
-export async function getNativeTransferFee({
-    nativeSession,
-}: {
-    nativeSession: LinkSession
-}): Promise<Asset> {
-    const apiClient = getClient(nativeSession.chainId)
-
-    let apiResponse
-
-    try {
-        apiResponse = await apiClient.v1.chain.get_table_rows({
-            code: 'eosio.evm',
-            scope: 'eosio.evm',
-            table: 'config',
-        })
-    } catch (err) {
-        throw new Error('Failed to get config table from eosio.evm. Full error: ' + err)
-    }
-
-    console.log({apiResponse})
-
-    const config = apiResponse.rows[0]
-
-    console.log({config})
-
-    return Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
-}
-
-export async function getGasAmount({
-    nativeSession,
-    evmAccount,
-    amount,
-}: TransferParams): Promise<Asset> {
-    const {gas, gasPrice} = await estimateGas({nativeSession, evmAccount, amount})
-
-    const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
-
-    return Asset.fromFloat(Number(eosAmount), evmAccount.chainConfig.nativeCurrency.symbol)
-}
-
-export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
-    const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
-
-    const {gas} = await estimateGas({nativeSession, evmAccount, amount})
-
-    return evmAccount.sendTransaction({
-        from: evmAccount.address,
-        to: targetEvmAddress,
-        value: ethers.utils.parseEther(amount),
-        gasPrice: await getProvider().getGasPrice(),
-        gasLimit: gas,
-        data: ethers.utils.formatBytes32String(''),
-    })
-}
-
-async function switchNetwork(chainName: string) {
-    const evmNodeConfig = evmChainConfigs[chainName]
-    console.log({evmNodeConfig})
-    await window.ethereum
-        .request({
-            method: 'wallet_switchEthereumChain',
-            params: [{chainId: evmNodeConfig.chainId}],
-        })
-        .catch(async (e: {code: number}) => {
-            if (e.code === 4902) {
-                await window.ethereum.request({
-                    method: 'wallet_addEthereumChain',
-                    params: [
-                        evmNodeConfig
-                    ],
-                })
-            }
-        })
-}
-
-export async function connectEthWallet(chainName: string): Promise<EvmAccount> {
+export async function connectEvmWallet(chainName: string): Promise<EvmAccount> {
     if (window.ethereum) {
         const provider = getProvider()
         let networkId = await provider.getNetwork()
@@ -296,6 +181,43 @@ export async function connectEthWallet(chainName: string): Promise<EvmAccount> {
     }
 }
 
-function formatEOS(amount: String, tokenSymbol: String) {
-    return `${Number(amount).toFixed(4)} ${tokenSymbol}`
+async function switchNetwork(chainName: string) {
+    const evmNodeConfig = evmChainConfigs[chainName]
+    console.log({evmNodeConfig})
+    await window.ethereum
+        .request({
+            method: 'wallet_switchEthereumChain',
+            params: [{chainId: evmNodeConfig.chainId}],
+        })
+        .catch(async (e: {code: number}) => {
+            if (e.code === 4902) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                        evmNodeConfig
+                    ],
+                })
+            }
+        })
+}
+
+export async function estimateGas({nativeSession, evmAccount, amount}: TransferParams) {
+    const provider = getProvider()
+
+    const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
+
+    const gasPrice = await provider.getGasPrice()
+
+    // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
+    const reducedAmount = String(Number(amount) - 0.005)
+
+    const gas = await provider.estimateGas({
+        from: evmAccount.address,
+        to: targetEvmAddress,
+        value: ethers.utils.parseEther(reducedAmount),
+        gasPrice,
+        data: ethers.utils.formatBytes32String(''),
+    })
+
+    return {gas, gasPrice}
 }

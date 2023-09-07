@@ -7,10 +7,10 @@
     import {
         transferNativeToEvm,
         transferEvmToNative,
-        connectEthWallet,
+        connectEvmWallet,
         getGasAmount,
         getNativeTransferFee,
-    } from '~/lib/evm'
+    } from '~/lib/evm/eos'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './form.svelte'
