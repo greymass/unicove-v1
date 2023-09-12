@@ -2,7 +2,7 @@ import type { Asset, LinkSession, TransactResult } from "anchor-link";
 import { BN } from "bn.js";
 import { ethers } from "ethers";
 import { wait } from "~/helpers";
-import { getActiveBlockchain, activeEvmSession, getActiveSession } from "~/store";
+import { getActiveBlockchain, activeEvmSession } from "~/store";
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
 export interface EvmChainConfig {
@@ -26,7 +26,6 @@ export interface EvmSessionParams {
     chainName: string
 }
 
-
 export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
     'eos': {
         chainId: '0x4571',
@@ -43,41 +42,6 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
         blockExplorerUrls: ['https://www.teloscan.io/'],
     },
 }
-
-export class EvmBridge {
-    readonly nativeSession: LinkSession
-    readonly evmSession: EvmSession
-
-    constructor(nativeSession: LinkSession, EvmSession: EvmSession) {
-        this.nativeSession = nativeSession
-        this.evmSession = EvmSession
-    }
-
-    static async connect(chainName: AvailableEvms) {
-        const EvmSession = await connectEvmWallet(chainName)
-        const nativeAccount = await getActiveSession()
-
-        return new this(nativeAccount, EvmSession)
-    }
-
-
-    nativeTransfer(amount: string): Promise<TransactResult> {
-        throw new Error('Not implemented')
-    }
-
-    nativeTransferFee(amount?: string): Promise<Asset> {
-        throw new Error('Not implemented')
-    }
-
-    evmTransfer(amount: string): Promise<ethers.providers.TransactionResponse> {
-        throw new Error('Not implemented')
-    }
-
-    evmTransferFee(amount?: string): Promise<Asset> {
-        throw new Error('Not implemented')
-    }
-}
-
 export class EvmSession {
     address: string
     signer: ethers.providers.JsonRpcSigner
@@ -104,6 +68,8 @@ export class EvmSession {
 
     async getBalance() {
         const wei = await this.signer.getBalance()
+
+        console.log({ chainName: this.chainName })
 
         const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
 
@@ -137,12 +103,12 @@ function formatToken(amount: string, tokenSymbol: string) {
 }
 let creatingEvmBridge = false
 
-export async function createEvmBridge(): Promise<EvmBridge | undefined> {
-    let evmBridge: EvmBridge
+export async function handleEvmWalletConnection(): Promise<EvmSession | undefined> {
+    let evmSession: EvmSession
 
     if (creatingEvmBridge) {
         await wait(5000)
-        return createEvmBridge()
+        return handleEvmWalletConnection()
     }
     
     creatingEvmBridge = true
@@ -150,11 +116,11 @@ export async function createEvmBridge(): Promise<EvmBridge | undefined> {
     const activeBlockchain = await getActiveBlockchain()
 
     try {
-        evmBridge = await EvmBridge.connect(String(activeBlockchain.id) as AvailableEvms)
+        evmSession = await connectEvmWallet(activeBlockchain.id)
     } catch (e) {
         if (e.code === -32002) {
             await wait(5000)
-            return createEvmBridge()
+            return handleEvmWalletConnection()
         }
 
         if (!e.message) {
@@ -165,12 +131,12 @@ export async function createEvmBridge(): Promise<EvmBridge | undefined> {
         throw new Error(`Could not connect to EVM wallet. Error: ${e.message}`)
     }
 
-    if (evmBridge) {
-        activeEvmSession.set(evmBridge.evmSession)
+    if (evmSession) {
+        activeEvmSession.set(evmSession)
         creatingEvmBridge = false
     }
 
-    return evmBridge
+    return evmSession
 }
 
 export async function switchNetwork(chainName: string) {

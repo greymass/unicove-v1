@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
-    import {currentAccountBalance, activeEvmSession, activeSession} from '~/store'
+    import {activeEvmSession, activeSession, activeBlockchain} from '~/store'
     import {Token, systemToken} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
@@ -8,12 +8,15 @@
     import Button from '~/components/elements/button.svelte'
     import Asset from '~/components/elements/input/asset.svelte'
     import Selector from '~/components/elements/input/token/selector.svelte'
+    import type { TransferManager } from './managers/transferManager'
+    import { transferManagers } from './managers'
+    import type { EvmSession } from '~/lib/evm'
 
     export let handleContinue: () => void
     export let amount: string = ''
     export let from: Token | undefined
     export let to: Token | undefined
-    export let evmBalance: CoreAsset | undefined
+    export let transferManager: TransferManager | undefined
     export let feeAmount: CoreAsset | undefined
     export let depositAmount: CoreAsset | undefined
     export let receivedAmount: CoreAsset | undefined
@@ -57,28 +60,56 @@
 
     let fromOptions: Token[] = []
     let toOptions: Token[] = []
+    let availableToReceive: CoreAsset | undefined
+
+    function generateOptions(evmSession?: EvmSession) {
+        fromOptions = []
+        Object.values(transferManagers).forEach(async TransferManagerClass => {
+            if (!$systemToken) return
+
+            // Only displaying accounts that support the current chain
+            if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
+
+            let accountBalance
+
+            if (!TransferManagerClass.evmRequired || evmSession) {
+                const transferManager = new (TransferManagerClass as unknown as new (...args: any[]) => TransferManager)(
+                    $activeSession!,
+                    evmSession
+                )
+                accountBalance = await transferManager.balance()
+            }
+
+            fromOptions.push({
+                ...$systemToken,
+                key: TransferManagerClass.from,
+                name: TransferManagerClass.fromDisplayString,
+                balance: accountBalance || 'Connect',
+            })
+        })
+    }
 
     $: {
-        if ($systemToken) {
-            const evmToken = {
-                ...$systemToken,
-                name: EvmSessionName,
-                contract: 'eosio.evm',
-                balance: evmBalance || 'Connect',
-            }
-            fromOptions = [$systemToken, evmToken]
-            if (from?.name === EvmSessionName) {
-                toOptions = [$systemToken]
-            } else if (from?.name === nativeAccountName) {
-                toOptions = [evmToken]
-            } else {
-                toOptions = fromOptions
-            }
+        if ($activeEvmSession) {
+            generateOptions($activeEvmSession)
+        } else {
+            generateOptions()
         }
     }
 
-    $: balance = from?.name === nativeAccountName ? $currentAccountBalance : evmBalance
-    $: availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), systemContractSymbol)
+    $: {
+        if (fromOptions.length > 0) {
+            toOptions = fromOptions.filter(token => token.key !== from?.key)
+        }
+    }
+
+    $: {
+        transferManager?.balance().then(balance => {
+            console.log({balance})
+
+            availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), balance?.symbol || "4,EOS")
+        })
+    }
 </script>
 
 <style type="scss">
@@ -108,7 +139,7 @@
                 padding: 20px;
                 min-height: 220px;
 
-                button {
+            button {
                     cursor: pointer;
                     color: var(--main-blue);
                     font-size: 0.7em;

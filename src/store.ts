@@ -49,6 +49,19 @@ export const activePriceTicker: Readable<number> = derived(
         })
 )
 
+export function getSystemTokenPrice(): Promise<number> {
+    let unsubscribe: () => void
+    return new Promise((resolve) => {
+        unsubscribe = activePriceTicker.subscribe((price) => {
+            if (price) {
+                unsubscribe && unsubscribe()
+                resolve(price)
+            }
+        })
+    })
+}
+
+
 /** List of all available anchor link sessions. */
 export const availableSessions = writable<SessionLike[]>([])
 
@@ -70,6 +83,18 @@ export const currentAccountBalance: Readable<Asset | undefined> = derived(
         }
     }
 )
+
+export function getCurrentAccountBalance(): Promise<Asset> {
+    let unsubscribe: () => void
+    return new Promise((resolve) => {
+        unsubscribe = currentAccountBalance.subscribe((balance) => {
+            if (balance) {
+                unsubscribe && unsubscribe()
+                resolve(balance)
+            }
+        })
+    })
+}
 
 const systemDarkMode = writable<boolean>(
     window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches

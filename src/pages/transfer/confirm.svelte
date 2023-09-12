@@ -5,17 +5,36 @@
     import TokenImage from '~/components/elements/image/token.svelte'
     import {systemTokenKey} from '~/stores/tokens'
 
-    import {valueInFiat} from '~/lib/fiat'
     import {activeEvmSession, activeSession, activePriceTicker} from '~/store'
 
-    import type {TransferType} from './transferManager'
+    import type {TransferManager} from './managers'
 
-    export let transferType: TransferType
+    export let transferManager: TransferManager
     export let depositAmount: Asset
     export let receivedAmount: Asset
     export let feeAmount: Asset | undefined
     export let handleConfirm: () => void
     export let handleBack: () => void
+
+    let depositAmountInUsd = ' N/A'
+    let receivedAmountInUsd = ' N/A'
+    let feeAmountInUsd = ' N/A'
+
+    function getUsdValues() {
+        transferManager.convertToUsd(depositAmount?.value).then((usdValue) => {
+            depositAmountInUsd = usdValue
+        })
+
+        transferManager.convertToUsd(receivedAmount?.value).then((usdValue) => {
+            receivedAmountInUsd = usdValue
+        })
+
+        if (feeAmount) {
+            transferManager.convertToUsd(feeAmount?.value).then((usdValue) => {
+                feeAmountInUsd = usdValue
+            })
+        }
+    }
 </script>
 
 <style type="scss">
@@ -117,12 +136,12 @@
 
     <table>
         <tr>
-            <td>From {transferType.fromString}</td>
-            <td>{transferType.from === 'evm' ? $activeEvmSession?.address : $activeSession?.auth.actor}</td>
+            <td>From {transferManager.fromDisplayString}</td>
+            <td>{transferManager.from === 'evm' ? $activeEvmSession?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
-            <td>To {transferType.toString}</td>
-            <td>{transferType.to === 'evm' ? $activeEvmSession?.address : $activeSession?.auth.actor}</td>
+            <td>To {transferManager.toDisplayString}</td>
+            <td>{transferManager.to === 'evm' ? $activeEvmSession?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
             <td>Deposit Amount</td>
@@ -134,7 +153,7 @@
                     {depositAmount}
                 </div>
                 <div class="fiat-value">
-                    ~{valueInFiat(depositAmount?.value, $activePriceTicker)}
+                    ~{depositAmountInUsd}
                 </div>
             </td>
         </tr>
@@ -148,7 +167,7 @@
                     {feeAmount || `0.0000 ${$systemTokenKey}`}
                 </div>
                 <div class="fiat-value">
-                    ~{valueInFiat(feeAmount?.value || 0, $activePriceTicker)}
+                    ~{feeAmountInUsd}
                 </div>
             </td>
         </tr>
@@ -162,7 +181,7 @@
                     {receivedAmount}
                 </div>
                 <div class="fiat-value">
-                    ~{valueInFiat(receivedAmount?.value, $activePriceTicker)}
+                    ~{receivedAmountInUsd}
                 </div>
             </td>
         </tr>

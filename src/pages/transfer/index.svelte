@@ -2,7 +2,7 @@
     import {Asset, TransactResult} from 'anchor-link'
     import type {ethers} from 'ethers'
 
-    import {currentAccountBalance, activeSession, activeEvmSession, activeBlockchain} from '~/store'
+    import {currentAccountBalance, activeSession, activeEvmSession} from '~/store'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './form.svelte'
@@ -11,8 +11,9 @@
     import Error from './error.svelte'
     import {updateAccount} from '~/stores/account-provider'
     import {systemToken} from '~/stores/tokens'
-    import { transferTypes } from './transferManager'
-    import { createEvmBridge } from '~/lib/evm'
+    import { transferManagers } from './managers'
+    import type { TransferManager } from './managers/transferManager'
+    import { handleEvmWalletConnection } from '~/lib/evm'
 
     import type {Token} from '~/stores/tokens'
 
@@ -24,30 +25,37 @@
     let to: Token | undefined
     let transactResult: TransactResult | ethers.providers.TransactionResponse | undefined
     let transferFee: Asset | undefined
-    let evmBalance: Asset | undefined
+    let transferManager: TransferManager | undefined
 
     $: nativeAccountName = String($systemToken?.symbol.code)
     $: systemContractSymbol = String($systemToken?.symbol)
-    $: transferType = (from?.name && to?.name) ? transferTypes[`${from.name} - ${to?.name}` as keyof typeof transferTypes] : undefined
+    $: {
+        const TransferManagerClass = (from?.name && to?.name) ? transferManagers[`${from.name} - ${to?.name}`] : undefined
+        if (TransferManagerClass) {
+            transferManager = new (TransferManagerClass as unknown as new (...args: any[]) => TransferManager)(
+                $activeSession!,
+                $activeEvmSession,
+            )
+        }
+    }
 
     async function useEntireBalance() {
         if (!from || !to) return
 
-        let value
-        if (transferType?.from === 'evm') {
-            value = evmBalance?.value
-        } else if (from?.name === nativeAccountName) {
-            value = $currentAccountBalance?.value
-        }
+        const balance = await transferManager?.balance()
 
-        await estimateTransferFee(String(value))
+        if (!balance) return
 
-        received = ((value || 0) - (transferFee?.value || 0))?.toFixed(4)
+        const balanceValue = balance.value
+       
+        await estimateTransferFee(String(balanceValue))
+
+        received = ((balanceValue || 0) - (transferFee?.value || 0))?.toFixed(4)
     }
 
     async function transfer() {
         try {
-            transactResult = await transferType?.transfer({ nativeSession: $activeSession!, evmSession: $activeEvmSession, amount: deposit })
+            transactResult = await transferManager?.transfer(deposit)
         } catch (error) {
             return (errorMessage = `Could not transfer. Error: ${
                 JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
@@ -82,11 +90,7 @@
         }
 
         try {
-            transferFee = transferType?.transferFee && await transferType.transferFee({
-                nativeSession: $activeSession!,
-                evmSession: $activeEvmSession,
-                amount: transferAmount || received,
-            })
+            transferFee = await transferManager?.transferFee(transferAmount || received)
         } catch (error) {
             if (!error?.data?.message?.includes('insufficient funds for transfer')) {
                 errorMessage = `Could not estimate transfer fee. Error: ${
@@ -99,32 +103,25 @@
         return transferFee
     }
 
-    function getEvmBalance() {
-        $activeEvmSession?.getBalance().then((balance) => {
-            evmBalance = Asset.from(Number(balance.split(' ')[0]), systemContractSymbol)
-        })
-    }
-
-    function updateBalances() {
-        updateAccount($activeSession!.auth.actor, $activeSession!.chainId)
-        getEvmBalance()
+    function updateBalances() {        
+        transferManager?.updateBalances()
     }
 
     $: {
         if ($activeEvmSession) {
-            getEvmBalance()
+            updateBalances()
         }
     }
 
     async function handlePageLoad() {
-        // For now we are always connecting to evm wallet on page load. This may change in the future.
-        await createEvmBridge()
+        // For now, we are always connecting to evm wallet on page load. This may change in the future.
+        await handleEvmWalletConnection()
     }
 
     handlePageLoad()
 
     $: {
-        if (transferType && received !== '' && Number(received) > 0) {
+        if (transferManager && received !== '' && Number(received) > 0) {
             estimateTransferFee()
         }
     }
@@ -150,12 +147,12 @@
     <div class="container">
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
-        {:else if step === 'form' || !transferType || !deposit || !received}
+        {:else if step === 'form' || !transferManager || !deposit || !received}
             <Form
                 handleContinue={submitForm}
                 {depositAmount}
                 {receivedAmount}
-                {evmBalance}
+                {transferManager}
                 {useEntireBalance}
                 bind:feeAmount={transferFee}
                 bind:amount={received}
@@ -166,7 +163,7 @@
             <Confirm
                 {depositAmount}
                 {receivedAmount}
-                {transferType}
+                {transferManager}
                 feeAmount={transferFee}
                 handleConfirm={transfer}
                 {handleBack}
