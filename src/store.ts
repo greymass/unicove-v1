@@ -15,7 +15,7 @@ export const appReady = writable<boolean>(false)
 export const activeSession = writable<LinkSession | undefined>(undefined)
 
 /** Active EVM account, aka logged in user. */
-export const EvmSession = writable<EvmSession | null>(null)
+export const activeEvmSession = writable<EvmSession | undefined>(undefined)
 
 /** Configuration of the currently selected blockchain */
 export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) => {
@@ -31,7 +31,7 @@ export function getActiveBlockchain(): Promise<ChainConfig> {
     return new Promise((resolve) => {
         unsubscribe = activeBlockchain.subscribe((chain) => {
             if (chain) {
-                unsubscribe()
+                unsubscribe && unsubscribe()
                 resolve(chain)
             }
         })
@@ -91,3 +91,27 @@ export const darkMode = derived(
         }
     }
 )
+
+export function getActiveSession(): Promise<LinkSession> {
+    let unsubscribe: () => void | undefined
+    return new Promise((resolve) => {
+        unsubscribe = activeSession.subscribe((session) => {
+            if (session) {
+                unsubscribe && unsubscribe()
+                resolve(session)
+            }
+        })
+    })
+}
+
+export function getActiveEvmSession(): Promise<EvmSession> {
+    let unsubscribe: () => void | undefined
+    return new Promise((resolve) => {
+        unsubscribe = activeEvmSession.subscribe((session) => {
+            if (session) {
+                unsubscribe && unsubscribe()
+                resolve(session)
+            }
+        })
+    })
+}

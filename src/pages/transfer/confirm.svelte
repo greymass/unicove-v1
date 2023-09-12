@@ -6,12 +6,11 @@
     import {systemTokenKey} from '~/stores/tokens'
 
     import {valueInFiat} from '~/lib/fiat'
+    import {activeEvmSession, activeSession, activePriceTicker} from '~/store'
 
-    import {EvmSession, activeSession, activePriceTicker} from '~/store'
-    import type {Token} from '~/stores/tokens'
+    import type {TransferType} from './transferManager'
 
-    export let from: Token
-    export let to: Token
+    export let transferType: TransferType
     export let depositAmount: Asset
     export let receivedAmount: Asset
     export let feeAmount: Asset | undefined
@@ -118,12 +117,12 @@
 
     <table>
         <tr>
-            <td>From {from.name === 'EOS (EVM)' ? 'EVM' : from.name}</td>
-            <td>{from?.name === 'EVM' ? $EvmSession?.address : $activeSession?.auth.actor}</td>
+            <td>From {transferType.fromString}</td>
+            <td>{transferType.from === 'evm' ? $activeEvmSession?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
-            <td>To {to.name}</td>
-            <td>{from?.name === 'EOS' ? $EvmSession?.address : $activeSession?.auth.actor}</td>
+            <td>To {transferType.toString}</td>
+            <td>{transferType.to === 'evm' ? $activeEvmSession?.address : $activeSession?.auth.actor}</td>
         </tr>
         <tr>
             <td>Deposit Amount</td>
@@ -146,7 +145,7 @@
                     <div class="image-container">
                         <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
                     </div>
-                    {feeAmount || '0.0000 EOS'}
+                    {feeAmount || `0.0000 ${$systemTokenKey}`}
                 </div>
                 <div class="fiat-value">
                     ~{valueInFiat(feeAmount?.value || 0, $activePriceTicker)}

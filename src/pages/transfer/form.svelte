@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
-    import {currentAccountBalance, EvmSession, activeSession} from '~/store'
+    import {currentAccountBalance, activeEvmSession, activeSession} from '~/store'
     import {Token, systemToken} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
@@ -34,7 +34,7 @@
         to = token
     }
 
-    $: readyToContinue = from && to && validAmount && $EvmSession
+    $: readyToContinue = from && to && validAmount && $activeEvmSession
 
     function onContinue() {
         if (readyToContinue) {
@@ -209,7 +209,7 @@
             <Button fluid style="primary" disabled={!readyToContinue} on:action={onContinue}
                 >Continue</Button
             >
-            {#if !$EvmSession}
+            {#if !$activeEvmSession}
                 <h3>Connect to metamask wallet to continue</h3>
             {/if}
         </div>

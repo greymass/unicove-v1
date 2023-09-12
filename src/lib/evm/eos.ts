@@ -38,7 +38,7 @@ export class EvmEosBridge extends EvmBridge {
             from: this.nativeSession.auth.actor,
             to: 'eosio.evm',
             quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
-            memo: this.EvmSession.address,
+            memo: this.evmSession.address,
         })
     
         return this.nativeSession.transact({
@@ -52,20 +52,20 @@ export class EvmEosBridge extends EvmBridge {
     }
 
     async evmTransferFee(amount: string) {
-        const {gas, gasPrice} = await this.estimateGas({nativeSession: this.nativeSession, EvmSession: this.EvmSession, amount})
+        const {gas, gasPrice} = await this.estimateGas(amount)
     
         const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
     
-        return Asset.fromFloat(Number(eosAmount), this.EvmSession.chainConfig.nativeCurrency.symbol)
+        return Asset.fromFloat(Number(eosAmount), this.evmSession.chainConfig.nativeCurrency.symbol)
     }
 
     async evmTransfer(amount: string) {
         const targetEvmAddress = convertToEvmAddress(String(this.nativeSession.auth.actor))
     
-        const {gas} = await this.estimateGas({nativeSession: this.nativeSession, EvmSession: this.EvmSession, amount})
+        const {gas} = await this.estimateGas(amount)
     
-        return this.EvmSession.sendTransaction({
-            from: this.EvmSession.address,
+        return this.evmSession.sendTransaction({
+            from: this.evmSession.address,
             to: targetEvmAddress,
             value: ethers.utils.parseEther(amount),
             gasPrice: await getProvider().getGasPrice(),
@@ -74,10 +74,10 @@ export class EvmEosBridge extends EvmBridge {
         })
     }
 
-    private async estimateGas({nativeSession, EvmSession, amount}: TransferParams) {
+    private async estimateGas(amount: string) {
         const provider = getProvider()
     
-        const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
+        const targetEvmAddress = convertToEvmAddress(String(this.nativeSession.auth.actor))
     
         const gasPrice = await provider.getGasPrice()
     
@@ -85,7 +85,7 @@ export class EvmEosBridge extends EvmBridge {
         const reducedAmount = String(Number(amount) - 0.005)
     
         const gas = await provider.estimateGas({
-            from: EvmSession.address,
+            from: this.evmSession.address,
             to: targetEvmAddress,
             value: ethers.utils.parseEther(reducedAmount),
             gasPrice,

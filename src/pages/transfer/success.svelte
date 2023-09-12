@@ -6,15 +6,14 @@
 
     import {activeBlockchain} from '~/store'
 
-    export let nativeTransactResult: TransactResult | undefined
-    export let evmTransactResult: ethers.providers.TransactionResponse | undefined
+    export let transactResult: TransactResult | ethers.providers.TransactionResponse
     export let handleBack: () => void
 </script>
 
-{#if nativeTransactResult}
+{#if "payload" in transactResult}
     <TxFollower
         title="Transfer Sent"
-        id={nativeTransactResult.payload.tx}
+        id={transactResult.payload.tx}
         chain={$activeBlockchain}
         primaryButtonText="New Transfer"
         handlePrimaryButtonClick={handleBack}
@@ -22,7 +21,7 @@
 {:else}
     <EvmTxFollower
         title="Transfer Sent"
-        {evmTransactResult}
+        evmTransactResult={transactResult}
         primaryButtonText="New Transfer"
         handlePrimaryButtonClick={handleBack}
     />
