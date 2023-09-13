@@ -170,3 +170,9 @@ export class Transfer extends Struct {
     @Struct.field('asset') quantity!: Asset
     @Struct.field('string') memo!: string
 }
+
+@Struct.type('withdraw')
+export class TelosEvmWithdraw extends Struct {
+    @Struct.field('name') to!: Name
+    @Struct.field('asset') quantity!: Asset
+}
