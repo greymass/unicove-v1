@@ -13,6 +13,14 @@ export class EvmEosBridge extends TransferManager {
     static supportedChains = ['eos']
     static evmRequired = true;
 
+    get fromAddress() {
+        return this.evmSession.address
+    }
+
+    get toAddress() {
+        return String(this.nativeSession.auth.actor)
+    }
+
     async transferFee(amount: string) {
         const {gas, gasPrice} = await this.estimateGas(amount)
     

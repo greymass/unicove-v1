@@ -7,7 +7,7 @@
 
     import {activeEvmSession, activeSession, activePriceTicker} from '~/store'
 
-    import type {TransferManager} from './managers'
+    import type {TransferManager} from './managers/transferManager'
 
     export let transferManager: TransferManager
     export let depositAmount: Asset
@@ -15,6 +15,8 @@
     export let feeAmount: Asset | undefined
     export let handleConfirm: () => void
     export let handleBack: () => void
+
+    $: console.log({ transferManager })
 
     let depositAmountInUsd = ' N/A'
     let receivedAmountInUsd = ' N/A'
@@ -35,6 +37,8 @@
             })
         }
     }
+
+    getUsdValues()
 </script>
 
 <style type="scss">
@@ -137,11 +141,11 @@
     <table>
         <tr>
             <td>From {transferManager.fromDisplayString}</td>
-            <td>{transferManager.from === 'evm' ? $activeEvmSession?.address : $activeSession?.auth.actor}</td>
+            <td>{transferManager.fromAddress}</td>
         </tr>
         <tr>
             <td>To {transferManager.toDisplayString}</td>
-            <td>{transferManager.to === 'evm' ? $activeEvmSession?.address : $activeSession?.auth.actor}</td>
+            <td>{transferManager.toAddress}</td>
         </tr>
         <tr>
             <td>Deposit Amount</td>

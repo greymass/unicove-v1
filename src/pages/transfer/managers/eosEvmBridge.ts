@@ -1,15 +1,23 @@
 import {Asset, Name} from 'anchor-link'
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
-import { TransferManager } from './transferManager'
-import { getCurrentAccountBalance } from '~/store'
+import {TransferManager} from './transferManager'
+import {getCurrentAccountBalance} from '~/store'
 
-export class EosEvmBridge extends TransferManager {
+export class EosEvmBridge extends TransferManager {    
     static from = 'eos'
     static fromDisplayString = 'EOS'
     static to = 'evm'
     static toDisplayString = 'EOS (EVM)'
     static supportedChains = ['eos']
+
+    get fromAddress() {
+        return String(this.nativeSession.auth.actor)
+    }
+
+    get toAddress() {
+        return this.evmSession.address
+    }
 
     async transferFee() {
         const apiClient = getClient(this.nativeSession.chainId)

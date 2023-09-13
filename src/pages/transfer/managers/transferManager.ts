@@ -1,11 +1,12 @@
-import type { Asset, LinkSession, TransactResult } from "anchor-link";
-import type { ethers } from "ethers";
+import type {Asset, LinkSession, TransactResult} from "anchor-link";
+import type {ethers} from "ethers";
 
-import type { EvmSession } from "~/lib/evm";
+import type {EvmSession} from "~/lib/evm";
 import {valueInFiat} from '~/lib/fiat'
-import { getSystemTokenPrice } from "~/store";
+import {getSystemTokenPrice} from "~/store";
 
 export abstract class TransferManager {
+    self: typeof TransferManager
     static from: string
     static to: string
     static fromDisplayString: string
@@ -19,6 +20,7 @@ export abstract class TransferManager {
     constructor(nativeSession: LinkSession, evmSession: EvmSession) {
         this.nativeSession = nativeSession
         this.evmSession = evmSession
+        this.self = this.constructor as typeof TransferManager
     }
 
     transfer(_amount: string): Promise<TransactResult | ethers.providers.TransactionResponse> {
@@ -48,27 +50,35 @@ export abstract class TransferManager {
     //     throw new Error('onSelect() not implemented')
     // }
 
+    get fromAddress(): string {
+        throw new Error('fromAddress() not implemented')
+    }
+
+    get toAddress(): string {
+        throw new Error('toAddress() not implemented')
+    }
+
     get from() {
-        return TransferManager.from
+        return this.self.from
     }
 
     get to() {
-        return TransferManager.to
+        return this.self.to
     }
 
     get fromDisplayString() {
-        return TransferManager.fromDisplayString
+        return this.self.fromDisplayString
     }
 
     get toDisplayString() {
-        return TransferManager.toDisplayString
+        return this.self.toDisplayString
     }
 
     get supportedChains() {
-        return TransferManager.supportedChains
+        return this.self.supportedChains
     }
 
     get evmRequired() {
-        return TransferManager.evmRequired
+        return this.self.evmRequired
     }
 }

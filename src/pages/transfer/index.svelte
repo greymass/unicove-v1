@@ -27,7 +27,6 @@
     let transferFee: Asset | undefined
     let transferManager: TransferManager | undefined
 
-    $: nativeAccountName = String($systemToken?.symbol.code)
     $: systemContractSymbol = String($systemToken?.symbol)
     $: {
         const TransferManagerClass = (from?.name && to?.name) ? transferManagers[`${from.name} - ${to?.name}`] : undefined
@@ -132,6 +131,7 @@
         }
     }
 
+    // Eventually we may want to get the symbol from the transferManager instead of the systemToken
     $: receivedAmount = isNaN(Number(received)) ? undefined : Asset.from(Number(received), systemContractSymbol)
     $: depositAmount = Asset.from(Number(deposit), systemContractSymbol)
 </script>
