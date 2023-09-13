@@ -1,9 +1,10 @@
 import type {Asset, LinkSession, TransactResult} from "anchor-link";
 import type {ethers} from "ethers";
+import { get } from "svelte/store";
 
 import type {EvmSession} from "~/lib/evm";
 import {valueInFiat} from '~/lib/fiat'
-import {getSystemTokenPrice} from "~/store";
+import {activePriceTicker, waitForStoreValue} from "~/store";
 
 export abstract class TransferManager {
     self: typeof TransferManager
@@ -31,7 +32,7 @@ export abstract class TransferManager {
         throw new Error('transferFee() not implemented')
     }
 
-    balance(): Promise<Asset> {
+    balance(): Promise<Asset | undefined> {
         throw new Error('balance() not implemented')
     }
 
@@ -40,7 +41,7 @@ export abstract class TransferManager {
     }
 
     async convertToUsd(amount: number): Promise<string> {
-        const systemTokenPrice = await getSystemTokenPrice()
+        const systemTokenPrice = await waitForStoreValue(activePriceTicker)
 
         return valueInFiat(amount, systemTokenPrice)
     }

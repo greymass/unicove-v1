@@ -14,8 +14,11 @@ export const appReady = writable<boolean>(false)
 /** Active anchor link session, aka logged in user. */
 export const activeSession = writable<LinkSession | undefined>(undefined)
 
-/** Active EVM account, aka logged in user. */
+/** Active EVM session, aka logged in user. */
 export const activeEvmSession = writable<EvmSession | undefined>(undefined)
+
+/** EVM session balance */
+export const evmBalance = writable<Asset | undefined>(undefined)
 
 /** Configuration of the currently selected blockchain */
 export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) => {
@@ -25,18 +28,6 @@ export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (s
         return chains[0]
     }
 })
-
-export function getActiveBlockchain(): Promise<ChainConfig> {
-    let unsubscribe: () => void
-    return new Promise((resolve) => {
-        unsubscribe = activeBlockchain.subscribe((chain) => {
-            if (chain) {
-                unsubscribe && unsubscribe()
-                resolve(chain)
-            }
-        })
-    })
-}
 
 /** Active price ticker for the currently selected blockchain */
 export const activePriceTicker: Readable<number> = derived(
@@ -48,18 +39,6 @@ export const activePriceTicker: Readable<number> = derived(
             }
         })
 )
-
-export function getSystemTokenPrice(): Promise<number> {
-    let unsubscribe: () => void
-    return new Promise((resolve) => {
-        unsubscribe = activePriceTicker.subscribe((price) => {
-            if (price) {
-                unsubscribe && unsubscribe()
-                resolve(price)
-            }
-        })
-    })
-}
 
 
 /** List of all available anchor link sessions. */
@@ -84,18 +63,6 @@ export const currentAccountBalance: Readable<Asset | undefined> = derived(
     }
 )
 
-export function getCurrentAccountBalance(): Promise<Asset> {
-    let unsubscribe: () => void
-    return new Promise((resolve) => {
-        unsubscribe = currentAccountBalance.subscribe((balance) => {
-            if (balance) {
-                unsubscribe && unsubscribe()
-                resolve(balance)
-            }
-        })
-    })
-}
-
 const systemDarkMode = writable<boolean>(
     window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 )
@@ -117,26 +84,13 @@ export const darkMode = derived(
     }
 )
 
-export function getActiveSession(): Promise<LinkSession> {
-    let unsubscribe: () => void | undefined
+export const waitForStoreValue = <StoreType>(store: Readable<StoreType | undefined>): Promise<StoreType> => {
     return new Promise((resolve) => {
-        unsubscribe = activeSession.subscribe((session) => {
-            if (session) {
-                unsubscribe && unsubscribe()
-                resolve(session)
+        const unsubscribe = store.subscribe((value) => {
+            if (value) {  // Replace this condition with whatever means "populated" for you
+                resolve(value);
+                unsubscribe && unsubscribe();
             }
-        })
-    })
-}
-
-export function getActiveEvmSession(): Promise<EvmSession> {
-    let unsubscribe: () => void | undefined
-    return new Promise((resolve) => {
-        unsubscribe = activeEvmSession.subscribe((session) => {
-            if (session) {
-                unsubscribe && unsubscribe()
-                resolve(session)
-            }
-        })
-    })
-}
+        });
+    });
+};

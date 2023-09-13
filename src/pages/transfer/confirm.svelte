@@ -5,8 +5,6 @@
     import TokenImage from '~/components/elements/image/token.svelte'
     import {systemTokenKey} from '~/stores/tokens'
 
-    import {activeEvmSession, activeSession, activePriceTicker} from '~/store'
-
     import type {TransferManager} from './managers/transferManager'
 
     export let transferManager: TransferManager
@@ -15,8 +13,6 @@
     export let feeAmount: Asset | undefined
     export let handleConfirm: () => void
     export let handleBack: () => void
-
-    $: console.log({ transferManager })
 
     let depositAmountInUsd = ' N/A'
     let receivedAmountInUsd = ' N/A'

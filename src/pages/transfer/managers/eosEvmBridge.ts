@@ -1,8 +1,12 @@
 import {Asset, Name} from 'anchor-link'
+import { get } from 'svelte/store'
+
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
 import {TransferManager} from './transferManager'
-import {getCurrentAccountBalance} from '~/store'
+import {currentAccountBalance} from '~/store'
+import { updateActiveAccount } from '~/stores/account-provider'
+import { updateEvmBalance } from '~/stores/balances-provider'
 
 export class EosEvmBridge extends TransferManager {    
     static from = 'eos'
@@ -58,6 +62,11 @@ export class EosEvmBridge extends TransferManager {
     }
 
     async balance() {
-        return getCurrentAccountBalance()
+        return get(currentAccountBalance)
+    }
+
+    async updateBalances() {
+        updateEvmBalance()
+        updateActiveAccount()
     }
 }

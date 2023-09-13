@@ -1,8 +1,9 @@
 import type { Asset, LinkSession, TransactResult } from "anchor-link";
 import { BN } from "bn.js";
 import { ethers } from "ethers";
+import { get } from "svelte/store";
 import { wait } from "~/helpers";
-import { getActiveBlockchain, activeEvmSession } from "~/store";
+import { activeBlockchain, activeEvmSession } from "~/store";
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
 export interface EvmChainConfig {
@@ -69,8 +70,6 @@ export class EvmSession {
     async getBalance() {
         const wei = await this.signer.getBalance()
 
-        console.log({ chainName: this.chainName })
-
         const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
 
         return formatToken(ethers.utils.formatEther(wei), tokenName)
@@ -113,10 +112,10 @@ export async function handleEvmWalletConnection(): Promise<EvmSession | undefine
     
     creatingEvmBridge = true
 
-    const activeBlockchain = await getActiveBlockchain()
+    const blockchain = get(activeBlockchain)
 
     try {
-        evmSession = await connectEvmWallet(activeBlockchain.id)
+        evmSession = await connectEvmWallet(blockchain.id)
     } catch (e) {
         if (e.code === -32002) {
             await wait(5000)

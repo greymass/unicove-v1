@@ -4,6 +4,8 @@ import {ethers} from 'ethers'
 import { convertToEvmAddress, getProvider } from '~/lib/evm'
 
 import { TransferManager } from './transferManager'
+import { updateEvmBalance } from '~/stores/balances-provider'
+import { updateActiveAccount } from '~/stores/account-provider'
 
 export class EvmEosBridge extends TransferManager {
     static from = 'evm'
@@ -66,9 +68,13 @@ export class EvmEosBridge extends TransferManager {
     }
 
     async balance() {
-        console.log({evmSessionInBalance: this.evmSession})
         const balance = await this.evmSession.getBalance()
 
         return Asset.from(balance)
+    }
+
+    async updateBalances() {
+        updateEvmBalance()
+        updateActiveAccount()
     }
 }

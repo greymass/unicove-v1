@@ -1,4 +1,6 @@
-import { getCurrentAccountBalance } from "~/store";
+import { get } from "svelte/store";
+
+import { currentAccountBalance } from "~/store";
 import { TransferManager } from "./transferManager";
 
 export class EvmTelosBridge extends TransferManager {
@@ -11,6 +13,6 @@ export class EvmTelosBridge extends TransferManager {
     // TODO: Implement methods
 
     async balance() {
-        return getCurrentAccountBalance()
+        return get(currentAccountBalance)
     }
 }
