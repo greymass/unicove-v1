@@ -27,8 +27,10 @@ export class TelosEvmBridge extends TransferManager {
     async transfer(amount: string) {
         const telosEvmAccount = await getTelosEvmAccount(this.nativeSession.auth.actor)
 
+        const actions = []
+
         if (!telosEvmAccount) {
-            this.createNewTelosEvmAccount()
+            actions.push(this.telosEvmOpenWalletAction())
         }
 
         const action = Transfer.from({
@@ -38,13 +40,15 @@ export class TelosEvmBridge extends TransferManager {
             memo: this.evmSession.address || '',
         })
 
+        actions.push({
+            authorization: [this.nativeSession.auth],
+            account: Name.from('eosio.token'),
+            name: Name.from('transfer'),
+            data: action,
+        })
+
         return this.nativeSession.transact({
-            action: {
-                authorization: [this.nativeSession.auth],
-                account: Name.from('eosio.token'),
-                name: Name.from('transfer'),
-                data: action,
-            },
+            actions
         })
     }
 
@@ -63,20 +67,18 @@ export class TelosEvmBridge extends TransferManager {
         ])
     }
 
-    createNewTelosEvmAccount() {
+    telosEvmOpenWalletAction() {
+        console.log({ address: this.evmSession.address })
         const action = TelosEvmOpenWallet.from({
             account: this.nativeSession.auth.actor,
             address: this.evmSession.address,
         })
 
-        this.nativeSession.transact({
-            action: {
-                authorization: [this.nativeSession.auth],
-                account: Name.from('eosio.evm'),
-                name: Name.from('openwallet'),
-                data: action,
-            },
-        })
-
+        return {
+            authorization: [this.nativeSession.auth],
+            account: Name.from('eosio.evm'),
+            name: Name.from('openwallet'),
+            data: action,
+        }
     }
 }

@@ -37,6 +37,8 @@
 
     function onContinue() {
         if (readyToContinue) {
+            removeEventListener('keyup', handleEnter)
+
             handleContinue()
         }
     }
@@ -57,6 +59,7 @@
     let fromOptions: Token[] = []
     let toOptions: Token[] = []
     let availableToReceive: CoreAsset | undefined
+    let isEntireBalanceFocused = false
 
     let generatingOptions = false
 
@@ -115,6 +118,17 @@
             availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), balance?.symbol || "4,EOS")
         })
     }
+
+    // Continue when the user presses enter
+    const handleEnter = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            event.preventDefault()
+
+            onContinue()
+        }
+    }
+
+    addEventListener('keyup', handleEnter)
 </script>
 
 <style type="scss">
@@ -216,7 +230,13 @@
                     bind:value={amount}
                 />
                 {#if from && to}
-                    <button on:click={useEntireBalance}>Entire Balance</button>
+                    <button
+                        type="button"
+                        on:click={useEntireBalance}
+                        on:keyup={() => {}}
+                    >
+                        Entire Balance
+                    </button>
                 {/if}
             </div>
             <div class="right-section">
