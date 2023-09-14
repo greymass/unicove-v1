@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
-    import {activeEvmSession, activeSession, activeBlockchain} from '~/store'
+    import {activeEvmSession, activeSession, activeBlockchain, currentAccountBalance} from '~/store'
     import {Token, systemToken} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
@@ -8,9 +8,9 @@
     import Button from '~/components/elements/button.svelte'
     import Asset from '~/components/elements/input/asset.svelte'
     import Selector from '~/components/elements/input/token/selector.svelte'
-    import type { TransferManager } from './managers/transferManager'
-    import { transferManagers } from './managers'
-    import type { EvmSession } from '~/lib/evm'
+    import type {TransferManager} from './managers/transferManager'
+    import {transferManagers} from './managers'
+    import type {EvmSession} from '~/lib/evm'
 
     export let handleContinue: () => void
     export let amount: string = ''
@@ -69,30 +69,31 @@
 
         fromOptions = []
 
-        await Promise.all(Object.values(transferManagers).map(async TransferManagerClass => {
-            if (!$systemToken) return
+        await Promise.all(
+            Object.values(transferManagers).map(async (TransferManagerClass) => {
+                if (!$systemToken) return
 
-            // Only displaying accounts that support the current chain
-            if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
+                // Only displaying accounts that support the current chain
+                if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
 
-            let accountBalance
+                let accountBalance
 
-            if (!TransferManagerClass.evmRequired || evmSession) {
-                const transferManager = new (TransferManagerClass as unknown as new (...args: any[]) => TransferManager)(
-                    $activeSession!,
-                    evmSession
-                )
-                await transferManager.updateMainBalance()
-                accountBalance = await transferManager.balance()
-            }
+                if (!TransferManagerClass.evmRequired || evmSession) {
+                    const transferManager = new (TransferManagerClass as unknown as new (
+                        ...args: any[]
+                    ) => TransferManager)($activeSession!, evmSession)
+                    await transferManager.updateMainBalance()
+                    accountBalance = await transferManager.balance()
+                }
 
-            fromOptions.push({
-                ...$systemToken,
-                key: TransferManagerClass.from,
-                name: TransferManagerClass.fromDisplayString,
-                balance: accountBalance || 'Connect',
+                fromOptions.push({
+                    ...$systemToken,
+                    key: TransferManagerClass.from,
+                    name: TransferManagerClass.fromDisplayString,
+                    balance: accountBalance || 'Connect',
+                })
             })
-        }))
+        )
 
         toOptions = fromOptions
 
@@ -101,13 +102,23 @@
 
     $: {
         if (from) {
-            toOptions = fromOptions.filter(token => token.key !== from?.key)
+            toOptions = fromOptions.filter((token) => token.key !== from?.key)
         } else {
             toOptions = fromOptions
         }
     }
 
+    const initialBalanceValue = $currentAccountBalance?.value
+
     $: {
+        // Regenerate options if the balance changes
+        if ($activeEvmSession && initialBalanceValue !== $currentAccountBalance?.value) {
+            generateOptions($activeEvmSession)
+        }
+    }
+
+    $: {
+        // Regenerate options if the user connects to evm wallet
         if ($activeEvmSession) {
             generateOptions($activeEvmSession)
         } else {
@@ -116,8 +127,11 @@
     }
 
     $: {
-        transferManager?.balance().then(balance => {
-            availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), balance?.symbol || "4,EOS")
+        transferManager?.balance().then((balance) => {
+            availableToReceive = CoreAsset.from(
+                (balance?.value || 0) - (feeAmount?.value || 0),
+                balance?.symbol || '4,EOS'
+            )
         })
     }
 
@@ -160,7 +174,7 @@
                 padding: 20px;
                 min-height: 220px;
 
-            button {
+                button {
                     cursor: pointer;
                     color: var(--main-blue);
                     font-size: 0.7em;
@@ -232,11 +246,7 @@
                     bind:value={amount}
                 />
                 {#if from && to}
-                    <button
-                        type="button"
-                        on:click={useEntireBalance}
-                        on:keyup={() => {}}
-                    >
+                    <button type="button" on:click={useEntireBalance} on:keyup={() => {}}>
                         Entire Balance
                     </button>
                 {/if}

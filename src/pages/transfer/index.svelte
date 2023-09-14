@@ -10,9 +10,9 @@
     import Success from './success.svelte'
     import Error from './error.svelte'
     import {systemToken} from '~/stores/tokens'
-    import { transferManagers } from './managers'
-    import type { TransferManager } from './managers/transferManager'
-    import { startEvmSession } from '~/lib/evm'
+    import {transferManagers} from './managers'
+    import type {TransferManager} from './managers/transferManager'
+    import {startEvmSession} from '~/lib/evm'
 
     import type {Token} from '~/stores/tokens'
 
@@ -28,12 +28,12 @@
 
     $: systemContractSymbol = String($systemToken?.symbol)
     $: {
-        const TransferManagerClass = (from?.name && to?.name) ? transferManagers[`${from.name} - ${to?.name}`] : undefined
+        const TransferManagerClass =
+            from?.name && to?.name ? transferManagers[`${from.name} - ${to?.name}`] : undefined
         if (TransferManagerClass) {
-            transferManager = new (TransferManagerClass as unknown as new (...args: any[]) => TransferManager)(
-                $activeSession!,
-                $activeEvmSession,
-            )
+            transferManager = new (TransferManagerClass as unknown as new (
+                ...args: any[]
+            ) => TransferManager)($activeSession!, $activeEvmSession)
         }
     }
 
@@ -45,30 +45,31 @@
         if (!balance) return
 
         const balanceValue = balance.value
-       
+
         await estimateTransferFee(String(balanceValue))
 
-        received = ((balanceValue || 0) - (transferFee?.value || 0))?.toFixed(4)
+        const transferFeeValue = transferFee?.value || 0
+
+        received = (
+            (balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue - 0.0001)
+        )?.toFixed(4)
     }
 
     async function transfer() {
         try {
-            transactResult = await transferManager?.transfer(deposit)
+            transactResult = await transferManager?.transfer(deposit, received)
         } catch (error) {
             return (errorMessage = `Could not transfer. Error: ${
-                error.underlyingError?.message || JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+                error.underlyingError?.message || JSON.stringify(error) === '{}'
+                    ? error.message
+                    : JSON.stringify(error)
             }`)
         }
 
-        setTimeout(() => {
-            transferManager?.updateBalances()
-        }, 20000) // Waiting a 20 seconds and then updating the balances
-
         step = 'success'
     }
-    
 
-    function handleBack() {
+    function handleBack(updateBalances = false) {
         step = 'form'
         errorMessage = undefined
         transactResult = undefined
@@ -81,7 +82,9 @@
 
         await estimateTransferFee()
 
-        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(4)
+        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(
+            4
+        )
     }
 
     async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
@@ -124,7 +127,9 @@
     }
 
     // Eventually we may want to get the symbol from the transferManager instead of the systemToken
-    $: receivedAmount = isNaN(Number(received)) ? undefined : Asset.from(Number(received), systemContractSymbol)
+    $: receivedAmount = isNaN(Number(received))
+        ? undefined
+        : Asset.from(Number(received), systemContractSymbol)
     $: depositAmount = Asset.from(Number(deposit), systemContractSymbol)
 </script>
 
@@ -160,8 +165,8 @@
                 handleConfirm={transfer}
                 {handleBack}
             />
-        {:else if (step === 'success' && transactResult)}
-            <Success {transactResult} {handleBack} />
+        {:else if step === 'success' && transactResult}
+            <Success {transactResult} {transferManager} {handleBack} />
         {/if}
     </div>
 </Page>

@@ -153,7 +153,7 @@
                     {depositAmount}
                 </div>
                 <div class="fiat-value">
-                    {depositAmountInUsd ? `~ ${depositAmountInUsd}`: ''}
+                    {depositAmountInUsd ? `~ ${depositAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>
@@ -167,7 +167,7 @@
                     {feeAmount || `0.0000 ${$systemTokenKey}`}
                 </div>
                 <div class="fiat-value">
-                    {feeAmountInUsd ? `~ ${feeAmountInUsd}`: ''}
+                    {feeAmountInUsd ? `~ ${feeAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>
@@ -181,7 +181,7 @@
                     {receivedAmount}
                 </div>
                 <div class="fiat-value">
-                    {receivedAmountInUsd ? `~ ${receivedAmountInUsd}`: ''}
+                    {receivedAmountInUsd ? `~ ${receivedAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>

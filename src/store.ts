@@ -40,7 +40,6 @@ export const activePriceTicker: Readable<number> = derived(
         })
 )
 
-
 /** List of all available anchor link sessions. */
 export const availableSessions = writable<SessionLike[]>([])
 
@@ -84,14 +83,17 @@ export const darkMode = derived(
     }
 )
 
-export const waitForStoreValue = <StoreType>(store: Readable<StoreType | undefined>): Promise<StoreType> => {
-    let unsubscribe: (() => void) | undefined;
+export const waitForStoreValue = <StoreType>(
+    store: Readable<StoreType | undefined>
+): Promise<StoreType> => {
+    let unsubscribe: (() => void) | undefined
     return new Promise((resolve) => {
         unsubscribe = store.subscribe((value) => {
-            if (value) {  // Replace this condition with whatever means "populated" for you
-                resolve(value);
-                unsubscribe && unsubscribe();
+            if (value) {
+                // Replace this condition with whatever means "populated" for you
+                resolve(value)
+                unsubscribe && unsubscribe()
             }
-        });
-    });
-};
+        })
+    })
+}

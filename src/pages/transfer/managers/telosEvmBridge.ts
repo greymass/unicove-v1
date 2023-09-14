@@ -1,20 +1,20 @@
-import { get } from "svelte/store";
+import {get} from 'svelte/store'
 
-import { currentAccountBalance } from "~/store";
-import { TransferManager } from "./transferManager";
-import { TelosEvmCreate, TelosEvmOpenWallet, Transfer } from "~/abi-types";
-import { Asset, Checksum160, Name } from "anchor-link";
-import { updateActiveAccount } from "~/stores/account-provider";
-import { updateEvmBalance } from "~/stores/balances-provider";
-import { getTelosEvmAccount } from "~/lib/evm";
+import {currentAccountBalance, evmBalance} from '~/store'
+import {TransferManager} from './transferManager'
+import {TelosEvmCreate, TelosEvmOpenWallet, Transfer} from '~/abi-types'
+import {Asset, Name} from 'anchor-link'
+import {updateActiveAccount} from '~/stores/account-provider'
+import {updateEvmBalance} from '~/stores/balances-provider'
+import {getTelosEvmAccount} from '~/lib/evm'
 
 export class TelosEvmBridge extends TransferManager {
-    static from = "telos"
-    static fromDisplayString = "TLOS"
-    static to = "evm"
-    static toDisplayString = "TLOS (EVM)"
-    static supportedChains = ["telos"]
-    static evmRequired = true;
+    static from = 'telos'
+    static fromDisplayString = 'TLOS'
+    static to = 'evm'
+    static toDisplayString = 'TLOS (EVM)'
+    static supportedChains = ['telos']
+    static evmRequired = true
 
     get fromAddress() {
         return String(this.nativeSession.auth.actor)
@@ -48,7 +48,7 @@ export class TelosEvmBridge extends TransferManager {
         })
 
         return this.nativeSession.transact({
-            actions
+            actions,
         })
     }
 
@@ -56,15 +56,17 @@ export class TelosEvmBridge extends TransferManager {
         return get(currentAccountBalance)
     }
 
+    async receivingBalance() {
+        return get(evmBalance)
+    }
+
     async updateMainBalance() {
         return updateEvmBalance()
     }
 
     async updateBalances(): Promise<void> {
-        await Promise.all([
-            updateActiveAccount(),
-            updateEvmBalance(),
-        ])
+        updateActiveAccount()
+        updateEvmBalance()
     }
 
     telosEvmOpenWalletAction() {

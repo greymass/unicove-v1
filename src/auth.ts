@@ -6,7 +6,7 @@ import {storeAccount} from './stores/account-provider'
 import {getClient} from './api-client'
 import {appId, chains} from './config'
 import {activeEvmSession, activeSession, availableSessions} from './store'
-import { startEvmSession } from './lib/evm'
+import {startEvmSession} from './lib/evm'
 
 const transport = new Transport({
     requestStatus: false,

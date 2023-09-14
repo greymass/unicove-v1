@@ -1,14 +1,12 @@
-import {Asset} from "anchor-link";
-import type {LinkSession, TransactResult} from "anchor-link";
-import type {ethers} from "ethers";
-import { get } from "svelte/store";
+import {Asset} from 'anchor-link'
+import type {LinkSession, TransactResult} from 'anchor-link'
+import type {ethers} from 'ethers'
+import {get} from 'svelte/store'
 
-import type {EvmSession} from "~/lib/evm";
+import type {EvmSession} from '~/lib/evm'
 import {valueInFiat} from '~/lib/fiat'
-import {activePriceTicker, waitForStoreValue} from "~/store";
-import { systemTokenBalance } from "~/stores/balances";
-import { systemToken } from "~/stores/tokens";
-import { systemTokenKey } from "~/stores/tokens";
+import {activePriceTicker, waitForStoreValue} from '~/store'
+import {systemToken} from '~/stores/tokens'
 
 export abstract class TransferManager {
     self: typeof TransferManager
@@ -28,16 +26,25 @@ export abstract class TransferManager {
         this.self = this.constructor as typeof TransferManager
     }
 
-    transfer(_amount: string): Promise<TransactResult | ethers.providers.TransactionResponse> {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    transfer(
+        _amount: string,
+        _amountReceived?: string
+    ): Promise<TransactResult | ethers.providers.TransactionResponse> {
         throw new Error('transfer() not implemented')
     }
 
     transferFee(_amount?: string): Promise<Asset> {
         return Promise.resolve(Asset.from(0, get(systemToken)?.symbol || '4,EOS'))
     }
+    /* eslint-enable @typescript-eslint/no-unused-vars */
 
     balance(): Promise<Asset | undefined> {
         throw new Error('balance() not implemented')
+    }
+
+    receivingBalance(): Promise<Asset | undefined> {
+        throw new Error('receivingBalance() not implemented')
     }
 
     updateBalances(): Promise<void> {
