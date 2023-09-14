@@ -182,6 +182,14 @@ export class TelosEvmWithdraw extends Struct {
 export class TelosEvmOpenWallet extends Struct {
     @Struct.field('name') account!: Name
     @Struct.field('checksum160') address!: Checksum160
-    @Struct.field('name') actor?: Name
-    @Struct.field('name') permission?: Name
+    @Struct.field('name') actor!: Name
+    @Struct.field('name') permission!: Name
+}
+
+@Struct.type('create')
+export class TelosEvmCreate extends Struct {
+    @Struct.field('name') account!: Name
+    @Struct.field('string') data!: string
+    @Struct.field('name') actor!: Name
+    @Struct.field('name') permission!: Name
 }

@@ -56,7 +56,7 @@
             transactResult = await transferManager?.transfer(deposit)
         } catch (error) {
             return (errorMessage = `Could not transfer. Error: ${
-                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+                error.underlyingError?.message || JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
             }`)
         }
 

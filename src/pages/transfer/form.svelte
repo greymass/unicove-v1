@@ -59,7 +59,6 @@
     let fromOptions: Token[] = []
     let toOptions: Token[] = []
     let availableToReceive: CoreAsset | undefined
-    let isEntireBalanceFocused = false
 
     let generatingOptions = false
 
@@ -95,21 +94,24 @@
             })
         }))
 
+        toOptions = fromOptions
+
         generatingOptions = false
     }
 
+    $: {
+        if (from) {
+            toOptions = fromOptions.filter(token => token.key !== from?.key)
+        } else {
+            toOptions = fromOptions
+        }
+    }
 
     $: {
         if ($activeEvmSession) {
             generateOptions($activeEvmSession)
         } else {
             generateOptions()
-        }
-    }
-
-    $: {
-        if (fromOptions.length > 0) {
-            toOptions = fromOptions.filter(token => token.key !== from?.key)
         }
     }
 

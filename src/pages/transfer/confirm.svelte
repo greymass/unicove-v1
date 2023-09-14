@@ -14,9 +14,9 @@
     export let handleConfirm: () => void
     export let handleBack: () => void
 
-    let depositAmountInUsd = ' N/A'
-    let receivedAmountInUsd = ' N/A'
-    let feeAmountInUsd = ' N/A'
+    let depositAmountInUsd: string
+    let receivedAmountInUsd: string
+    let feeAmountInUsd: string
 
     function getUsdValues() {
         transferManager.convertToUsd(depositAmount?.value).then((usdValue) => {
@@ -153,7 +153,7 @@
                     {depositAmount}
                 </div>
                 <div class="fiat-value">
-                    ~{depositAmountInUsd}
+                    {depositAmountInUsd ? `~ ${depositAmountInUsd}`: ''}
                 </div>
             </td>
         </tr>
@@ -167,7 +167,7 @@
                     {feeAmount || `0.0000 ${$systemTokenKey}`}
                 </div>
                 <div class="fiat-value">
-                    ~{feeAmountInUsd}
+                    {feeAmountInUsd ? `~ ${feeAmountInUsd}`: ''}
                 </div>
             </td>
         </tr>
@@ -181,7 +181,7 @@
                     {receivedAmount}
                 </div>
                 <div class="fiat-value">
-                    ~{receivedAmountInUsd}
+                    {receivedAmountInUsd ? `~ ${receivedAmountInUsd}`: ''}
                 </div>
             </td>
         </tr>

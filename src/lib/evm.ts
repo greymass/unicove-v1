@@ -2,9 +2,8 @@ import { wait } from "~/helpers"
 import { get } from "svelte/store"
 import { activeBlockchain, activeEvmSession, activeSession } from "~/store"
 
-import { Asset, Name, NameType } from "anchor-link";
-import { BN } from "bn.js";
-import { ethers } from "ethers";
+import { Asset, Int16, Int64, Name, NameType } from "anchor-link";
+import { BigNumber, ethers } from "ethers";
 import { getClient } from "~/api-client";
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
@@ -62,6 +61,10 @@ export class EvmSession {
         this.chainName = chainName
     }
 
+    get checksumAddress() {
+        return this.address.replace('0x', '').toLowerCase()
+    }
+
     get chainConfig() {
         return evmChainConfigs[this.chainName]
     }
@@ -113,9 +116,9 @@ export class EvmSession {
             return Asset.from(0, this.chainConfig.nativeCurrency.symbol)
         }
 
-        const bnBalance = new BN(account.balance, 16)
+        const bn = BigNumber.from(`0x${account.balance}`)
 
-        return Asset.from(Number(bnBalance), this.chainConfig.nativeCurrency.symbol)
+        return Asset.from(Number(ethers.utils.formatEther(bn)), this.chainConfig.nativeCurrency.symbol)
     }
 }
 
@@ -131,8 +134,9 @@ export async function getTelosEvmAccount(nativeAccountName: NameType) {
         code: 'eosio.evm',
         scope: 'eosio.evm',
         table: 'account',
-        lower_bound: Name.from(nativeAccountName),
-        upper_bound: Name.from(nativeAccountName),
+        index_position: 'tertiary',
+        lower_bound: Name.from('gm3timrygqge'),
+        upper_bound: Name.from('gm3timrygqge'),
     })
 
     return rows[0]

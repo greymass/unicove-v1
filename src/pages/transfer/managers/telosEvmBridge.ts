@@ -2,8 +2,8 @@ import { get } from "svelte/store";
 
 import { currentAccountBalance } from "~/store";
 import { TransferManager } from "./transferManager";
-import { TelosEvmOpenWallet, Transfer } from "~/abi-types";
-import { Asset, Name } from "anchor-link";
+import { TelosEvmCreate, TelosEvmOpenWallet, Transfer } from "~/abi-types";
+import { Asset, Checksum160, Name } from "anchor-link";
 import { updateActiveAccount } from "~/stores/account-provider";
 import { updateEvmBalance } from "~/stores/balances-provider";
 import { getTelosEvmAccount } from "~/lib/evm";
@@ -30,21 +30,21 @@ export class TelosEvmBridge extends TransferManager {
         const actions = []
 
         if (!telosEvmAccount) {
-            actions.push(this.telosEvmOpenWalletAction())
+            actions.push(this.telosEvmCreate())
         }
 
-        const action = Transfer.from({
+        const transfer = Transfer.from({
             from: this.nativeSession.auth.actor,
             to: 'eosio.evm',
             quantity: String(Asset.fromFloat(Number(amount), '4,TLOS')),
-            memo: this.evmSession.address || '',
+            memo: this.evmSession.checksumAddress || '',
         })
 
         actions.push({
             authorization: [this.nativeSession.auth],
             account: Name.from('eosio.token'),
             name: Name.from('transfer'),
-            data: action,
+            data: transfer,
         })
 
         return this.nativeSession.transact({
@@ -68,16 +68,33 @@ export class TelosEvmBridge extends TransferManager {
     }
 
     telosEvmOpenWalletAction() {
-        console.log({ address: this.evmSession.address })
         const action = TelosEvmOpenWallet.from({
             account: this.nativeSession.auth.actor,
-            address: this.evmSession.address,
+            address: this.evmSession.checksumAddress,
+            actor: this.nativeSession.auth.actor,
+            permission: this.nativeSession.auth.permission,
         })
 
         return {
             authorization: [this.nativeSession.auth],
             account: Name.from('eosio.evm'),
             name: Name.from('openwallet'),
+            data: action,
+        }
+    }
+
+    telosEvmCreate() {
+        const action = TelosEvmCreate.from({
+            account: this.nativeSession.auth.actor,
+            data: this.evmSession.checksumAddress,
+            actor: this.nativeSession.auth.actor,
+            permission: this.nativeSession.auth.permission,
+        })
+
+        return {
+            authorization: [this.nativeSession.auth],
+            account: Name.from('eosio.evm'),
+            name: Name.from('create'),
             data: action,
         }
     }

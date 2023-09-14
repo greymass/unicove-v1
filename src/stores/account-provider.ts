@@ -5,7 +5,7 @@ import type {Readable, Writable} from 'svelte/store'
 
 import {getClient} from '~/api-client'
 import {dbPromise} from '~/db'
-import {activeSession} from '~/store'
+import {activeEvmSession, activeSession} from '~/store'
 import {chainConfig} from '~/config'
 
 /** How old a cached account is before we update it */
