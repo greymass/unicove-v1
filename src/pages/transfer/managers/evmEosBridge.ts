@@ -1,13 +1,13 @@
 import {Asset} from 'anchor-link'
 import {ethers} from 'ethers'
 
-import { convertToEvmAddress, getProvider } from '~/lib/evm'
+import { convertToEvmAddress, getProvider, EvmSession as EosEvmSession } from '~/lib/evm/eos'
 
 import { TransferManager } from './transferManager'
 import { updateEvmBalance } from '~/stores/balances-provider'
 import { updateActiveAccount } from '~/stores/account-provider'
 
-export class EvmEosBridge extends TransferManager {
+export class EvmEosBridge extends TransferManager<EosEvmSession> {
     static from = 'evm'
     static fromDisplayString = 'EOS (EVM)'
     static to = 'eos'
@@ -67,14 +67,18 @@ export class EvmEosBridge extends TransferManager {
         return {gas, gasPrice}
     }
 
-    async balance() {
-        const balance = await this.evmSession.getBalance()
-
-        return Asset.from(balance)
+    balance() {
+        return this.evmSession.getBalance()
     }
 
     async updateBalances() {
-        updateEvmBalance()
-        updateActiveAccount()
+        await Promise.all([
+            updateActiveAccount(),
+            updateEvmBalance(),
+        ])
+    }
+
+    updateMainBalance() {
+        return updateEvmBalance()
     }
 }

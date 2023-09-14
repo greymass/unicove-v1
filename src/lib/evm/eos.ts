@@ -1,9 +1,6 @@
-import type { Asset, LinkSession, TransactResult } from "anchor-link";
+import { Asset } from "anchor-link";
 import { BN } from "bn.js";
 import { ethers } from "ethers";
-import { get } from "svelte/store";
-import { wait } from "~/helpers";
-import { activeBlockchain, activeEvmSession } from "~/store";
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
 export interface EvmChainConfig {
@@ -21,11 +18,6 @@ declare global {
         ethereum: any
     }
 }
-export interface EvmSessionParams {
-    signer: ethers.providers.JsonRpcSigner
-    address: string
-    chainName: string
-}
 
 export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
     'eos': {
@@ -35,14 +27,18 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
     },
-    'telos': {
-        chainId: '40(0x28)',
-        chainName: 'Telos EVM Network',
-        nativeCurrency: {name: 'TLOS', symbol: '4,TLOS', decimals: 18},
-        rpcUrls: ['https://mainnet.telos.net/evm'],
-        blockExplorerUrls: ['https://www.teloscan.io/'],
-    },
 }
+
+export interface EvmSessionParams {
+    signer: ethers.providers.JsonRpcSigner
+    address: string
+    chainName: string
+}
+
+export interface EvmSessionFromParams {
+    chainName: string
+}
+
 export class EvmSession {
     address: string
     signer: ethers.providers.JsonRpcSigner
@@ -58,9 +54,28 @@ export class EvmSession {
         return evmChainConfigs[this.chainName]
     }
 
-    static from(EvmSessionParams: EvmSessionParams) {
-        // Implement your logic here
-        return new EvmSession(EvmSessionParams)
+    static async  from({ chainName }: EvmSessionFromParams) {
+        if (window.ethereum) {
+            const provider = getProvider()
+            let networkId = await provider.getNetwork()
+            if (networkId.chainId !== 17777) {
+                await switchNetwork(chainName)
+                networkId = await provider.getNetwork()
+            }
+    
+            await window.ethereum.request({method: 'eth_requestAccounts'})
+            const signer = provider.getSigner()
+    
+            await window.ethereum.get_currency_balance
+    
+            return new EvmSession({
+                address: await signer.getAddress(),
+                signer,
+                chainName,
+            })
+        } else {
+            throw new Error('You need to install Metamask in order to use this feature.')
+        }
     }
 
     async sendTransaction(tx: ethers.providers.TransactionRequest) {
@@ -72,7 +87,7 @@ export class EvmSession {
 
         const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
 
-        return formatToken(ethers.utils.formatEther(wei), tokenName)
+        return Asset.from(formatToken(ethers.utils.formatEther(wei), tokenName))
     }
 }
 
@@ -99,43 +114,6 @@ export function convertToEvmAddress(eosAccountName: string): string {
 
 function formatToken(amount: string, tokenSymbol: string) {
     return `${Number(amount).toFixed(4)} ${tokenSymbol}`
-}
-let creatingEvmBridge = false
-
-export async function handleEvmWalletConnection(): Promise<EvmSession | undefined> {
-    let evmSession: EvmSession
-
-    if (creatingEvmBridge) {
-        await wait(5000)
-        return handleEvmWalletConnection()
-    }
-    
-    creatingEvmBridge = true
-
-    const blockchain = get(activeBlockchain)
-
-    try {
-        evmSession = await connectEvmWallet(blockchain.id)
-    } catch (e) {
-        if (e.code === -32002) {
-            await wait(5000)
-            return handleEvmWalletConnection()
-        }
-
-        if (!e.message) {
-            creatingEvmBridge = false
-            return
-        }
-
-        throw new Error(`Could not connect to EVM wallet. Error: ${e.message}`)
-    }
-
-    if (evmSession) {
-        activeEvmSession.set(evmSession)
-        creatingEvmBridge = false
-    }
-
-    return evmSession
 }
 
 export async function switchNetwork(chainName: string) {
@@ -209,28 +187,3 @@ function strToUint64(str: string) {
 function uint64ToAddr(str: string) {
     return '0xbbbbbbbbbbbbbbbbbbbbbbbb' + str
 }
-
-async function connectEvmWallet(chainName: string): Promise<EvmSession> {
-    if (window.ethereum) {
-        const provider = getProvider()
-        let networkId = await provider.getNetwork()
-        if (networkId.chainId !== 17777) {
-            await switchNetwork(chainName)
-            networkId = await provider.getNetwork()
-        }
-
-        await window.ethereum.request({method: 'eth_requestAccounts'})
-        const signer = provider.getSigner()
-
-        await window.ethereum.get_currency_balance
-
-        return EvmSession.from({
-            address: await signer.getAddress(),
-            signer,
-            chainName,
-        })
-    } else {
-        throw new Error('You need to install Metamask in order to use this feature.')
-    }
-}
-

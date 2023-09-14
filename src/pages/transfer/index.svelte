@@ -2,18 +2,17 @@
     import {Asset, TransactResult} from 'anchor-link'
     import type {ethers} from 'ethers'
 
-    import {currentAccountBalance, activeSession, activeEvmSession} from '~/store'
+    import {activeSession, activeEvmSession} from '~/store'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './form.svelte'
     import Confirm from './confirm.svelte'
     import Success from './success.svelte'
     import Error from './error.svelte'
-    import {updateAccount} from '~/stores/account-provider'
     import {systemToken} from '~/stores/tokens'
     import { transferManagers } from './managers'
     import type { TransferManager } from './managers/transferManager'
-    import { handleEvmWalletConnection } from '~/lib/evm'
+    import { startEvmSession } from '~/lib/evm/index'
 
     import type {Token} from '~/stores/tokens'
 
@@ -61,10 +60,13 @@
             }`)
         }
 
-        setTimeout(updateBalances, 20000) // Waiting a 20 seconds and then updating the balances
+        setTimeout(() => {
+            transferManager?.updateBalances()
+        }, 20000) // Waiting a 20 seconds and then updating the balances
 
         step = 'success'
     }
+    
 
     function handleBack() {
         step = 'form'
@@ -102,19 +104,9 @@
         return transferFee
     }
 
-    function updateBalances() {        
-        transferManager?.updateBalances()
-    }
-
-    $: {
-        if ($activeEvmSession) {
-            updateBalances()
-        }
-    }
-
     async function handlePageLoad() {
         // For now, we are always connecting to evm wallet on page load. This may change in the future.
-        await handleEvmWalletConnection()
+        await startEvmSession()
     }
 
     handlePageLoad()

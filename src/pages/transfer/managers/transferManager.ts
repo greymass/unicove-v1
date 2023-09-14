@@ -1,12 +1,12 @@
-import type {Asset, LinkSession, TransactResult} from "anchor-link";
+import {Asset} from "anchor-link";
+import type {LinkSession, TransactResult} from "anchor-link";
 import type {ethers} from "ethers";
-import { get } from "svelte/store";
 
-import type {EvmSession} from "~/lib/evm";
+import type {EvmSession} from "~/lib/evm/index";
 import {valueInFiat} from '~/lib/fiat'
 import {activePriceTicker, waitForStoreValue} from "~/store";
 
-export abstract class TransferManager {
+export abstract class TransferManager<EvmSessionType extends EvmSession = EvmSession> {
     self: typeof TransferManager
     static from: string
     static to: string
@@ -16,9 +16,9 @@ export abstract class TransferManager {
     static evmRequired: boolean = false
 
     readonly nativeSession: LinkSession
-    readonly evmSession: EvmSession
+    readonly evmSession: EvmSessionType
 
-    constructor(nativeSession: LinkSession, evmSession: EvmSession) {
+    constructor(nativeSession: LinkSession, evmSession: EvmSessionType) {
         this.nativeSession = nativeSession
         this.evmSession = evmSession
         this.self = this.constructor as typeof TransferManager
@@ -29,7 +29,7 @@ export abstract class TransferManager {
     }
 
     transferFee(_amount?: string): Promise<Asset> {
-        throw new Error('transferFee() not implemented')
+        return Promise.resolve(Asset.from('0.0000 EOS'))
     }
 
     balance(): Promise<Asset | undefined> {
@@ -38,6 +38,10 @@ export abstract class TransferManager {
 
     updateBalances(): Promise<void> {
         throw new Error('updateBalances() not implemented')
+    }
+
+    updateMainBalance(): Promise<void> {
+        throw new Error('updateMainBalance() not implemented')
     }
 
     async convertToUsd(amount: number): Promise<string> {

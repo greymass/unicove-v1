@@ -3,7 +3,7 @@ import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 
 import {chainConfig} from '~/config'
-import {activeEvmSession, activeSession, evmBalance} from '~/store'
+import {activeEvmSession, activeSession, evmBalance, waitForStoreValue} from '~/store'
 import type {Balance} from '~/stores/balances'
 import {getBalanceProvider} from '~/lib/balance-providers/utils'
 
@@ -58,7 +58,7 @@ export async function updateBalances(session: LinkSession) {
 }
 
 export async function updateEvmBalance() {
-    const evmSession = get(activeEvmSession)
+    const evmSession = await waitForStoreValue(activeEvmSession)
 
     if (evmSession) {
         const balance = await evmSession.getBalance()

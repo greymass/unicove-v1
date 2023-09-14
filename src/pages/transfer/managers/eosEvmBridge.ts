@@ -7,13 +7,15 @@ import {TransferManager} from './transferManager'
 import {currentAccountBalance} from '~/store'
 import { updateActiveAccount } from '~/stores/account-provider'
 import { updateEvmBalance } from '~/stores/balances-provider'
+import type { EvmSession as EosEvmSession } from '~/lib/evm/eos'
 
-export class EosEvmBridge extends TransferManager {    
+export class EosEvmBridge extends TransferManager<EosEvmSession> {    
     static from = 'eos'
     static fromDisplayString = 'EOS'
     static to = 'evm'
     static toDisplayString = 'EOS (EVM)'
     static supportedChains = ['eos']
+    static evmRequired = true;
 
     get fromAddress() {
         return String(this.nativeSession.auth.actor)
@@ -68,5 +70,9 @@ export class EosEvmBridge extends TransferManager {
     async updateBalances() {
         updateEvmBalance()
         updateActiveAccount()
+    }
+
+    updateMainBalance() {
+        return updateEvmBalance()
     }
 }

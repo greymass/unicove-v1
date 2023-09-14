@@ -10,7 +10,8 @@
     import Selector from '~/components/elements/input/token/selector.svelte'
     import type { TransferManager } from './managers/transferManager'
     import { transferManagers } from './managers'
-    import type { EvmSession } from '~/lib/evm'
+    import type { EvmSession } from '~/lib/evm/index'
+    import { updateEvmBalance } from '~/stores/balances-provider'
 
     export let handleContinue: () => void
     export let amount: string = ''
@@ -21,10 +22,6 @@
     export let depositAmount: CoreAsset | undefined
     export let receivedAmount: CoreAsset | undefined
     export let useEntireBalance: () => void
-
-    $: nativeAccountName = String($systemToken?.symbol.code)
-    $: EvmSessionName = `${nativeAccountName} (EVM)`
-    $: systemContractSymbol = String($systemToken?.symbol)
 
     let validAmount = false
 
@@ -37,7 +34,7 @@
         to = token
     }
 
-    $: readyToContinue = from && to && validAmount && $activeEvmSession
+    $: readyToContinue = from && to && validAmount
 
     function onContinue() {
         if (readyToContinue) {
@@ -62,9 +59,16 @@
     let toOptions: Token[] = []
     let availableToReceive: CoreAsset | undefined
 
-    function generateOptions(evmSession?: EvmSession) {
+    let generatingOptions = false
+
+    async function generateOptions(evmSession?: EvmSession) {
+        if (!!generatingOptions) return
+
+        generatingOptions = true
+
         fromOptions = []
-        Object.values(transferManagers).forEach(async TransferManagerClass => {
+
+        await Promise.all(Object.values(transferManagers).map(async TransferManagerClass => {
             if (!$systemToken) return
 
             // Only displaying accounts that support the current chain
@@ -77,6 +81,7 @@
                     $activeSession!,
                     evmSession
                 )
+                await transferManager.updateMainBalance()
                 accountBalance = await transferManager.balance()
             }
 
@@ -86,8 +91,11 @@
                 name: TransferManagerClass.fromDisplayString,
                 balance: accountBalance || 'Connect',
             })
-        })
+        }))
+
+        generatingOptions = false
     }
+
 
     $: {
         if ($activeEvmSession) {
@@ -105,8 +113,6 @@
 
     $: {
         transferManager?.balance().then(balance => {
-            console.log({balance})
-
             availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), balance?.symbol || "4,EOS")
         })
     }

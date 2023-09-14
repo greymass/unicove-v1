@@ -6,7 +6,7 @@ import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
 import {priceTicker} from './price-ticker'
 import {accountProvider} from './stores/account-provider'
-import type {EvmSession} from './lib/evm'
+import type {EvmSession} from '~/lib/evm'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)

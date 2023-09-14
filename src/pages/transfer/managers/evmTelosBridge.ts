@@ -1,10 +1,12 @@
 import { get } from "svelte/store";
 
-import { currentAccountBalance } from "~/store";
+import { evmBalance } from "~/store";
 import { TransferManager } from "./transferManager";
 import { Asset, Name } from "anchor-link";
 import { TelosEvmWithdraw } from "~/abi-types";
 import { systemToken } from "~/stores/tokens";
+import { updateActiveAccount } from "~/stores/account-provider";
+import { updateEvmBalance } from "~/stores/balances-provider";
 
 export class EvmTelosBridge extends TransferManager {
     static from = "evm"
@@ -12,6 +14,15 @@ export class EvmTelosBridge extends TransferManager {
     static to = "telos"
     static toDisplayString = "TLOS"
     static supportedChains = ["telos"]
+    static evmRequired = false;
+
+    get fromAddress() {
+        return this.evmSession.address!
+    }
+
+    get toAddress() {
+        return String(this.nativeSession.auth.actor)
+    }
 
     async transfer(amount: string) {
         const systemTokenSymbol = get(systemToken)?.symbol
@@ -36,6 +47,17 @@ export class EvmTelosBridge extends TransferManager {
     }
 
     async balance() {
-        return get(currentAccountBalance)
+        return get(evmBalance)
+    }
+
+    async updateBalances(): Promise<void> {
+        await Promise.all([
+            updateActiveAccount(),
+            updateEvmBalance(),
+        ])
+    }
+
+    updateMainBalance() {
+        return updateEvmBalance()
     }
 }
