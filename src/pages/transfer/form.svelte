@@ -10,8 +10,7 @@
     import Selector from '~/components/elements/input/token/selector.svelte'
     import type { TransferManager } from './managers/transferManager'
     import { transferManagers } from './managers'
-    import type { EvmSession } from '~/lib/evm/index'
-    import { updateEvmBalance } from '~/stores/balances-provider'
+    import type { EvmSession } from '~/lib/evm'
 
     export let handleContinue: () => void
     export let amount: string = ''

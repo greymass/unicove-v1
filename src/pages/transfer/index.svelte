@@ -12,7 +12,7 @@
     import {systemToken} from '~/stores/tokens'
     import { transferManagers } from './managers'
     import type { TransferManager } from './managers/transferManager'
-    import { startEvmSession } from '~/lib/evm/index'
+    import { startEvmSession } from '~/lib/evm'
 
     import type {Token} from '~/stores/tokens'
 

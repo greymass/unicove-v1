@@ -7,9 +7,8 @@ import {TransferManager} from './transferManager'
 import {currentAccountBalance} from '~/store'
 import { updateActiveAccount } from '~/stores/account-provider'
 import { updateEvmBalance } from '~/stores/balances-provider'
-import type { EvmSession as EosEvmSession } from '~/lib/evm/eos'
 
-export class EosEvmBridge extends TransferManager<EosEvmSession> {    
+export class EosEvmBridge extends TransferManager {    
     static from = 'eos'
     static fromDisplayString = 'EOS'
     static to = 'evm'

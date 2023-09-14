@@ -2,11 +2,11 @@ import {Asset} from "anchor-link";
 import type {LinkSession, TransactResult} from "anchor-link";
 import type {ethers} from "ethers";
 
-import type {EvmSession} from "~/lib/evm/index";
+import type {EvmSession} from "~/lib/evm";
 import {valueInFiat} from '~/lib/fiat'
 import {activePriceTicker, waitForStoreValue} from "~/store";
 
-export abstract class TransferManager<EvmSessionType extends EvmSession = EvmSession> {
+export abstract class TransferManager {
     self: typeof TransferManager
     static from: string
     static to: string
@@ -16,9 +16,9 @@ export abstract class TransferManager<EvmSessionType extends EvmSession = EvmSes
     static evmRequired: boolean = false
 
     readonly nativeSession: LinkSession
-    readonly evmSession: EvmSessionType
+    readonly evmSession: EvmSession
 
-    constructor(nativeSession: LinkSession, evmSession: EvmSessionType) {
+    constructor(nativeSession: LinkSession, evmSession: EvmSession) {
         this.nativeSession = nativeSession
         this.evmSession = evmSession
         this.self = this.constructor as typeof TransferManager

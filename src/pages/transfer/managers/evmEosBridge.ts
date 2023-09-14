@@ -1,13 +1,13 @@
 import {Asset} from 'anchor-link'
 import {ethers} from 'ethers'
 
-import { convertToEvmAddress, getProvider, EvmSession as EosEvmSession } from '~/lib/evm/eos'
+import { convertToEvmAddress, getProvider } from '~/lib/evm'
 
 import { TransferManager } from './transferManager'
 import { updateEvmBalance } from '~/stores/balances-provider'
 import { updateActiveAccount } from '~/stores/account-provider'
 
-export class EvmEosBridge extends TransferManager<EosEvmSession> {
+export class EvmEosBridge extends TransferManager {
     static from = 'evm'
     static fromDisplayString = 'EOS (EVM)'
     static to = 'eos'

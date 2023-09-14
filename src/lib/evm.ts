@@ -1,6 +1,11 @@
-import { Asset } from "anchor-link";
+import { wait } from "~/helpers"
+import { get } from "svelte/store"
+import { activeBlockchain, activeEvmSession, activeSession } from "~/store"
+
+import { Asset, Name, NameType } from "anchor-link";
 import { BN } from "bn.js";
 import { ethers } from "ethers";
+import { getClient } from "~/api-client";
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
 export interface EvmChainConfig {
@@ -27,6 +32,13 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
     },
+    'telos': {
+        chainId: '0x4571',
+        chainName: 'EOS EVM Network',
+        nativeCurrency: {name: 'TLOS', symbol: '4,TLOS', decimals: 18},
+        rpcUrls: ['https://api.evm.eosnetwork.com/'],
+        blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
+    }
 }
 
 export interface EvmSessionParams {
@@ -54,7 +66,7 @@ export class EvmSession {
         return evmChainConfigs[this.chainName]
     }
 
-    static async  from({ chainName }: EvmSessionFromParams) {
+    static async from({ chainName }: EvmSessionFromParams) {
         if (window.ethereum) {
             const provider = getProvider()
             let networkId = await provider.getNetwork()
@@ -83,12 +95,47 @@ export class EvmSession {
     }
 
     async getBalance() {
+        if (this.chainName === 'telos') {
+            return this.getTelosEvmBalance()
+        }
+
         const wei = await this.signer.getBalance()
 
         const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
 
         return Asset.from(formatToken(ethers.utils.formatEther(wei), tokenName))
     }
+
+    async getTelosEvmBalance() {
+        const account = await getTelosEvmAccount(this.address)
+
+        if (!account) {
+            return Asset.from(0, this.chainConfig.nativeCurrency.symbol)
+        }
+
+        const bnBalance = new BN(account.balance, 16)
+
+        return Asset.from(Number(bnBalance), this.chainConfig.nativeCurrency.symbol)
+    }
+}
+
+export async function getTelosEvmAccount(nativeAccountName: NameType) {
+    const chain = get(activeBlockchain)
+    const client = getClient(chain.chainId)
+
+    if (!client) {
+        throw new Error('API client could not be instantiated')
+    }
+
+    const { rows } = await client.v1.chain.get_table_rows({
+        code: 'eosio.evm',
+        scope: 'eosio.evm',
+        table: 'account',
+        lower_bound: Name.from(nativeAccountName),
+        upper_bound: Name.from(nativeAccountName),
+    })
+
+    return rows[0]
 }
 
 export function getProvider() {
@@ -186,4 +233,43 @@ function strToUint64(str: string) {
 
 function uint64ToAddr(str: string) {
     return '0xbbbbbbbbbbbbbbbbbbbbbbbb' + str
+}
+
+
+let connectingToEvm = false
+
+export async function startEvmSession(): Promise<EvmSession | undefined> {
+    let evmSession: EvmSession
+
+    if (connectingToEvm) {
+        await wait(5000)
+        return startEvmSession()
+    }
+    
+    connectingToEvm = true
+
+    const blockchain = get(activeBlockchain)
+
+    try {
+        evmSession = await EvmSession.from({ chainName: blockchain.id })
+    } catch (e) {
+        if (e.code === -32002) {
+            await wait(5000)
+            return startEvmSession()
+        }
+
+        if (!e.message) {
+            connectingToEvm = false
+            return
+        }
+
+        throw new Error(`Could not connect to EVM. Error: ${e.message}`)
+    }
+
+    if (evmSession) {
+        activeEvmSession.set(evmSession)
+        connectingToEvm = false
+    }
+
+    return evmSession
 }

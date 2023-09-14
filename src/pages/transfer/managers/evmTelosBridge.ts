@@ -14,7 +14,7 @@ export class EvmTelosBridge extends TransferManager {
     static to = "telos"
     static toDisplayString = "TLOS"
     static supportedChains = ["telos"]
-    static evmRequired = false;
+    static evmRequired = true;
 
     get fromAddress() {
         return this.evmSession.address!
