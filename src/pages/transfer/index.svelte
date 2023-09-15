@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Asset, TransactResult} from 'anchor-link'
+    import {Asset, LinkSession, TransactResult} from 'anchor-link'
     import type {ethers} from 'ethers'
 
     import {activeSession, activeEvmSession} from '~/store'
@@ -125,6 +125,23 @@
             deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4))).toFixed(4)
         }
     }
+
+    let previousSession: LinkSession | undefined
+
+    $: {
+        if (!previousSession) {
+            previousSession = $activeSession
+        }
+    }
+
+    $: {
+        if (previousSession && String($activeSession?.chainId) !== String(previousSession?.chainId)) {
+            startEvmSession()
+            previousSession = $activeSession
+        }
+    }
+
+    
 
     // Eventually we may want to get the symbol from the transferManager instead of the systemToken
     $: receivedAmount = isNaN(Number(received))

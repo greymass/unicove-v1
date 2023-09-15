@@ -78,10 +78,10 @@ export class EvmSession {
         if (window.ethereum) {
             const evmChainConfig = evmChainConfigs[chainName]
             const provider = getProvider()
-            let networkId = await provider.getNetwork()
-            if (networkId.chainId !== Number(evmChainConfig.chainId.replace('0x', ''))) {
+            let network = await provider.detectNetwork()
+            if (network.chainId !== Number(evmChainConfig.chainId.replace('0x', ''))) {
                 await switchNetwork(evmChainConfig)
-                networkId = await provider.getNetwork()
+                network = await provider.detectNetwork()
             }
 
             await window.ethereum.request({method: 'eth_requestAccounts'})
