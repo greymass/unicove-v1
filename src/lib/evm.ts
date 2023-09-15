@@ -33,11 +33,11 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
     },
     telos: {
-        chainId: '0x4571',
-        chainName: 'EOS EVM Network',
-        nativeCurrency: {name: 'TLOS', symbol: '4,TLOS', decimals: 18},
-        rpcUrls: ['https://api.evm.eosnetwork.com/'],
-        blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
+        chainId: '0x28',
+        chainName: 'Telos EVM Mainnet',
+        nativeCurrency: {name: 'Telos', symbol: '4,TLOS', decimals: 18},
+        rpcUrls: ['https://mainnet.telos.net/evm'],
+        blockExplorerUrls: ['https://teloscan.io'],
     },
 }
 
@@ -76,10 +76,11 @@ export class EvmSession {
 
     static async from({chainName, nativeAccountName}: EvmSessionFromParams) {
         if (window.ethereum) {
+            const evmChainConfig = evmChainConfigs[chainName]
             const provider = getProvider()
             let networkId = await provider.getNetwork()
-            if (networkId.chainId !== 17777) {
-                await switchNetwork(chainName)
+            if (networkId.chainId !== Number(evmChainConfig.chainId.replace('0x', ''))) {
+                await switchNetwork(evmChainConfig)
                 networkId = await provider.getNetwork()
             }
 
@@ -180,19 +181,17 @@ function formatToken(amount: string, tokenSymbol: string) {
     return `${Number(amount).toFixed(4)} ${tokenSymbol}`
 }
 
-export async function switchNetwork(chainName: string) {
-    const evmNodeConfig = evmChainConfigs[chainName]
-
+export async function switchNetwork(evmChainConfig: EvmChainConfig) {
     await window.ethereum
         .request({
             method: 'wallet_switchEthereumChain',
-            params: [{chainId: evmNodeConfig.chainId}],
+            params: [{chainId: evmChainConfig.chainId}],
         })
         .catch(async (e: {code: number}) => {
             if (e.code === 4902) {
                 await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
-                    params: [evmNodeConfig],
+                    params: [evmChainConfig],
                 })
             }
         })

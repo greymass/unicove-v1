@@ -108,12 +108,13 @@
         }
     }
 
-    const initialBalanceValue = $currentAccountBalance?.value
+    let lastBalanceValue = $currentAccountBalance?.value
 
     $: {
         // Regenerate options if the balance changes
-        if ($activeEvmSession && initialBalanceValue !== $currentAccountBalance?.value) {
+        if ($activeEvmSession && lastBalanceValue !== $currentAccountBalance?.value) {
             generateOptions($activeEvmSession)
+            lastBalanceValue = $currentAccountBalance?.value
         }
     }
 
