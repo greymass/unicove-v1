@@ -96,7 +96,10 @@
         try {
             transferFee = await transferManager?.transferFee(transferAmount || received)
         } catch (error) {
-            if (!error?.data?.message?.includes('insufficient funds for transfer')) {
+            if (
+                !error?.data?.message?.includes('insufficient funds for transfer') &&
+                !error?.data?.message?.includes('gas required exceeds allowance')
+            ) {
                 errorMessage = `Could not estimate transfer fee. Error: ${
                     JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
                 }`
@@ -135,13 +138,14 @@
     }
 
     $: {
-        if (previousSession && String($activeSession?.chainId) !== String(previousSession?.chainId)) {
+        if (
+            previousSession &&
+            String($activeSession?.chainId) !== String(previousSession?.chainId)
+        ) {
             startEvmSession()
             previousSession = $activeSession
         }
     }
-
-    
 
     // Eventually we may want to get the symbol from the transferManager instead of the systemToken
     $: receivedAmount = isNaN(Number(received))
