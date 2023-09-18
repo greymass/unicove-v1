@@ -78,7 +78,7 @@ export class EvmSession {
         if (window.ethereum) {
             const evmChainConfig = evmChainConfigs[chainName]
             const provider = getProvider()
-            let network = await provider.detectNetwork()
+            let network = await provider.getNetwork()
             if (network.chainId !== Number(evmChainConfig.chainId.replace('0x', ''))) {
                 await switchNetwork(evmChainConfig)
                 network = await provider.detectNetwork()
@@ -162,7 +162,7 @@ export function getProvider() {
     }
 
     if (window.ethereum) {
-        evmProvider = new ethers.providers.Web3Provider(window.ethereum)
+        evmProvider = new ethers.providers.Web3Provider(window.ethereum, 'any')
         return evmProvider
     }
 

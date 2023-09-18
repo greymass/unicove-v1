@@ -7,7 +7,7 @@ import {TransferManager} from './transferManager'
 import {updateEvmBalance} from '~/stores/balances-provider'
 import {updateActiveAccount} from '~/stores/account-provider'
 import {get} from 'svelte/store'
-import {currentAccountBalance} from '~/store'
+import {currentAccountBalance, evmBalance} from '~/store'
 
 export class EvmEosBridge extends TransferManager {
     static from = 'evm'
@@ -71,8 +71,8 @@ export class EvmEosBridge extends TransferManager {
         return {gas, gasPrice}
     }
 
-    balance() {
-        return this.evmSession.getBalance()
+    async balance() {
+        return get(evmBalance)
     }
 
     async receivingBalance() {

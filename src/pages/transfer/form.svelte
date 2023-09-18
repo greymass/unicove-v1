@@ -95,8 +95,6 @@
             })
         )
 
-        toOptions = fromOptions
-
         generatingOptions = false
     }
 
