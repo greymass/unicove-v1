@@ -1,9 +1,9 @@
-import type {LinkSession} from 'anchor-link'
+import {Asset, LinkSession} from 'anchor-link'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 
 import {chainConfig} from '~/config'
-import {activeSession} from '~/store'
+import {activeEvmSession, activeSession, evmBalance, waitForStoreValue} from '~/store'
 import type {Balance} from '~/stores/balances'
 import {getBalanceProvider} from '~/lib/balance-providers/utils'
 
@@ -55,4 +55,13 @@ export async function updateBalances(session: LinkSession) {
         }
     }
     isLoading.set(false)
+}
+
+export async function updateEvmBalance() {
+    const evmSession = await waitForStoreValue(activeEvmSession)
+
+    if (evmSession) {
+        const balance = await evmSession.getBalance()
+        evmBalance.set(Asset.from(balance))
+    }
 }

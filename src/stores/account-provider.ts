@@ -60,6 +60,12 @@ export async function updateAccount(name: Name, chainId: ChainId, refresh: boole
     isLoading.set(false)
 }
 
+export function updateActiveAccount() {
+    const session = get(activeSession)
+    if (!session) return
+    updateAccount(session.auth.actor, session.chainId)
+}
+
 function fetchBalance(name: Name, chainId: ChainId) {
     const chain = chainConfig(chainId)
     return getClient(chainId).v1.chain.get_currency_balance(chain.coreTokenContract, name)

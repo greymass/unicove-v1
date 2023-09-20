@@ -5,7 +5,8 @@ import {get} from 'svelte/store'
 import {storeAccount} from './stores/account-provider'
 import {getClient} from './api-client'
 import {appId, chains} from './config'
-import {activeSession, availableSessions} from './store'
+import {activeEvmSession, activeSession, availableSessions} from './store'
+import {startEvmSession} from './lib/evm'
 
 const transport = new Transport({
     requestStatus: false,
@@ -97,4 +98,9 @@ export async function activate(id: SessionLike) {
         throw new Error('No such session')
     }
     activeSession.set(session)
+
+    if (get(activeEvmSession)) {
+        activeEvmSession.set(undefined)
+        startEvmSession()
+    }
 }

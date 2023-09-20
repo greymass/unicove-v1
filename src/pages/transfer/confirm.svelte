@@ -5,18 +5,36 @@
     import TokenImage from '~/components/elements/image/token.svelte'
     import {systemTokenKey} from '~/stores/tokens'
 
-    import {valueInFiat} from '~/lib/fiat'
+    import type {TransferManager} from './managers/transferManager'
 
-    import {evmAccount, activeSession, activePriceTicker} from '~/store'
-    import type {Token} from '~/stores/tokens'
-
-    export let from: Token
-    export let to: Token
+    export let transferManager: TransferManager
     export let depositAmount: Asset
     export let receivedAmount: Asset
     export let feeAmount: Asset | undefined
     export let handleConfirm: () => void
     export let handleBack: () => void
+
+    let depositAmountInUsd: string
+    let receivedAmountInUsd: string
+    let feeAmountInUsd: string
+
+    function getUsdValues() {
+        transferManager.convertToUsd(depositAmount?.value).then((usdValue) => {
+            depositAmountInUsd = usdValue
+        })
+
+        transferManager.convertToUsd(receivedAmount?.value).then((usdValue) => {
+            receivedAmountInUsd = usdValue
+        })
+
+        if (feeAmount) {
+            transferManager.convertToUsd(feeAmount?.value).then((usdValue) => {
+                feeAmountInUsd = usdValue
+            })
+        }
+    }
+
+    getUsdValues()
 </script>
 
 <style type="scss">
@@ -118,12 +136,12 @@
 
     <table>
         <tr>
-            <td>From {from.name === 'EOS (EVM)' ? 'EVM' : from.name}</td>
-            <td>{from?.name === 'EVM' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
+            <td>From {transferManager.fromDisplayString}</td>
+            <td>{transferManager.fromAddress}</td>
         </tr>
         <tr>
-            <td>To {to.name}</td>
-            <td>{from?.name === 'EOS' ? $evmAccount?.address : $activeSession?.auth.actor}</td>
+            <td>To {transferManager.toDisplayString}</td>
+            <td>{transferManager.toAddress}</td>
         </tr>
         <tr>
             <td>Deposit Amount</td>
@@ -135,7 +153,7 @@
                     {depositAmount}
                 </div>
                 <div class="fiat-value">
-                    ~{valueInFiat(depositAmount?.value, $activePriceTicker)}
+                    {depositAmountInUsd ? `~ ${depositAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>
@@ -146,10 +164,10 @@
                     <div class="image-container">
                         <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
                     </div>
-                    {feeAmount || '0.0000 EOS'}
+                    {feeAmount || `0.0000 ${$systemTokenKey}`}
                 </div>
                 <div class="fiat-value">
-                    ~{valueInFiat(feeAmount?.value || 0, $activePriceTicker)}
+                    {feeAmountInUsd ? `~ ${feeAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>
@@ -163,7 +181,7 @@
                     {receivedAmount}
                 </div>
                 <div class="fiat-value">
-                    ~{valueInFiat(receivedAmount?.value, $activePriceTicker)}
+                    {receivedAmountInUsd ? `~ ${receivedAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>

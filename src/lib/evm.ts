@@ -1,11 +1,20 @@
-import type {LinkSession} from 'anchor-link'
-import {Asset, Name} from 'anchor-link'
-import {ethers} from 'ethers'
-
+import {get} from 'svelte/store'
 import BN from 'bn.js'
+import {activeBlockchain, activeEvmSession, activeSession} from '~/store'
+import {wait} from '~/helpers'
 
-import {Transfer} from '~/abi-types'
+import {Asset, Name, NameType} from 'anchor-link'
+import {BigNumber, ethers} from 'ethers'
 import {getClient} from '~/api-client'
+
+export type AvailableEvms = 'eos-mainnet' | 'telos'
+export interface EvmChainConfig {
+    chainId: string
+    chainName: string
+    nativeCurrency: {name: string; symbol: string; decimals: number}
+    rpcUrls: string[]
+    blockExplorerUrls: string[]
+}
 
 let evmProvider: ethers.providers.Web3Provider
 
@@ -15,36 +24,80 @@ declare global {
     }
 }
 
-interface EvmAccountParams {
-    signer: ethers.providers.JsonRpcSigner
-    address: string
+export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
+    eos: {
+        chainId: '0x4571',
+        chainName: 'EOS EVM Network',
+        nativeCurrency: {name: 'EOS', symbol: '4,EOS', decimals: 18},
+        rpcUrls: ['https://api.evm.eosnetwork.com/'],
+        blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
+    },
+    telos: {
+        chainId: '0x28',
+        chainName: 'Telos EVM Mainnet',
+        nativeCurrency: {name: 'Telos', symbol: '4,TLOS', decimals: 18},
+        rpcUrls: ['https://mainnet.telos.net/evm'],
+        blockExplorerUrls: ['https://teloscan.io'],
+    },
 }
 
-function getProvider() {
-    if (evmProvider) {
-        return evmProvider
-    }
-
-    if (window.ethereum) {
-        evmProvider = new ethers.providers.Web3Provider(window.ethereum)
-        return evmProvider
-    }
-
-    throw new Error('No provider found')
+export interface EvmSessionParams {
+    signer: ethers.providers.JsonRpcSigner
+    address: string
+    chainName: string
+    nativeAccountName?: NameType
 }
 
-export class EvmAccount {
+export interface EvmSessionFromParams {
+    chainName: string
+    nativeAccountName?: NameType
+}
+
+export class EvmSession {
     address: string
     signer: ethers.providers.JsonRpcSigner
+    chainName: string
+    nativeAccountName?: NameType
 
-    constructor({address, signer}: EvmAccountParams) {
+    constructor({address, signer, chainName, nativeAccountName}: EvmSessionParams) {
         this.address = address
         this.signer = signer
+        this.chainName = chainName
+        this.nativeAccountName = nativeAccountName
     }
 
-    static from(EvmAccountParams: EvmAccountParams) {
-        // Implement your logic here
-        return new EvmAccount(EvmAccountParams)
+    get checksumAddress() {
+        return this.address.replace('0x', '').toLowerCase()
+    }
+
+    get chainConfig() {
+        return evmChainConfigs[this.chainName]
+    }
+
+    static async from({chainName, nativeAccountName}: EvmSessionFromParams) {
+        if (window.ethereum) {
+            const evmChainConfig = evmChainConfigs[chainName]
+            const provider = getProvider()
+            let network = await provider.getNetwork()
+            if (network.chainId !== Number(evmChainConfig.chainId.replace('0x', ''))) {
+                await switchNetwork(evmChainConfig)
+                network = await provider.detectNetwork()
+            }
+
+            await window.ethereum.request({method: 'eth_requestAccounts'})
+            const signer = provider.getSigner()
+
+            await window.ethereum.get_currency_balance
+
+            return new EvmSession({
+                address: await signer.getAddress(),
+                signer,
+                chainName,
+                nativeAccountName,
+            })
+        } else {
+            throw new Error('You need to install Metamask in order to use this feature.')
+        }
     }
 
     async sendTransaction(tx: ethers.providers.TransactionRequest) {
@@ -52,10 +105,68 @@ export class EvmAccount {
     }
 
     async getBalance() {
+        if (this.chainName === 'telos') {
+            return this.getTelosEvmBalance()
+        }
+
         const wei = await this.signer.getBalance()
 
-        return formatEOS(ethers.utils.formatEther(wei))
+        const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
+
+        return Asset.from(formatToken(ethers.utils.formatEther(wei), tokenName))
     }
+
+    async getTelosEvmBalance() {
+        if (!this.nativeAccountName) {
+            throw new Error('Native account name is necessary to fetch Telos balance.')
+        }
+
+        const account = await getTelosEvmAccount(this.nativeAccountName)
+
+        if (!account) {
+            return Asset.from(0, this.chainConfig.nativeCurrency.symbol)
+        }
+
+        const bn = BigNumber.from(`0x${account.balance}`)
+
+        return Asset.from(
+            Number(ethers.utils.formatEther(bn)),
+            this.chainConfig.nativeCurrency.symbol
+        )
+    }
+}
+
+export async function getTelosEvmAccount(nativeAccountName: NameType) {
+    const chain = get(activeBlockchain)
+    const client = getClient(chain.chainId)
+
+    if (!client) {
+        throw new Error('API client could not be instantiated')
+    }
+
+    const {rows} = await client.v1.chain.get_table_rows({
+        code: 'eosio.evm',
+        scope: 'eosio.evm',
+        table: 'account',
+        index_position: 'tertiary',
+        lower_bound: Name.from(nativeAccountName),
+        upper_bound: Name.from(nativeAccountName),
+    })
+
+    return rows[0]
+}
+
+export function getProvider() {
+    if (evmProvider) {
+        return evmProvider
+    }
+
+    if (window.ethereum) {
+        evmProvider = new ethers.providers.Web3Provider(window.ethereum, 'any')
+        return evmProvider
+    }
+
+    throw new Error('No provider found')
 }
 
 export function convertToEvmAddress(eosAccountName: string): string {
@@ -64,6 +175,26 @@ export function convertToEvmAddress(eosAccountName: string): string {
         throw new Error('This CEX has not fully support the EOS-EVM bridge yet.')
     }
     return convertToEthAddress(eosAccountName)
+}
+
+function formatToken(amount: string, tokenSymbol: string) {
+    return `${Number(amount).toFixed(4)} ${tokenSymbol}`
+}
+
+export async function switchNetwork(evmChainConfig: EvmChainConfig) {
+    await window.ethereum
+        .request({
+            method: 'wallet_switchEthereumChain',
+            params: [{chainId: evmChainConfig.chainId}],
+        })
+        .catch(async (e: {code: number}) => {
+            if (e.code === 4902) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [evmChainConfig],
+                })
+            }
+        })
 }
 
 function convertToEthAddress(eosAddress: string) {
@@ -118,149 +249,44 @@ function uint64ToAddr(str: string) {
     return '0xbbbbbbbbbbbbbbbbbbbbbbbb' + str
 }
 
-interface TransferParams {
-    amount: string
-    evmAccount: EvmAccount
-    nativeSession: LinkSession
-}
+let connectingToEvm = false
 
-export async function transferNativeToEvm({nativeSession, evmAccount, amount}: TransferParams) {
-    const action = Transfer.from({
-        from: nativeSession.auth.actor,
-        to: 'eosio.evm',
-        quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
-        memo: evmAccount.address,
-    })
+export async function startEvmSession(): Promise<EvmSession | undefined> {
+    let evmSession: EvmSession
 
-    return nativeSession.transact({
-        action: {
-            authorization: [nativeSession.auth],
-            account: Name.from('eosio.token'),
-            name: Name.from('transfer'),
-            data: action,
-        },
-    })
-}
+    if (connectingToEvm) {
+        await wait(5000)
+        return startEvmSession()
+    }
 
-export async function estimateGas({nativeSession, evmAccount, amount}: TransferParams) {
-    const provider = getProvider()
+    connectingToEvm = true
 
-    const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
-
-    const gasPrice = await provider.getGasPrice()
-
-    // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
-    const reducedAmount = String(Number(amount) - 0.005)
-
-    const gas = await provider.estimateGas({
-        from: evmAccount.address,
-        to: targetEvmAddress,
-        value: ethers.utils.parseEther(reducedAmount),
-        gasPrice,
-        data: ethers.utils.formatBytes32String(''),
-    })
-
-    return {gas, gasPrice}
-}
-
-export async function getNativeTransferFee({
-    nativeSession,
-}: {
-    nativeSession: LinkSession
-}): Promise<Asset> {
-    const apiClient = getClient(nativeSession.chainId)
-
-    let apiResponse
+    const blockchain = get(activeBlockchain)
+    const nativeSession = get(activeSession)
 
     try {
-        apiResponse = await apiClient.v1.chain.get_table_rows({
-            code: 'eosio.evm',
-            scope: 'eosio.evm',
-            table: 'config',
+        evmSession = await EvmSession.from({
+            chainName: blockchain.id,
+            nativeAccountName: nativeSession?.auth.actor,
         })
-    } catch (err) {
-        throw new Error('Failed to get config table from eosio.evm. Full error: ' + err)
-    }
-
-    const config = apiResponse.rows[0]
-
-    return Asset.from(config.ingress_bridge_fee)
-}
-
-export async function getGasAmount({
-    nativeSession,
-    evmAccount,
-    amount,
-}: TransferParams): Promise<Asset> {
-    const {gas, gasPrice} = await estimateGas({nativeSession, evmAccount, amount})
-
-    const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
-
-    return Asset.fromFloat(Number(eosAmount), '4,EOS')
-}
-
-export async function transferEvmToNative({nativeSession, evmAccount, amount}: TransferParams) {
-    const targetEvmAddress = convertToEvmAddress(String(nativeSession.auth.actor))
-
-    const {gas} = await estimateGas({nativeSession, evmAccount, amount})
-
-    return evmAccount.sendTransaction({
-        from: evmAccount.address,
-        to: targetEvmAddress,
-        value: ethers.utils.parseEther(amount),
-        gasPrice: await getProvider().getGasPrice(),
-        gasLimit: gas,
-        data: ethers.utils.formatBytes32String(''),
-    })
-}
-
-async function switchNetwork() {
-    await window.ethereum
-        .request({
-            method: 'wallet_switchEthereumChain',
-            params: [{chainId: '0x4571'}],
-        })
-        .catch(async (e: {code: number}) => {
-            if (e.code === 4902) {
-                await window.ethereum.request({
-                    method: 'wallet_addEthereumChain',
-                    params: [
-                        {
-                            chainId: '0x4571',
-                            chainName: 'EOS EVM Network',
-                            nativeCurrency: {name: 'EOS', symbol: 'EOS', decimals: 18},
-                            rpcUrls: ['https://api.evm.eosnetwork.com/'],
-                            blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
-                        },
-                    ],
-                })
-            }
-        })
-}
-
-export async function connectEthWallet(): Promise<EvmAccount> {
-    if (window.ethereum) {
-        const provider = getProvider()
-        let networkId = await provider.getNetwork()
-        if (networkId.chainId !== 17777) {
-            await switchNetwork()
-            networkId = await provider.getNetwork()
+    } catch (e) {
+        if (e.code === -32002) {
+            await wait(5000)
+            return startEvmSession()
         }
 
-        await window.ethereum.request({method: 'eth_requestAccounts'})
-        const signer = provider.getSigner()
+        if (!e.message) {
+            connectingToEvm = false
+            return
+        }
 
-        await window.ethereum.get_currency_balance
-
-        return EvmAccount.from({
-            address: await signer.getAddress(),
-            signer,
-        })
-    } else {
-        throw 'You need to install Metamask in order to use this feature.'
+        throw new Error(`Could not connect to EVM. Error: ${e.message}`)
     }
-}
 
-function formatEOS(amount: String) {
-    return `${Number(amount).toFixed(4)} EOS`
+    if (evmSession) {
+        activeEvmSession.set(evmSession)
+        connectingToEvm = false
+    }
+
+    return evmSession
 }

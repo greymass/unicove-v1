@@ -11,6 +11,7 @@ import {
     UInt16,
     UInt32,
     UInt64,
+    Checksum160,
 } from 'anchor-link'
 
 @Struct.type('buyrambytes')
@@ -169,4 +170,26 @@ export class Transfer extends Struct {
     @Struct.field('name') to!: Name
     @Struct.field('asset') quantity!: Asset
     @Struct.field('string') memo!: string
+}
+
+@Struct.type('withdraw')
+export class TelosEvmWithdraw extends Struct {
+    @Struct.field('name') to!: Name
+    @Struct.field('asset') quantity!: Asset
+}
+
+@Struct.type('openwallet')
+export class TelosEvmOpenWallet extends Struct {
+    @Struct.field('name') account!: Name
+    @Struct.field('checksum160') address!: Checksum160
+    @Struct.field('name') actor!: Name
+    @Struct.field('name') permission!: Name
+}
+
+@Struct.type('create')
+export class TelosEvmCreate extends Struct {
+    @Struct.field('name') account!: Name
+    @Struct.field('string') data!: string
+    @Struct.field('name') actor!: Name
+    @Struct.field('name') permission!: Name
 }

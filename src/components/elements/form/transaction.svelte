@@ -61,7 +61,6 @@
         },
         clear: () => {
             error = false
-            console.log('clearing')
             transaction_id.set(undefined)
         },
         retryTransaction: () => {
@@ -73,7 +72,6 @@
             }
         },
         setTransaction: (id: string) => {
-            console.log('setting')
             transaction_id.set(id)
         },
         setTransactionError: (err: any) => {

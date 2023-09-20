@@ -1,24 +1,20 @@
 <script lang="ts">
-    import {Asset, TransactResult} from 'anchor-link'
+    import {Asset, LinkSession, TransactResult} from 'anchor-link'
     import type {ethers} from 'ethers'
 
-    import {currentAccountBalance, evmAccount, activeSession} from '~/store'
-
-    import {
-        transferNativeToEvm,
-        transferEvmToNative,
-        connectEthWallet,
-        getGasAmount,
-        getNativeTransferFee,
-    } from '~/lib/evm'
+    import {activeSession, activeEvmSession} from '~/store'
 
     import Page from '~/components/layout/page.svelte'
     import Form from './form.svelte'
     import Confirm from './confirm.svelte'
     import Success from './success.svelte'
     import Error from './error.svelte'
+    import {systemToken} from '~/stores/tokens'
+    import {transferManagers} from './managers'
+    import type {TransferManager} from './managers/transferManager'
+    import {startEvmSession} from '~/lib/evm'
+
     import type {Token} from '~/stores/tokens'
-    import {updateAccount} from '~/stores/account-provider'
 
     let step = 'form'
     let deposit: string = ''
@@ -26,61 +22,57 @@
     let errorMessage: string | undefined
     let from: Token | undefined
     let to: Token | undefined
-    let nativeTransactResult: TransactResult | undefined
-    let evmTransactResult: ethers.providers.TransactionResponse | undefined
+    let transactResult: TransactResult | ethers.providers.TransactionResponse | undefined
     let transferFee: Asset | undefined
-    let evmBalance: Asset | undefined
+    let transferManager: TransferManager | undefined
+
+    $: systemContractSymbol = String($systemToken?.symbol)
+    $: {
+        const TransferManagerClass =
+            from?.name && to?.name ? transferManagers[`${from.name} - ${to?.name}`] : undefined
+        if (TransferManagerClass) {
+            transferManager = new (TransferManagerClass as unknown as new (
+                ...args: any[]
+            ) => TransferManager)($activeSession!, $activeEvmSession)
+        }
+    }
 
     async function useEntireBalance() {
         if (!from || !to) return
 
-        let value
-        if (from?.name === 'EOS (EVM)') {
-            value = evmBalance?.value
-        } else if (from?.name === 'EOS') {
-            value = $currentAccountBalance?.value
-        }
+        const balance = await transferManager?.balance()
 
-        await estimateTransferFee(String(value))
+        if (!balance) return
 
-        received = ((value || 0) - (transferFee?.value || 0))?.toFixed(4)
+        const balanceValue = balance.value
+
+        await estimateTransferFee(String(balanceValue))
+
+        const transferFeeValue = transferFee?.value || 0
+
+        received = (
+            (balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue - 0.0001)
+        )?.toFixed(4)
     }
 
     async function transfer() {
-        if (!$evmAccount) {
-            return (errorMessage = 'An evm session is required.')
-        }
-
         try {
-            if (from?.name === 'EOS') {
-                nativeTransactResult = await transferNativeToEvm({
-                    nativeSession: $activeSession!,
-                    evmAccount: $evmAccount,
-                    amount: deposit,
-                })
-            } else {
-                evmTransactResult = await transferEvmToNative({
-                    nativeSession: $activeSession!,
-                    evmAccount: $evmAccount,
-                    amount: received,
-                })
-            }
+            transactResult = await transferManager?.transfer(deposit, received)
         } catch (error) {
             return (errorMessage = `Could not transfer. Error: ${
-                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+                error.underlyingError?.message || JSON.stringify(error) === '{}'
+                    ? error.message
+                    : JSON.stringify(error)
             }`)
         }
-
-        setTimeout(updateBalances, 20000) // Waiting a 20 seconds and then updating the balances
 
         step = 'success'
     }
 
-    function handleBack() {
+    function handleBack(updateBalances = false) {
         step = 'form'
         errorMessage = undefined
-        nativeTransactResult = undefined
-        evmTransactResult = undefined
+        transactResult = undefined
         deposit = ''
         received = ''
     }
@@ -96,88 +88,37 @@
     }
 
     async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
-        if (!$evmAccount) {
+        if (!$activeEvmSession) {
             errorMessage = 'An evm session is required.'
             return
         }
 
         try {
-            if (from?.name === 'EOS') {
-                transferFee = await getNativeTransferFee({
-                    nativeSession: $activeSession!,
-                })
-            } else {
-                transferFee = await getGasAmount({
-                    nativeSession: $activeSession!,
-                    evmAccount: $evmAccount,
-                    amount: transferAmount || received,
-                })
-            }
+            transferFee = await transferManager?.transferFee(transferAmount || received)
         } catch (error) {
-            errorMessage = `Could not estimate transfer fee. Error: ${
-                JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
-            }`
+            if (
+                !error?.data?.message?.includes('insufficient funds for transfer') &&
+                !error?.data?.message?.includes('gas required exceeds allowance')
+            ) {
+                errorMessage = `Could not estimate transfer fee. Error: ${
+                    JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+                }`
+            }
             return
         }
 
         return transferFee
     }
 
-    let connectInterval: number | undefined
-    let connectingToEvmWallet = false
-
-    async function connectEvmWallet() {
-        let ethWalletAccount
-
-        if (connectingToEvmWallet || !!$evmAccount) {
-            return
-        }
-
-        connectingToEvmWallet = true
-
-        try {
-            ethWalletAccount = await connectEthWallet()
-        } catch (e) {
-            if (e.code === -32002) {
-                return
-            }
-
-            if (!e.message) {
-                return (connectingToEvmWallet = false)
-            }
-
-            return (errorMessage = `Could not connect to ETH wallet. Error: ${e.message}`)
-        }
-
-        if (ethWalletAccount) {
-            evmAccount.set(ethWalletAccount)
-            connectInterval && clearInterval(connectInterval)
-            connectingToEvmWallet = false
-        }
+    async function handlePageLoad() {
+        // For now, we are always connecting to evm wallet on page load. This may change in the future.
+        await startEvmSession()
     }
 
-    function getEvmBalance() {
-        $evmAccount?.getBalance().then((balance) => {
-            evmBalance = Asset.from(Number(balance.split(' ')[0]), '4,EOS')
-        })
-    }
-
-    function updateBalances() {
-        updateAccount($activeSession!.auth.actor, $activeSession!.chainId)
-        getEvmBalance()
-    }
+    handlePageLoad()
 
     $: {
-        if ($evmAccount) {
-            getEvmBalance()
-        }
-    }
-
-    connectInterval = window.setInterval(connectEvmWallet, 3000)
-    connectEvmWallet()
-
-    $: {
-        if (from && to && received !== '' && Number(received) > 0) {
+        if (transferManager && received !== '' && Number(received) > 0) {
             estimateTransferFee()
         }
     }
@@ -188,8 +129,29 @@
         }
     }
 
-    $: receivedAmount = isNaN(Number(received)) ? undefined : Asset.from(Number(received), '4,EOS')
-    $: depositAmount = Asset.from(Number(deposit), '4,EOS')
+    let previousSession: LinkSession | undefined
+
+    $: {
+        if (!previousSession) {
+            previousSession = $activeSession
+        }
+    }
+
+    $: {
+        if (
+            previousSession &&
+            String($activeSession?.chainId) !== String(previousSession?.chainId)
+        ) {
+            startEvmSession()
+            previousSession = $activeSession
+        }
+    }
+
+    // Eventually we may want to get the symbol from the transferManager instead of the systemToken
+    $: receivedAmount = isNaN(Number(received))
+        ? undefined
+        : Asset.from(Number(received), systemContractSymbol)
+    $: depositAmount = Asset.from(Number(deposit), systemContractSymbol)
 </script>
 
 <style type="scss">
@@ -203,12 +165,12 @@
     <div class="container">
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
-        {:else if step === 'form' || !from || !to || !deposit || !received}
+        {:else if step === 'form' || !transferManager || !deposit || !received}
             <Form
                 handleContinue={submitForm}
                 {depositAmount}
                 {receivedAmount}
-                {evmBalance}
+                {transferManager}
                 {useEntireBalance}
                 bind:feeAmount={transferFee}
                 bind:amount={received}
@@ -219,14 +181,13 @@
             <Confirm
                 {depositAmount}
                 {receivedAmount}
+                {transferManager}
                 feeAmount={transferFee}
-                {from}
-                {to}
                 handleConfirm={transfer}
                 {handleBack}
             />
-        {:else if (step === 'success' && nativeTransactResult) || evmTransactResult}
-            <Success {nativeTransactResult} {evmTransactResult} {handleBack} />
+        {:else if step === 'success' && transactResult}
+            <Success {transactResult} {transferManager} {handleBack} />
         {/if}
     </div>
 </Page>

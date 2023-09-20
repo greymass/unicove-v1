@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
-    import {currentAccountBalance, evmAccount, activeSession} from '~/store'
+    import {activeEvmSession, activeSession, activeBlockchain, currentAccountBalance} from '~/store'
     import {Token, systemToken} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
@@ -8,12 +8,15 @@
     import Button from '~/components/elements/button.svelte'
     import Asset from '~/components/elements/input/asset.svelte'
     import Selector from '~/components/elements/input/token/selector.svelte'
+    import type {TransferManager} from './managers/transferManager'
+    import {transferManagers} from './managers'
+    import type {EvmSession} from '~/lib/evm'
 
     export let handleContinue: () => void
     export let amount: string = ''
     export let from: Token | undefined
     export let to: Token | undefined
-    export let evmBalance: CoreAsset | undefined
+    export let transferManager: TransferManager | undefined
     export let feeAmount: CoreAsset | undefined
     export let depositAmount: CoreAsset | undefined
     export let receivedAmount: CoreAsset | undefined
@@ -30,10 +33,12 @@
         to = token
     }
 
-    $: readyToContinue = from && to && validAmount && $evmAccount
+    $: readyToContinue = from && to && validAmount
 
     function onContinue() {
         if (readyToContinue) {
+            removeEventListener('keyup', handleEnter)
+
             handleContinue()
         }
     }
@@ -53,28 +58,92 @@
 
     let fromOptions: Token[] = []
     let toOptions: Token[] = []
+    let availableToReceive: CoreAsset | undefined
+
+    let generatingOptions = false
+
+    async function generateOptions(evmSession?: EvmSession) {
+        if (!!generatingOptions) return
+
+        generatingOptions = true
+
+        fromOptions = []
+
+        await Promise.all(
+            Object.values(transferManagers).map(async (TransferManagerClass) => {
+                if (!$systemToken) return
+
+                // Only displaying accounts that support the current chain
+                if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
+
+                let accountBalance
+
+                if (!TransferManagerClass.evmRequired || evmSession) {
+                    const transferManager = new (TransferManagerClass as unknown as new (
+                        ...args: any[]
+                    ) => TransferManager)($activeSession!, evmSession)
+                    await transferManager.updateMainBalance()
+                    accountBalance = await transferManager.balance()
+                }
+
+                fromOptions.push({
+                    ...$systemToken,
+                    key: TransferManagerClass.from,
+                    name: TransferManagerClass.fromDisplayString,
+                    balance: accountBalance || 'Connect',
+                })
+            })
+        )
+
+        generatingOptions = false
+    }
 
     $: {
-        if ($systemToken) {
-            const evmToken = {
-                ...$systemToken,
-                name: 'EOS (EVM)',
-                contract: 'eosio.evm',
-                balance: evmBalance || 'Connect',
-            }
-            fromOptions = [$systemToken, evmToken]
-            if (from?.name === 'EOS (EVM)') {
-                toOptions = [$systemToken]
-            } else if (from?.name === 'EOS') {
-                toOptions = [evmToken]
-            } else {
-                toOptions = fromOptions
-            }
+        if (from) {
+            toOptions = fromOptions.filter((token) => token.key !== from?.key)
+        } else {
+            toOptions = fromOptions
         }
     }
 
-    $: balance = from?.name === 'EOS' ? $currentAccountBalance : evmBalance
-    $: availableToReceive = CoreAsset.from((balance?.value || 0) - (feeAmount?.value || 0), '4,EOS')
+    let lastBalanceValue = $currentAccountBalance?.value
+
+    $: {
+        // Regenerate options if the balance changes
+        if ($activeEvmSession && lastBalanceValue !== $currentAccountBalance?.value) {
+            generateOptions($activeEvmSession)
+            lastBalanceValue = $currentAccountBalance?.value
+        }
+    }
+
+    $: {
+        // Regenerate options if the user connects to evm wallet
+        if ($activeEvmSession) {
+            generateOptions($activeEvmSession)
+        } else {
+            generateOptions()
+        }
+    }
+
+    $: {
+        transferManager?.balance().then((balance) => {
+            availableToReceive = CoreAsset.from(
+                (balance?.value || 0) - (feeAmount?.value || 0),
+                balance?.symbol || '4,EOS'
+            )
+        })
+    }
+
+    // Continue when the user presses enter
+    const handleEnter = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            event.preventDefault()
+
+            onContinue()
+        }
+    }
+
+    addEventListener('keyup', handleEnter)
 </script>
 
 <style type="scss">
@@ -176,7 +245,9 @@
                     bind:value={amount}
                 />
                 {#if from && to}
-                    <button on:click={useEntireBalance}>Entire Balance</button>
+                    <button type="button" on:click={useEntireBalance} on:keyup={() => {}}>
+                        Entire Balance
+                    </button>
                 {/if}
             </div>
             <div class="right-section">
@@ -205,7 +276,7 @@
             <Button fluid style="primary" disabled={!readyToContinue} on:action={onContinue}
                 >Continue</Button
             >
-            {#if !$evmAccount}
+            {#if !$activeEvmSession}
                 <h3>Connect to metamask wallet to continue</h3>
             {/if}
         </div>
