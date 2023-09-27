@@ -4,11 +4,13 @@
     import {validatePresence} from './validators/presence'
     import {validateAccountLength} from './validators/account'
 
+    import type {inputType} from '~/ui-types'
+
     // Generic input type matching
     export let name: string = ''
     export let fluid: boolean = false
     export let focus: boolean = false
-    export let inputmode: string = ''
+    export let inputmode: inputType = undefined
     export let placeholder: string | undefined = undefined
     export let value: string = ''
 

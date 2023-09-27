@@ -1,174 +1,193 @@
 <script lang="ts">
-    import type {Readable} from 'svelte/store'
-    import type {TinroRouteMeta} from 'tinro'
-    import type {LinkSession} from 'anchor-link'
+    import {Asset, LinkSession, TransactResult} from 'anchor-link'
+    import type {ethers} from 'ethers'
 
-    import {Name} from 'anchor-link'
-    import {onMount} from 'svelte'
-    import {derived} from 'svelte/store'
-    import {router} from 'tinro'
+    import {activeSession, activeEvmSession} from '~/store'
 
-    import {activeBlockchain, activeSession} from '~/store'
-    import type {Token, TokenKeyParams} from '~/stores/tokens'
-    import type {Balance} from '~/stores/balances'
-    import {balances, makeBalanceKey} from '~/stores/balances'
-    import {tokens, makeTokenKey} from '~/stores/tokens'
-    import {systemTokenKey} from '~/stores/tokens'
-    import {transferData, Step} from '~/pages/transfer/transfer'
-    import {syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/transfer/fio'
-
-    import Text from '~/components/elements/text.svelte'
-    import TransactionForm from '~/components/elements/form/transaction.svelte'
     import Page from '~/components/layout/page.svelte'
+    import Form from './form.svelte'
+    import Confirm from './confirm.svelte'
+    import Success from './success.svelte'
+    import Error from './error.svelte'
+    import {systemToken} from '~/stores/tokens'
+    import {transferManagers} from './managers'
+    import type {TransferManager} from './managers/transferManager'
+    import {startEvmSession} from '~/lib/evm'
 
-    import TransferMain from '~/pages/transfer/main.svelte'
+    import type {Token} from '~/stores/tokens'
 
-    export let meta: TinroRouteMeta | undefined = undefined
+    let step = 'form'
+    let deposit: string = ''
+    let received: string = ''
+    let errorMessage: string | undefined
+    let from: Token | undefined
+    let to: Token | undefined
+    let transactResult: TransactResult | ethers.providers.TransactionResponse | undefined
+    let transferFee: Asset | undefined
+    let transferManager: TransferManager | undefined
 
-    onMount(() => {
-        resetData()
-        syncTxFee()
-        return () => {
-            stopSyncTxFee()
+    $: systemContractSymbol = String($systemToken?.symbol)
+    $: {
+        const TransferManagerClass =
+            from?.name && to?.name ? transferManagers[`${from.name} - ${to?.name}`] : undefined
+        if (TransferManagerClass) {
+            transferManager = new (TransferManagerClass as unknown as new (
+                ...args: any[]
+            ) => TransferManager)($activeSession!, $activeEvmSession)
         }
-    })
+    }
 
-    const token: Readable<Token | undefined> = derived(
-        [activeSession, systemTokenKey, transferData, tokens],
-        ([$activeSession, $systemTokenKey, $transferData, $tokens]) => {
-            if ($activeSession && $systemTokenKey && $tokens) {
-                // If this transfer session data has a token key, use it first
-                if ($transferData.tokenKey) {
-                    return $tokens.find((t) => t.key === $transferData.tokenKey)
-                }
-                // If the URL has a token key, use it second
-                if (meta) {
-                    const params: TokenKeyParams = {
-                        chainId: $activeBlockchain!.chainId,
-                        contract: Name.from(meta.params.contract),
-                        name: Name.from(meta.params.token),
-                    }
-                    const key = makeTokenKey(params)
-                    return $tokens.find((t) => t.key === key)
-                }
-                // Otherwise return the system token key
-                return $tokens.find((t) => t.key === $systemTokenKey)
+    async function useEntireBalance() {
+        if (!from || !to) return
+
+        const balance = await transferManager?.balance()
+
+        if (!balance) return
+
+        const balanceValue = balance.value
+
+        await estimateTransferFee(String(balanceValue))
+
+        const transferFeeValue = transferFee?.value || 0
+
+        received = (
+            (balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue - 0.0001)
+        )?.toFixed(4)
+    }
+
+    async function transfer() {
+        try {
+            transactResult = await transferManager?.transfer(deposit, received)
+        } catch (error) {
+            return (errorMessage = `Could not transfer. Error: ${
+                error.underlyingError?.message || JSON.stringify(error) === '{}'
+                    ? error.message
+                    : JSON.stringify(error)
+            }`)
+        }
+
+        step = 'success'
+    }
+
+    function handleBack(updateBalances = false) {
+        step = 'form'
+        errorMessage = undefined
+        transactResult = undefined
+        deposit = ''
+        received = ''
+    }
+
+    async function submitForm() {
+        step = 'confirm'
+
+        await estimateTransferFee()
+
+        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(
+            4
+        )
+    }
+
+    async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
+        if (!$activeEvmSession) {
+            errorMessage = 'An evm session is required.'
+            return
+        }
+
+        try {
+            transferFee = await transferManager?.transferFee(transferAmount || received)
+        } catch (error) {
+            if (
+                !error?.data?.message?.includes('insufficient funds for transfer') &&
+                !error?.data?.message?.includes('gas required exceeds allowance')
+            ) {
+                errorMessage = `Could not estimate transfer fee. Error: ${
+                    JSON.stringify(error) === '{}' ? error.message : JSON.stringify(error)
+                }`
             }
+            return
         }
-    )
 
-    const balance: Readable<Balance | undefined> = derived(
-        [activeSession, balances, token],
-        ([$activeSession, $currentBalances, $token]) => {
-            if ($token) {
-                const key = makeBalanceKey($token, $activeSession!.auth.actor)
-                return $currentBalances.find((b) => b.key === key)
-            }
-        }
-    )
+        return transferFee
+    }
 
-    let currentSession: LinkSession | undefined = $activeSession
+    async function handlePageLoad() {
+        // For now, we are always connecting to evm wallet on page load. This may change in the future.
+        await startEvmSession()
+    }
+
+    handlePageLoad()
 
     $: {
-        if ($activeSession !== currentSession) {
-            resetData()
-            router.goto('/transfer')
-            currentSession = $activeSession
+        if (transferManager && received !== '' && Number(received) > 0) {
+            estimateTransferFee()
         }
     }
 
-    function resetData() {
-        transferData.set({
-            step: Step.Recipient,
-        })
-        fetchTxFee()
+    $: {
+        if (transferFee && received !== '') {
+            deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4))).toFixed(4)
+        }
     }
 
-    function retryCallback() {
-        // Upon retry, move back to the confirm step to allow the user to retry
-        $transferData.step = Step.Confirm
+    let previousSession: LinkSession | undefined
+
+    $: {
+        if (!previousSession) {
+            previousSession = $activeSession
+        }
     }
 
-    function resetCallback() {
-        // Upon retry, move back to the confirm step to allow the user to retry
-        $transferData.step = Step.Recipient
+    $: {
+        if (
+            previousSession &&
+            String($activeSession?.chainId) !== String(previousSession?.chainId)
+        ) {
+            startEvmSession()
+            previousSession = $activeSession
+        }
     }
+
+    // Eventually we may want to get the symbol from the transferManager instead of the systemToken
+    $: receivedAmount = isNaN(Number(received))
+        ? undefined
+        : Asset.from(Number(received), systemContractSymbol)
+    $: depositAmount = Asset.from(Number(deposit), systemContractSymbol)
 </script>
 
 <style type="scss">
-    .container {
-        border: 1px solid var(--divider-grey);
-        border-radius: 20px;
-        padding: 26px;
-        :global(.button) {
-            margin-top: 31px;
-        }
-    }
-    .options {
-        display: inline-flex;
-        padding: 22px 0px 15px;
-        text-align: right;
-        .toggle {
-            font-weight: bold;
-            margin-right: 10px;
-            font-size: 10px;
-            line-height: 12px;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            letter-spacing: 0.1px;
-            text-transform: uppercase;
-            padding: 10px;
-            cursor: pointer;
-            color: var(--main-blue);
-            border-radius: 8px;
-            &.active {
-                opacity: 1;
-                background-color: var(--main-grey);
-                color: var(--main-black);
-            }
-            &:last-child {
-                margin-right: 0;
-            }
-        }
-    }
-    @media only screen and (max-width: 999px) {
-        .container {
-            margin: 0 32px;
-        }
-    }
-
-    @media only screen and (max-width: 600px) {
-        .container {
-            border: none;
-            padding: 12px;
-            margin: 0 8px;
-        }
+    div {
+        max-width: 800px;
+        margin: 0 auto;
     }
 </style>
 
 <Page divider={false}>
-    <span slot="submenu">
-        <div class="options">
-            <span
-                class="toggle"
-                class:active={$transferData.step !== Step.Receive}
-                on:click={() => ($transferData.step = Step.Recipient)}
-            >
-                <Text>↑ Send</Text>
-            </span>
-            <span
-                class="toggle"
-                class:active={$transferData.step === Step.Receive}
-                on:click={() => ($transferData.step = Step.Receive)}
-            >
-                <Text>↓ Receive</Text>
-            </span>
-        </div>
-    </span>
-    <TransactionForm {resetCallback} {retryCallback}>
-        <div class="container">
-            <TransferMain {balance} {token} {resetData} />
-        </div>
-    </TransactionForm>
+    <div class="container">
+        {#if errorMessage}
+            <Error error={errorMessage} {handleBack} />
+        {:else if step === 'form' || !transferManager || !deposit || !received}
+            <Form
+                handleContinue={submitForm}
+                {depositAmount}
+                {receivedAmount}
+                {transferManager}
+                {useEntireBalance}
+                bind:feeAmount={transferFee}
+                bind:amount={received}
+                bind:from
+                bind:to
+            />
+        {:else if step === 'confirm' && receivedAmount}
+            <Confirm
+                {depositAmount}
+                {receivedAmount}
+                {transferManager}
+                feeAmount={transferFee}
+                handleConfirm={transfer}
+                {handleBack}
+            />
+        {:else if step === 'success' && transactResult}
+            <Success {transactResult} {transferManager} {handleBack} />
+        {/if}
+    </div>
 </Page>

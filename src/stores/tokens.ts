@@ -17,6 +17,7 @@ export interface Token {
     name: NameType
     price?: number
     logo?: string
+    balance?: Asset | string
 }
 
 export interface TokenKeyParams {

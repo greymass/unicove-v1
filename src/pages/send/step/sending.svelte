@@ -1,14 +1,14 @@
 <script lang="ts">
     import {activeBlockchain} from '~/store'
-    import {transferData} from '~/pages/transfer/transfer'
+    import {transferData} from '~/pages/send/transfer'
     import type {Token} from '~/stores/tokens'
 
-    import {txFee} from '~/pages/transfer/fio'
-    import StatusAddress from '~/pages/transfer/status/address.svelte'
-    import StatusAccount from '~/pages/transfer/status/account.svelte'
-    import StatusQuantity from '~/pages/transfer/status/quantity.svelte'
-    import StatusMemo from '~/pages/transfer/status/memo.svelte'
-    import StatusFee from '~/pages/transfer/status/fee.svelte'
+    import {txFee} from '~/pages/send/fio'
+    import StatusAddress from '~/pages/send/status/address.svelte'
+    import StatusAccount from '~/pages/send/status/account.svelte'
+    import StatusQuantity from '~/pages/send/status/quantity.svelte'
+    import StatusMemo from '~/pages/send/status/memo.svelte'
+    import StatusFee from '~/pages/send/status/fee.svelte'
 
     export let token: Token
 </script>

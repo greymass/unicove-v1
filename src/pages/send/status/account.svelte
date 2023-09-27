@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {Name} from 'anchor-link'
-    import Completed from '~/pages/transfer/status/template/completed.svelte'
-    import {transferData, Step} from '~/pages/transfer/transfer'
+    import Completed from '~/pages/send/status/template/completed.svelte'
+    import {transferData, Step} from '~/pages/send/transfer'
 
     export let toAccount: Name
     export let editable: boolean = false

@@ -1,7 +1,4 @@
 <script lang="ts">
-    import type {ChainConfig} from '~/config'
-    import type {Checksum256Type} from '@greymass/eosio'
-
     import {Checksum256} from '@greymass/eosio'
     import {router} from 'tinro'
 
@@ -9,16 +6,12 @@
     import Button from '~/components/elements/button.svelte'
     import Card from '~/components/elements/card.svelte'
 
-    import {exporerUrl, followTransaction} from './utils'
-    import Summary from './summary.svelte'
-    import Advanced from './advanced.svelte'
+    import type {ethers} from 'ethers'
 
-    /** The transaction id to follow */
-    export let id: Checksum256Type
-    /** The chain where the transaction was submitted */
-    export let chain: ChainConfig
     /** Title, e.g. Tokens sent */
     export let title = 'Transaction sent'
+    /** The EVM transaction result */
+    export let evmTransactResult: ethers.providers.TransactionResponse | undefined
     /** The text of the primary button at the bottom of the page */
     export let primaryButtonText = 'Done'
     /** The function to call when the primary button is clicked */
@@ -26,24 +19,18 @@
         router.goto('/')
     }
 
-    let txId: Checksum256
-    $: {
-        try {
-            txId = Checksum256.from(id)
-        } catch (error) {
-            console.warn('Invalid transaction id passed to TxFollower', error)
-            txId = Checksum256.from(
-                '0000000000000000000000000000000000000000000000000000000000000000'
-            )
-        }
+    let txId: string
+    if (evmTransactResult?.hash) {
+        txId = evmTransactResult?.hash
+    } else {
+        console.warn(
+            'Invalid EVM Transact Result data passed to EvmTxFollower. Missing transaction hash.'
+        )
+        txId = '0000000000000000000000000000000000000000000000000000000000000000'
     }
-    $: status = followTransaction(txId, chain).value
 
-    let tabs = [
-        {id: 'summary', title: 'Summary', component: Summary},
-        {id: 'advanced', title: 'Advanced', component: Advanced},
-    ]
-    let activeTab = tabs[0]
+    const blockExplorerUrl = 'https://explorer.evm.eosnetwork.com/tx/'
+    const blockExplorerTransactionUrl = `${blockExplorerUrl}${evmTransactResult?.hash}`
 </script>
 
 <style type="scss">
@@ -113,26 +100,8 @@
     <header>
         <Icon size="massive" name="check-circle" />
         <h1>{title}</h1>
-        <a target="_blank" href={exporerUrl(txId, chain)}>{txId}</a>
-        <nav>
-            <ul>
-                {#each tabs as tab}
-                    <li>
-                        <a
-                            href={`#tab-${tab.id}`}
-                            class:active={tab === activeTab}
-                            on:click|preventDefault|stopPropagation={() => (activeTab = tab)}
-                        >
-                            {tab.title}
-                        </a>
-                    </li>
-                {/each}
-            </ul>
-        </nav>
+        <a target="_blank" href={blockExplorerTransactionUrl}>{txId}</a>
     </header>
-    {#if $status}
-        <svelte:component this={activeTab.component} status={$status} />
-    {/if}
     <footer>
         <div>
             <slot name="done">
@@ -142,7 +111,7 @@
             </slot>
         </div>
         <div>
-            <Button fluid size="large" href={exporerUrl(txId, chain)} target="_blank">
+            <Button fluid size="large" href={blockExplorerTransactionUrl} target="_blank">
                 View on block explorer
             </Button>
         </div>

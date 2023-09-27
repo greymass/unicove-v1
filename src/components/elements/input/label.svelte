@@ -1,4 +1,5 @@
-<script lang="ts">
+<script>
+    export let align: 'center' | 'left' | 'right' = 'center'
 </script>
 
 <style type="scss">
@@ -13,6 +14,6 @@
     }
 </style>
 
-<div class="label">
+<div class="label" style="text-align: {align};">
     <slot />
 </div>

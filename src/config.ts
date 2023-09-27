@@ -203,7 +203,7 @@ export const chains: ChainConfig[] = [
         resourceSampleAccount: 'greymassfuel',
         resourceSampleMilliseconds: 1000,
         testnet: false,
-        bloksUrl: 'https://telos.bloks.io',
+        bloksUrl: 'https://explorer.telos.net',
         balanceProviders: new Set([BalanceProviders.LightAPI]),
     },
     {

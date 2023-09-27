@@ -6,12 +6,19 @@ import {ChainConfig, chainConfig, chains} from './config'
 import {Preferences} from './preferences'
 import {priceTicker} from './price-ticker'
 import {accountProvider} from './stores/account-provider'
+import type {EvmSession} from '~/lib/evm'
 
 /** Set to true when app initialization completes. */
 export const appReady = writable<boolean>(false)
 
 /** Active anchor link session, aka logged in user. */
 export const activeSession = writable<LinkSession | undefined>(undefined)
+
+/** Active EVM session, aka logged in user. */
+export const activeEvmSession = writable<EvmSession | undefined>(undefined)
+
+/** EVM session balance */
+export const evmBalance = writable<Asset | undefined>(undefined)
 
 /** Configuration of the currently selected blockchain */
 export const activeBlockchain: Readable<ChainConfig> = derived(activeSession, (session) => {
@@ -75,3 +82,18 @@ export const darkMode = derived(
         }
     }
 )
+
+export const waitForStoreValue = <StoreType>(
+    store: Readable<StoreType | undefined>
+): Promise<StoreType> => {
+    let unsubscribe: (() => void) | undefined
+    return new Promise((resolve) => {
+        unsubscribe = store.subscribe((value) => {
+            if (value) {
+                // Replace this condition with whatever means "populated" for you
+                resolve(value)
+                unsubscribe && unsubscribe()
+            }
+        })
+    })
+}
