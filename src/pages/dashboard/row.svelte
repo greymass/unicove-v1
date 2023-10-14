@@ -26,7 +26,7 @@
 
     const url = derived(token, ($token) => {
         if ($token) {
-            return `/transfer/${String($token.contract).toLowerCase()}/${String(
+            return `/send/${String($token.contract).toLowerCase()}/${String(
                 $token.name
             ).toLowerCase()}`
         }
