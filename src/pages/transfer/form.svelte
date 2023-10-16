@@ -234,6 +234,7 @@
                         onTokenSelect={handleFromChange}
                         selectedToken={from}
                         tokenOptions={fromOptions}
+                        showTokensWithoutBalance
                     />
                 </div>
                 <Label align="left">Amount</Label>
@@ -257,6 +258,7 @@
                         onTokenSelect={handleToChange}
                         selectedToken={to}
                         tokenOptions={toOptions}
+                        showTokensWithoutBalance
                     />
                 </div>
                 {#if receivedAmount && receivedAmount.value > 0 && feeAmount && feeAmount.value > 0}
