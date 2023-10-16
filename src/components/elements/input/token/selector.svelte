@@ -4,6 +4,7 @@
     import {activeBlockchain} from '~/store'
     import type {Token} from '~/stores/tokens'
     import {tokens} from '~/stores/tokens'
+    import {balances} from '~/stores/balances'
 
     import Form from '~/components/elements/form.svelte'
     import Input from '~/components/elements/input.svelte'
@@ -16,6 +17,13 @@
     export let selectedToken: Token | undefined = undefined
     export let tokenOptions: Token[] | undefined = undefined
     export let onTokenSelect: (token: Token) => void
+    export let showTokensWithoutBalance: boolean = false
+
+    $: {
+        if (defaultToken) {
+            selectedToken = defaultToken
+        }
+    }
 
     let displayModal = writable<boolean>(false)
     let query: string = ''
@@ -42,11 +50,22 @@
                 ($tokens &&
                     $tokens.filter((token) => {
                         const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
+                        let balanceExists
+                        if (!showTokensWithoutBalance) {
+                            balanceExists = !!(
+                                token.balance ||
+                                $balances.find((balance) => balance.tokenKey === token.key)
+                            )
+                        }
                         const queryExists = query.length === 0
                         const queryMatches = String(token.name)
                             .toLowerCase()
                             .includes(query.toLowerCase())
-                        return blockchainMatches && (queryExists || queryMatches)
+                        return (
+                            blockchainMatches &&
+                            (queryExists || queryMatches) &&
+                            (showTokensWithoutBalance || balanceExists)
+                        )
                     })) ||
                 []
         }
