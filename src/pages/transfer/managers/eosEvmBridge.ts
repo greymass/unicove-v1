@@ -44,11 +44,11 @@ export class EosEvmBridge extends TransferManager {
         return Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
     }
 
-    transfer(amount: string) {
+    transfer(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
         const action = Transfer.from({
             from: this.nativeSession.auth.actor,
             to: 'eosio.evm',
-            quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
+            quantity: String(Asset.fromFloat(Number(amount), tokenSymbol)),
             memo: this.evmSession.address,
         })
 

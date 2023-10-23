@@ -33,7 +33,7 @@ export class EvmEosBridge extends TransferManager {
         return Asset.fromFloat(Number(eosAmount), this.evmSession.chainConfig.nativeCurrency.symbol)
     }
 
-    async transfer(amount: string, amountReceived?: string) {
+    async transfer(amount: string, _tokenSymbol: Asset.SymbolType, amountReceived?: string) {
         const targetEvmAddress = convertToEvmAddress(String(this.nativeSession.auth.actor))
 
         const amountToTransfer = amountReceived || amount
