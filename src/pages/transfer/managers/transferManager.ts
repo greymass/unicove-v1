@@ -29,7 +29,7 @@ export abstract class TransferManager {
     /* eslint-disable @typescript-eslint/no-unused-vars */
     transfer(
         _amount: string,
-        _amountReceived?: string
+        _tokenSymibol: Asset.SymbolType
     ): Promise<TransactResult | ethers.providers.TransactionResponse> {
         throw new Error('transfer() not implemented')
     }

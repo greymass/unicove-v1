@@ -28,9 +28,9 @@
 
     $: systemContractSymbol = String($systemToken?.symbol)
     $: {
-        const TransferManagerClass =
+        const transferManagerData =
             from?.name && to?.name ? transferManagers[`${from.name} - ${to?.name}`] : undefined
-        if (TransferManagerClass) {
+        if (transferManagerData.class) {
             transferManager = new (TransferManagerClass as unknown as new (
                 ...args: any[]
             ) => TransferManager)($activeSession!, $activeEvmSession)
