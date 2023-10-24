@@ -1,4 +1,4 @@
-import type { Asset } from 'anchor-link'
+import type { Asset, AssetType } from 'anchor-link'
 
 import {EvmTelosBridge} from './evmTelosBridge'
 import {EosEvmBridge} from './eosEvmBridge'
@@ -8,20 +8,32 @@ import type {TransferManager} from './transferManager'
 
 interface TransferType {
     transferClass: typeof TransferManager
-    tokenSymbol: Asset.SymbolType
+    token: AssetType
 }
 
 export const transferManagers: {[key: string]: TransferType} = {
     'EOS - EOS (EVM)': {
         transferClass: EosEvmBridge,
-        tokenSymbol: '4,EOS'
+        token: 'EOS'
     },
     'EOS (EVM) - EOS': {
-        
-    }
-    'EOS (EVM) - EOS': EvmEosBridge,
-    'USDT - USDT (EVM)': EosEvmBridge,
-    'USDT (EVM) - USDT': EvmEosBridge,
-    'TLOS - TLOS (EVM)': TelosEvmBridge,
-    'TLOS (EVM) - TLOS': EvmTelosBridge,
+        transferClass: EvmEosBridge,
+        token: 'EOS'
+    },
+    'USDT - USDT (EVM)': {
+        transferClass: EosEvmBridge,
+        token: 'USDT'
+    },
+    'USDT (EVM) - USDT': {
+        transferClass: EvmEosBridge,
+        token: 'USDT'
+    },
+    'TLOS - TLOS (EVM)': {
+        transferClass: TelosEvmBridge,
+        token: 'TLOS'
+    },
+    'TLOS (EVM) - TLOS': {
+        transferClass: EvmTelosBridge,
+        token: 'TLOS'
+    },
 }

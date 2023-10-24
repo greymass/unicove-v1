@@ -30,7 +30,9 @@
     $: {
         const transferManagerData =
             from?.name && to?.name ? transferManagers[`${from.name} - ${to?.name}`] : undefined
-        if (transferManagerData.class) {
+        const TransferManagerClass = transferManagerData?.transferClass
+
+        if (TransferManagerClass) {
             transferManager = new (TransferManagerClass as unknown as new (
                 ...args: any[]
             ) => TransferManager)($activeSession!, $activeEvmSession)

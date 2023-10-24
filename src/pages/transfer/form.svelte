@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
     import {activeEvmSession, activeSession, activeBlockchain, currentAccountBalance} from '~/store'
-    import {Token, systemToken} from '~/stores/tokens'
+    import {Token, TokenOption, systemToken} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -56,8 +56,8 @@
         }
     }
 
-    let fromOptions: Token[] = []
-    let toOptions: Token[] = []
+    let fromOptions: TokenOption[] = []
+    let toOptions: TokenOption[] = []
     let availableToReceive: CoreAsset | undefined
 
     let generatingOptions = false
@@ -70,7 +70,9 @@
         fromOptions = []
 
         await Promise.all(
-            Object.values(transferManagers).map(async (TransferManagerClass) => {
+            Object.values(transferManagers).map(async (transferManagerData) => {
+                const TransferManagerClass = transferManagerData.transferClass
+
                 if (!$systemToken) return
 
                 // Only displaying accounts that support the current chain
@@ -87,10 +89,8 @@
                 }
 
                 fromOptions.push({
-                    ...$systemToken,
-                    key: TransferManagerClass.from,
-                    name: TransferManagerClass.fromDisplayString,
-                    balance: accountBalance || 'Connect',
+                    tokenName: String(transferManagerData.token),
+                    label: TransferManagerClass.fromDisplayString,
                 })
             })
         )
@@ -100,7 +100,7 @@
 
     $: {
         if (from) {
-            toOptions = fromOptions.filter((token) => token.key !== from?.key)
+            toOptions = fromOptions.filter((token) => token.tokenName !== from?.name)
         } else {
             toOptions = fromOptions
         }
