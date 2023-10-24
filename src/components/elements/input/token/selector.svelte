@@ -45,8 +45,10 @@
     $: {
         if (tokenOptions) {
             filteredTokens = tokenOptions.map(tokenOption => {
-                const usdt = $tokens?.find(token => token.contract === 'tethertether')
-                const token = $tokens?.find(token => tokenOption.tokenName === token.name)
+                const token = $tokens?.find(token =>
+                    String(tokenOption.tokenName) === String(token.name) &&
+                    String(tokenOption.tokenContract) === String(token.contract)
+                )
 
                 if (!token) {
                     throw new Error(`Token ${tokenOption.tokenName} not found.`)

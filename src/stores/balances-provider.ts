@@ -47,6 +47,18 @@ export async function updateBalances(session: LinkSession) {
             const provider = getBalanceProvider(p, chain)
             if (provider) {
                 const balances = await provider.fetchBalances(session.auth.actor)
+                // Fetch evm balances when applicable
+                const evmSession = await waitForStoreValue(activeEvmSession)
+                if (evmSession) {
+                    const evmBalance = await evmSession.getBalance()
+                    balances.push({
+                        key: 'evm',
+                        chainId: evmSession.chainId,
+                        account: evmSession.address,
+                        tokenKey: 'evm',
+                        quantity: Asset.from(evmBalance),
+                    })
+                }
                 balancesProvider.set({
                     balances: balances,
                 })

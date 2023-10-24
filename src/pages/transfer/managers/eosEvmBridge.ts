@@ -9,10 +9,6 @@ import {updateActiveAccount} from '~/stores/account-provider'
 import {updateEvmBalance} from '~/stores/balances-provider'
 
 export class EosEvmBridge extends TransferManager {
-    static from = 'eos'
-    static fromDisplayString = 'EOS'
-    static to = 'evm'
-    static toDisplayString = 'EOS (EVM)'
     static supportedChains = ['eos']
     static evmRequired = true
 

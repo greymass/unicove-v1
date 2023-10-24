@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
     import {activeEvmSession, activeSession, activeBlockchain, currentAccountBalance} from '~/store'
-    import {Token, TokenOption, systemToken} from '~/stores/tokens'
+    import type {Token, TokenOption} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -73,8 +73,6 @@
             Object.values(transferManagers).map(async (transferManagerData) => {
                 const TransferManagerClass = transferManagerData.transferClass
 
-                if (!$systemToken) return
-
                 // Only displaying accounts that support the current chain
                 if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
 
@@ -89,8 +87,9 @@
                 }
 
                 fromOptions.push({
-                    tokenName: String(transferManagerData.token),
-                    label: TransferManagerClass.fromDisplayString,
+                    tokenName: String(transferManagerData.tokenName),
+                    tokenContract: String(transferManagerData.tokenContract),
+                    label: transferManagerData.fromLabel,
                 })
             })
         )
@@ -106,24 +105,9 @@
         }
     }
 
-    let lastBalanceValue = $currentAccountBalance?.value
+    generateOptions()
 
-    $: {
-        // Regenerate options if the balance changes
-        if ($activeEvmSession && lastBalanceValue !== $currentAccountBalance?.value) {
-            generateOptions($activeEvmSession)
-            lastBalanceValue = $currentAccountBalance?.value
-        }
-    }
-
-    $: {
-        // Regenerate options if the user connects to evm wallet
-        if ($activeEvmSession) {
-            generateOptions($activeEvmSession)
-        } else {
-            generateOptions()
-        }
-    }
+    $: console.log({ fromOptions })
 
     $: {
         transferManager?.balance().then((balance) => {
@@ -234,7 +218,6 @@
                         onTokenSelect={handleFromChange}
                         selectedToken={from}
                         tokenOptions={fromOptions}
-                        showTokensWithoutBalance
                     />
                 </div>
                 <Label align="left">Amount</Label>
@@ -258,7 +241,6 @@
                         onTokenSelect={handleToChange}
                         selectedToken={to}
                         tokenOptions={toOptions}
-                        showTokensWithoutBalance
                     />
                 </div>
                 {#if receivedAmount && receivedAmount.value > 0 && feeAmount && feeAmount.value > 0}
