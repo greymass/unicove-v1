@@ -2,7 +2,7 @@
     import {writable} from 'svelte/store'
 
     import {activeBlockchain} from '~/store'
-    import type {Token, TokenOption} from '~/stores/tokens'
+    import type {Token} from '~/stores/tokens'
     import {tokens} from '~/stores/tokens'
     import {balances} from '~/stores/balances'
 
@@ -15,7 +15,7 @@
 
     export let defaultToken: Token | undefined = undefined
     export let selectedToken: Token | undefined = undefined
-    export let tokenOptions: TokenOption[] | undefined = undefined
+    export let tokenOptions: Token[] | undefined = undefined
     export let onTokenSelect: (token: Token) => void
     export let showTokensWithoutBalance: boolean = false
 
@@ -44,21 +44,7 @@
 
     $: {
         if (tokenOptions) {
-            filteredTokens = tokenOptions.map(tokenOption => {
-                const token = $tokens?.find(token =>
-                    String(tokenOption.tokenKey) === String(token.key) &&
-                    String(tokenOption.tokenContract) === String(token.contract)
-                )
-
-                if (!token) {
-                    throw new Error(`Token ${tokenOption.tokenName} not found.`)
-                }
-
-                return {
-                    ...token,
-                    name: tokenOption.label || token.name,
-                }
-            })
+            filteredTokens = tokenOptions
         } else {
             filteredTokens =
                 $tokens?.filter((token) => {

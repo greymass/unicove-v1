@@ -20,12 +20,6 @@ export interface Token {
     balance?: Asset | string
 }
 
-export interface TokenOption {
-    tokenContract: NameType
-    tokenKey: string
-    label?: string
-}
-
 export interface TokenKeyParams {
     chainId: ChainId
     contract: NameType

@@ -53,7 +53,7 @@ export async function updateBalances(session: LinkSession) {
                     const evmBalances = await evmSession.getBalances()
 
                     evmBalances.forEach((balance) => {
-                        const tokenKey = `evm-${balance.symbol.code}`
+                        const tokenKey = `evm-${String(balance.symbol.code).toLowerCase()}`
                         balances.push({
                             key: tokenKey,
                             chainId: session.chainId,

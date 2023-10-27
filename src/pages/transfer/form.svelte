@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
     import {activeEvmSession, activeSession, activeBlockchain, currentAccountBalance} from '~/store'
-    import type {Token, TokenOption} from '~/stores/tokens'
+    import {tokens, type Token} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -24,12 +24,12 @@
 
     let validAmount = false
 
-    function handleFromChange(token: TokenOption) {
+    function handleFromChange(token: Token) {
         resetForm() // reset form when changing from token
         from = token
     }
 
-    function handleToChange(token: TokenOption) {
+    function handleToChange(token: Token) {
         to = token
     }
 
@@ -56,8 +56,8 @@
         }
     }
 
-    let fromOptions: TokenOption[] = []
-    let toOptions: TokenOption[] = []
+    let fromOptions: Token[] = []
+    let toOptions: Token[] = []
     let availableToReceive: CoreAsset | undefined
 
     let generatingOptions = false
@@ -86,11 +86,14 @@
                     accountBalance = await transferManager.balance()
                 }
 
-                fromOptions.push({
-                    tokenKey: transferManagerData.tokenKey,
-                    tokenContract: String(transferManagerData.tokenContract),
-                    label: transferManagerData.fromLabel,
-                })
+                const token = $tokens.find(token => token.key === transferManagerData.tokenKey)
+
+                if (!token) {
+                    console.error(`Token ${transferManagerData.tokenKey} not found`)
+                    return
+                }
+
+                fromOptions.push(token)
             })
         )
 
@@ -99,7 +102,7 @@
 
     $: {
         if (from) {
-            toOptions = fromOptions.filter((token) => token.tokenKey !== from?.name)
+            toOptions = fromOptions.filter((token) => token.name !== from?.name)
         } else {
             toOptions = fromOptions
         }

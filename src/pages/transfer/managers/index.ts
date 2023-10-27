@@ -19,7 +19,7 @@ interface TransferType {
 export const transferManagers: {[key: string]: TransferType} = {
     'EOS - EOS (EVM)': {
         transferClass: EosEvmBridge,
-        tokenKey: 'EOS',
+        tokenKey: 'eos', // change these for actual token key
         tokenContract: 'eosio.token',
         from: 'eos',
         fromLabel: 'EOS',
@@ -28,7 +28,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'EOS (EVM) - EOS': {
         transferClass: EvmEosBridge,
-        tokenKey: 'EVM-EOS',
+        tokenKey: 'evm-eos',
         tokenContract: 'eosio.token',
         from: 'evm',
         fromLabel: 'EOS (EVM)',
@@ -37,7 +37,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'USDT - USDT (EVM)': {
         transferClass: EosEvmBridge,
-        tokenKey: 'USDT',
+        tokenKey: 'usdt',
         tokenContract: 'tethertether',
         from: 'usdt',
         fromLabel: 'USDT',
@@ -46,7 +46,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'USDT (EVM) - USDT': {
         transferClass: EvmEosBridge,
-        tokenKey: 'EVM-USDT',
+        tokenKey: 'evm-usdt',
         tokenContract: 'tethertether',
         from: 'evm',
         fromLabel: 'USDT (EVM)',
@@ -55,8 +55,8 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'TLOS - TLOS (EVM)': {
         transferClass: TelosEvmBridge,
-        tokenKey: 'TLOS',
-        tokenContract: 'tethertether',
+        tokenKey: 'tlos',
+        tokenContract: 'telos.token',
         from: 'tlos',
         fromLabel: 'TLOS',
         to: 'evm',
@@ -64,8 +64,8 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'TLOS (EVM) - TLOS': {
         transferClass: EvmTelosBridge,
-        tokenKey: 'TLOS',
-        tokenContract: 'tethertether',
+        tokenKey: 'evm-tlos',
+        tokenContract: 'telos.evm',
         from: 'evm',
         fromLabel: 'TLOS (EVM)',
         to: 'tlos',
