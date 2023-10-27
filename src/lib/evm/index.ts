@@ -32,7 +32,7 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
         chainName: 'EOS EVM Network',
         tokens: [
             {name: 'EOS', symbol: '4,EOS', decimals: 18, nativeToken: true},
-            {name: 'USDT', symbol: '2,USDT', decimals: 2, address: '0x33B57dC70014FD7AA6e1ed3080eeD2B619632B8e' },
+            {name: 'USDT', symbol: '4,USDT', decimals: 6, address: '0x33B57dC70014FD7AA6e1ed3080eeD2B619632B8e' },
         ],
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
@@ -132,13 +132,20 @@ export class EvmSession {
             const contract = new ethers.Contract(token.address, erc20_abi, this.signer);
 
             wei = await contract.balanceOf(this.address)
+           
         } else if (token?.nativeToken) {
             wei = await this.signer.getBalance()
         } else {
             throw new Error('Non native token must have an address.')
         }
 
-        return Asset.from(formatToken(ethers.utils.formatEther(wei), token.name))
+        const decimals = token.decimals
+
+        if (token.decimals === 18) {
+            return Asset.from(Number(ethers.utils.formatEther(wei)), token.symbol)
+        } else {
+            return Asset.from(fromWei(wei, decimals), token.symbol)
+        }
     }
 
     getBalances() {
@@ -342,4 +349,8 @@ export async function startEvmSession(): Promise<EvmSession | undefined> {
     }
 
     return evmSession
+}
+
+export function fromWei(wei: BigNumber, decimals: number) {
+    return wei.toNumber() / Math.pow(10, decimals);
 }

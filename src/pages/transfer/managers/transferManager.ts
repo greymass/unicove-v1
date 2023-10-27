@@ -39,7 +39,7 @@ export abstract class TransferManager {
     }
     /* eslint-enable @typescript-eslint/no-unused-vars */
 
-    balance(): Promise<Asset | undefined> {
+    balance(tokenName?: string): Promise<Asset | undefined> {
         throw new Error('balance() not implemented')
     }
 

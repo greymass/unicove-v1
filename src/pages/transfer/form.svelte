@@ -89,7 +89,6 @@
                 const token = $tokens.find(token => token.name === transferManagerData.tokenName)
 
                 if (!token) {
-                    console.log({tokens: $tokens, tokenKey: transferManagerData.tokenName})
                     console.error(`Token ${transferManagerData.tokenName} not found`)
                     return
                 }
@@ -103,7 +102,7 @@
 
     $: {
         if (from) {
-            toOptions = fromOptions.filter((token) => token.name !== from?.name)
+            toOptions = fromOptions.filter((token) => from?.symbol.equals(token.symbol) && token.name !== from?.name) // this needs to only show options which involve the same token
         } else {
             toOptions = fromOptions
         }
@@ -113,6 +112,7 @@
 
     $: {
         transferManager?.balance().then((balance) => {
+            console.log({ balance, feeAmount, amount })
             availableToReceive = CoreAsset.from(
                 (balance?.value || 0) - (feeAmount?.value || 0),
                 balance?.symbol || '4,EOS'

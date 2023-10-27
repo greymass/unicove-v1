@@ -71,19 +71,6 @@ export class EvmEosBridge extends TransferManager {
         return {gas, gasPrice}
     }
 
-    async balance() {
-        return get(evmBalance)
-    }
-
-    async receivingBalance() {
-        return get(currentAccountBalance)
-    }
-
-    async updateBalances() {
-        updateActiveAccount()
-        updateEvmBalance()
-    }
-
     updateMainBalance() {
         return updateEvmBalance()
     }

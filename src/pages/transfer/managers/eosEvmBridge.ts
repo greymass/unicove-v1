@@ -7,6 +7,7 @@ import {TransferManager} from './transferManager'
 import {currentAccountBalance, evmBalance} from '~/store'
 import {updateActiveAccount} from '~/stores/account-provider'
 import {updateEvmBalance} from '~/stores/balances-provider'
+import { balances } from '~/stores/balances'
 
 export class EosEvmBridge extends TransferManager {
     static supportedChains = ['eos']
@@ -58,8 +59,10 @@ export class EosEvmBridge extends TransferManager {
         })
     }
 
-    async balance() {
-        return get(currentAccountBalance)
+    async balance(tokenName?: string) {
+        const balance = get(balances).find((b) => b.tokenKey === tokenName)
+
+        return balance?.quantity
     }
 
     async receivingBalance() {
