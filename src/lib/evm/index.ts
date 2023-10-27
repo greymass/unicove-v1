@@ -7,7 +7,7 @@ import {Asset, Name, NameType} from 'anchor-link'
 import {BigNumber, ethers} from 'ethers'
 import {getClient} from '~/api-client'
 
-import erc20_abi from './abis/erc20.json'
+import erc20_abi from './data/erc20_abi.json'
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
 export interface EvmChainConfig {
@@ -130,7 +130,7 @@ export class EvmSession {
 
         if (token?.address) {
             const contract = new ethers.Contract(token.address, erc20_abi, this.signer);
-            console.log({ contract, signer: this.signer })
+
             wei = await contract.balanceOf(this.address)
         } else if (token?.nativeToken) {
             wei = await this.signer.getBalance()

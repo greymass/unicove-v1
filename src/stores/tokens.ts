@@ -9,6 +9,8 @@ import {activeBlockchain, activePriceTicker, activeSession} from '~/store'
 import {priceTicker} from '~/price-ticker'
 import {Balance, balances} from '~/stores/balances'
 
+import evmTokens from '../lib/evm/data/tokens.json'
+
 export interface Token {
     key: string
     chainId: ChainId
@@ -56,7 +58,9 @@ export const tokens: Writable<Token[]> = writable(initialTokens, () => {
 export function makeTokenKey(token: TokenKeyParams): string {
     return [String(token.chainId), String(token.contract), String(token.name)]
         .join('-')
-        .toLowerCase()
+        .replace(/[()]/g, '')
+        .replace(/\s/g, '-')
+        .toLowerCase();
 }
 
 export const systemTokenKey: Readable<string> = derived(activeBlockchain, ($activeBlockchain) => {
@@ -111,9 +115,14 @@ export function loadTokenMetadata(session: LinkSession) {
     const sysToken = createTokenFromChainId(session.chainId, get(activePriceTicker))
     records.push(sysToken)
 
-    for (const t of AntelopeTokens) {
-        const chain = chainConfig(session.chainId)
+    const allTokens = [
+        ...AntelopeTokens,
+        ...evmTokens,
+    ]
 
+    const chain = chainConfig(session.chainId)
+
+    for (const t of allTokens) {
         if (chain.id === t.chain) {
             if (t.supply && t.supply.precision && t.symbol) {
                 const symbol: Asset.Symbol = Asset.Symbol.from(`${t.supply.precision},${t.symbol}`)
@@ -125,7 +134,7 @@ export function loadTokenMetadata(session: LinkSession) {
                     logo: t.metadata.logo,
                 }
 
-                if (token.symbol.equals(sysToken.symbol) && token.contract === token.contract) {
+                if (token.symbol.equals(sysToken.symbol) && token.name !== `${sysToken.name} (EVM)`) {
                     continue
                 }
 

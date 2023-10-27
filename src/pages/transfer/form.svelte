@@ -86,10 +86,11 @@
                     accountBalance = await transferManager.balance()
                 }
 
-                const token = $tokens.find(token => token.key === transferManagerData.tokenKey)
+                const token = $tokens.find(token => token.name === transferManagerData.tokenName)
 
                 if (!token) {
-                    console.error(`Token ${transferManagerData.tokenKey} not found`)
+                    console.log({tokens: $tokens, tokenKey: transferManagerData.tokenName})
+                    console.error(`Token ${transferManagerData.tokenName} not found`)
                     return
                 }
 

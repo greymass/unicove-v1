@@ -14,7 +14,6 @@
     let balance
 
     $: {
-        console.log({ token })
         balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)?.quantity
 
         if (typeof balance === 'string') {

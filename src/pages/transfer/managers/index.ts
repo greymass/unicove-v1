@@ -8,7 +8,7 @@ import type {TransferManager} from './transferManager'
 
 interface TransferType {
     transferClass: typeof TransferManager
-    tokenKey: string
+    tokenName: string
     tokenContract: NameType
     from: string
     fromLabel: string
@@ -19,7 +19,7 @@ interface TransferType {
 export const transferManagers: {[key: string]: TransferType} = {
     'EOS - EOS (EVM)': {
         transferClass: EosEvmBridge,
-        tokenKey: 'eos', // change these for actual token key
+        tokenName: 'EOS',
         tokenContract: 'eosio.token',
         from: 'eos',
         fromLabel: 'EOS',
@@ -28,7 +28,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'EOS (EVM) - EOS': {
         transferClass: EvmEosBridge,
-        tokenKey: 'evm-eos',
+        tokenName: 'EOS (EVM)',
         tokenContract: 'eosio.token',
         from: 'evm',
         fromLabel: 'EOS (EVM)',
@@ -37,7 +37,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'USDT - USDT (EVM)': {
         transferClass: EosEvmBridge,
-        tokenKey: 'usdt',
+        tokenName: 'USDT',
         tokenContract: 'tethertether',
         from: 'usdt',
         fromLabel: 'USDT',
@@ -46,7 +46,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'USDT (EVM) - USDT': {
         transferClass: EvmEosBridge,
-        tokenKey: 'evm-usdt',
+        tokenName: 'USDT (EVM)',
         tokenContract: 'tethertether',
         from: 'evm',
         fromLabel: 'USDT (EVM)',
@@ -55,8 +55,8 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'TLOS - TLOS (EVM)': {
         transferClass: TelosEvmBridge,
-        tokenKey: 'tlos',
-        tokenContract: 'telos.token',
+        tokenName: 'TLOS',
+        tokenContract: 'eosio.token',
         from: 'tlos',
         fromLabel: 'TLOS',
         to: 'evm',
@@ -64,7 +64,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'TLOS (EVM) - TLOS': {
         transferClass: EvmTelosBridge,
-        tokenKey: 'evm-tlos',
+        tokenName: 'TLOS (EVM)',
         tokenContract: 'telos.evm',
         from: 'evm',
         fromLabel: 'TLOS (EVM)',
