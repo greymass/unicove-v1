@@ -15,6 +15,7 @@
     import {startEvmSession} from '~/lib/evm'
 
     import type {Token} from '~/stores/tokens'
+    import { balances } from '~/stores/balances'
 
     let step = 'form'
     let deposit: string = ''
@@ -27,6 +28,7 @@
     let transferManager: TransferManager | undefined
 
     $: systemContractSymbol = String($systemToken?.symbol)
+    $: balance = $balances?.find((balance) => balance.tokenKey === from?.key)?.quantity
     $: {
         const transferManagerData =
             from?.name && to?.name ? transferManagers[`${from.name} - ${to?.name}`] : undefined
@@ -40,11 +42,7 @@
     }
 
     async function useEntireBalance() {
-        if (!from || !to) return
-
-        const balance = await transferManager?.balance()
-
-        if (!balance) return
+        if (!from || !to || !balance) return
 
         const balanceValue = balance.value
 
@@ -96,7 +94,7 @@
         }
 
         try {
-            transferFee = await transferManager?.transferFee(transferAmount || received)
+            transferFee = await transferManager?.transferFee(transferAmount || received, from?.symbol)
         } catch (error) {
             if (
                 !error?.data?.message?.includes('insufficient funds for transfer') &&
@@ -152,8 +150,8 @@
     // Eventually we may want to get the symbol from the transferManager instead of the systemToken
     $: receivedAmount = isNaN(Number(received))
         ? undefined
-        : Asset.from(Number(received), systemContractSymbol)
-    $: depositAmount = Asset.from(Number(deposit), systemContractSymbol)
+        : Asset.from(Number(received), from?.symbol || systemContractSymbol)
+    $: depositAmount = Asset.from(Number(deposit), from?.symbol || systemContractSymbol)
 </script>
 
 <style type="scss">

@@ -11,6 +11,7 @@
     import type {TransferManager} from './managers/transferManager'
     import {transferManagers} from './managers'
     import type {EvmSession} from '~/lib/evm'
+    import { balances } from '~/stores/balances'
 
     export let handleContinue: () => void
     export let amount: string = ''
@@ -62,6 +63,8 @@
 
     let generatingOptions = false
 
+    $: balance = $balances.find((balance) => balance.tokenKey === from?.key)
+
     async function generateOptions(evmSession?: EvmSession) {
         if (!!generatingOptions) return
 
@@ -76,14 +79,10 @@
                 // Only displaying accounts that support the current chain
                 if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
 
-                let accountBalance
-
                 if (!TransferManagerClass.evmRequired || evmSession) {
                     const transferManager = new (TransferManagerClass as unknown as new (
                         ...args: any[]
                     ) => TransferManager)($activeSession!, evmSession)
-                    await transferManager.updateMainBalance()
-                    accountBalance = await transferManager.balance()
                 }
 
                 const token = $tokens.find(token => token.name === transferManagerData.tokenName)
@@ -111,13 +110,12 @@
     generateOptions()
 
     $: {
-        transferManager?.balance().then((balance) => {
-            console.log({ balance, feeAmount, amount })
-            availableToReceive = CoreAsset.from(
-                (balance?.value || 0) - (feeAmount?.value || 0),
-                balance?.symbol || '4,EOS'
-            )
-        })
+        const balance = $balances.find((balance) => from?.key === balance.tokenKey)
+        const balanceAmount = balance?.quantity
+        availableToReceive = balanceAmount && CoreAsset.from(
+            (balanceAmount?.value || 0) - (feeAmount?.value || 0),
+            balanceAmount?.symbol || '4,EOS'
+        )
     }
 
     // Continue when the user presses enter

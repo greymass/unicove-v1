@@ -34,26 +34,10 @@ export abstract class TransferManager {
         throw new Error('transfer() not implemented')
     }
 
-    transferFee(_amount?: string): Promise<Asset> {
+    transferFee(_amount?: string, tokenSymbol?: Asset.SymbolType): Promise<Asset> {
         return Promise.resolve(Asset.from(0, get(systemToken)?.symbol || '4,EOS'))
     }
     /* eslint-enable @typescript-eslint/no-unused-vars */
-
-    balance(tokenName?: string): Promise<Asset | undefined> {
-        throw new Error('balance() not implemented')
-    }
-
-    receivingBalance(): Promise<Asset | undefined> {
-        throw new Error('receivingBalance() not implemented')
-    }
-
-    updateBalances(): Promise<void> {
-        throw new Error('updateBalances() not implemented')
-    }
-
-    updateMainBalance(): Promise<void> {
-        throw new Error('updateMainBalance() not implemented')
-    }
 
     async convertToUsd(amount: number): Promise<string> {
         const systemTokenPrice = await waitForStoreValue(activePriceTicker)

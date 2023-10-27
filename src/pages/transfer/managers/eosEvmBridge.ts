@@ -4,10 +4,8 @@ import {get} from 'svelte/store'
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
 import {TransferManager} from './transferManager'
-import {currentAccountBalance, evmBalance} from '~/store'
 import {updateActiveAccount} from '~/stores/account-provider'
 import {updateEvmBalance} from '~/stores/balances-provider'
-import { balances } from '~/stores/balances'
 
 export class EosEvmBridge extends TransferManager {
     static supportedChains = ['eos']
@@ -21,7 +19,7 @@ export class EosEvmBridge extends TransferManager {
         return this.evmSession.address
     }
 
-    async transferFee() {
+    async transferFee(_amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
         const apiClient = getClient(this.nativeSession.chainId)
 
         let apiResponse
@@ -35,6 +33,8 @@ export class EosEvmBridge extends TransferManager {
         } catch (err) {
             throw new Error('Failed to get config table from eosio.evm. Full error: ' + err)
         }
+
+        console.log({rows: apiResponse.rows})
 
         const config = apiResponse.rows[0]
 
@@ -57,16 +57,6 @@ export class EosEvmBridge extends TransferManager {
                 data: action,
             },
         })
-    }
-
-    async balance(tokenName?: string) {
-        const balance = get(balances).find((b) => b.tokenKey === tokenName)
-
-        return balance?.quantity
-    }
-
-    async receivingBalance() {
-        return get(evmBalance)
     }
 
     async updateBalances() {

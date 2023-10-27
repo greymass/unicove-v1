@@ -2,18 +2,9 @@ import {Asset} from 'anchor-link'
 import {ethers} from 'ethers'
 
 import {convertToEvmAddress, getProvider} from '~/lib/evm'
-
 import {TransferManager} from './transferManager'
-import {updateEvmBalance} from '~/stores/balances-provider'
-import {updateActiveAccount} from '~/stores/account-provider'
-import {get} from 'svelte/store'
-import {currentAccountBalance, evmBalance} from '~/store'
 
 export class EvmEosBridge extends TransferManager {
-    static from = 'evm'
-    static fromDisplayString = 'EOS (EVM)'
-    static to = 'eos'
-    static toDisplayString = 'EOS'
     static supportedChains = ['eos']
     static evmRequired = true
 
@@ -25,12 +16,12 @@ export class EvmEosBridge extends TransferManager {
         return String(this.nativeSession.auth.actor)
     }
 
-    async transferFee(amount: string) {
+    async transferFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
         const {gas, gasPrice} = await this.estimateGas(amount)
 
-        const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
+        const feeAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
 
-        return Asset.fromFloat(Number(eosAmount), this.evmSession.getNativeToken().symbol)
+        return Asset.fromFloat(Number(amount), tokenSymbol)
     }
 
     async transfer(amount: string, _tokenSymbol: Asset.SymbolType, amountReceived?: string) {
@@ -69,9 +60,5 @@ export class EvmEosBridge extends TransferManager {
         })
 
         return {gas, gasPrice}
-    }
-
-    updateMainBalance() {
-        return updateEvmBalance()
     }
 }
