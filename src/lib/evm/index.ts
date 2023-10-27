@@ -13,8 +13,7 @@ export type AvailableEvms = 'eos-mainnet' | 'telos'
 export interface EvmChainConfig {
     chainId: string
     chainName: string
-    nativeCurrency: {name: string; symbol: string; decimals: number}
-    secondaryCurrencies?: {name: string; symbol: string; decimals: number; address: string}[]
+    tokens: {name: string; symbol: string; decimals: number; address?: string, nativeToken?: boolean}[]
     rpcUrls: string[]
     blockExplorerUrls: string[]
 }
@@ -31,8 +30,8 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
     eos: {
         chainId: '0x4571',
         chainName: 'EOS EVM Network',
-        nativeCurrency: {name: 'EOS', symbol: '4,EOS', decimals: 18},
-        secondaryCurrencies: [
+        tokens: [
+            {name: 'EOS', symbol: '4,EOS', decimals: 18, nativeToken: true},
             {name: 'USDT', symbol: '2,USDT', decimals: 2, address: '0x33B57dC70014FD7AA6e1ed3080eeD2B619632B8e' },
         ],
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
@@ -41,7 +40,7 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
     telos: {
         chainId: '0x28',
         chainName: 'Telos EVM Mainnet',
-        nativeCurrency: {name: 'Telos', symbol: '4,TLOS', decimals: 18},
+        tokens: [{name: 'Telos', symbol: '4,TLOS', decimals: 18, nativeToken: true}],
         rpcUrls: ['https://mainnet.telos.net/evm'],
         blockExplorerUrls: ['https://teloscan.io'],
     },
@@ -115,24 +114,57 @@ export class EvmSession {
             return this.getTelosEvmBalance()
         }
 
-        const evmChainConfig = evmChainConfigs[this.chainName]
-
-        let wei: BigNumber
-
+        let token
+        
         if (tokenName) {
-            const secondaryCurrency = evmChainConfig.secondaryCurrencies?.find(currency => currency.name === tokenName)
-            if (!secondaryCurrency) {
-                throw new Error('Token not found')
-            }
-            const contract = new ethers.Contract(secondaryCurrency?.address, erc20_abi);
-            wei = await contract.methods.balanceOf(this.address).call()
-            console.log({ wei })
+            token = this.getTokens()?.find(token => token.name === tokenName)
         } else {
-            wei = await this.signer.getBalance()
-            tokenName = evmChainConfig.nativeCurrency.name
+            token = this.getNativeToken()
         }
 
-        return Asset.from(formatToken(ethers.utils.formatEther(wei), tokenName))
+        if (!token) {
+            throw new Error('Token not found.')
+        }
+        
+        let wei: BigNumber
+
+        if (token?.address) {
+            const contract = new ethers.Contract(token.address, erc20_abi, this.signer);
+            console.log({ contract, signer: this.signer })
+            wei = await contract.balanceOf(this.address)
+        } else if (token?.nativeToken) {
+            wei = await this.signer.getBalance()
+        } else {
+            throw new Error('Non native token must have an address.')
+        }
+
+        return Asset.from(formatToken(ethers.utils.formatEther(wei), token.name))
+    }
+
+    getBalances() {
+        const evmChainConfig = evmChainConfigs[this.chainName]
+
+        return Promise.all(
+            evmChainConfig.tokens.map(async token => this.getBalance(token.name))
+        )
+    }
+
+    getTokens() {
+        const evmChainConfig = evmChainConfigs[this.chainName]
+
+        return evmChainConfig.tokens
+    }
+
+    getNativeToken() {
+        const evmChainConfig = evmChainConfigs[this.chainName]
+
+        const nativeToken = evmChainConfig.tokens?.find(token => token.nativeToken)
+
+        if (!nativeToken) {
+            throw new Error('Native token info not found.')
+        }
+
+        return nativeToken
     }
 
     async getTelosEvmBalance() {
@@ -142,15 +174,17 @@ export class EvmSession {
 
         const account = await getTelosEvmAccount(this.nativeAccountName)
 
+        const nativeTokenSymbol = this.chainConfig.tokens?.find(token => token.nativeToken)?.symbol
+
         if (!account) {
-            return Asset.from(0, this.chainConfig.nativeCurrency.symbol)
+            return Asset.from(0, nativeTokenSymbol!)
         }
 
         const bn = BigNumber.from(`0x${account.balance}`)
 
         return Asset.from(
             Number(ethers.utils.formatEther(bn)),
-            this.chainConfig.nativeCurrency.symbol
+            nativeTokenSymbol!
         )
     }
 }

@@ -46,7 +46,7 @@
         if (tokenOptions) {
             filteredTokens = tokenOptions.map(tokenOption => {
                 const token = $tokens?.find(token =>
-                    String(tokenOption.tokenName) === String(token.name) &&
+                    String(tokenOption.tokenKey) === String(token.key) &&
                     String(tokenOption.tokenContract) === String(token.contract)
                 )
 

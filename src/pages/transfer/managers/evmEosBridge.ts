@@ -30,7 +30,7 @@ export class EvmEosBridge extends TransferManager {
 
         const eosAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
 
-        return Asset.fromFloat(Number(eosAmount), this.evmSession.chainConfig.nativeCurrency.symbol)
+        return Asset.fromFloat(Number(eosAmount), this.evmSession.getNativeToken().symbol)
     }
 
     async transfer(amount: string, _tokenSymbol: Asset.SymbolType, amountReceived?: string) {

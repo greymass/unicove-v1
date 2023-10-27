@@ -8,7 +8,7 @@ import type {TransferManager} from './transferManager'
 
 interface TransferType {
     transferClass: typeof TransferManager
-    tokenName: NameType
+    tokenKey: string
     tokenContract: NameType
     from: string
     fromLabel: string
@@ -19,7 +19,7 @@ interface TransferType {
 export const transferManagers: {[key: string]: TransferType} = {
     'EOS - EOS (EVM)': {
         transferClass: EosEvmBridge,
-        tokenName: 'EOS',
+        tokenKey: 'EOS',
         tokenContract: 'eosio.token',
         from: 'eos',
         fromLabel: 'EOS',
@@ -28,7 +28,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'EOS (EVM) - EOS': {
         transferClass: EvmEosBridge,
-        tokenName: 'EOS',
+        tokenKey: 'EVM-EOS',
         tokenContract: 'eosio.token',
         from: 'evm',
         fromLabel: 'EOS (EVM)',
@@ -37,7 +37,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'USDT - USDT (EVM)': {
         transferClass: EosEvmBridge,
-        tokenName: 'USDT',
+        tokenKey: 'USDT',
         tokenContract: 'tethertether',
         from: 'usdt',
         fromLabel: 'USDT',
@@ -46,7 +46,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'USDT (EVM) - USDT': {
         transferClass: EvmEosBridge,
-        tokenName: 'USDT',
+        tokenKey: 'EVM-USDT',
         tokenContract: 'tethertether',
         from: 'evm',
         fromLabel: 'USDT (EVM)',
@@ -55,7 +55,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'TLOS - TLOS (EVM)': {
         transferClass: TelosEvmBridge,
-        tokenName: 'TLOS',
+        tokenKey: 'TLOS',
         tokenContract: 'tethertether',
         from: 'tlos',
         fromLabel: 'TLOS',
@@ -64,7 +64,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     },
     'TLOS (EVM) - TLOS': {
         transferClass: EvmTelosBridge,
-        tokenName: 'TLOS',
+        tokenKey: 'TLOS',
         tokenContract: 'tethertether',
         from: 'evm',
         fromLabel: 'TLOS (EVM)',

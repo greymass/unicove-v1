@@ -21,8 +21,8 @@ export interface Token {
 }
 
 export interface TokenOption {
-    tokenName: NameType
     tokenContract: NameType
+    tokenKey: string
     label?: string
 }
 

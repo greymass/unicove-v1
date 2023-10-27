@@ -1,4 +1,4 @@
-import {Asset, LinkSession} from 'anchor-link'
+import {Asset, LinkSession, Name} from 'anchor-link'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 
@@ -50,15 +50,20 @@ export async function updateBalances(session: LinkSession) {
                 // Fetch evm balances when applicable
                 const evmSession = await waitForStoreValue(activeEvmSession)
                 if (evmSession) {
-                    const evmBalance = await evmSession.getBalance()
-                    balances.push({
-                        key: 'evm',
-                        chainId: evmSession.chainId,
-                        account: evmSession.address,
-                        tokenKey: 'evm',
-                        quantity: Asset.from(evmBalance),
+                    const evmBalances = await evmSession.getBalances()
+
+                    evmBalances.forEach((balance) => {
+                        const tokenKey = `evm-${balance.symbol.code}`
+                        balances.push({
+                            key: tokenKey,
+                            chainId: session.chainId,
+                            account: Name.from('eosio.evm'),
+                            tokenKey,
+                            quantity: balance,
+                        })
                     })
                 }
+                console.log({ balances })
                 balancesProvider.set({
                     balances: balances,
                 })

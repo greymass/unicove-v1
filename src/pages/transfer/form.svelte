@@ -24,12 +24,12 @@
 
     let validAmount = false
 
-    function handleFromChange(token: Token) {
+    function handleFromChange(token: TokenOption) {
         resetForm() // reset form when changing from token
         from = token
     }
 
-    function handleToChange(token: Token) {
+    function handleToChange(token: TokenOption) {
         to = token
     }
 
@@ -87,7 +87,7 @@
                 }
 
                 fromOptions.push({
-                    tokenName: String(transferManagerData.tokenName),
+                    tokenKey: transferManagerData.tokenKey,
                     tokenContract: String(transferManagerData.tokenContract),
                     label: transferManagerData.fromLabel,
                 })
@@ -99,15 +99,13 @@
 
     $: {
         if (from) {
-            toOptions = fromOptions.filter((token) => token.tokenName !== from?.name)
+            toOptions = fromOptions.filter((token) => token.tokenKey !== from?.name)
         } else {
             toOptions = fromOptions
         }
     }
 
     generateOptions()
-
-    $: console.log({ fromOptions })
 
     $: {
         transferManager?.balance().then((balance) => {
