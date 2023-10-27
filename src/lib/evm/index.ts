@@ -7,11 +7,14 @@ import {Asset, Name, NameType} from 'anchor-link'
 import {BigNumber, ethers} from 'ethers'
 import {getClient} from '~/api-client'
 
+import erc20_abi from './abis/erc20.json'
+
 export type AvailableEvms = 'eos-mainnet' | 'telos'
 export interface EvmChainConfig {
     chainId: string
     chainName: string
     nativeCurrency: {name: string; symbol: string; decimals: number}
+    secondaryCurrencies?: {name: string; symbol: string; decimals: number; address: string}[]
     rpcUrls: string[]
     blockExplorerUrls: string[]
 }
@@ -29,6 +32,9 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
         chainId: '0x4571',
         chainName: 'EOS EVM Network',
         nativeCurrency: {name: 'EOS', symbol: '4,EOS', decimals: 18},
+        secondaryCurrencies: [
+            {name: 'USDT', symbol: '2,USDT', decimals: 2, address: '0x33B57dC70014FD7AA6e1ed3080eeD2B619632B8e' },
+        ],
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
     },
@@ -104,14 +110,27 @@ export class EvmSession {
         return this.signer.sendTransaction(tx)
     }
 
-    async getBalance() {
+    async getBalance(tokenName?: string) {
         if (this.chainName === 'telos') {
             return this.getTelosEvmBalance()
         }
 
-        const wei = await this.signer.getBalance()
+        const evmChainConfig = evmChainConfigs[this.chainName]
 
-        const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
+        let wei: BigNumber
+
+        if (tokenName) {
+            const secondaryCurrency = evmChainConfig.secondaryCurrencies?.find(currency => currency.name === tokenName)
+            if (!secondaryCurrency) {
+                throw new Error('Token not found')
+            }
+            const contract = new ethers.Contract(secondaryCurrency?.address, erc20_abi);
+            wei = await contract.methods.balanceOf(this.address).call()
+            console.log({ wei })
+        } else {
+            wei = await this.signer.getBalance()
+            tokenName = evmChainConfig.nativeCurrency.name
+        }
 
         return Asset.from(formatToken(ethers.utils.formatEther(wei), tokenName))
     }
