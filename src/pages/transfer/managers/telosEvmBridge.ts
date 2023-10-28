@@ -4,6 +4,7 @@ import {Asset, Name} from 'anchor-link'
 import {getTelosEvmAccount} from '~/lib/evm'
 
 export class TelosEvmBridge extends TransferManager {
+    static supportedChains = ['telos']
     static evmRequired = true
 
     get fromAddress() {

@@ -5,9 +5,11 @@
     import TokenImage from '~/components/elements/image/token.svelte'
     import {systemTokenKey} from '~/stores/tokens'
 
-    import type {TransferManager} from './managers/transferManager'
+    import type { TransferType } from './managers'
+    import type { TransferManager } from './managers/transferManager'
 
     export let transferManager: TransferManager
+    export let transferManagerData: TransferType
     export let depositAmount: Asset
     export let receivedAmount: Asset
     export let feeAmount: Asset | undefined
@@ -136,11 +138,11 @@
 
     <table>
         <tr>
-            <td>From {transferManager.fromDisplayString}</td>
+            <td>From {transferManagerData.fromLabel}</td>
             <td>{transferManager.fromAddress}</td>
         </tr>
         <tr>
-            <td>To {transferManager.toDisplayString}</td>
+            <td>To {transferManagerData.toLabel}</td>
             <td>{transferManager.toAddress}</td>
         </tr>
         <tr>

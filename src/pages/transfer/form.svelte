@@ -63,7 +63,13 @@
 
     let generatingOptions = false
 
+    $: console.log({ balances: $balances })
+
     $: balance = $balances.find((balance) => balance.tokenKey === from?.key)
+
+    $: console.log({ balance, from })
+
+    console.log({ tokens: $tokens })
 
     async function generateOptions(evmSession?: EvmSession) {
         if (!!generatingOptions) return
@@ -79,13 +85,10 @@
                 // Only displaying accounts that support the current chain
                 if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
 
-                if (!TransferManagerClass.evmRequired || evmSession) {
-                    const transferManager = new (TransferManagerClass as unknown as new (
-                        ...args: any[]
-                    ) => TransferManager)($activeSession!, evmSession)
-                }
-
-                const token = $tokens.find(token => token.name === transferManagerData.tokenName)
+                const token = $tokens?.find(token => 
+                    token.name === transferManagerData.tokenName &&
+                    String(token.contract) === transferManagerData.tokenContract &&
+                    token.chainId.equals($activeBlockchain?.chainId))
 
                 if (!token) {
                     console.error(`Token ${transferManagerData.tokenName} not found`)
@@ -107,10 +110,13 @@
         }
     }
 
-    generateOptions()
+    $: {
+        if ($tokens) {
+            generateOptions()
+        }
+    }
 
     $: {
-        const balance = $balances.find((balance) => from?.key === balance.tokenKey)
         const balanceAmount = balance?.quantity
         availableToReceive = balanceAmount && CoreAsset.from(
             (balanceAmount?.value || 0) - (feeAmount?.value || 0),

@@ -1,12 +1,10 @@
 import {Asset} from 'anchor-link'
 import type {LinkSession, TransactResult} from 'anchor-link'
 import type {ethers} from 'ethers'
-import {get} from 'svelte/store'
 
 import type {EvmSession} from '~/lib/evm'
 import {valueInFiat} from '~/lib/fiat'
 import {activePriceTicker, waitForStoreValue} from '~/store'
-import {systemToken} from '~/stores/tokens'
 
 export abstract class TransferManager {
     self: typeof TransferManager
@@ -35,7 +33,7 @@ export abstract class TransferManager {
     }
 
     transferFee(_amount?: string, tokenSymbol?: Asset.SymbolType): Promise<Asset> {
-        return Promise.resolve(Asset.from(0, get(systemToken)?.symbol || '4,EOS'))
+        return Promise.resolve(Asset.from(0, tokenSymbol|| '4,EOS'))
     }
     /* eslint-enable @typescript-eslint/no-unused-vars */
 

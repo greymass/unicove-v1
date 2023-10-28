@@ -10,7 +10,7 @@
     import Success from './success.svelte'
     import Error from './error.svelte'
     import {systemToken} from '~/stores/tokens'
-    import {transferManagers} from './managers'
+    import {TransferType, transferManagers} from './managers'
     import type {TransferManager} from './managers/transferManager'
     import {startEvmSession} from '~/lib/evm'
 
@@ -25,13 +25,16 @@
     let to: Token | undefined
     let transactResult: TransactResult | ethers.providers.TransactionResponse | undefined
     let transferFee: Asset | undefined
+    let transferManagerData: TransferType | undefined
     let transferManager: TransferManager | undefined
 
     $: systemContractSymbol = String($systemToken?.symbol)
     $: balance = $balances?.find((balance) => balance.tokenKey === from?.key)?.quantity
+    $: receivingBalance = $balances?.find((balance) => balance.tokenKey === to?.key)?.quantity
     $: {
-        const transferManagerData =
+        transferManagerData =
             from?.name && to?.name ? transferManagers[`${from.name} - ${to?.name}`] : undefined
+
         const TransferManagerClass = transferManagerData?.transferClass
 
         if (TransferManagerClass) {
@@ -51,7 +54,7 @@
         const transferFeeValue = transferFee?.value || 0
 
         received = (
-            (balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue - 0.0001)
+            (balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue)
         )?.toFixed(4)
     }
 
@@ -96,6 +99,7 @@
         try {
             transferFee = await transferManager?.transferFee(transferAmount || received, from?.symbol)
         } catch (error) {
+            console.log({ error })
             if (
                 !error?.data?.message?.includes('insufficient funds for transfer') &&
                 !error?.data?.message?.includes('gas required exceeds allowance')
@@ -177,17 +181,18 @@
                 bind:from
                 bind:to
             />
-        {:else if step === 'confirm' && receivedAmount}
+        {:else if step === 'confirm' && receivedAmount && transferManagerData}
             <Confirm
                 {depositAmount}
                 {receivedAmount}
                 {transferManager}
+                {transferManagerData}
                 feeAmount={transferFee}
                 handleConfirm={transfer}
                 {handleBack}
             />
         {:else if step === 'success' && transactResult}
-            <Success {transactResult} {transferManager} {handleBack} />
+            <Success {transactResult} {transferManager} {balance} {receivingBalance} {handleBack} />
         {/if}
     </div>
 </Page>

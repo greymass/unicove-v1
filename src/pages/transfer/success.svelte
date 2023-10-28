@@ -6,17 +6,21 @@
 
     import {activeBlockchain} from '~/store'
     import type {TransferManager} from './managers/transferManager'
+    import { updateBalances } from '~/stores/balances-provider'
+    import { activeSession } from '~/store'
 
     export let transferManager: TransferManager
     export let transactResult: TransactResult | ethers.providers.TransactionResponse
     export let handleBack: () => void
+    export let balance: Asset | undefined
+    export let receivingBalance: Asset | undefined
 
     let refreshInterval: NodeJS.Timeout
 
     async function awaitBalancesUpdate() {
         // Create a copy of the initial value
-        const initialSendingBalance = await transferManager.balance()
-        const initialReceivedBalance = await transferManager.receivingBalance()
+        const initialSendingBalance = balance
+        const initialReceivedBalance = receivingBalance
 
         if (!initialSendingBalance) return
         if (!initialReceivedBalance) return
@@ -27,8 +31,8 @@
 
         // Start an interval to continously monitor for changes to that value
         refreshInterval = setInterval(async () => {
-            currentSendingBalance = await transferManager.balance()
-            currentReceivedBalance = await transferManager.receivingBalance()
+            currentSendingBalance = balance
+            currentReceivedBalance = receivingBalance
 
             // If the balances changed, stop the interval
             if (
@@ -38,7 +42,7 @@
                 clearInterval(refreshInterval)
             }
             // Fetch the balances
-            transferManager.updateBalances()
+            updateBalances($activeSession!)
         }, 1000)
 
         // Timeout after 30 seconds

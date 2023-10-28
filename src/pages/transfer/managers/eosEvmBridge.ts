@@ -38,7 +38,9 @@ export class EosEvmBridge extends TransferManager {
 
         const config = apiResponse.rows[0]
 
-        return Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
+        const ingressBridgeFee = Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
+
+        return Asset.from(ingressBridgeFee.value, tokenSymbol)
     }
 
     transfer(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {

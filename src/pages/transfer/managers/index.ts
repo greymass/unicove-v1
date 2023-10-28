@@ -6,7 +6,7 @@ import {EvmEosBridge} from './evmEosBridge'
 import {TelosEvmBridge} from './telosEvmBridge'
 import type {TransferManager} from './transferManager'
 
-interface TransferType {
+export interface TransferType {
     transferClass: typeof TransferManager
     tokenName: string
     tokenContract: NameType
@@ -29,7 +29,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     'EOS (EVM) - EOS': {
         transferClass: EvmEosBridge,
         tokenName: 'EOS (EVM)',
-        tokenContract: 'eosio.token',
+        tokenContract: 'eosio.evm',
         from: 'evm',
         fromLabel: 'EOS (EVM)',
         to: 'eos',
@@ -47,7 +47,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     'USDT (EVM) - USDT': {
         transferClass: EvmEosBridge,
         tokenName: 'USDT (EVM)',
-        tokenContract: 'tethertether',
+        tokenContract: 'eosio.evm',
         from: 'evm',
         fromLabel: 'USDT (EVM)',
         to: 'usdt',
