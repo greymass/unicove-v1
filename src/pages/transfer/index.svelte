@@ -40,7 +40,7 @@
         if (TransferManagerClass) {
             transferManager = new (TransferManagerClass as unknown as new (
                 ...args: any[]
-            ) => TransferManager)($activeSession!, $activeEvmSession)
+            ) => TransferManager)($activeSession!, $activeEvmSession, transferManagerData)
         }
     }
 

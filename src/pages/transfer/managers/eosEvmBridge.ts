@@ -52,7 +52,7 @@ export class EosEvmBridge extends TransferManager {
         return this.nativeSession.transact({
             action: {
                 authorization: [this.nativeSession.auth],
-                account: Name.from('eosio.token'),
+                account: Name.from(this.transferData.tokenContract || 'eosio.token'),
                 name: Name.from('transfer'),
                 data: action,
             },

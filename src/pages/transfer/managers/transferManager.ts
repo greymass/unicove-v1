@@ -6,6 +6,7 @@ import type {EvmSession} from '~/lib/evm'
 import {valueInFiat} from '~/lib/fiat'
 import {activePriceTicker, waitForStoreValue} from '~/store'
 import { systemToken } from '~/stores/tokens'
+import type { TransferType } from './index'
 
 export abstract class TransferManager {
     self: typeof TransferManager
@@ -14,10 +15,13 @@ export abstract class TransferManager {
 
     readonly nativeSession: LinkSession
     readonly evmSession: EvmSession
+    readonly transferData: TransferType
 
-    constructor(nativeSession: LinkSession, evmSession: EvmSession) {
+    constructor(nativeSession: LinkSession, evmSession: EvmSession, transferData: TransferType) {
         this.nativeSession = nativeSession
         this.evmSession = evmSession
+        this.transferData = transferData
+
         this.self = this.constructor as typeof TransferManager
     }
 
