@@ -10,10 +10,18 @@ import {getClient} from '~/api-client'
 import erc20_abi from './data/erc20_abi.json'
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
+
+export interface EvmToken {
+    name: string;
+    symbol: string;
+    decimals: number;
+    address?: string,
+    nativeToken?: boolean
+}
 export interface EvmChainConfig {
     chainId: string
     chainName: string
-    tokens: {name: string; symbol: string; decimals: number; address?: string, nativeToken?: boolean}[]
+    tokens: EvmToken[]
     rpcUrls: string[]
     blockExplorerUrls: string[]
 }
@@ -79,6 +87,23 @@ export class EvmSession {
         return evmChainConfigs[this.chainName]
     }
 
+    erc20ContractBySymbol(tokenSymbol: Asset.SymbolType) {
+        const token = this.getTokens()?.find(token => token.symbol === String(tokenSymbol))
+
+        return token && this.erc20Contract(token)
+    }
+
+    erc20Contract(token: EvmToken) {
+        if (!token.address) {
+            return
+        }
+        return new ethers.Contract(token.address, erc20_abi, this.signer);
+    }
+
+    erc20Interface() {
+        return new ethers.utils.Interface(erc20_abi);
+    }
+
     static async from({chainName, nativeAccountName}: EvmSessionFromParams) {
         if (window.ethereum) {
             const evmChainConfig = evmChainConfigs[chainName]
@@ -128,11 +153,10 @@ export class EvmSession {
         
         let wei: BigNumber
 
-        if (token?.address) {
-            const contract = new ethers.Contract(token.address, erc20_abi, this.signer);
+        const contract = this.erc20Contract(token)
 
+        if (contract) {
             wei = await contract.balanceOf(this.address)
-           
         } else if (token?.nativeToken) {
             wei = await this.signer.getBalance()
         } else {

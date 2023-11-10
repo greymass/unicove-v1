@@ -1,4 +1,4 @@
-import {Asset} from 'anchor-link'
+import {Asset, PackedTransaction} from 'anchor-link'
 import {ethers} from 'ethers'
 
 import {convertToEvmAddress, getProvider} from '~/lib/evm'
@@ -16,67 +16,94 @@ export class EvmEosBridge extends TransferManager {
         return String(this.nativeSession.auth.actor)
     }
 
-    async transferFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
-        const {gas, gasPrice} = await this.estimateGas(amount)
+    async transferFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {        
+        const {gas, gasPrice} = await this.estimateGas(amount, tokenSymbol)
 
         const feeAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
 
-        return Asset.fromFloat(Number(amount), tokenSymbol)
+        return Asset.fromFloat(Number(feeAmount), tokenSymbol)
     }
 
-    async transfer(amount: string, _tokenSymbol: Asset.SymbolType, amountReceived?: string) {
-        const targetEvmAddress = convertToEvmAddress(String(this.nativeSession.auth.actor))
+    // async transfer(amount: string, tokenSymbol: Asset.SymbolType, amountReceived?: string) {
+    //     const amountToTransfer = amountReceived || amount;
+    
+    //     const { gas, gasPrice } = await this.estimateGas(amountToTransfer, tokenSymbol);
+    
+    //     const transaction = this.transactionParams(amountToTransfer, tokenSymbol);
+    
+    //     return this.evmSession.sendTransaction({
+    //         ...transaction,
+    //         gasPrice,
+    //         gasLimit: gas,
+    //     });
+    // }    
 
-        const amountToTransfer = amountReceived || amount
-
-        const {gas} = await this.estimateGas(amountToTransfer)
-
-        // In the case of an USDT transfer, we must construct the transaction differently here
-        // From EVM bridge FE:
-        //
-        // USDT
-        //   const fee = await this.erc20_contract().methods.egressFee().call()
-        //   let tx = {
-        //     from: this.address,
-        //     to: this.erc20_addr(),
-        //     value: fee,
-        //     gasPrice: this.gasPrice,
-        //     data: this.erc20_contract().methods.bridgeTransfer(this.addressEvm, this.transferValue, this.memo).encodeABI(),
-        //   }
-  
-        //   if (gaslimit != null) {
-        //     tx.gas = gaslimit;
-        //   }
-        //   return tx
-        //
-
+    async transfer(amount: string, tokenSymbol: Asset.SymbolType, amountReceived?: string) {   
+        const amountToTransfer = amountReceived || amount;
+    
+        const { gas } = await this.estimateGas(amountToTransfer);
+    
+        const transaction = await this.transactionParams(amountToTransfer, tokenSymbol);
+    
         return this.evmSession.sendTransaction({
-            from: this.evmSession.address,
-            to: targetEvmAddress,
-            value: ethers.utils.parseEther(amountToTransfer),
-            gasPrice: await getProvider().getGasPrice(),
+            ...transaction,
             gasLimit: gas,
-            data: ethers.utils.formatBytes32String(''),
-        })
+        });
     }
+    
 
-    private async estimateGas(amount: string) {
+    private async transactionParams(amount: string, tokenSymbol: Asset.SymbolType) {
+        const token = this.evmSession.getTokens().find((t) => t.symbol === String(tokenSymbol));
+    
+        if (!token) {
+            throw new Error(`Token ${tokenSymbol} not found`);
+        }
+
+        console.log({token, tokenSymbol})
+
+        const erc20Contract = this.evmSession.erc20Contract(token);
+    
+        let data;
+        let egressFee;
+
+        const targetEvmAddress = convertToEvmAddress(String(this.nativeSession.auth.actor));
+    
+        if (erc20Contract) {
+            const erc20Interface = this.evmSession.erc20Interface();
+
+            console.log({parsedAmount: Number(ethers.utils.parseEther(amount))})
+
+            // Correctly encode the bridgeTransfer function
+            data = erc20Interface.encodeFunctionData("bridgeTransfer", [targetEvmAddress, ethers.utils.parseUnits(amount, 'mwei'), '']);
+            
+            egressFee = await erc20Contract.egressFee();
+        } else {
+            data = ethers.utils.formatBytes32String('');
+        }
+
+        console.log({amount, egressFee: String(egressFee)})
+    
+        return {
+            from: this.evmSession.address,
+            to: token.address || targetEvmAddress,
+            value: erc20Contract ? egressFee || 0 : ethers.utils.formatEther(amount), // For ERC20 transfers, this is often 0
+            gasPrice: await getProvider().getGasPrice(),
+            data,
+        };
+    }
+    
+
+    private async estimateGas(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
         const provider = getProvider()
-
-        const targetEvmAddress = convertToEvmAddress(String(this.nativeSession.auth.actor))
 
         const gasPrice = await provider.getGasPrice()
 
         // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
         const reducedAmount = String(Number(amount) - 0.005)
 
-        const gas = await provider.estimateGas({
-            from: this.evmSession.address,
-            to: targetEvmAddress,
-            value: ethers.utils.parseEther(reducedAmount),
-            gasPrice,
-            data: ethers.utils.formatBytes32String(''),
-        })
+        const transaction = await this.transactionParams(reducedAmount, tokenSymbol)
+
+        const gas = await provider.estimateGas(transaction)
 
         return {gas, gasPrice}
     }

@@ -97,6 +97,7 @@
         }
 
         try {
+            console.log({from})
             transferFee = await transferManager?.transferFee(transferAmount || received, from?.symbol)
         } catch (error) {
             if (
