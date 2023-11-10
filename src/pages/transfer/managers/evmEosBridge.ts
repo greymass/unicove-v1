@@ -31,6 +31,25 @@ export class EvmEosBridge extends TransferManager {
 
         const {gas} = await this.estimateGas(amountToTransfer)
 
+        // In the case of an USDT transfer, we must construct the transaction differently here
+        // From EVM bridge FE:
+        //
+        // USDT
+        //   const fee = await this.erc20_contract().methods.egressFee().call()
+        //   let tx = {
+        //     from: this.address,
+        //     to: this.erc20_addr(),
+        //     value: fee,
+        //     gasPrice: this.gasPrice,
+        //     data: this.erc20_contract().methods.bridgeTransfer(this.addressEvm, this.transferValue, this.memo).encodeABI(),
+        //   }
+  
+        //   if (gaslimit != null) {
+        //     tx.gas = gaslimit;
+        //   }
+        //   return tx
+        //
+
         return this.evmSession.sendTransaction({
             from: this.evmSession.address,
             to: targetEvmAddress,

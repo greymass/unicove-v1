@@ -44,7 +44,7 @@ export class EosEvmBridge extends TransferManager {
     transfer(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
         const action = Transfer.from({
             from: this.nativeSession.auth.actor,
-            to: 'eosio.evm',
+            to: 'eosio.evmin',
             quantity: String(Asset.fromFloat(Number(amount), tokenSymbol)),
             memo: this.evmSession.address,
         })
