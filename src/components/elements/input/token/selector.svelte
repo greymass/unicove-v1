@@ -18,6 +18,7 @@
     export let tokenOptions: Token[] | undefined = undefined
     export let onTokenSelect: (token: Token) => void
     export let showTokensWithoutBalance: boolean = false
+    export let includeEvmTokens: boolean = false
 
     $: {
         if (defaultToken) {
@@ -48,6 +49,8 @@
         } else {
             filteredTokens =
                 $tokens?.filter((token) => {
+                    if (token.evm && !includeEvmTokens) return false
+
                     const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
                     let balanceExists
                     if (!showTokensWithoutBalance) {
@@ -60,6 +63,7 @@
                     const queryMatches = String(token.name)
                         .toLowerCase()
                         .includes(query.toLowerCase())
+                    
                     return (
                         blockchainMatches &&
                         (queryExists || queryMatches) &&

@@ -60,7 +60,7 @@
 
     async function transfer() {
         try {
-            transactResult = await transferManager?.transfer(deposit, received)
+            transactResult = await transferManager?.transfer(deposit, from!.symbol)
         } catch (error) {
             return (errorMessage = `Could not transfer. Error: ${
                 error.underlyingError?.message || JSON.stringify(error) === '{}'
@@ -99,7 +99,6 @@
         try {
             transferFee = await transferManager?.transferFee(transferAmount || received, from?.symbol)
         } catch (error) {
-            console.log({ error })
             if (
                 !error?.data?.message?.includes('insufficient funds for transfer') &&
                 !error?.data?.message?.includes('gas required exceeds allowance')

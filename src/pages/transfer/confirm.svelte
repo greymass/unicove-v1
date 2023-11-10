@@ -16,25 +16,26 @@
     export let handleConfirm: () => void
     export let handleBack: () => void
 
-    let depositAmountInUsd: string
-    let receivedAmountInUsd: string
-    let feeAmountInUsd: string
+    let depositAmountInUsd: string | undefined
+    let receivedAmountInUsd: string | undefined
+    let feeAmountInUsd: string | undefined
 
     function getUsdValues() {
-        transferManager.convertToUsd(depositAmount?.value).then((usdValue) => {
+        transferManager.convertToUsd(depositAmount?.value, transferManagerData?.tokenName).then((usdValue) => {
             depositAmountInUsd = usdValue
         })
 
-        transferManager.convertToUsd(receivedAmount?.value).then((usdValue) => {
+        transferManager.convertToUsd(receivedAmount?.value, transferManagerData?.tokenName).then((usdValue) => {
             receivedAmountInUsd = usdValue
         })
 
         if (feeAmount) {
-            transferManager.convertToUsd(feeAmount?.value).then((usdValue) => {
+            transferManager.convertToUsd(feeAmount?.value, transferManagerData?.tokenName).then((usdValue) => {
                 feeAmountInUsd = usdValue
             })
         }
     }
+
 
     getUsdValues()
 </script>

@@ -63,13 +63,7 @@
 
     let generatingOptions = false
 
-    $: console.log({ balances: $balances })
-
     $: balance = $balances.find((balance) => balance.tokenKey === from?.key)
-
-    $: console.log({ balance, from })
-
-    console.log({ tokens: $tokens })
 
     async function generateOptions(evmSession?: EvmSession) {
         if (!!generatingOptions) return

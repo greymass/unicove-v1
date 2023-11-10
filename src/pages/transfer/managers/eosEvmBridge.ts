@@ -34,8 +34,6 @@ export class EosEvmBridge extends TransferManager {
             throw new Error('Failed to get config table from eosio.evm. Full error: ' + err)
         }
 
-        console.log({rows: apiResponse.rows})
-
         const config = apiResponse.rows[0]
 
         const ingressBridgeFee = Asset.from(config.ingress_bridge_fee || '0.0000 EOS')

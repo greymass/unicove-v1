@@ -49,7 +49,7 @@ export async function updateBalances(session: LinkSession) {
             if (provider) {
                 const balances = await provider.fetchBalances(session.auth.actor)
                 // Fetch evm balances when applicable
-                const evmSession = await waitForStoreValue(activeEvmSession)
+                const evmSession = get(activeEvmSession)
                 if (evmSession) {
                     const evmBalances = await evmSession.getBalances()
 

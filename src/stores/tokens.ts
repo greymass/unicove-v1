@@ -9,7 +9,7 @@ import {activeBlockchain, activePriceTicker, activeSession} from '~/store'
 import {priceTicker} from '~/price-ticker'
 import {Balance, balances} from '~/stores/balances'
 
-import evmTokens from '../lib/evm/data/tokens.json'
+import EvmTokens from '../lib/evm/data/tokens.json'
 
 export interface Token {
     key: string
@@ -20,6 +20,7 @@ export interface Token {
     price?: number
     logo?: string
     balance?: Asset | string
+    evm?: boolean
 }
 
 export interface TokenKeyParams {
@@ -117,7 +118,7 @@ export function loadTokenMetadata(session: LinkSession) {
 
     const allTokens = [
         ...AntelopeTokens,
-        ...evmTokens,
+        ...EvmTokens,
     ]
 
     const chain = chainConfig(session.chainId)

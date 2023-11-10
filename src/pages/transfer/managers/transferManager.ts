@@ -5,13 +5,10 @@ import type {ethers} from 'ethers'
 import type {EvmSession} from '~/lib/evm'
 import {valueInFiat} from '~/lib/fiat'
 import {activePriceTicker, waitForStoreValue} from '~/store'
+import { systemToken } from '~/stores/tokens'
 
 export abstract class TransferManager {
     self: typeof TransferManager
-    static from: string
-    static to: string
-    static fromDisplayString: string
-    static toDisplayString: string
     static supportedChains: string[]
     static evmRequired: boolean = false
 
@@ -27,17 +24,24 @@ export abstract class TransferManager {
     /* eslint-disable @typescript-eslint/no-unused-vars */
     transfer(
         _amount: string,
-        _tokenSymibol: Asset.SymbolType
+        _tokenSymbol: Asset.SymbolType,
+        _amountReceived?: string
     ): Promise<TransactResult | ethers.providers.TransactionResponse> {
         throw new Error('transfer() not implemented')
     }
 
     transferFee(_amount?: string, tokenSymbol?: Asset.SymbolType): Promise<Asset> {
-        return Promise.resolve(Asset.from(0, tokenSymbol|| '4,EOS'))
+        return Promise.resolve(Asset.from(0, tokenSymbol || '4,EOS'))
     }
     /* eslint-enable @typescript-eslint/no-unused-vars */
 
-    async convertToUsd(amount: number): Promise<string> {
+    async convertToUsd(amount: number, token?: Asset.SymbolCodeType): Promise<string | undefined> {
+        const activeSystemToken = await waitForStoreValue(systemToken)
+
+        if (token && token !== activeSystemToken.symbol.code) {
+            return
+        }
+
         const systemTokenPrice = await waitForStoreValue(activePriceTicker)
 
         return valueInFiat(amount, systemTokenPrice)
@@ -54,22 +58,6 @@ export abstract class TransferManager {
 
     get toAddress(): string {
         throw new Error('toAddress() not implemented')
-    }
-
-    get from() {
-        return this.self.from
-    }
-
-    get to() {
-        return this.self.to
-    }
-
-    get fromDisplayString() {
-        return this.self.fromDisplayString
-    }
-
-    get toDisplayString() {
-        return this.self.toDisplayString
     }
 
     get supportedChains() {
