@@ -60,7 +60,7 @@
 
     async function transfer() {
         try {
-            transactResult = await transferManager?.transfer(sent, from!.symbol)
+            transactResult = await transferManager?.transfer(sent, from!.symbol, received)
         } catch (error) {
             return (errorMessage = `Could not transfer. Error: ${
                 error.underlyingError?.message || JSON.stringify(error) === '{}'
@@ -86,7 +86,7 @@
         await estimateTransferFee()
 
         if (transferFee?.symbol.equals(from?.symbol!)) {
-            sent = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(4)
+            sent = (parseFloat(received) + transferFee?.value || 0).toFixed(4)
         }
     }
 
@@ -129,7 +129,7 @@
     $: {
         if (transferFee && received !== '') {
             if (transferFee?.symbol.equals(from?.symbol!)) {
-                sent = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4))).toFixed(4)
+                sent = (parseFloat(received) + transferFee?.value || 0).toFixed(4)
             } else {
                 sent = received
             }
@@ -157,7 +157,7 @@
     // Eventually we may want to get the symbol from the transferManager instead of the systemToken
     $: sentAmount = isNaN(Number(sent))
         ? undefined
-        : Asset.from(Number(received), from?.symbol || systemContractSymbol)
+        : Asset.from(Number(sent), from?.symbol || systemContractSymbol)
     $: receivedAmount = received ? Asset.from(Number(received), from?.symbol || systemContractSymbol) : undefined
 </script>
 

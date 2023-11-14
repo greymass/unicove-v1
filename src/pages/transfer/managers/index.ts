@@ -65,7 +65,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     'TLOS (EVM) - TLOS': {
         transferClass: EvmTelosBridge,
         tokenName: 'TLOS (EVM)',
-        tokenContract: 'telos.evm',
+        tokenContract: 'eosio.evm',
         from: 'evm',
         fromLabel: 'TLOS (EVM)',
         to: 'tlos',

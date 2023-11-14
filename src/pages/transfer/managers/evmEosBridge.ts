@@ -16,28 +16,22 @@ export class EvmEosBridge extends TransferManager {
         return String(this.nativeSession.auth.actor)
     }
 
-    async transferFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {          
+    async transferFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {  
         const {gas, gasPrice, egressFee} = await this.estimateFee(amount, tokenSymbol)
 
         const feeAmount = Number(ethers.utils.formatEther(gasPrice)) * Number(gas)
 
-        const egressAmount = Number(ethers.utils.formatEther(egressFee))
+        const egressAmount = egressFee && Number(ethers.utils.formatEther(egressFee))
 
-        return Asset.fromFloat(Number(feeAmount) + Number(egressAmount) , '4,EOS')
+        return Asset.fromFloat(Number(feeAmount) + Number(egressAmount || 0) , '4,EOS')
     }  
 
     async transfer(amount: string, tokenSymbol: Asset.SymbolType, amountReceived?: string) {   
         const amountToTransfer = amountReceived || amount;
     
         const { gas } = await this.estimateFee(amountToTransfer, tokenSymbol);
-
-        console.log({gas})
-
-        console.log({tokenSymbol})
     
         const transaction = await this.transactionParams(amountToTransfer, tokenSymbol);
-
-        console.log({transaction})
     
         return this.evmSession.sendTransaction({
             ...transaction,
@@ -59,18 +53,12 @@ export class EvmEosBridge extends TransferManager {
         let egressFee;
 
         const targetEvmAddress = convertToEvmAddress(String(this.nativeSession.auth.actor));
-
-        console.log({targetEvmAddress, token, amount})
-
-        console.log({ units: ethers.utils.parseUnits(amount, 'mwei')})
     
         if (erc20Contract) {
             const erc20Interface = this.evmSession.erc20Interface();
 
             // Encode the bridgeTransfer function
             data = erc20Interface.encodeFunctionData("bridgeTransfer", [targetEvmAddress, ethers.utils.parseUnits(amount, 'mwei'), '']);
-
-            console.log({data})
             
             egressFee = await erc20Contract.egressFee();
         } else {
@@ -80,7 +68,7 @@ export class EvmEosBridge extends TransferManager {
         return {
             from: this.evmSession.address,
             to: token.address || targetEvmAddress,
-            value: erc20Contract ? egressFee || 0 : amount, // For ERC20 transfers, this is often 0
+            value: erc20Contract ? egressFee || 0 : ethers.utils.parseEther(amount),
             gasPrice: await getProvider().getGasPrice(),
             data,
         };
