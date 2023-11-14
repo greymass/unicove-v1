@@ -19,7 +19,11 @@ export class EvmEosBridge extends TransferManager {
     async transferFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {        
         const {gas, gasPrice} = await this.estimateGas(amount, tokenSymbol)
 
+        console.log({gas, gasPrice, gasN: Number(gas), gasPriceN: Number(gasPrice)})
+
         const feeAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
+
+        console.log({feeAmount})
 
         return Asset.fromFloat(Number(feeAmount), tokenSymbol)
     }
@@ -71,8 +75,10 @@ export class EvmEosBridge extends TransferManager {
         if (erc20Contract) {
             const erc20Interface = this.evmSession.erc20Interface();
 
-            console.log({parsedAmount: Number(ethers.utils.parseEther(amount))})
-
+            console.log({
+                targetEvmAddress,
+                amount: String(ethers.utils.parseUnits(amount, 'ether')),
+            })
             // Correctly encode the bridgeTransfer function
             data = erc20Interface.encodeFunctionData("bridgeTransfer", [targetEvmAddress, ethers.utils.parseUnits(amount, 'mwei'), '']);
             
@@ -81,12 +87,19 @@ export class EvmEosBridge extends TransferManager {
             data = ethers.utils.formatBytes32String('');
         }
 
-        console.log({amount, egressFee: String(egressFee)})
+        console.log({
+            token,
+            from: this.evmSession.address,
+            to: token.address || targetEvmAddress,
+            value: String(erc20Contract ? egressFee || 0 : amount), // For ERC20 transfers, this is often 0
+            gasPrice: String(await getProvider().getGasPrice()),
+            data,
+        })
     
         return {
             from: this.evmSession.address,
             to: token.address || targetEvmAddress,
-            value: erc20Contract ? egressFee || 0 : ethers.utils.formatEther(amount), // For ERC20 transfers, this is often 0
+            value: erc20Contract ? egressFee || 0 : amount, // For ERC20 transfers, this is often 0
             gasPrice: await getProvider().getGasPrice(),
             data,
         };
@@ -99,11 +112,13 @@ export class EvmEosBridge extends TransferManager {
         const gasPrice = await provider.getGasPrice()
 
         // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
-        const reducedAmount = String(Number(amount) - 0.005)
+        const reducedAmount = String(Number(amount))
 
         const transaction = await this.transactionParams(reducedAmount, tokenSymbol)
 
         const gas = await provider.estimateGas(transaction)
+
+        console.log({ gas })
 
         return {gas, gasPrice}
     }
