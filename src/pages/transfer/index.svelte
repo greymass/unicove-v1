@@ -155,10 +155,10 @@
     }
 
     // Eventually we may want to get the symbol from the transferManager instead of the systemToken
-    $: sentAmount = isNaN(Number(received))
+    $: sentAmount = isNaN(Number(sent))
         ? undefined
         : Asset.from(Number(received), from?.symbol || systemContractSymbol)
-    $: receivedAmount = sent ? Asset.from(Number(sent), from?.symbol || systemContractSymbol) : undefined
+    $: receivedAmount = received ? Asset.from(Number(received), from?.symbol || systemContractSymbol) : undefined
 </script>
 
 <style type="scss">

@@ -29,9 +29,11 @@ export class EvmEosBridge extends TransferManager {
     async transfer(amount: string, tokenSymbol: Asset.SymbolType, amountReceived?: string) {   
         const amountToTransfer = amountReceived || amount;
     
-        const { gas } = await this.estimateFee(amountToTransfer);
+        const { gas } = await this.estimateFee(amountToTransfer, tokenSymbol);
 
         console.log({gas})
+
+        console.log({tokenSymbol})
     
         const transaction = await this.transactionParams(amountToTransfer, tokenSymbol);
 

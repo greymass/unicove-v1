@@ -188,7 +188,7 @@
                         {receivedAmount}
                     </div>
                     <div class="fiat-value">
-                        {sentAmountInUsd ? `~ ${sentAmountInUsd}` : ''}
+                        {receivedAmountInUsd ? `~ ${receivedAmountInUsd}` : ''}
                     </div>
                 </td>
             </tr>
