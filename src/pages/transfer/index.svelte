@@ -152,7 +152,7 @@
     }
 
     // Eventually we may want to get the symbol from the transferManager instead of the systemToken
-    $: receivedAmount = isNaN(Number(received))
+    $: sentAmount = isNaN(Number(received))
         ? undefined
         : Asset.from(Number(received), from?.symbol || systemContractSymbol)
     $: depositAmount = Asset.from(Number(deposit), from?.symbol || systemContractSymbol)
@@ -173,7 +173,7 @@
             <Form
                 handleContinue={submitForm}
                 {depositAmount}
-                {receivedAmount}
+                {sentAmount}
                 {transferManager}
                 {useEntireBalance}
                 bind:feeAmount={transferFee}
@@ -181,10 +181,10 @@
                 bind:from
                 bind:to
             />
-        {:else if step === 'confirm' && receivedAmount && transferManagerData}
+        {:else if step === 'confirm' && sentAmount && transferManagerData}
             <Confirm
                 {depositAmount}
-                {receivedAmount}
+                {sentAmount}
                 {transferManager}
                 {transferManagerData}
                 feeAmount={transferFee}

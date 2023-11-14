@@ -3,7 +3,7 @@
 
     import Button from '~/components/elements/button.svelte'
     import TokenImage from '~/components/elements/image/token.svelte'
-    import {systemTokenKey} from '~/stores/tokens'
+    import {systemToken, tokens} from '~/stores/tokens'
 
     import type { TransferType } from './managers'
     import type { TransferManager } from './managers/transferManager'
@@ -11,13 +11,13 @@
     export let transferManager: TransferManager
     export let transferManagerData: TransferType
     export let depositAmount: Asset
-    export let receivedAmount: Asset
+    export let sentAmount: Asset
     export let feeAmount: Asset | undefined
     export let handleConfirm: () => void
     export let handleBack: () => void
 
     let depositAmountInUsd: string | undefined
-    let receivedAmountInUsd: string | undefined
+    let sentAmountInUsd: string | undefined
     let feeAmountInUsd: string | undefined
 
     function getUsdValues() {
@@ -25,8 +25,8 @@
             depositAmountInUsd = usdValue
         })
 
-        transferManager.convertToUsd(receivedAmount?.value, transferManagerData?.tokenName).then((usdValue) => {
-            receivedAmountInUsd = usdValue
+        transferManager.convertToUsd(sentAmount?.value, transferManagerData?.tokenName).then((usdValue) => {
+            sentAmountInUsd = usdValue
         })
 
         if (feeAmount) {
@@ -36,8 +36,11 @@
         }
     }
 
-
     getUsdValues()
+
+    $: transferToken = ($tokens.find((token) => token.name === transferManagerData.tokenName) || $systemToken)!
+    $: feeToken = ($tokens.find((token) => token.symbol === feeAmount?.symbol) || $systemToken)!
+    $: feeSymbol = feeAmount?.symbol
 </script>
 
 <style type="scss">
@@ -146,28 +149,30 @@
             <td>To {transferManagerData.toLabel}</td>
             <td>{transferManager.toAddress}</td>
         </tr>
-        <tr>
-            <td>Deposit Amount</td>
-            <td>
-                <div>
-                    <div class="image-container">
-                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+        {#if depositAmount}
+            <tr>
+                <td>Deposit Amount</td>
+                <td>
+                    <div>
+                        <div class="image-container">
+                            <TokenImage width="20" height="20" tokenKey={transferToken.key} />
+                        </div>
+                        {depositAmount}
                     </div>
-                    {depositAmount}
-                </div>
-                <div class="fiat-value">
-                    {depositAmountInUsd ? `~ ${depositAmountInUsd}` : ''}
-                </div>
-            </td>
-        </tr>
+                    <div class="fiat-value">
+                        {depositAmountInUsd ? `~ ${depositAmountInUsd}` : ''}
+                    </div>
+                </td>
+            </tr>
+        {/if}
         <tr>
             <td>Fee Amount</td>
             <td>
                 <div>
                     <div class="image-container">
-                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+                        <TokenImage width="20" height="20" tokenKey={feeToken.key} />
                     </div>
-                    {feeAmount || `0.0000 ${$systemTokenKey}`}
+                    {feeAmount || `0.0000 ${feeSymbol || $systemToken?.symbol}`}
                 </div>
                 <div class="fiat-value">
                     {feeAmountInUsd ? `~ ${feeAmountInUsd}` : ''}
@@ -179,12 +184,12 @@
             <td>
                 <div>
                     <div class="image-container">
-                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+                        <TokenImage width="20" height="20" tokenKey={transferToken.key} />
                     </div>
-                    {receivedAmount}
+                    {sentAmount}
                 </div>
                 <div class="fiat-value">
-                    {receivedAmountInUsd ? `~ ${receivedAmountInUsd}` : ''}
+                    {sentAmountInUsd ? `~ ${sentAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>

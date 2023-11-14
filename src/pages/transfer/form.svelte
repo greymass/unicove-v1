@@ -20,7 +20,7 @@
     export let transferManager: TransferManager | undefined
     export let feeAmount: CoreAsset | undefined
     export let depositAmount: CoreAsset | undefined
-    export let receivedAmount: CoreAsset | undefined
+    export let sentAmount: CoreAsset | undefined
     export let useEntireBalance: () => void
 
     let validAmount = false
@@ -112,8 +112,10 @@
 
     $: {
         const balanceAmount = balance?.quantity
+        const feeIsInSameToken = String(feeAmount?.symbol) === String(from?.symbol)
+        const valueAvailableToReceive = (balanceAmount?.value || 0) - (feeIsInSameToken ? feeAmount?.value || 0 : 0)
         availableToReceive = balanceAmount && CoreAsset.from(
-            (balanceAmount?.value || 0) - (feeAmount?.value || 0),
+            valueAvailableToReceive,
             balanceAmount?.symbol || '4,EOS'
         )
     }
@@ -243,16 +245,25 @@
                         tokenOptions={toOptions}
                     />
                 </div>
-                {#if receivedAmount && receivedAmount.value > 0 && feeAmount && feeAmount.value > 0}
+                {#if sentAmount && sentAmount.value > 0 && feeAmount && feeAmount.value > 0}
+                    {#if feeAmount.symbol.equals(sentAmount.symbol)}
+                        <div class="label-container">
+                            <Label align="left">Amount Received: {String(sentAmount)}</Label>
+                        </div>
+                        <div class="label-container">
+                            <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
+                        </div>
+                        <div class="label-container">
+                            <Label align="left">Total Transferred: {String(depositAmount)}</Label>
+                        </div>
+                    {:else}
                     <div class="label-container">
-                        <Label align="left">Amount Received: {String(receivedAmount)}</Label>
+                        <Label align="left">Amount Converted: {String(sentAmount)}</Label>
                     </div>
                     <div class="label-container">
                         <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
                     </div>
-                    <div class="label-container">
-                        <Label align="left">Total transferred: {String(depositAmount)}</Label>
-                    </div>
+                    {/if}
                 {/if}
             </div>
         </div>

@@ -8,6 +8,7 @@ import {BigNumber, ethers} from 'ethers'
 import {getClient} from '~/api-client'
 
 import erc20_abi from './data/erc20_abi.json'
+import type { Token } from '~/stores/tokens'
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
 
@@ -142,7 +143,7 @@ export class EvmSession {
         let token
         
         if (tokenName) {
-            token = this.getTokens()?.find(token => token.name === tokenName)
+            token = this.getToken(tokenName)
         } else {
             token = this.getNativeToken()
         }
@@ -163,13 +164,7 @@ export class EvmSession {
             throw new Error('Non native token must have an address.')
         }
 
-        const decimals = token.decimals
-
-        if (token.decimals === 18) {
-            return Asset.from(Number(ethers.utils.formatEther(wei)), token.symbol)
-        } else {
-            return Asset.from(fromWei(wei, decimals), token.symbol)
-        }
+        return weiToAmount(wei, token)
     }
 
     getBalances() {
@@ -184,6 +179,17 @@ export class EvmSession {
         const evmChainConfig = evmChainConfigs[this.chainName]
 
         return evmChainConfig.tokens
+    }
+
+    getToken(tokenSymbolOrCode: Asset.SymbolType | Asset.SymbolCodeType) {
+        console.log({tokenSymbolOrCode})
+        const token = this.getTokens()?.find(token => token.symbol === String(tokenSymbolOrCode) || token.name === String(tokenSymbolOrCode))
+
+        if (!token) {
+            throw new Error(`Token "${tokenSymbolOrCode}" not found.`)
+        }
+
+        return token
     }
 
     getNativeToken() {
@@ -375,6 +381,14 @@ export async function startEvmSession(): Promise<EvmSession | undefined> {
     return evmSession
 }
 
+export function weiToAmount(wei: BigNumber, token: EvmToken) {
+    return Asset.from(fromWei(wei, token.decimals), token.symbol)
+}
+
 export function fromWei(wei: BigNumber, decimals: number) {
-    return wei.toNumber() / Math.pow(10, decimals);
+    if (decimals === 18) {
+        return Number(ethers.utils.formatEther(wei))
+    } else {
+        return wei.toNumber() / Math.pow(10, decimals);
+    }
 }

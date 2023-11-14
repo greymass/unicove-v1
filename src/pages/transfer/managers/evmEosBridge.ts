@@ -1,7 +1,7 @@
 import {Asset, PackedTransaction} from 'anchor-link'
 import {ethers} from 'ethers'
 
-import {convertToEvmAddress, getProvider} from '~/lib/evm'
+import {convertToEvmAddress, fromWei, getProvider, weiToAmount} from '~/lib/evm'
 import {TransferManager} from './transferManager'
 
 export class EvmEosBridge extends TransferManager {
@@ -16,16 +16,14 @@ export class EvmEosBridge extends TransferManager {
         return String(this.nativeSession.auth.actor)
     }
 
-    async transferFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {        
-        const {gas, gasPrice} = await this.estimateGas(amount, tokenSymbol)
+    async transferFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {          
+        const {gas, gasPrice, egressFee} = await this.estimateFee(amount, tokenSymbol)
 
-        console.log({gas, gasPrice, gasN: Number(gas), gasPriceN: Number(gasPrice)})
+        const feeAmount = Number(ethers.utils.formatEther(gasPrice)) * Number(gas)
 
-        const feeAmount = ethers.utils.formatEther(Number(gas) * Number(gasPrice))
+        const egressAmount = Number(ethers.utils.formatEther(egressFee))
 
-        console.log({feeAmount})
-
-        return Asset.fromFloat(Number(feeAmount), tokenSymbol)
+        return Asset.fromFloat(Number(feeAmount) + Number(egressAmount) , '4,EOS')
     }
 
     // async transfer(amount: string, tokenSymbol: Asset.SymbolType, amountReceived?: string) {
@@ -45,7 +43,7 @@ export class EvmEosBridge extends TransferManager {
     async transfer(amount: string, tokenSymbol: Asset.SymbolType, amountReceived?: string) {   
         const amountToTransfer = amountReceived || amount;
     
-        const { gas } = await this.estimateGas(amountToTransfer);
+        const { gas } = await this.estimateFee(amountToTransfer);
     
         const transaction = await this.transactionParams(amountToTransfer, tokenSymbol);
     
@@ -86,15 +84,6 @@ export class EvmEosBridge extends TransferManager {
         } else {
             data = ethers.utils.formatBytes32String('');
         }
-
-        console.log({
-            token,
-            from: this.evmSession.address,
-            to: token.address || targetEvmAddress,
-            value: String(erc20Contract ? egressFee || 0 : amount), // For ERC20 transfers, this is often 0
-            gasPrice: String(await getProvider().getGasPrice()),
-            data,
-        })
     
         return {
             from: this.evmSession.address,
@@ -106,20 +95,25 @@ export class EvmEosBridge extends TransferManager {
     }
     
 
-    private async estimateGas(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
+    private async estimateFee(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
+        const token = this.evmSession.getToken(tokenSymbol);
+
         const provider = getProvider()
 
         const gasPrice = await provider.getGasPrice()
 
-        // Reducing the amount by 0.005 EOS to avoid getting an error when entire balance is sent. Proper amount is calculated once the gas fee is known.
-        const reducedAmount = String(Number(amount))
-
-        const transaction = await this.transactionParams(reducedAmount, tokenSymbol)
+        const transaction = await this.transactionParams(amount, tokenSymbol)
 
         const gas = await provider.estimateGas(transaction)
 
-        console.log({ gas })
+        let egressFee
 
-        return {gas, gasPrice}
+        if (token.address) {
+            egressFee = transaction.value
+        }
+        
+        console.log({ gas, egressFee })
+
+        return {gas, gasPrice, egressFee}
     }
 }
