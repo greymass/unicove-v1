@@ -182,7 +182,6 @@ export class EvmSession {
     }
 
     getToken(tokenSymbolOrCode: Asset.SymbolType | Asset.SymbolCodeType) {
-        console.log({tokenSymbolOrCode})
         const token = this.getTokens()?.find(token => token.symbol === String(tokenSymbolOrCode) || token.name === String(tokenSymbolOrCode))
 
         if (!token) {

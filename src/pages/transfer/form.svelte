@@ -19,8 +19,8 @@
     export let to: Token | undefined
     export let transferManager: TransferManager | undefined
     export let feeAmount: CoreAsset | undefined
-    export let depositAmount: CoreAsset | undefined
     export let sentAmount: CoreAsset | undefined
+    export let receivedAmount: CoreAsset | undefined
     export let useEntireBalance: () => void
 
     let validAmount = false
@@ -248,21 +248,21 @@
                 {#if sentAmount && sentAmount.value > 0 && feeAmount && feeAmount.value > 0}
                     {#if feeAmount.symbol.equals(sentAmount.symbol)}
                         <div class="label-container">
-                            <Label align="left">Amount Received: {String(sentAmount)}</Label>
+                            <Label align="left">Amount Received: {String(receivedAmount)}</Label>
                         </div>
                         <div class="label-container">
                             <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
                         </div>
                         <div class="label-container">
-                            <Label align="left">Total Transferred: {String(depositAmount)}</Label>
+                            <Label align="left">Total Transferred: {String(sentAmount)}</Label>
                         </div>
                     {:else}
-                    <div class="label-container">
-                        <Label align="left">Amount Converted: {String(sentAmount)}</Label>
-                    </div>
-                    <div class="label-container">
-                        <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
-                    </div>
+                        <div class="label-container">
+                            <Label align="left">Amount Sent: {String(sentAmount)}</Label>
+                        </div>
+                        <div class="label-container">
+                            <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
+                        </div>
                     {/if}
                 {/if}
             </div>

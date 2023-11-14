@@ -18,7 +18,7 @@
     import { balances } from '~/stores/balances'
 
     let step = 'form'
-    let deposit: string = ''
+    let sent: string = ''
     let received: string = ''
     let errorMessage: string | undefined
     let from: Token | undefined
@@ -60,7 +60,7 @@
 
     async function transfer() {
         try {
-            transactResult = await transferManager?.transfer(deposit, from!.symbol)
+            transactResult = await transferManager?.transfer(sent, from!.symbol)
         } catch (error) {
             return (errorMessage = `Could not transfer. Error: ${
                 error.underlyingError?.message || JSON.stringify(error) === '{}'
@@ -76,7 +76,7 @@
         step = 'form'
         errorMessage = undefined
         transactResult = undefined
-        deposit = ''
+        sent = ''
         received = ''
     }
 
@@ -85,9 +85,9 @@
 
         await estimateTransferFee()
 
-        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(
-            4
-        )
+        if (transferFee?.symbol.equals(from?.symbol!)) {
+            sent = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(4)
+        }
     }
 
     async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
@@ -97,7 +97,6 @@
         }
 
         try {
-            console.log({from})
             transferFee = await transferManager?.transferFee(transferAmount || received, from?.symbol)
         } catch (error) {
             if (
@@ -129,7 +128,11 @@
 
     $: {
         if (transferFee && received !== '') {
-            deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4))).toFixed(4)
+            if (transferFee?.symbol.equals(from?.symbol!)) {
+                sent = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4))).toFixed(4)
+            } else {
+                sent = received
+            }
         }
     }
 
@@ -155,7 +158,7 @@
     $: sentAmount = isNaN(Number(received))
         ? undefined
         : Asset.from(Number(received), from?.symbol || systemContractSymbol)
-    $: depositAmount = Asset.from(Number(deposit), from?.symbol || systemContractSymbol)
+    $: receivedAmount = sent ? Asset.from(Number(sent), from?.symbol || systemContractSymbol) : undefined
 </script>
 
 <style type="scss">
@@ -169,11 +172,11 @@
     <div class="container">
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
-        {:else if step === 'form' || !transferManager || !deposit || !received}
+        {:else if step === 'form' || !transferManager || !sent || !received}
             <Form
                 handleContinue={submitForm}
-                {depositAmount}
                 {sentAmount}
+                {receivedAmount}
                 {transferManager}
                 {useEntireBalance}
                 bind:feeAmount={transferFee}
@@ -181,10 +184,10 @@
                 bind:from
                 bind:to
             />
-        {:else if step === 'confirm' && sentAmount && transferManagerData}
+        {:else if step === 'confirm' && sentAmount && receivedAmount && transferManagerData}
             <Confirm
-                {depositAmount}
                 {sentAmount}
+                {receivedAmount}
                 {transferManager}
                 {transferManagerData}
                 feeAmount={transferFee}
