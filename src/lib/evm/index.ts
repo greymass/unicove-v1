@@ -8,15 +8,14 @@ import {BigNumber, ethers} from 'ethers'
 import {getClient} from '~/api-client'
 
 import erc20_abi from './data/erc20_abi.json'
-import type { Token } from '~/stores/tokens'
 
 export type AvailableEvms = 'eos-mainnet' | 'telos'
 
 export interface EvmToken {
-    name: string;
-    symbol: string;
-    decimals: number;
-    address?: string,
+    name: string
+    symbol: string
+    decimals: number
+    address?: string
     nativeToken?: boolean
 }
 export interface EvmChainConfig {
@@ -41,7 +40,12 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
         chainName: 'EOS EVM Network',
         tokens: [
             {name: 'EOS', symbol: '4,EOS', decimals: 18, nativeToken: true},
-            {name: 'USDT', symbol: '4,USDT', decimals: 6, address: '0x33B57dC70014FD7AA6e1ed3080eeD2B619632B8e'  },
+            {
+                name: 'USDT',
+                symbol: '4,USDT',
+                decimals: 6,
+                address: '0x33B57dC70014FD7AA6e1ed3080eeD2B619632B8e',
+            },
         ],
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
@@ -89,7 +93,7 @@ export class EvmSession {
     }
 
     erc20ContractBySymbol(tokenSymbol: Asset.SymbolType) {
-        const token = this.getTokens()?.find(token => token.symbol === String(tokenSymbol))
+        const token = this.getTokens()?.find((token) => token.symbol === String(tokenSymbol))
 
         return token && this.erc20Contract(token)
     }
@@ -98,11 +102,11 @@ export class EvmSession {
         if (!token.address) {
             return
         }
-        return new ethers.Contract(token.address, erc20_abi, this.signer);
+        return new ethers.Contract(token.address, erc20_abi, this.signer)
     }
 
     erc20Interface() {
-        return new ethers.utils.Interface(erc20_abi);
+        return new ethers.utils.Interface(erc20_abi)
     }
 
     static async from({chainName, nativeAccountName}: EvmSessionFromParams) {
@@ -141,7 +145,7 @@ export class EvmSession {
         }
 
         let token
-        
+
         if (tokenName) {
             token = this.getToken(tokenName)
         } else {
@@ -151,7 +155,7 @@ export class EvmSession {
         if (!token) {
             throw new Error('Token not found.')
         }
-        
+
         let wei: BigNumber
 
         const contract = this.erc20Contract(token)
@@ -170,9 +174,7 @@ export class EvmSession {
     getBalances() {
         const evmChainConfig = evmChainConfigs[this.chainName]
 
-        return Promise.all(
-            evmChainConfig.tokens.map(async token => this.getBalance(token.name))
-        )
+        return Promise.all(evmChainConfig.tokens.map(async (token) => this.getBalance(token.name)))
     }
 
     getTokens() {
@@ -182,7 +184,11 @@ export class EvmSession {
     }
 
     getToken(tokenSymbolOrCode: Asset.SymbolType | Asset.SymbolCodeType) {
-        const token = this.getTokens()?.find(token => token.symbol === String(tokenSymbolOrCode) || token.name === String(tokenSymbolOrCode))
+        const token = this.getTokens()?.find(
+            (token) =>
+                token.symbol === String(tokenSymbolOrCode) ||
+                token.name === String(tokenSymbolOrCode)
+        )
 
         if (!token) {
             throw new Error(`Token "${tokenSymbolOrCode}" not found.`)
@@ -194,7 +200,7 @@ export class EvmSession {
     getNativeToken() {
         const evmChainConfig = evmChainConfigs[this.chainName]
 
-        const nativeToken = evmChainConfig.tokens?.find(token => token.nativeToken)
+        const nativeToken = evmChainConfig.tokens?.find((token) => token.nativeToken)
 
         if (!nativeToken) {
             throw new Error('Native token info not found.')
@@ -210,7 +216,9 @@ export class EvmSession {
 
         const account = await getTelosEvmAccount(this.nativeAccountName)
 
-        const nativeTokenSymbol = this.chainConfig.tokens?.find(token => token.nativeToken)?.symbol
+        const nativeTokenSymbol = this.chainConfig.tokens?.find(
+            (token) => token.nativeToken
+        )?.symbol
 
         if (!account) {
             return Asset.from(0, nativeTokenSymbol!)
@@ -218,10 +226,7 @@ export class EvmSession {
 
         const bn = BigNumber.from(`0x${account.balance}`)
 
-        return Asset.from(
-            Number(ethers.utils.formatEther(bn)),
-            nativeTokenSymbol!
-        )
+        return Asset.from(Number(ethers.utils.formatEther(bn)), nativeTokenSymbol!)
     }
 }
 
@@ -264,10 +269,6 @@ export function convertToEvmAddress(eosAccountName: string): string {
         throw new Error('This CEX has not fully support the EOS-EVM bridge yet.')
     }
     return convertToEthAddress(eosAccountName)
-}
-
-function formatToken(amount: string, tokenSymbol: string) {
-    return `${Number(amount).toFixed(4)} ${tokenSymbol}`
 }
 
 export async function switchNetwork(evmChainConfig: EvmChainConfig) {
@@ -388,6 +389,6 @@ export function fromWei(wei: BigNumber, decimals: number) {
     if (decimals === 18) {
         return Number(ethers.utils.formatEther(wei))
     } else {
-        return wei.toNumber() / Math.pow(10, decimals);
+        return wei.toNumber() / Math.pow(10, decimals)
     }
 }

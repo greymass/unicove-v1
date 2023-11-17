@@ -1,4 +1,4 @@
-import type { NameType } from 'anchor-link'
+import type {NameType} from 'anchor-link'
 
 import {EvmTelosBridge} from './evmTelosBridge'
 import {EosEvmBridge} from './eosEvmBridge'

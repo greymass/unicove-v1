@@ -1,5 +1,4 @@
 import {Asset, Name} from 'anchor-link'
-import {get} from 'svelte/store'
 
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'

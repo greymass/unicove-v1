@@ -61,7 +61,7 @@ export function makeTokenKey(token: TokenKeyParams): string {
         .join('-')
         .replace(/[()]/g, '')
         .replace(/\s/g, '-')
-        .toLowerCase();
+        .toLowerCase()
 }
 
 export const systemTokenKey: Readable<string> = derived(activeBlockchain, ($activeBlockchain) => {
@@ -116,10 +116,7 @@ export function loadTokenMetadata(session: LinkSession) {
     const sysToken = createTokenFromChainId(session.chainId, get(activePriceTicker))
     records.push(sysToken)
 
-    const allTokens = [
-        ...AntelopeTokens,
-        ...EvmTokens,
-    ]
+    const allTokens = [...AntelopeTokens, ...EvmTokens]
 
     const chain = chainConfig(session.chainId)
 
@@ -135,7 +132,10 @@ export function loadTokenMetadata(session: LinkSession) {
                     logo: t.metadata.logo,
                 }
 
-                if (token.symbol.equals(sysToken.symbol) && token.name !== `${sysToken.name} (EVM)`) {
+                if (
+                    token.symbol.equals(sysToken.symbol) &&
+                    token.name !== `${sysToken.name} (EVM)`
+                ) {
                     continue
                 }
 

@@ -6,7 +6,7 @@ import {chainConfig} from '~/config'
 import {activeEvmSession, activeSession, evmBalance, waitForStoreValue} from '~/store'
 import type {Balance} from '~/stores/balances'
 import {getBalanceProvider} from '~/lib/balance-providers/utils'
-import { makeTokenKey } from './tokens'
+import {makeTokenKey} from './tokens'
 
 export const isLoading: Writable<boolean> = writable(false)
 
@@ -55,7 +55,11 @@ export async function updateBalances(session: LinkSession) {
 
                     evmBalances.forEach((balance) => {
                         const contract = Name.from('eosio.evm')
-                        const tokenKey = makeTokenKey({ chainId: session.chainId, contract, name: `${String(balance.symbol.code).toLowerCase()}-evm` })
+                        const tokenKey = makeTokenKey({
+                            chainId: session.chainId,
+                            contract,
+                            name: `${String(balance.symbol.code).toLowerCase()}-evm`,
+                        })
 
                         balances.push({
                             key: `${tokenKey}-balance`,

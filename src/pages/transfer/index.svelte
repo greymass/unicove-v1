@@ -15,7 +15,7 @@
     import {startEvmSession} from '~/lib/evm'
 
     import type {Token} from '~/stores/tokens'
-    import { balances } from '~/stores/balances'
+    import {balances} from '~/stores/balances'
 
     let step = 'form'
     let sent: string = ''
@@ -53,9 +53,9 @@
 
         const transferFeeValue = transferFee?.value || 0
 
-        received = (
-            (balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue)
-        )?.toFixed(4)
+        received = ((balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue))?.toFixed(
+            4
+        )
     }
 
     async function transfer() {
@@ -97,7 +97,10 @@
         }
 
         try {
-            transferFee = await transferManager?.transferFee(transferAmount || received, from?.symbol)
+            transferFee = await transferManager?.transferFee(
+                transferAmount || received,
+                from?.symbol
+            )
         } catch (error) {
             if (
                 !error?.data?.message?.includes('insufficient funds for transfer') &&
@@ -158,7 +161,9 @@
     $: sentAmount = isNaN(Number(sent))
         ? undefined
         : Asset.from(Number(sent), from?.symbol || systemContractSymbol)
-    $: receivedAmount = received ? Asset.from(Number(received), from?.symbol || systemContractSymbol) : undefined
+    $: receivedAmount = received
+        ? Asset.from(Number(received), from?.symbol || systemContractSymbol)
+        : undefined
 </script>
 
 <style type="scss">

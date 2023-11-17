@@ -5,8 +5,8 @@ import type {ethers} from 'ethers'
 import type {EvmSession} from '~/lib/evm'
 import {valueInFiat} from '~/lib/fiat'
 import {activePriceTicker, waitForStoreValue} from '~/store'
-import { systemToken } from '~/stores/tokens'
-import type { TransferType } from './index'
+import {systemToken} from '~/stores/tokens'
+import type {TransferType} from './index'
 
 export abstract class TransferManager {
     self: typeof TransferManager

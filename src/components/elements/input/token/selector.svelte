@@ -63,7 +63,7 @@
                     const queryMatches = String(token.name)
                         .toLowerCase()
                         .includes(query.toLowerCase())
-                    
+
                     return (
                         blockchainMatches &&
                         (queryExists || queryMatches) &&

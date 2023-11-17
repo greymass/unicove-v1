@@ -11,7 +11,7 @@
     import type {TransferManager} from './managers/transferManager'
     import {transferManagers} from './managers'
     import type {EvmSession} from '~/lib/evm'
-    import { balances } from '~/stores/balances'
+    import {balances} from '~/stores/balances'
 
     export let handleContinue: () => void
     export let amount: string = ''
@@ -79,10 +79,12 @@
                 // Only displaying accounts that support the current chain
                 if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
 
-                const token = $tokens?.find(token => 
-                    token.name === transferManagerData.tokenName &&
-                    String(token.contract) === transferManagerData.tokenContract &&
-                    token.chainId.equals($activeBlockchain?.chainId))
+                const token = $tokens?.find(
+                    (token) =>
+                        token.name === transferManagerData.tokenName &&
+                        String(token.contract) === transferManagerData.tokenContract &&
+                        token.chainId.equals($activeBlockchain?.chainId)
+                )
 
                 if (!token) {
                     console.error(`Token ${transferManagerData.tokenName} not found`)
@@ -98,7 +100,9 @@
 
     $: {
         if (from) {
-            toOptions = fromOptions.filter((token) => from?.symbol.equals(token.symbol) && token.name !== from?.name) // this needs to only show options which involve the same token
+            toOptions = fromOptions.filter(
+                (token) => from?.symbol.equals(token.symbol) && token.name !== from?.name
+            ) // this needs to only show options which involve the same token
         } else {
             toOptions = fromOptions
         }
@@ -113,11 +117,11 @@
     $: {
         const balanceAmount = balance?.quantity
         const feeIsInSameToken = String(feeAmount?.symbol) === String(from?.symbol)
-        const valueAvailableToReceive = (balanceAmount?.value || 0) - (feeIsInSameToken ? feeAmount?.value || 0 : 0)
-        availableToReceive = balanceAmount && CoreAsset.from(
-            valueAvailableToReceive,
-            balanceAmount?.symbol || '4,EOS'
-        )
+        const valueAvailableToReceive =
+            (balanceAmount?.value || 0) - (feeIsInSameToken ? feeAmount?.value || 0 : 0)
+        availableToReceive =
+            balanceAmount &&
+            CoreAsset.from(valueAvailableToReceive, balanceAmount?.symbol || '4,EOS')
     }
 
     // Continue when the user presses enter

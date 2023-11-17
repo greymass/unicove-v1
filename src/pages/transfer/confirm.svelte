@@ -5,8 +5,8 @@
     import TokenImage from '~/components/elements/image/token.svelte'
     import {systemToken, tokens} from '~/stores/tokens'
 
-    import type { TransferType } from './managers'
-    import type { TransferManager } from './managers/transferManager'
+    import type {TransferType} from './managers'
+    import type {TransferManager} from './managers/transferManager'
 
     export let transferManager: TransferManager
     export let transferManagerData: TransferType
@@ -21,24 +21,31 @@
     let feeAmountInUsd: string | undefined
 
     function getUsdValues() {
-        transferManager.convertToUsd(receivedAmount?.value, transferManagerData?.tokenName).then((usdValue) => {
-            receivedAmountInUsd = usdValue
-        })
+        transferManager
+            .convertToUsd(receivedAmount?.value, transferManagerData?.tokenName)
+            .then((usdValue) => {
+                receivedAmountInUsd = usdValue
+            })
 
-        transferManager.convertToUsd(sentAmount?.value, transferManagerData?.tokenName).then((usdValue) => {
-            receivedAmountInUsd = usdValue
-        })
+        transferManager
+            .convertToUsd(sentAmount?.value, transferManagerData?.tokenName)
+            .then((usdValue) => {
+                receivedAmountInUsd = usdValue
+            })
 
         if (feeAmount) {
-            transferManager.convertToUsd(feeAmount?.value, transferManagerData?.tokenName).then((usdValue) => {
-                feeAmountInUsd = usdValue
-            })
+            transferManager
+                .convertToUsd(feeAmount?.value, transferManagerData?.tokenName)
+                .then((usdValue) => {
+                    feeAmountInUsd = usdValue
+                })
         }
     }
 
     getUsdValues()
 
-    $: transferToken = ($tokens.find((token) => token.name === transferManagerData.tokenName) || $systemToken)!
+    $: transferToken = ($tokens.find((token) => token.name === transferManagerData.tokenName) ||
+        $systemToken)!
     $: feeToken = ($tokens.find((token) => token.symbol === feeAmount?.symbol) || $systemToken)!
     $: feeSymbol = feeAmount?.symbol
 </script>
@@ -192,7 +199,7 @@
                     </div>
                 </td>
             </tr>
-            {/if}
+        {/if}
     </table>
     <div class="bottom-section">
         <Button fluid style="primary" on:action={handleConfirm}>Sign Transaction</Button>
