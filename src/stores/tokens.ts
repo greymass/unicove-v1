@@ -29,6 +29,16 @@ export interface TokenKeyParams {
     name: NameType
 }
 
+export function tokenFromBalance(balance: Balance) {
+    return {
+        key: balance.tokenKey,
+        chainId: balance.chainId,
+        contract: balance.contract,
+        name: String(balance.quantity.symbol.code),
+        symbol: balance.quantity.symbol,
+    }
+}
+
 const initialTokens: Token[] = []
 
 export const tokens: Writable<Token[]> = writable(initialTokens, () => {

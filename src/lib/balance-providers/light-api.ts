@@ -51,7 +51,9 @@ export class LightAPIProvider implements BalanceProvider {
     }
 
     parseTokenBalances(account: Name, balances: RawTokenBalance[]) {
-        return balances.map((balance) => {
+        return balances.filter(balance => {
+            return balance.amount && Number(balance.amount) !== 0
+        }).map((balance) => {
             const symbol: Asset.Symbol = Asset.Symbol.from(
                 `${balance.decimals},${balance.currency}`
             )
@@ -63,11 +65,12 @@ export class LightAPIProvider implements BalanceProvider {
                 key,
                 chainId: this.chain.chainId,
                 account: account,
+                contract: Name.from(balance.contract),
                 tokenKey: token.key,
                 quantity: asset,
             }
             return record
-        })
+        }).filter((balance) => !!balance)
     }
 
     parseTokenInfo(balance: RawTokenBalance): Token {

@@ -3,7 +3,7 @@
 
     import {activeBlockchain} from '~/store'
     import type {Token} from '~/stores/tokens'
-    import {tokens} from '~/stores/tokens'
+    import {tokenFromBalance, tokens} from '~/stores/tokens'
     import {balances} from '~/stores/balances'
 
     import Form from '~/components/elements/form.svelte'
@@ -12,6 +12,7 @@
     import Icon from '~/components/elements/icon.svelte'
 
     import TokenSelectorRow from './selector/row.svelte'
+    import { Name } from 'anchor-link'
 
     export let defaultToken: Token | undefined = undefined
     export let selectedToken: Token | undefined = undefined
@@ -45,31 +46,28 @@
 
     $: {
         if (tokenOptions) {
-            filteredTokens = tokenOptions
+            filteredTokens =  tokenOptions.filter(token => showTokensWithoutBalance || token.balance)
         } else {
-            filteredTokens =
-                $tokens?.filter((token) => {
-                    if (token.evm && !includeEvmTokens) return false
+            filteredTokens = showTokensWithoutBalance ? $tokens : $balances.map((balance) => {
+                const token = $tokens.find((t) => t.key === balance.tokenKey)
 
-                    const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
-                    let balanceExists
-                    if (!showTokensWithoutBalance) {
-                        balanceExists = !!(
-                            token.balance ||
-                            $balances.find((balance) => balance.tokenKey === token.key)
-                        )
-                    }
-                    const queryExists = query.length === 0
-                    const queryMatches = String(token.name)
-                        .toLowerCase()
-                        .includes(query.toLowerCase())
+                return token || tokenFromBalance(balance)
+            })
+            
+            filteredTokens = filteredTokens.filter((token) => {
+                if (token.evm && !includeEvmTokens) return false
 
-                    return (
-                        blockchainMatches &&
-                        (queryExists || queryMatches) &&
-                        (showTokensWithoutBalance || balanceExists)
-                    )
-                }) || []
+                const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
+                const queryExists = query.length === 0
+                const queryMatches = String(token.name)
+                    .toLowerCase()
+                    .includes(query.toLowerCase())
+
+                return (
+                    blockchainMatches &&
+                    (queryExists || queryMatches)
+                )
+            }) || []
         }
     }
 </script>

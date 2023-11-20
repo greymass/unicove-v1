@@ -102,7 +102,7 @@
         if (from) {
             toOptions = fromOptions.filter(
                 (token) => from?.symbol.equals(token.symbol) && token.name !== from?.name
-            ) // this needs to only show options which involve the same token
+            )
         } else {
             toOptions = fromOptions
         }

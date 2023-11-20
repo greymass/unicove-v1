@@ -64,7 +64,8 @@ export async function updateBalances(session: LinkSession) {
                         balances.push({
                             key: `${tokenKey}-balance`,
                             chainId: session.chainId,
-                            account: contract,
+                            contract: contract,
+                            account: session.auth.actor,
                             tokenKey,
                             quantity: balance,
                         })
