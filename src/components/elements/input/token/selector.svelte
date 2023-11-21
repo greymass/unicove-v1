@@ -1,5 +1,6 @@
 <script>
     import {writable} from 'svelte/store'
+    import {Asset} from 'anchor-link'
 
     import {activeBlockchain} from '~/store'
     import type {Token} from '~/stores/tokens'
@@ -12,7 +13,7 @@
     import Icon from '~/components/elements/icon.svelte'
 
     import TokenSelectorRow from './selector/row.svelte'
-    import { Name } from 'anchor-link'
+    import Balance from '../../form/balance.svelte'
 
     export let defaultToken: Token | undefined = undefined
     export let selectedToken: Token | undefined = undefined
@@ -46,7 +47,8 @@
 
     $: {
         if (tokenOptions) {
-            filteredTokens =  tokenOptions.filter(token => showTokensWithoutBalance || token.balance)
+            filteredTokens =
+                showTokensWithoutBalance ? tokenOptions : tokenOptions.filter((token) => hasBalance(token))
         } else {
             filteredTokens = showTokensWithoutBalance ? $tokens : $balances.map((balance) => {
                 const token = $tokens.find((t) => t.key === balance.tokenKey)
@@ -65,10 +67,17 @@
 
                 return (
                     blockchainMatches &&
+                    hasBalance(token) &&
                     (queryExists || queryMatches)
                 )
             }) || []
         }
+    }
+
+    function hasBalance(token: Token, balance?: Balance) {
+        const balanceEntry = balance || $balances.find((b) => b.tokenKey === token?.key)
+
+        return !!balanceEntry?.quantity && balanceEntry.quantity.value > 0
     }
 </script>
 

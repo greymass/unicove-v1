@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
-    import {activeEvmSession, activeSession, activeBlockchain, currentAccountBalance} from '~/store'
-    import {tokens, type Token} from '~/stores/tokens'
+    import {activeEvmSession, activeSession, activeBlockchain} from '~/store'
+    import {tokens, type Token, makeTokenKey, tokenFromBalance} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -79,12 +79,19 @@
                 // Only displaying accounts that support the current chain
                 if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
 
-                const token = $tokens?.find(
-                    (token) =>
-                        token.name === transferManagerData.tokenName &&
-                        String(token.contract) === transferManagerData.tokenContract &&
-                        token.chainId.equals($activeBlockchain?.chainId)
-                )
+                const tokenKey = makeTokenKey({
+                    chainId: $activeBlockchain!.chainId,
+                    contract: transferManagerData.tokenContract,
+                    name: transferManagerData.tokenName,
+                })
+
+                let token = $tokens?.find((token) => token.key === tokenKey)
+
+                if (!token) {
+                    const balance = $balances.find((balance) => balance.tokenKey === tokenKey)
+
+                    token = balance && tokenFromBalance(balance)
+                }
 
                 if (!token) {
                     console.error(`Token ${transferManagerData.tokenName} not found`)
@@ -247,6 +254,7 @@
                         onTokenSelect={handleToChange}
                         selectedToken={to}
                         tokenOptions={toOptions}
+                        showTokensWithoutBalance
                     />
                 </div>
                 {#if sentAmount && sentAmount.value > 0 && feeAmount && feeAmount.value > 0}

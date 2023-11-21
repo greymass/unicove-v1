@@ -57,7 +57,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     'SEOS - SEOS (EVM)': {
         transferClass: EosEvmBridge,
         tokenName: 'SEOS',
-        tokenContract: '0xbfb10f85b889328e4a42507e31a07977ae00eec6',
+        tokenContract: 'stoken.defi',
         from: 'seos',
         fromLabel: 'SEOS',
         to: 'evm',
@@ -75,7 +75,7 @@ export const transferManagers: {[key: string]: TransferType} = {
     'BOX - BOX (EVM)': {
         transferClass: EosEvmBridge,
         tokenName: 'BOX',
-        tokenContract: 'token.box',
+        tokenContract: 'token.defi',
         from: 'box',
         fromLabel: 'BOX',
         to: 'evm',

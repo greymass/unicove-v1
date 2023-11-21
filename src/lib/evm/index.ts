@@ -46,6 +46,24 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
                 decimals: 6,
                 address: '0x33B57dC70014FD7AA6e1ed3080eeD2B619632B8e',
             },
+            {
+                name: 'SEOS',
+                symbol: '4,SEOS',
+                decimals: 18,
+                address: '0xbfb10f85b889328e4a42507e31a07977ae00eec6',
+            },
+            {
+                name: 'BOX',
+                symbol: '4,BOX',
+                decimals: 18,
+                address: '0x9b3754f036de42846e60c8d8c89b18764f168367',
+            },
+            {
+                name: 'USN',
+                symbol: '4,USN',
+                decimals: 18,
+                address: '0x8d0258d6ccfb0ce394dc542c545566936b7974f9',
+            }
         ],
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],

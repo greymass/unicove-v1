@@ -46,7 +46,7 @@
 
     $: transferToken = ($tokens.find((token) => token.name === transferManagerData.tokenName) ||
         $systemToken)!
-    $: feeToken = ($tokens.find((token) => token.symbol === feeAmount?.symbol) || $systemToken)!
+    $: feeToken = ($tokens.find((token) => String(token.symbol) === String(feeAmount?.symbol)) || $systemToken)!
     $: feeSymbol = feeAmount?.symbol
 </script>
 
