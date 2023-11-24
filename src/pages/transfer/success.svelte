@@ -8,7 +8,7 @@
     import type {TransferManager} from './managers/transferManager'
     import {updateBalances} from '~/stores/balances-provider'
     import {activeSession} from '~/store'
-    import { get } from 'svelte/store'
+    import {get} from 'svelte/store'
 
     export let transferManager: TransferManager
     export let transactResult: TransactResult | ethers.providers.TransactionResponse

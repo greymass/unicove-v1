@@ -126,7 +126,7 @@
             )
             if (!fromInOptions) {
                 toOptions = []
-            }   
+            }
         }
     }
 
