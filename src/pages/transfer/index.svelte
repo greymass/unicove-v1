@@ -72,7 +72,7 @@
         step = 'success'
     }
 
-    function handleBack(updateBalances = false) {
+    function handleBack() {
         step = 'form'
         errorMessage = undefined
         transactResult = undefined

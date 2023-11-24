@@ -101,6 +101,6 @@ export async function activate(id: SessionLike) {
 
     if (get(activeEvmSession)) {
         activeEvmSession.set(undefined)
-        startEvmSession()
+        await startEvmSession()
     }
 }

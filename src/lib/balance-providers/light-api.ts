@@ -28,7 +28,7 @@ export class LightAPIProvider implements BalanceProvider {
 
     async fetchData(account: Name) {
         //Example: https://eos.light-api.net/api/account/eos/teamgreymass
-        const apiUrl = `https://balances.unicove.com/api/balances/${this.chain.id}/danchorsmart`
+        const apiUrl = `https://balances.unicove.com/api/balances/${this.chain.id}/${account}`
 
         return await fetch(apiUrl)
             .then(async (response) => {

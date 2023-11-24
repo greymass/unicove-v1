@@ -1,6 +1,8 @@
 <script>
     import {activate} from '~/auth'
     import type {SessionLike} from '~/auth'
+    import {activeSession} from '~/store'
+    import { fetchBalances } from '~/stores/balances'
 
     import Icon from '~/components/elements/icon.svelte'
 
@@ -9,7 +11,9 @@
     export let open = false
 
     function onSelect(session: SessionLike) {
-        activate(session)
+        activate(session).then(() => {
+            fetchBalances($activeSession!)
+        })
         open = false
     }
 </script>

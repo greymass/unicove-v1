@@ -58,11 +58,6 @@ export class EosEvmBridge extends TransferManager {
         })
     }
 
-    async updateBalances() {
-        updateEvmBalance()
-        updateActiveAccount()
-    }
-
     updateMainBalance() {
         return updateEvmBalance()
     }
