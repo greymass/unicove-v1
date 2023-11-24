@@ -3,8 +3,6 @@ import {Asset, Name} from 'anchor-link'
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
 import {TransferManager} from './transferManager'
-import {updateActiveAccount} from '~/stores/account-provider'
-import {updateEvmBalance} from '~/stores/balances-provider'
 
 export class EosEvmBridge extends TransferManager {
     static supportedChains = ['eos']
@@ -56,9 +54,5 @@ export class EosEvmBridge extends TransferManager {
                 data: action,
             },
         })
-    }
-
-    updateMainBalance() {
-        return updateEvmBalance()
     }
 }

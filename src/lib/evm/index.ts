@@ -63,7 +63,7 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
                 symbol: '4,USN',
                 decimals: 18,
                 address: '0x8d0258d6ccfb0ce394dc542c545566936b7974f9',
-            }
+            },
         ],
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],

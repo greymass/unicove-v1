@@ -116,10 +116,12 @@
     }
 
     $: {
-        const fromInOptions = fromOptions.find(token => from?.symbol.equals(token.symbol) && token.name !== from?.name)
+        const fromInOptions = fromOptions.find(
+            (token) => from?.symbol.equals(token.symbol) && token.name !== from?.name
+        )
         if (!fromInOptions) {
             toOptions = []
-        } 
+        }
     }
 
     $: {

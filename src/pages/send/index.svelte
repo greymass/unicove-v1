@@ -47,7 +47,7 @@
                         const balance = $balances.find((b) => b.tokenKey === $transferData.tokenKey)
 
                         return balance && tokenFromBalance(balance)
-                    }         
+                    }
                 }
                 // If the URL has a token key, use it second
                 if (meta) {

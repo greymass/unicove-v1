@@ -51,26 +51,29 @@ export class LightAPIProvider implements BalanceProvider {
     }
 
     parseTokenBalances(account: Name, balances: RawTokenBalance[]) {
-        return balances.filter(balance => {
-            return balance.amount && Number(balance.amount) !== 0
-        }).map((balance) => {
-            const symbol: Asset.Symbol = Asset.Symbol.from(
-                `${balance.decimals},${balance.currency}`
-            )
-            const token = this.parseTokenInfo(balance)
-            const amount = balance.amount ? Number(balance.amount) : 0
-            const asset = Asset.from(amount, symbol)
-            const key = makeBalanceKey(token, account)
-            const record: Balance = {
-                key,
-                chainId: this.chain.chainId,
-                account: account,
-                contract: Name.from(balance.contract),
-                tokenKey: token.key,
-                quantity: asset,
-            }
-            return record
-        }).filter((balance) => !!balance)
+        return balances
+            .filter((balance) => {
+                return balance.amount && Number(balance.amount) !== 0
+            })
+            .map((balance) => {
+                const symbol: Asset.Symbol = Asset.Symbol.from(
+                    `${balance.decimals},${balance.currency}`
+                )
+                const token = this.parseTokenInfo(balance)
+                const amount = balance.amount ? Number(balance.amount) : 0
+                const asset = Asset.from(amount, symbol)
+                const key = makeBalanceKey(token, account)
+                const record: Balance = {
+                    key,
+                    chainId: this.chain.chainId,
+                    account: account,
+                    contract: Name.from(balance.contract),
+                    tokenKey: token.key,
+                    quantity: asset,
+                }
+                return record
+            })
+            .filter((balance) => !!balance)
     }
 
     parseTokenInfo(balance: RawTokenBalance): Token {
