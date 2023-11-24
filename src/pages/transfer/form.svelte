@@ -115,7 +115,7 @@
                 (token) => from?.symbol.equals(token.symbol) && token.name !== from?.name
             )
         } else {
-            toOptions = fromOptions
+            toOptions = []
         }
     }
 

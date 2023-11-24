@@ -357,17 +357,8 @@ function uint64ToAddr(str: string) {
     return '0xbbbbbbbbbbbbbbbbbbbbbbbb' + str
 }
 
-let connectingToEvm = false
-
 export async function startEvmSession(): Promise<EvmSession | undefined> {
     let evmSession: EvmSession
-
-    if (connectingToEvm) {
-        await wait(5000)
-        return startEvmSession()
-    }
-
-    connectingToEvm = true
 
     const blockchain = get(activeBlockchain)
     const nativeSession = get(activeSession)
@@ -384,7 +375,6 @@ export async function startEvmSession(): Promise<EvmSession | undefined> {
         }
 
         if (!e.message) {
-            connectingToEvm = false
             return
         }
 
@@ -393,7 +383,6 @@ export async function startEvmSession(): Promise<EvmSession | undefined> {
 
     if (evmSession) {
         activeEvmSession.set(evmSession)
-        connectingToEvm = false
     }
 
     return evmSession

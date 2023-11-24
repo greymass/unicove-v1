@@ -11,11 +11,7 @@
     export let open = false
 
     function onSelect(session: SessionLike) {
-        activate(session).then(() => {
-            setTimeout(() => {
-                fetchBalances($activeSession!, true)
-            }, 1000)
-        })
+        activate(session)
         open = false
     }
 </script>

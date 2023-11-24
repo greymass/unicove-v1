@@ -7,6 +7,7 @@ import {getClient} from './api-client'
 import {appId, chains} from './config'
 import {activeEvmSession, activeSession, availableSessions} from './store'
 import {startEvmSession} from './lib/evm'
+import {fetchBalances} from './stores/balances'
 
 const transport = new Transport({
     requestStatus: false,
@@ -102,5 +103,6 @@ export async function activate(id: SessionLike) {
     if (get(activeEvmSession)) {
         activeEvmSession.set(undefined)
         await startEvmSession()
+        fetchBalances(get(activeSession), true)
     }
 }
