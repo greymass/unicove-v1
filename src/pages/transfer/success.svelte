@@ -8,6 +8,7 @@
     import type {TransferManager} from './managers/transferManager'
     import {updateBalances} from '~/stores/balances-provider'
     import {activeSession} from '~/store'
+    import { get } from 'svelte/store'
 
     export let transferManager: TransferManager
     export let transactResult: TransactResult | ethers.providers.TransactionResponse
@@ -41,9 +42,10 @@
             ) {
                 clearInterval(refreshInterval)
             }
+
             // Fetch the balances
-            updateBalances($activeSession!)
-        }, 1000)
+            updateBalances(get(activeSession)!)
+        }, 2000)
 
         // Timeout after 30 seconds
         setTimeout(() => {

@@ -12,7 +12,9 @@
 
     function onSelect(session: SessionLike) {
         activate(session).then(() => {
-            fetchBalances($activeSession!)
+            setTimeout(() => {
+                fetchBalances($activeSession!, true)
+            }, 1000)
         })
         open = false
     }

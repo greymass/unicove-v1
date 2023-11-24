@@ -72,6 +72,8 @@
 
         fromOptions = []
 
+        const fromOptionsBeingSet: Token[] = []
+
         await Promise.all(
             Object.values(transferManagers).map(async (transferManagerData) => {
                 const TransferManagerClass = transferManagerData.transferClass
@@ -98,9 +100,11 @@
                     return
                 }
 
-                fromOptions.push(token)
+                fromOptionsBeingSet.push(token)
             })
         )
+
+        fromOptions = [...fromOptionsBeingSet]
 
         generatingOptions = false
     }
@@ -116,11 +120,13 @@
     }
 
     $: {
-        const fromInOptions = fromOptions.find(
-            (token) => from?.symbol.equals(token.symbol) && token.name !== from?.name
-        )
-        if (!fromInOptions) {
-            toOptions = []
+        if (from) {
+            const fromInOptions = fromOptions.find(
+                (token) => from?.symbol.equals(token.symbol) && token.name !== from?.name
+            )
+            if (!fromInOptions) {
+                toOptions = []
+            }   
         }
     }
 
