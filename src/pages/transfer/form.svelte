@@ -63,6 +63,8 @@
 
     let generatingOptions = false
 
+    $: console.log({balances: $balances})
+
     $: balance = $balances.find((balance) => balance.tokenKey === from?.key)
 
     async function generateOptions(evmSession?: EvmSession) {
@@ -235,7 +237,7 @@
 <div class="container">
     <div class="top-section">
         <h1>Transfer</h1>
-        <h3>Transfer tokens between your accounts</h3>
+        <h3>Transfer tokens between {$activeBlockchain?.name} and {$activeBlockchain?.name} EVM</h3>
     </div>
     <Form>
         <div class="middle-section">
