@@ -26,31 +26,16 @@
         if (!initialSendingBalance) return
         if (!initialReceivedBalance) return
 
-        // Set the current value equal to the initial value
-        let currentSendingBalance: Asset | undefined
-        let currentReceivedBalance: Asset | undefined
-
         // Start an interval to continously monitor for changes to that value
         refreshInterval = setInterval(async () => {
-            currentSendingBalance = balance
-            currentReceivedBalance = receivingBalance
-
-            // If the balances changed, stop the interval
-            if (
-                (!currentSendingBalance || !currentSendingBalance.equals(initialSendingBalance)) &&
-                (!currentReceivedBalance || !currentReceivedBalance.equals(initialReceivedBalance))
-            ) {
-                clearInterval(refreshInterval)
-            }
-
             // Fetch the balances
             updateBalances(get(activeSession)!)
-        }, 2000)
+        }, 5000)
 
-        // Timeout after 30 seconds
+        // Timeout after 60 seconds
         setTimeout(() => {
             clearInterval(refreshInterval)
-        }, 30000)
+        }, 60000)
     }
 
     awaitBalancesUpdate()
