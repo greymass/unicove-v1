@@ -4,6 +4,13 @@ import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
 import {TransferManager} from './transferManager'
 
+const bridgeFees: Record<string, number> = {
+    USDT: 0.01,
+    SEOS: 0.1,
+    BOX: 0.1,
+    USN: 0.1,
+}
+
 export class EosEvmBridge extends TransferManager {
     static supportedChains = ['eos']
     static evmRequired = true
@@ -17,6 +24,11 @@ export class EosEvmBridge extends TransferManager {
     }
 
     async transferFee(_amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
+        const symbolCode = String(Asset.Symbol.from(tokenSymbol).code)
+        if (bridgeFees[symbolCode]) {
+            return Asset.from(bridgeFees[symbolCode], tokenSymbol)
+        }
+
         const apiClient = getClient(this.nativeSession.chainId)
 
         let apiResponse
