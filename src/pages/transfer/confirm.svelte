@@ -7,6 +7,7 @@
 
     import type {TransferType} from './managers'
     import type {TransferManager} from './managers/transferManager'
+    import {activeBlockchain} from '~/store'
 
     export let transferManager: TransferManager
     export let transferManagerData: TransferType
@@ -44,10 +45,17 @@
 
     getUsdValues()
 
-    $: transferToken = ($tokens.find((token) => token.name === transferManagerData.tokenName) ||
-        $systemToken)!
-    $: feeToken = ($tokens.find((token) => String(token.symbol) === String(feeAmount?.symbol)) ||
-        $systemToken)!
+    $: transferToken = ($tokens.find(
+        (token) =>
+            token.name === transferManagerData.tokenName &&
+            token.contract === transferManagerData.tokenContract &&
+            $activeBlockchain?.chainId.equals(token.chainId)
+    ) || $systemToken)!
+    $: feeToken = ($tokens.find(
+        (token) =>
+            String(token.symbol) === String(feeAmount?.symbol) &&
+            $activeBlockchain?.chainId.equals(token.chainId)
+    ) || $systemToken)!
     $: feeSymbol = feeAmount?.symbol
 </script>
 

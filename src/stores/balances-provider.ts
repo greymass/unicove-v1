@@ -53,23 +53,30 @@ export async function updateBalances(session: LinkSession) {
                 if (evmSession) {
                     const evmBalances = await evmSession.getBalances()
 
-                    evmBalances.forEach((balance) => {
-                        const contract = Name.from('eosio.evm')
-                        const tokenKey = makeTokenKey({
-                            chainId: session.chainId,
-                            contract,
-                            name: `${String(balance.symbol.code).toLowerCase()}-evm`,
-                        })
+                    if (evmBalances.length > 0) {
+                        evmBalances.forEach((balance) => {
+                            const contract = Name.from('eosio.evm')
+                            const tokenKey = makeTokenKey({
+                                chainId: session.chainId,
+                                contract,
+                                name: `${String(balance.symbol.code).toLowerCase()}-evm`,
+                            })
 
-                        balances.push({
-                            key: `${tokenKey}-balance`,
-                            chainId: session.chainId,
-                            contract: contract,
-                            account: session.auth.actor,
-                            tokenKey,
-                            quantity: balance,
+                            balances.push({
+                                key: `${tokenKey}-balance`,
+                                chainId: session.chainId,
+                                contract: contract,
+                                account: session.auth.actor,
+                                tokenKey,
+                                quantity: balance,
+                            })
                         })
-                    })
+                    } else {
+                        // If no balances are returned, try again in 3 seconds
+                        setTimeout(() => {
+                            updateBalances(session)
+                        }, 3000)
+                    }
                 }
 
                 balancesProvider.set({

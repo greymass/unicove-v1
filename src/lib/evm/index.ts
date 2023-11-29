@@ -54,7 +54,7 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
             },
             {
                 name: 'BOX',
-                symbol: '4,BOX',
+                symbol: '6,BOX',
                 decimals: 6,
                 address: '0x9b3754f036de42846e60c8d8c89b18764f168367',
             },
