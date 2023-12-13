@@ -12,7 +12,7 @@
     import type {Token, TokenKeyParams} from '~/stores/tokens'
     import type {Balance} from '~/stores/balances'
     import {balances, makeBalanceKey} from '~/stores/balances'
-    import {tokens, makeTokenKey} from '~/stores/tokens'
+    import {tokens, makeTokenKey, tokenFromBalance} from '~/stores/tokens'
     import {systemTokenKey} from '~/stores/tokens'
     import {transferData, Step} from '~/pages/send/transfer'
     import {syncTxFee, stopSyncTxFee, fetchTxFee} from '~/pages/send/fio'
@@ -34,12 +34,20 @@
     })
 
     const token: Readable<Token | undefined> = derived(
-        [activeSession, systemTokenKey, transferData, tokens],
-        ([$activeSession, $systemTokenKey, $transferData, $tokens]) => {
+        [activeSession, systemTokenKey, transferData, tokens, balances],
+        ([$activeSession, $systemTokenKey, $transferData, $tokens, $balances]) => {
             if ($activeSession && $systemTokenKey && $tokens) {
                 // If this transfer session data has a token key, use it first
                 if ($transferData.tokenKey) {
-                    return $tokens.find((t) => t.key === $transferData.tokenKey)
+                    const token = $tokens.find((t) => t.key === $transferData.tokenKey)
+
+                    if (token) {
+                        return token
+                    } else {
+                        const balance = $balances.find((b) => b.tokenKey === $transferData.tokenKey)
+
+                        return balance && tokenFromBalance(balance)
+                    }
                 }
                 // If the URL has a token key, use it second
                 if (meta) {
@@ -49,7 +57,15 @@
                         name: Name.from(meta.params.token),
                     }
                     const key = makeTokenKey(params)
-                    return $tokens.find((t) => t.key === key)
+                    const token = $tokens.find((t) => t.key === key)
+
+                    if (token) {
+                        return token
+                    }
+
+                    const balance = $balances.find((b) => b.tokenKey === key)
+
+                    return balance && tokenFromBalance(balance)
                 }
                 // Otherwise return the system token key
                 return $tokens.find((t) => t.key === $systemTokenKey)
@@ -61,8 +77,7 @@
         [activeSession, balances, token],
         ([$activeSession, $currentBalances, $token]) => {
             if ($token) {
-                const key = makeBalanceKey($token, $activeSession!.auth.actor)
-                return $currentBalances.find((b) => b.key === key)
+                return $currentBalances.find((b) => b.tokenKey === $token.key)
             }
         }
     )

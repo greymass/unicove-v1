@@ -1,9 +1,10 @@
 <script>
     import {writable} from 'svelte/store'
+    import {Asset} from 'anchor-link'
 
     import {activeBlockchain} from '~/store'
     import type {Token} from '~/stores/tokens'
-    import {tokens} from '~/stores/tokens'
+    import {tokenFromBalance, tokens} from '~/stores/tokens'
     import {balances} from '~/stores/balances'
 
     import Form from '~/components/elements/form.svelte'
@@ -13,11 +14,14 @@
 
     import TokenSelectorRow from './selector/row.svelte'
 
+    import type {Balance} from '~/stores/balances'
+
     export let defaultToken: Token | undefined = undefined
     export let selectedToken: Token | undefined = undefined
     export let tokenOptions: Token[] | undefined = undefined
     export let onTokenSelect: (token: Token) => void
     export let showTokensWithoutBalance: boolean = false
+    export let includeEvmTokens: boolean = false
 
     $: {
         if (defaultToken) {
@@ -44,31 +48,37 @@
 
     $: {
         if (tokenOptions) {
-            filteredTokens = tokenOptions
+            filteredTokens = showTokensWithoutBalance
+                ? tokenOptions
+                : tokenOptions.filter((token) => hasBalance(token))
         } else {
+            filteredTokens = showTokensWithoutBalance
+                ? $tokens
+                : $balances.map((balance) => {
+                      const token = $tokens.find((t) => t.key === balance.tokenKey)
+
+                      return token || tokenFromBalance(balance)
+                  })
+
             filteredTokens =
-                ($tokens &&
-                    $tokens.filter((token) => {
-                        const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
-                        let balanceExists
-                        if (!showTokensWithoutBalance) {
-                            balanceExists = !!(
-                                token.balance ||
-                                $balances.find((balance) => balance.tokenKey === token.key)
-                            )
-                        }
-                        const queryExists = query.length === 0
-                        const queryMatches = String(token.name)
-                            .toLowerCase()
-                            .includes(query.toLowerCase())
-                        return (
-                            blockchainMatches &&
-                            (queryExists || queryMatches) &&
-                            (showTokensWithoutBalance || balanceExists)
-                        )
-                    })) ||
-                []
+                filteredTokens.filter((token) => {
+                    if (token.evm && !includeEvmTokens) return false
+
+                    const blockchainMatches = token.chainId.equals($activeBlockchain.chainId)
+                    const queryExists = query.length === 0
+                    const queryMatches = String(token.name)
+                        .toLowerCase()
+                        .includes(query.toLowerCase())
+
+                    return blockchainMatches && hasBalance(token) && (queryExists || queryMatches)
+                }) || []
         }
+    }
+
+    function hasBalance(token: Token, balance?: Balance) {
+        const balanceEntry = balance || $balances.find((b) => b.tokenKey === token?.key)
+
+        return !!balanceEntry?.quantity && balanceEntry.quantity.value > 0
     }
 </script>
 

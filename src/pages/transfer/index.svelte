@@ -10,39 +10,42 @@
     import Success from './success.svelte'
     import Error from './error.svelte'
     import {systemToken} from '~/stores/tokens'
-    import {transferManagers} from './managers'
+    import {TransferType, transferManagers} from './managers'
     import type {TransferManager} from './managers/transferManager'
     import {startEvmSession} from '~/lib/evm'
 
     import type {Token} from '~/stores/tokens'
+    import {balances} from '~/stores/balances'
 
     let step = 'form'
-    let deposit: string = ''
+    let sent: string = ''
     let received: string = ''
     let errorMessage: string | undefined
     let from: Token | undefined
     let to: Token | undefined
     let transactResult: TransactResult | ethers.providers.TransactionResponse | undefined
     let transferFee: Asset | undefined
+    let transferManagerData: TransferType | undefined
     let transferManager: TransferManager | undefined
 
     $: systemContractSymbol = String($systemToken?.symbol)
+    $: balance = $balances?.find((balance) => balance.tokenKey === from?.key)?.quantity
+    $: receivingBalance = $balances?.find((balance) => balance.tokenKey === to?.key)?.quantity
     $: {
-        const TransferManagerClass =
+        transferManagerData =
             from?.name && to?.name ? transferManagers[`${from.name} - ${to?.name}`] : undefined
+
+        const TransferManagerClass = transferManagerData?.transferClass
+
         if (TransferManagerClass) {
             transferManager = new (TransferManagerClass as unknown as new (
                 ...args: any[]
-            ) => TransferManager)($activeSession!, $activeEvmSession)
+            ) => TransferManager)($activeSession!, $activeEvmSession, transferManagerData)
         }
     }
 
     async function useEntireBalance() {
-        if (!from || !to) return
-
-        const balance = await transferManager?.balance()
-
-        if (!balance) return
+        if (!from || !to || !balance) return
 
         const balanceValue = balance.value
 
@@ -50,14 +53,14 @@
 
         const transferFeeValue = transferFee?.value || 0
 
-        received = (
-            (balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue - 0.0001)
-        )?.toFixed(4)
+        received = ((balanceValue || 0) - (transferFeeValue === 0 ? 0 : transferFeeValue))?.toFixed(
+            4
+        )
     }
 
     async function transfer() {
         try {
-            transactResult = await transferManager?.transfer(deposit, received)
+            transactResult = await transferManager?.transfer(sent, from!.symbol, received)
         } catch (error) {
             return (errorMessage = `Could not transfer. Error: ${
                 error.underlyingError?.message || JSON.stringify(error) === '{}'
@@ -69,11 +72,11 @@
         step = 'success'
     }
 
-    function handleBack(updateBalances = false) {
+    function handleBack() {
         step = 'form'
         errorMessage = undefined
         transactResult = undefined
-        deposit = ''
+        sent = ''
         received = ''
     }
 
@@ -82,9 +85,9 @@
 
         await estimateTransferFee()
 
-        deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4) || '')).toFixed(
-            4
-        )
+        if (transferFee?.symbol.equals(from?.symbol!)) {
+            sent = (parseFloat(received) + transferFee?.value || 0).toFixed(4)
+        }
     }
 
     async function estimateTransferFee(transferAmount?: string): Promise<Asset | undefined> {
@@ -94,7 +97,10 @@
         }
 
         try {
-            transferFee = await transferManager?.transferFee(transferAmount || received)
+            transferFee = await transferManager?.transferFee(
+                transferAmount || received,
+                from?.symbol
+            )
         } catch (error) {
             if (
                 !error?.data?.message?.includes('insufficient funds for transfer') &&
@@ -125,7 +131,11 @@
 
     $: {
         if (transferFee && received !== '') {
-            deposit = (parseFloat(received) + parseFloat(transferFee?.value.toFixed(4))).toFixed(4)
+            if (transferFee?.symbol.equals(from?.symbol!)) {
+                sent = (parseFloat(received) + transferFee?.value || 0).toFixed(4)
+            } else {
+                sent = received
+            }
         }
     }
 
@@ -148,10 +158,12 @@
     }
 
     // Eventually we may want to get the symbol from the transferManager instead of the systemToken
-    $: receivedAmount = isNaN(Number(received))
+    $: sentAmount = isNaN(Number(sent))
         ? undefined
-        : Asset.from(Number(received), systemContractSymbol)
-    $: depositAmount = Asset.from(Number(deposit), systemContractSymbol)
+        : Asset.from(Number(sent), from?.symbol || systemContractSymbol)
+    $: receivedAmount = received
+        ? Asset.from(Number(received), from?.symbol || systemContractSymbol)
+        : undefined
 </script>
 
 <style type="scss">
@@ -165,10 +177,10 @@
     <div class="container">
         {#if errorMessage}
             <Error error={errorMessage} {handleBack} />
-        {:else if step === 'form' || !transferManager || !deposit || !received}
+        {:else if step === 'form' || !transferManager || !sent || !received}
             <Form
                 handleContinue={submitForm}
-                {depositAmount}
+                {sentAmount}
                 {receivedAmount}
                 {transferManager}
                 {useEntireBalance}
@@ -177,17 +189,18 @@
                 bind:from
                 bind:to
             />
-        {:else if step === 'confirm' && receivedAmount}
+        {:else if step === 'confirm' && sentAmount && receivedAmount && transferManagerData}
             <Confirm
-                {depositAmount}
+                {sentAmount}
                 {receivedAmount}
                 {transferManager}
+                {transferManagerData}
                 feeAmount={transferFee}
                 handleConfirm={transfer}
                 {handleBack}
             />
         {:else if step === 'success' && transactResult}
-            <Success {transactResult} {transferManager} {handleBack} />
+            <Success {transactResult} {transferManager} {balance} {receivingBalance} {handleBack} />
         {/if}
     </div>
 </Page>

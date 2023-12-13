@@ -1,18 +1,17 @@
 import {Asset, Name} from 'anchor-link'
-import {get} from 'svelte/store'
 
 import {Transfer} from '~/abi-types'
 import {getClient} from '~/api-client'
 import {TransferManager} from './transferManager'
-import {currentAccountBalance, evmBalance} from '~/store'
-import {updateActiveAccount} from '~/stores/account-provider'
-import {updateEvmBalance} from '~/stores/balances-provider'
+
+const bridgeFees: Record<string, number> = {
+    USDT: 0.01,
+    SEOS: 0.1,
+    BOX: 0.1,
+    USN: 0.1,
+}
 
 export class EosEvmBridge extends TransferManager {
-    static from = 'eos'
-    static fromDisplayString = 'EOS'
-    static to = 'evm'
-    static toDisplayString = 'EOS (EVM)'
     static supportedChains = ['eos']
     static evmRequired = true
 
@@ -24,7 +23,12 @@ export class EosEvmBridge extends TransferManager {
         return this.evmSession.address
     }
 
-    async transferFee() {
+    async transferFee(_amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
+        const symbolCode = String(Asset.Symbol.from(tokenSymbol).code)
+        if (bridgeFees[symbolCode]) {
+            return Asset.from(bridgeFees[symbolCode], tokenSymbol)
+        }
+
         const apiClient = getClient(this.nativeSession.chainId)
 
         let apiResponse
@@ -41,41 +45,26 @@ export class EosEvmBridge extends TransferManager {
 
         const config = apiResponse.rows[0]
 
-        return Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
+        const ingressBridgeFee = Asset.from(config.ingress_bridge_fee || '0.0000 EOS')
+
+        return Asset.from(ingressBridgeFee.value, tokenSymbol)
     }
 
-    transfer(amount: string) {
+    transfer(amount: string, tokenSymbol: Asset.SymbolType = '4,EOS') {
         const action = Transfer.from({
             from: this.nativeSession.auth.actor,
-            to: 'eosio.evm',
-            quantity: String(Asset.fromFloat(Number(amount), '4,EOS')),
+            to: 'eosio.evmin',
+            quantity: String(Asset.fromFloat(Number(amount), tokenSymbol)),
             memo: this.evmSession.address,
         })
 
         return this.nativeSession.transact({
             action: {
                 authorization: [this.nativeSession.auth],
-                account: Name.from('eosio.token'),
+                account: Name.from(this.transferData.tokenContract || 'eosio.token'),
                 name: Name.from('transfer'),
                 data: action,
             },
         })
-    }
-
-    async balance() {
-        return get(currentAccountBalance)
-    }
-
-    async receivingBalance() {
-        return get(evmBalance)
-    }
-
-    async updateBalances() {
-        updateEvmBalance()
-        updateActiveAccount()
-    }
-
-    updateMainBalance() {
-        return updateEvmBalance()
     }
 }

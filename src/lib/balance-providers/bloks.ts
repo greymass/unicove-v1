@@ -68,6 +68,7 @@ export class BloksProvider implements BalanceProvider {
                 key,
                 chainId: this.chain.chainId,
                 account: account,
+                contract: Name.from(token.contract),
                 tokenKey: token.key,
                 quantity: asset,
             }

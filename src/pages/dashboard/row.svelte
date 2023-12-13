@@ -3,7 +3,7 @@
     import {derived} from 'svelte/store'
     import type {Balance} from '~/stores/balances'
     import type {Token} from '~/stores/tokens'
-    import {tokens} from '~/stores/tokens'
+    import {tokenFromBalance, tokens} from '~/stores/tokens'
 
     import Button from '~/components/elements/button.svelte'
     import Icon from '~/components/elements/icon.svelte'
@@ -19,8 +19,8 @@
     let expanded = false
 
     let token: Readable<Token | undefined> = derived([tokens], ([$tokens]) => {
-        if (balance && $tokens) {
-            return $tokens.find((t) => t.key === balance.tokenKey)
+        if (balance) {
+            return $tokens.find((t) => t.key === balance.tokenKey) || tokenFromBalance(balance)
         }
     })
 
