@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Asset as CoreAsset} from '@greymass/eosio'
-    import {activeEvmSession, activeSession, activeBlockchain, currentAccountBalance} from '~/store'
-    import {Token, systemToken} from '~/stores/tokens'
+    import {activeEvmSession, activeSession, activeBlockchain} from '~/store'
+    import {tokens, type Token, makeTokenKey, tokenFromBalance} from '~/stores/tokens'
 
     import Label from '~/components/elements/input/label.svelte'
     import Form from '~/components/elements/form.svelte'
@@ -11,6 +11,7 @@
     import type {TransferManager} from './managers/transferManager'
     import {transferManagers} from './managers'
     import type {EvmSession} from '~/lib/evm'
+    import {balances} from '~/stores/balances'
 
     export let handleContinue: () => void
     export let amount: string = ''
@@ -18,7 +19,7 @@
     export let to: Token | undefined
     export let transferManager: TransferManager | undefined
     export let feeAmount: CoreAsset | undefined
-    export let depositAmount: CoreAsset | undefined
+    export let sentAmount: CoreAsset | undefined
     export let receivedAmount: CoreAsset | undefined
     export let useEntireBalance: () => void
 
@@ -62,6 +63,8 @@
 
     let generatingOptions = false
 
+    $: balance = $balances.find((balance) => balance.tokenKey === from?.key)
+
     async function generateOptions(evmSession?: EvmSession) {
         if (!!generatingOptions) return
 
@@ -69,69 +72,78 @@
 
         fromOptions = []
 
+        const fromOptionsBeingSet: Token[] = []
+
         await Promise.all(
-            Object.values(transferManagers).map(async (TransferManagerClass) => {
-                if (!$systemToken) return
+            Object.values(transferManagers).map(async (transferManagerData) => {
+                const TransferManagerClass = transferManagerData.transferClass
 
                 // Only displaying accounts that support the current chain
                 if (!TransferManagerClass.supportedChains.includes($activeBlockchain?.id)) return
 
-                let accountBalance
+                const tokenKey = makeTokenKey({
+                    chainId: $activeBlockchain!.chainId,
+                    contract: transferManagerData.tokenContract,
+                    name: transferManagerData.tokenName,
+                })
 
-                if (!TransferManagerClass.evmRequired || evmSession) {
-                    const transferManager = new (TransferManagerClass as unknown as new (
-                        ...args: any[]
-                    ) => TransferManager)($activeSession!, evmSession)
-                    await transferManager.updateMainBalance()
-                    accountBalance = await transferManager.balance()
+                let token = $tokens?.find((token) => token.key === tokenKey)
+
+                if (!token) {
+                    const balance = $balances.find((balance) => balance.tokenKey === tokenKey)
+
+                    token = balance && tokenFromBalance(balance)
                 }
 
-                fromOptions.push({
-                    ...$systemToken,
-                    key: TransferManagerClass.from,
-                    name: TransferManagerClass.fromDisplayString,
-                    balance: accountBalance || 'Connect',
-                })
+                if (!token) {
+                    console.error(`Token ${transferManagerData.tokenName} not found`)
+                    return
+                }
+
+                fromOptionsBeingSet.push(token)
             })
         )
+
+        fromOptions = [...fromOptionsBeingSet]
 
         generatingOptions = false
     }
 
     $: {
         if (from) {
-            toOptions = fromOptions.filter((token) => token.key !== from?.key)
+            toOptions = fromOptions.filter(
+                (token) => from?.symbol.equals(token.symbol) && token.name !== from?.name
+            )
         } else {
-            toOptions = fromOptions
-        }
-    }
-
-    let lastBalanceValue = $currentAccountBalance?.value
-
-    $: {
-        // Regenerate options if the balance changes
-        if ($activeEvmSession && lastBalanceValue !== $currentAccountBalance?.value) {
-            generateOptions($activeEvmSession)
-            lastBalanceValue = $currentAccountBalance?.value
+            toOptions = []
         }
     }
 
     $: {
-        // Regenerate options if the user connects to evm wallet
-        if ($activeEvmSession) {
-            generateOptions($activeEvmSession)
-        } else {
+        if (from) {
+            const fromInOptions = fromOptions.find(
+                (token) => from?.symbol.equals(token.symbol) && token.name !== from?.name
+            )
+            if (!fromInOptions) {
+                toOptions = []
+            }
+        }
+    }
+
+    $: {
+        if ($tokens) {
             generateOptions()
         }
     }
 
     $: {
-        transferManager?.balance().then((balance) => {
-            availableToReceive = CoreAsset.from(
-                (balance?.value || 0) - (feeAmount?.value || 0),
-                balance?.symbol || '4,EOS'
-            )
-        })
+        const balanceAmount = balance?.quantity
+        const feeIsInSameToken = String(feeAmount?.symbol) === String(from?.symbol)
+        const valueAvailableToReceive =
+            (balanceAmount?.value || 0) - (feeIsInSameToken ? feeAmount?.value || 0 : 0)
+        availableToReceive =
+            balanceAmount &&
+            CoreAsset.from(valueAvailableToReceive, balanceAmount?.symbol || '4,EOS')
     }
 
     // Continue when the user presses enter
@@ -223,7 +235,7 @@
 <div class="container">
     <div class="top-section">
         <h1>Transfer</h1>
-        <h3>Transfer tokens between your accounts</h3>
+        <h3>Transfer tokens between {$activeBlockchain?.name} and {$activeBlockchain?.name} EVM</h3>
     </div>
     <Form>
         <div class="middle-section">
@@ -234,7 +246,6 @@
                         onTokenSelect={handleFromChange}
                         selectedToken={from}
                         tokenOptions={fromOptions}
-                        showTokensWithoutBalance
                     />
                 </div>
                 <Label align="left">Amount</Label>
@@ -261,16 +272,25 @@
                         showTokensWithoutBalance
                     />
                 </div>
-                {#if receivedAmount && receivedAmount.value > 0 && feeAmount && feeAmount.value > 0}
-                    <div class="label-container">
-                        <Label align="left">Amount Received: {String(receivedAmount)}</Label>
-                    </div>
-                    <div class="label-container">
-                        <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
-                    </div>
-                    <div class="label-container">
-                        <Label align="left">Total transferred: {String(depositAmount)}</Label>
-                    </div>
+                {#if sentAmount && sentAmount.value > 0 && feeAmount && feeAmount.value > 0}
+                    {#if feeAmount.symbol.equals(sentAmount.symbol)}
+                        <div class="label-container">
+                            <Label align="left">Amount Received: {String(receivedAmount)}</Label>
+                        </div>
+                        <div class="label-container">
+                            <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
+                        </div>
+                        <div class="label-container">
+                            <Label align="left">Total Transferred: {String(sentAmount)}</Label>
+                        </div>
+                    {:else}
+                        <div class="label-container">
+                            <Label align="left">Amount Sent: {String(sentAmount)}</Label>
+                        </div>
+                        <div class="label-container">
+                            <Label align="left">Transfer Fee: {String(feeAmount)}</Label>
+                        </div>
+                    {/if}
                 {/if}
             </div>
         </div>

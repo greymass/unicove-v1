@@ -1,4 +1,4 @@
-import {Asset, LinkSession} from 'anchor-link'
+import {Asset, LinkSession, Name} from 'anchor-link'
 import {get, writable} from 'svelte/store'
 import type {Writable} from 'svelte/store'
 
@@ -6,6 +6,7 @@ import {chainConfig} from '~/config'
 import {activeEvmSession, activeSession, evmBalance, waitForStoreValue} from '~/store'
 import type {Balance} from '~/stores/balances'
 import {getBalanceProvider} from '~/lib/balance-providers/utils'
+import {makeTokenKey} from './tokens'
 
 export const isLoading: Writable<boolean> = writable(false)
 
@@ -47,6 +48,37 @@ export async function updateBalances(session: LinkSession) {
             const provider = getBalanceProvider(p, chain)
             if (provider) {
                 const balances = await provider.fetchBalances(session.auth.actor)
+                // Fetch evm balances when applicable
+                const evmSession = get(activeEvmSession)
+                if (evmSession) {
+                    const evmBalances = await evmSession.getBalances()
+
+                    if (evmBalances.length > 0) {
+                        evmBalances.forEach((balance) => {
+                            const contract = Name.from('eosio.evm')
+                            const tokenKey = makeTokenKey({
+                                chainId: session.chainId,
+                                contract,
+                                name: `${String(balance.symbol.code).toLowerCase()}-evm`,
+                            })
+
+                            balances.push({
+                                key: `${tokenKey}-balance`,
+                                chainId: session.chainId,
+                                contract: contract,
+                                account: session.auth.actor,
+                                tokenKey,
+                                quantity: balance,
+                            })
+                        })
+                    } else {
+                        // If no balances are returned, try again in 3 seconds
+                        setTimeout(() => {
+                            updateBalances(session)
+                        }, 3000)
+                    }
+                }
+
                 balancesProvider.set({
                     balances: balances,
                 })

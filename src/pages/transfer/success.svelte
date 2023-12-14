@@ -6,45 +6,36 @@
 
     import {activeBlockchain} from '~/store'
     import type {TransferManager} from './managers/transferManager'
+    import {updateBalances} from '~/stores/balances-provider'
+    import {activeSession} from '~/store'
+    import {get} from 'svelte/store'
 
     export let transferManager: TransferManager
     export let transactResult: TransactResult | ethers.providers.TransactionResponse
     export let handleBack: () => void
+    export let balance: Asset | undefined
+    export let receivingBalance: Asset | undefined
 
     let refreshInterval: NodeJS.Timeout
 
     async function awaitBalancesUpdate() {
         // Create a copy of the initial value
-        const initialSendingBalance = await transferManager.balance()
-        const initialReceivedBalance = await transferManager.receivingBalance()
+        const initialSendingBalance = balance
+        const initialReceivedBalance = receivingBalance
 
         if (!initialSendingBalance) return
         if (!initialReceivedBalance) return
 
-        // Set the current value equal to the initial value
-        let currentSendingBalance: Asset | undefined
-        let currentReceivedBalance: Asset | undefined
-
         // Start an interval to continously monitor for changes to that value
         refreshInterval = setInterval(async () => {
-            currentSendingBalance = await transferManager.balance()
-            currentReceivedBalance = await transferManager.receivingBalance()
-
-            // If the balances changed, stop the interval
-            if (
-                (!currentSendingBalance || !currentSendingBalance.equals(initialSendingBalance)) &&
-                (!currentReceivedBalance || !currentReceivedBalance.equals(initialReceivedBalance))
-            ) {
-                clearInterval(refreshInterval)
-            }
             // Fetch the balances
-            transferManager.updateBalances()
-        }, 1000)
+            updateBalances(get(activeSession)!)
+        }, 5000)
 
-        // Timeout after 30 seconds
+        // Timeout after 60 seconds
         setTimeout(() => {
             clearInterval(refreshInterval)
-        }, 30000)
+        }, 60000)
     }
 
     awaitBalancesUpdate()

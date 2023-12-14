@@ -1,18 +1,9 @@
-import {get} from 'svelte/store'
-
-import {currentAccountBalance, evmBalance} from '~/store'
 import {TransferManager} from './transferManager'
 import {TelosEvmCreate, TelosEvmOpenWallet, Transfer} from '~/abi-types'
 import {Asset, Name} from 'anchor-link'
-import {updateActiveAccount} from '~/stores/account-provider'
-import {updateEvmBalance} from '~/stores/balances-provider'
 import {getTelosEvmAccount} from '~/lib/evm'
 
 export class TelosEvmBridge extends TransferManager {
-    static from = 'telos'
-    static fromDisplayString = 'TLOS'
-    static to = 'evm'
-    static toDisplayString = 'TLOS (EVM)'
     static supportedChains = ['telos']
     static evmRequired = true
 
@@ -50,23 +41,6 @@ export class TelosEvmBridge extends TransferManager {
         return this.nativeSession.transact({
             actions,
         })
-    }
-
-    async balance() {
-        return get(currentAccountBalance)
-    }
-
-    async receivingBalance() {
-        return get(evmBalance)
-    }
-
-    async updateMainBalance() {
-        return updateEvmBalance()
-    }
-
-    async updateBalances(): Promise<void> {
-        updateActiveAccount()
-        updateEvmBalance()
     }
 
     telosEvmOpenWalletAction() {

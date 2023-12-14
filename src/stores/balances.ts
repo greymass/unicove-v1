@@ -1,5 +1,5 @@
-import type {AccountName, ChainId, LinkSession, Name} from 'anchor-link'
-import {Asset} from 'anchor-link'
+import type {AccountName, ChainId, LinkSession} from 'anchor-link'
+import {Asset, Name} from 'anchor-link'
 import {derived} from 'svelte/store'
 import type {Readable} from 'svelte/store'
 
@@ -14,6 +14,7 @@ export interface Balance {
     account: Name
     tokenKey: string
     quantity: Asset
+    contract: Name
 }
 
 const initialBalances: Balance[] = []
@@ -73,6 +74,7 @@ export function createBalanceFromToken(
         account: session.auth.actor,
         tokenKey: makeTokenKey(token),
         quantity: balance,
+        contract: Name.from(token.contract),
     }
     return record
 }

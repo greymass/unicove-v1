@@ -3,38 +3,60 @@
 
     import Button from '~/components/elements/button.svelte'
     import TokenImage from '~/components/elements/image/token.svelte'
-    import {systemTokenKey} from '~/stores/tokens'
+    import {systemToken, tokens} from '~/stores/tokens'
 
+    import type {TransferType} from './managers'
     import type {TransferManager} from './managers/transferManager'
+    import {activeBlockchain} from '~/store'
 
     export let transferManager: TransferManager
-    export let depositAmount: Asset
+    export let transferManagerData: TransferType
     export let receivedAmount: Asset
+    export let sentAmount: Asset
     export let feeAmount: Asset | undefined
     export let handleConfirm: () => void
     export let handleBack: () => void
 
-    let depositAmountInUsd: string
-    let receivedAmountInUsd: string
-    let feeAmountInUsd: string
+    let receivedAmountInUsd: string | undefined
+    let sentAmountInUsd: string | undefined
+    let feeAmountInUsd: string | undefined
 
     function getUsdValues() {
-        transferManager.convertToUsd(depositAmount?.value).then((usdValue) => {
-            depositAmountInUsd = usdValue
-        })
+        transferManager
+            .convertToUsd(receivedAmount?.value, transferManagerData?.tokenName)
+            .then((usdValue) => {
+                receivedAmountInUsd = usdValue
+            })
 
-        transferManager.convertToUsd(receivedAmount?.value).then((usdValue) => {
-            receivedAmountInUsd = usdValue
-        })
+        transferManager
+            .convertToUsd(sentAmount?.value, transferManagerData?.tokenName)
+            .then((usdValue) => {
+                receivedAmountInUsd = usdValue
+            })
 
         if (feeAmount) {
-            transferManager.convertToUsd(feeAmount?.value).then((usdValue) => {
-                feeAmountInUsd = usdValue
-            })
+            transferManager
+                .convertToUsd(feeAmount?.value, transferManagerData?.tokenName)
+                .then((usdValue) => {
+                    feeAmountInUsd = usdValue
+                })
         }
     }
 
     getUsdValues()
+
+    $: transferToken = ($tokens.find(
+        (token) =>
+            token.name === transferManagerData.tokenName &&
+            token.contract === transferManagerData.tokenContract &&
+            $activeBlockchain?.chainId.equals(token.chainId)
+    ) || $systemToken)!
+    $: feeToken = ($tokens.find(
+        (token) =>
+            String(token.symbol) === String(feeAmount?.symbol) &&
+            $activeBlockchain?.chainId.equals(token.chainId)
+    ) || $systemToken)!
+    $: feeSymbol = feeAmount?.symbol
 </script>
 
 <style type="scss">
@@ -136,24 +158,24 @@
 
     <table>
         <tr>
-            <td>From {transferManager.fromDisplayString}</td>
+            <td>From {transferManagerData.fromLabel}</td>
             <td>{transferManager.fromAddress}</td>
         </tr>
         <tr>
-            <td>To {transferManager.toDisplayString}</td>
+            <td>To {transferManagerData.toLabel}</td>
             <td>{transferManager.toAddress}</td>
         </tr>
         <tr>
-            <td>Deposit Amount</td>
+            <td>Sent Amount</td>
             <td>
                 <div>
                     <div class="image-container">
-                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+                        <TokenImage width="20" height="20" tokenKey={transferToken.key} />
                     </div>
-                    {depositAmount}
+                    {sentAmount}
                 </div>
                 <div class="fiat-value">
-                    {depositAmountInUsd ? `~ ${depositAmountInUsd}` : ''}
+                    {sentAmountInUsd ? `~ ${sentAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>
@@ -162,29 +184,31 @@
             <td>
                 <div>
                     <div class="image-container">
-                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+                        <TokenImage width="20" height="20" tokenKey={feeToken.key} />
                     </div>
-                    {feeAmount || `0.0000 ${$systemTokenKey}`}
+                    {feeAmount || `0.0000 ${feeSymbol || $systemToken?.symbol}`}
                 </div>
                 <div class="fiat-value">
                     {feeAmountInUsd ? `~ ${feeAmountInUsd}` : ''}
                 </div>
             </td>
         </tr>
-        <tr>
-            <td>Received Amount</td>
-            <td>
-                <div>
-                    <div class="image-container">
-                        <TokenImage width="20" height="20" tokenKey={$systemTokenKey} />
+        {#if String(receivedAmount) !== String(sentAmount)}
+            <tr>
+                <td>Received Amount</td>
+                <td>
+                    <div>
+                        <div class="image-container">
+                            <TokenImage width="20" height="20" tokenKey={transferToken.key} />
+                        </div>
+                        {receivedAmount}
                     </div>
-                    {receivedAmount}
-                </div>
-                <div class="fiat-value">
-                    {receivedAmountInUsd ? `~ ${receivedAmountInUsd}` : ''}
-                </div>
-            </td>
-        </tr>
+                    <div class="fiat-value">
+                        {receivedAmountInUsd ? `~ ${receivedAmountInUsd}` : ''}
+                    </div>
+                </td>
+            </tr>
+        {/if}
     </table>
     <div class="bottom-section">
         <Button fluid style="primary" on:action={handleConfirm}>Sign Transaction</Button>

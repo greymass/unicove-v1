@@ -7,11 +7,21 @@ import {Asset, Name, NameType} from 'anchor-link'
 import {BigNumber, ethers} from 'ethers'
 import {getClient} from '~/api-client'
 
+import erc20_abi from './data/erc20_abi.json'
+
 export type AvailableEvms = 'eos-mainnet' | 'telos'
+
+export interface EvmToken {
+    name: string
+    symbol: string
+    decimals: number
+    address?: string
+    nativeToken?: boolean
+}
 export interface EvmChainConfig {
     chainId: string
     chainName: string
-    nativeCurrency: {name: string; symbol: string; decimals: number}
+    tokens: EvmToken[]
     rpcUrls: string[]
     blockExplorerUrls: string[]
 }
@@ -28,14 +38,40 @@ export const evmChainConfigs: {[key: string]: EvmChainConfig} = {
     eos: {
         chainId: '0x4571',
         chainName: 'EOS EVM Network',
-        nativeCurrency: {name: 'EOS', symbol: '4,EOS', decimals: 18},
+        tokens: [
+            {name: 'EOS', symbol: '4,EOS', decimals: 18, nativeToken: true},
+            {
+                name: 'USDT',
+                symbol: '4,USDT',
+                decimals: 6,
+                address: '0x33B57dC70014FD7AA6e1ed3080eeD2B619632B8e',
+            },
+            {
+                name: 'SEOS',
+                symbol: '4,SEOS',
+                decimals: 6,
+                address: '0xbfb10f85b889328e4a42507e31a07977ae00eec6',
+            },
+            {
+                name: 'BOX',
+                symbol: '6,BOX',
+                decimals: 6,
+                address: '0x9b3754f036de42846e60c8d8c89b18764f168367',
+            },
+            {
+                name: 'USN',
+                symbol: '4,USN',
+                decimals: 6,
+                address: '0x8d0258d6ccfb0ce394dc542c545566936b7974f9',
+            },
+        ],
         rpcUrls: ['https://api.evm.eosnetwork.com/'],
         blockExplorerUrls: ['https://explorer.evm.eosnetwork.com'],
     },
     telos: {
         chainId: '0x28',
         chainName: 'Telos EVM Mainnet',
-        nativeCurrency: {name: 'Telos', symbol: '4,TLOS', decimals: 18},
+        tokens: [{name: 'Telos', symbol: '4,TLOS', decimals: 18, nativeToken: true}],
         rpcUrls: ['https://mainnet.telos.net/evm'],
         blockExplorerUrls: ['https://teloscan.io'],
     },
@@ -74,6 +110,23 @@ export class EvmSession {
         return evmChainConfigs[this.chainName]
     }
 
+    erc20ContractBySymbol(tokenSymbol: Asset.SymbolType) {
+        const token = this.getTokens()?.find((token) => token.symbol === String(tokenSymbol))
+
+        return token && this.erc20Contract(token)
+    }
+
+    erc20Contract(token: EvmToken) {
+        if (!token.address) {
+            return
+        }
+        return new ethers.Contract(token.address, erc20_abi, this.signer)
+    }
+
+    erc20Interface() {
+        return new ethers.utils.Interface(erc20_abi)
+    }
+
     static async from({chainName, nativeAccountName}: EvmSessionFromParams) {
         if (window.ethereum) {
             const evmChainConfig = evmChainConfigs[chainName]
@@ -104,16 +157,74 @@ export class EvmSession {
         return this.signer.sendTransaction(tx)
     }
 
-    async getBalance() {
+    async getBalance(tokenName?: string) {
         if (this.chainName === 'telos') {
             return this.getTelosEvmBalance()
         }
 
-        const wei = await this.signer.getBalance()
+        let token
 
-        const tokenName = evmChainConfigs[this.chainName].nativeCurrency.name
+        if (tokenName) {
+            token = this.getToken(tokenName)
+        } else {
+            token = this.getNativeToken()
+        }
 
-        return Asset.from(formatToken(ethers.utils.formatEther(wei), tokenName))
+        if (!token) {
+            throw new Error('Token not found.')
+        }
+
+        let wei: BigNumber
+
+        const contract = this.erc20Contract(token)
+
+        if (contract) {
+            wei = await contract.balanceOf(this.address)
+        } else if (token?.nativeToken) {
+            wei = await this.signer.getBalance()
+        } else {
+            throw new Error('Non native token must have an address.')
+        }
+
+        return weiToAmount(wei, token)
+    }
+
+    getBalances() {
+        const evmChainConfig = evmChainConfigs[this.chainName]
+
+        return Promise.all(evmChainConfig.tokens.map(async (token) => this.getBalance(token.name)))
+    }
+
+    getTokens() {
+        const evmChainConfig = evmChainConfigs[this.chainName]
+
+        return evmChainConfig.tokens
+    }
+
+    getToken(tokenSymbolOrCode: Asset.SymbolType | Asset.SymbolCodeType) {
+        const token = this.getTokens()?.find(
+            (token) =>
+                token.symbol === String(tokenSymbolOrCode) ||
+                token.name === String(tokenSymbolOrCode)
+        )
+
+        if (!token) {
+            throw new Error(`Token "${tokenSymbolOrCode}" not found.`)
+        }
+
+        return token
+    }
+
+    getNativeToken() {
+        const evmChainConfig = evmChainConfigs[this.chainName]
+
+        const nativeToken = evmChainConfig.tokens?.find((token) => token.nativeToken)
+
+        if (!nativeToken) {
+            throw new Error('Native token info not found.')
+        }
+
+        return nativeToken
     }
 
     async getTelosEvmBalance() {
@@ -123,16 +234,17 @@ export class EvmSession {
 
         const account = await getTelosEvmAccount(this.nativeAccountName)
 
+        const nativeTokenSymbol = this.chainConfig.tokens?.find(
+            (token) => token.nativeToken
+        )?.symbol
+
         if (!account) {
-            return Asset.from(0, this.chainConfig.nativeCurrency.symbol)
+            return Asset.from(0, nativeTokenSymbol!)
         }
 
         const bn = BigNumber.from(`0x${account.balance}`)
 
-        return Asset.from(
-            Number(ethers.utils.formatEther(bn)),
-            this.chainConfig.nativeCurrency.symbol
-        )
+        return Asset.from(Number(ethers.utils.formatEther(bn)), nativeTokenSymbol!)
     }
 }
 
@@ -175,10 +287,6 @@ export function convertToEvmAddress(eosAccountName: string): string {
         throw new Error('This CEX has not fully support the EOS-EVM bridge yet.')
     }
     return convertToEthAddress(eosAccountName)
-}
-
-function formatToken(amount: string, tokenSymbol: string) {
-    return `${Number(amount).toFixed(4)} ${tokenSymbol}`
 }
 
 export async function switchNetwork(evmChainConfig: EvmChainConfig) {
@@ -249,17 +357,8 @@ function uint64ToAddr(str: string) {
     return '0xbbbbbbbbbbbbbbbbbbbbbbbb' + str
 }
 
-let connectingToEvm = false
-
 export async function startEvmSession(): Promise<EvmSession | undefined> {
     let evmSession: EvmSession
-
-    if (connectingToEvm) {
-        await wait(5000)
-        return startEvmSession()
-    }
-
-    connectingToEvm = true
 
     const blockchain = get(activeBlockchain)
     const nativeSession = get(activeSession)
@@ -276,7 +375,6 @@ export async function startEvmSession(): Promise<EvmSession | undefined> {
         }
 
         if (!e.message) {
-            connectingToEvm = false
             return
         }
 
@@ -285,8 +383,19 @@ export async function startEvmSession(): Promise<EvmSession | undefined> {
 
     if (evmSession) {
         activeEvmSession.set(evmSession)
-        connectingToEvm = false
     }
 
     return evmSession
+}
+
+export function weiToAmount(wei: BigNumber, token: EvmToken) {
+    return Asset.from(fromWei(wei, token.decimals), token.symbol)
+}
+
+export function fromWei(wei: BigNumber, decimals: number) {
+    if (decimals === 18) {
+        return Number(ethers.utils.formatEther(wei))
+    } else {
+        return wei.toNumber() / Math.pow(10, decimals)
+    }
 }

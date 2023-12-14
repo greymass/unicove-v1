@@ -1,6 +1,8 @@
 <script>
     import {activate} from '~/auth'
     import type {SessionLike} from '~/auth'
+    import {activeSession} from '~/store'
+    import {fetchBalances} from '~/stores/balances'
 
     import Icon from '~/components/elements/icon.svelte'
 
