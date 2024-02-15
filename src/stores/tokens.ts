@@ -9,12 +9,15 @@ import {activeBlockchain, activePriceTicker, activeSession} from '~/store'
 import {priceTicker} from '~/price-ticker'
 import {Balance, balances} from '~/stores/balances'
 
+import SystemTokens from '../lib/system-tokens.json'
 import EvmTokens from '../lib/evm/data/tokens.json'
+import {ramPrice} from '~/pages/resources/resources'
 
 export interface Token {
     key: string
     chainId: ChainId
     contract: NameType
+    action?: NameType
     symbol: Asset.Symbol
     name: NameType
     price?: number
@@ -126,7 +129,7 @@ export function loadTokenMetadata(session: LinkSession) {
     const sysToken = createTokenFromChainId(session.chainId, get(activePriceTicker))
     records.push(sysToken)
 
-    const allTokens = [...AntelopeTokens, ...EvmTokens]
+    const allTokens = [...AntelopeTokens, ...EvmTokens, ...SystemTokens]
 
     const chain = chainConfig(session.chainId)
 
@@ -167,6 +170,16 @@ export function loadTokenPrices(chain: ChainConfig, currentBalances: Balance[]) 
         const token = getToken(balance.tokenKey)
         if (token) {
             const pairName = token.symbol.name.toLowerCase() + 'usd'
+
+            const ramunsub = ramPrice.subscribe((v) => {
+                if (v !== undefined) {
+                    if (pairName === 'ramusd') {
+                        setTokenPrice(token, v)
+                    }
+                }
+            })
+            unsubscribers.push(ramunsub)
+
             const unsubscribe = priceTicker(chain, pairName).value.subscribe((v) => {
                 if (v !== undefined) {
                     setTokenPrice(token, v)

@@ -1,0 +1,32 @@
+[
+    {
+        "key": "ramkb",
+        "symbol": "RAM",
+        "account": "eosio",
+        "chain": "eos",
+        "supply": {
+            "precision": 3
+        },
+        "metadata": {
+            "name": "RAM (kb) Used",
+            "website": "https://eos.io",
+            "logo": "/images/token-eos-dark.svg",
+            "created_at": "2022-08-15T13:34:31.994Z"
+        }
+    },
+    {
+        "key": "ramkb",
+        "symbol": "RAM",
+        "account": "eosio",
+        "chain": "eos",
+        "supply": {
+            "precision": 3
+        },
+        "metadata": {
+            "name": "RAM (kb) Available",
+            "website": "https://eos.io",
+            "logo": "/images/token-eos-dark.svg",
+            "created_at": "2022-08-15T13:34:31.994Z"
+        }
+    }
+]

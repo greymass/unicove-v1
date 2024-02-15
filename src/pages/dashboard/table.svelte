@@ -100,7 +100,7 @@
     {/if}
     {#if $records}
         {#each $records as balance}
-            <TokenRow {balance} />
+            <TokenRow {balance} transferable={!balance.tokenKey.includes('ram-kb-used')} />
         {/each}
     {/if}
 </div>

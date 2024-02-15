@@ -1,7 +1,7 @@
 import {derived, Readable} from 'svelte/store'
 import {API, Asset} from '@greymass/eosio'
 import {Resources, SampleUsage, PowerUpState, RAMState, REXState} from '@greymass/eosio-resources'
-import {activeBlockchain} from '~/store'
+import {activeBlockchain, activePriceTicker} from '~/store'
 
 import {getClient} from '../../api-client'
 import {ChainConfig, ChainFeatures, resourceFeatures} from '~/config'
@@ -186,3 +186,13 @@ export const getRAMState = async (set: (v: any) => void, chain: ChainConfig) =>
             // Set to undefined, which is the same as uninitialized
             set(undefined)
         })
+
+export const ramPrice = derived(
+    [stateRAM, activePriceTicker],
+    ([$stateRAM, $activePriceTicker]) => {
+        if ($stateRAM) {
+            return $stateRAM.price_per(1000) * $activePriceTicker
+        }
+        return 0
+    }
+)
