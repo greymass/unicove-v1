@@ -34,14 +34,13 @@
     }
 
     function formatBalanceString(balanceString: string) {
-        if (balanceString.length < 9) {
-            return balanceString
-        }
-
         const balanceInIntegers = balanceString.split('.')[0]
+        const decimals = balanceString.split('.')[1]
 
         if (balanceInIntegers.length < 8) {
-            return balanceInIntegers
+            return decimals?.length === 0
+                ? balanceString
+                : `${balanceInIntegers}.${decimals.substring(0, 4)}`
         }
 
         return `${Number(balanceInIntegers) / 1000000} M`

@@ -173,7 +173,11 @@ export const chains: ChainConfig[] = [
     },
     {
         id: 'proton',
-        chainFeatures: new Set([ChainFeatures.Staking, ChainFeatures.VoteProducer]),
+        chainFeatures: new Set([
+            ChainFeatures.BuyRAM,
+            ChainFeatures.Staking,
+            ChainFeatures.VoteProducer,
+        ]),
         chainId: ChainId.from('384da888112027f0321850a169f737c33e53b388aad48b5adace4bab97f437e0'),
         coreTokenSymbol: Asset.Symbol.from('4,XPR'),
         coreTokenContract: Name.from('eosio.token'),
