@@ -238,6 +238,7 @@ export const chains: ChainConfig[] = [
             ChainFeatures.BidName,
             ChainFeatures.BuyRAM,
             ChainFeatures.Fuel,
+            ChainFeatures.PowerUp,
             ChainFeatures.Staking,
             ChainFeatures.VoteProducer,
             ChainFeatures.DelphiOracle,
