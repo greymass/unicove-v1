@@ -1,6 +1,5 @@
 <script>
     import {writable} from 'svelte/store'
-    import {Asset} from 'anchor-link'
 
     import {activeBlockchain} from '~/store'
     import type {Token} from '~/stores/tokens'

@@ -30,6 +30,12 @@
             name: 'Transfer',
             path: '/transfer',
         },
+        {
+            icon: 'battery-charging',
+            name: 'Earn',
+            path: '/earn',
+        },
+
         ...(banxaIsAvailable($activeBlockchain)
             ? [
                   {
