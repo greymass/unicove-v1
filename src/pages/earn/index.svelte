@@ -110,7 +110,7 @@
     }
 
     function toStakeConfirm(fromStep: Step) {
-        if (fromStep === Step.Stake) {
+        if (fromStep === Step.Stake || fromStep === Step.Bootstrap) {
             selectedAction = 'Stake'
         } else {
             selectedAction = 'Unstake'
