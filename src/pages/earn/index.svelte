@@ -10,6 +10,7 @@
     import {balances} from '~/stores/balances'
     import {REXDeposit, REXWithdraw, REXBUYREX, REXSELLREX} from '~/abi-types'
     import type {FormTransaction} from '~/ui-types'
+    import {rexIsAvailable} from '~/lib/rex'
 
     import Page from '~/components/layout/page.svelte'
     import TransactionForm from '~/components/elements/form/transaction.svelte'
@@ -28,6 +29,11 @@
     let onConfirmBack: () => void
     let error: string = ''
 
+    $: {
+        if (!rexIsAvailable($activeBlockchain)) {
+            window.location.href = window.origin
+        }
+    }
     const availableSystemTokens: Readable<Asset> = derived(
         [balances, currentAccount, systemTokenKey, activeBlockchain],
         ([$balances, $currentAccount, $systemTokenKey, $activeBlockchain]) => {
