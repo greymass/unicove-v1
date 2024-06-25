@@ -189,7 +189,7 @@
         if ($currentAccount && $currentAccount.rex_info && $currentAccount.rex_info.rex_balance) {
             return $currentAccount.rex_info.rex_balance
         }
-        return undefined
+        return Asset.from(0, $systemToken!.symbol)
     })
 
     async function handleConfirm(context: FormTransaction) {
@@ -209,7 +209,11 @@
         } catch (e) {
             console.warn('Error during transact', e)
             if (context) {
-                context.setTransactionError(e)
+                let msg = String(e)
+                if (e.details && e.details.length > 0 && e.details[0].message) {
+                    msg = e.details[0].message
+                }
+                context.setTransactionError(msg)
             }
         }
     }
