@@ -83,7 +83,7 @@
         <ProgressBar step={1} />
     </div>
     <div class="middle-section">
-        <Form>
+        <Form on:submit={onConfirm}>
             <InputLabel>amount to stake</InputLabel>
             <div class="token-selector">
                 <TokenSelector defaultToken={token} {tokenOptions} onTokenSelect={() => {}} />
@@ -95,7 +95,7 @@
                 focus
                 fluid
                 name="amount"
-                placeholder={amount}
+                placeholder={`Enter amount of tokens`}
                 balance={availableTokens}
                 on:changed={onAmountChanged}
             />
@@ -106,7 +106,7 @@
             fluid
             style="primary"
             size="large"
-            disabled={false}
+            disabled={!amountValid}
             formValidation
             on:action={onConfirm}
         >

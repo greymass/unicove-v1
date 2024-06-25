@@ -100,7 +100,7 @@
                     focus
                     fluid
                     name="amount"
-                    placeholder={amount}
+                    placeholder={`Enter amount of tokens`}
                     balance={availableTokens}
                     on:changed={onAmountChanged}
                 />
