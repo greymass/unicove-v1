@@ -3,6 +3,7 @@
 
     import Button from '~/components/elements/button.svelte'
 
+    export let availableTokens: Asset
     export let maturedBalance: Asset
     export let rexBalance: Asset
     export let toStake: () => void
@@ -105,7 +106,7 @@
                     fluid
                     style="primary"
                     size="regular"
-                    disabled={false}
+                    disabled={availableTokens.value <= 0}
                     formValidation
                     on:action={toStake}
                 >
@@ -115,7 +116,7 @@
                     fluid
                     style="primary"
                     size="regular"
-                    disabled={false}
+                    disabled={maturedBalance.value <= 0}
                     formValidation
                     on:action={toUnstake}
                 >

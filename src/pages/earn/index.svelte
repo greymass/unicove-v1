@@ -265,6 +265,7 @@
             />
         {:else if $step === Step.Overview}
             <REXOverview
+                availableTokens={$availableSystemTokens}
                 maturedBalance={$maturedBalance}
                 rexBalance={$rexBalance}
                 toStake={() => switchStep(Step.Stake)}
