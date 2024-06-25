@@ -12,7 +12,7 @@
     export let availableTokens: Asset
     export let nextStep: () => void
 
-    let percent = 85
+    let percent = 0
     let amountValid = false
 
     function onAmountChanged(event: CustomEvent<InputResponse>) {
