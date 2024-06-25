@@ -16,10 +16,12 @@
     export let availableTokens: Asset
     export let nextStep: () => void
 
+    let selectedToken: Token
+
     let tokenOptions: Token[] = []
     if (token) {
-        let newToken = {...token}
-        newToken.balance = availableTokens
+        let newToken = {...token, balance: availableTokens}
+        selectedToken = newToken
         tokenOptions = [newToken]
     }
     let amountValid = false
@@ -92,9 +94,9 @@
             <InputLabel>amount to unstake</InputLabel>
             <div class="token-selector">
                 <TokenSelector
-                    defaultToken={token}
+                    defaultToken={selectedToken}
                     {tokenOptions}
-                    selectedToken={token}
+                    {selectedToken}
                     onTokenSelect={() => {}}
                 />
             </div>

@@ -78,6 +78,23 @@
         }
     )
 
+    const maturedBalance: Readable<Asset> = derived(
+        [currentAccount, stateREX, systemToken],
+        ([$currentAccount, $stateREX, $systemToken]) => {
+            let value = 0
+            if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
+                if ($stateREX.value === 0.0001) {
+                    value =
+                        ($stateREX.total_lendable.value / $stateREX.total_rex.value) *
+                        Number($currentAccount.rex_info.matured_rex)
+                } else {
+                    value = $stateREX.value * Number($currentAccount.rex_info.matured_rex)
+                }
+            }
+            return Asset.fromUnits(value, $systemToken!.symbol)
+        }
+    )
+
     const rexToken: Readable<Token> = derived(
         [systemToken, rexBalance],
         ([$systemToken, $rexBalance]) => {
@@ -248,6 +265,7 @@
             />
         {:else if $step === Step.Overview}
             <REXOverview
+                maturedBalance={$maturedBalance}
                 rexBalance={$rexBalance}
                 toStake={() => switchStep(Step.Stake)}
                 toUnstake={() => switchStep(Step.Unstake)}
@@ -263,7 +281,7 @@
             <REXUnstake
                 bind:amount={selectedAmount}
                 token={$rexToken}
-                availableTokens={$rexBalance}
+                availableTokens={$maturedBalance}
                 nextStep={() => toStakeConfirm(Step.Unstake)}
             />
         {:else if $step === Step.Confirm}

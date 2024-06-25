@@ -3,6 +3,7 @@
 
     import Button from '~/components/elements/button.svelte'
 
+    export let maturedBalance: Asset
     export let rexBalance: Asset
     export let toStake: () => void
     export let toUnstake: () => void
@@ -96,7 +97,8 @@
         <div class="rex">
             <div class="label">currently staked balance</div>
             <div class="balance">
-                {rexBalance}
+                {maturedBalance.value} / {rexBalance.value}
+                {rexBalance.symbol.name}
             </div>
             <div class="buttons">
                 <Button
