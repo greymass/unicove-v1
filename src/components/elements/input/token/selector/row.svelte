@@ -1,5 +1,4 @@
 <script>
-    import type {Readable} from 'svelte/store'
     import Icon from '~/components/elements/icon.svelte'
     import TokenImage from '~/components/elements/image/token.svelte'
     import type {Token} from '~/stores/tokens'

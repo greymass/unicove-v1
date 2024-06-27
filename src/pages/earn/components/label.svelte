@@ -24,7 +24,7 @@
         flex: 1;
         text-align: right;
     }
-    changeStep {
+    .changeStep {
         color: var(--main-blue);
         cursor: pointer;
         display: flex;
