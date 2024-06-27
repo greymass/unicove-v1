@@ -76,7 +76,7 @@
         margin-bottom: 12px;
         text-align: center;
     }
-    .balance {
+    .staked {
         color: var(--black);
         font-family: Inter;
         font-style: normal;
@@ -85,7 +85,35 @@
         line-height: 29px;
         text-align: center;
         letter-spacing: -0.47px;
+        margin-bottom: 2px;
+    }
+    .matured {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
         margin-bottom: 26px;
+    }
+
+    .matured .maturedtooltip {
+        visibility: hidden;
+        color: var(--main-blue);
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 29px;
+        text-align: center;
+        letter-spacing: -0.47px;
+        background-color: var(--cultured);
+        padding: 0px 0;
+        border-radius: 6px;
+
+        position: absolute;
+        z-index: 1;
+    }
+
+    .matured:hover .maturedtooltip {
+        visibility: visible;
     }
 </style>
 
@@ -97,10 +125,14 @@
     <div class="middle-section">
         <div class="rex">
             <div class="label">currently staked balance</div>
-            <div class="balance">
-                {maturedBalance.value} / {rexBalance.value}
-                {rexBalance.symbol.name}
+            <div class="staked">
+                {rexBalance}
             </div>
+            <div class="matured">
+                {maturedBalance}
+                <div class="maturedtooltip">matured</div>
+            </div>
+
             <div class="buttons">
                 <Button
                     fluid
