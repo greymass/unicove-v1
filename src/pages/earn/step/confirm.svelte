@@ -99,9 +99,11 @@
         <LabelValue header="Action">
             <span>{action}</span>
         </LabelValue>
-        <LabelValue header="Time to fully matured">
-            <span>72 hours</span>
-        </LabelValue>
+        {#if action === 'Stake'}
+            <LabelValue header="Time to fully matured">
+                <span>72 hours</span>
+            </LabelValue>
+        {/if}
 
         <LabelValue header="Token Amount" changeStep={handleBack}>
             <div class="amount">

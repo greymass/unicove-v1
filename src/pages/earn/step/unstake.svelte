@@ -60,7 +60,7 @@
     .middle-section {
         margin: 0 auto;
         max-width: 28rem;
-        margin-bottom: 84px;
+        margin-bottom: 31px;
     }
     .bottom-section {
         margin: 0 auto;
