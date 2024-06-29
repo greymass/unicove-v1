@@ -13,6 +13,7 @@
 
     export let amount: string
     export let token: Token | undefined
+    export let rexBalance: Asset
     export let availableTokens: Asset
     export let nextStep: () => void
 
@@ -26,13 +27,24 @@
     }
     let amountValid = false
 
+    function maxBalance() {
+        if (availableTokens) {
+            amount = String(availableTokens.value)
+            amountValid = true
+        }
+    }
+
     function onConfirm() {
         nextStep()
     }
 
     function onAmountChanged(event: CustomEvent<InputResponse>) {
-        let newAmount = Asset.from(Number(event.detail.value), availableTokens.symbol).value
-        amount = String(newAmount)
+        try {
+            let newAmount = Asset.from(Number(event.detail.value), availableTokens.symbol).value
+            amount = String(newAmount)
+        } catch (error) {
+            console.log('failed to apply amount change', error)
+        }
     }
 </script>
 
@@ -41,9 +53,6 @@
         border: 1px solid var(--divider-grey);
         border-radius: 20px;
         padding: 26px;
-        :global(.button) {
-            margin-top: 31px;
-        }
     }
     .top-section {
         margin-bottom: 42px;
@@ -79,7 +88,46 @@
         letter-spacing: -0.18px;
     }
     .token-selector {
+        margin-bottom: 10px;
+    }
+    .label {
+        color: var(--dark-grey);
+        font-weight: 600;
+        font-size: 10px;
+        line-height: 12px;
+        letter-spacing: 0.1px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        text-align: start;
         margin-bottom: 32px;
+    }
+    .controls {
+        margin-top: 31px;
+        text-align: center;
+        :global(.button) {
+            background: none;
+            color: var(--main-blue);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+    }
+    .actions {
+        padding: 13px;
+        cursor: pointer;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 10px;
+        line-height: 12px;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        text-align: center;
+        letter-spacing: 0.1px;
+        text-transform: uppercase;
+        color: var(--main-blue);
+        user-select: none;
+        -webkit-user-select: none;
     }
 </style>
 
@@ -100,6 +148,10 @@
                     onTokenSelect={() => {}}
                 />
             </div>
+            <div class="label">
+                total staked {rexBalance}
+            </div>
+
             <InputAsset
                 bind:valid={amountValid}
                 bind:value={amount}
@@ -111,6 +163,9 @@
                 balance={availableTokens}
                 on:changed={onAmountChanged}
             />
+            <div class="actions">
+                <span on:click={maxBalance}>Entire Balance</span>
+            </div>
         </Form>
     </div>
     <div class="bottom-section">
@@ -124,5 +179,9 @@
         >
             Unstake tokens
         </Button>
+
+        <div class="controls">
+            <Button href="/" style="no-frame">Cancel</Button>
+        </div>
     </div>
 </div>

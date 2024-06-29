@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Asset} from 'anchor-link'
+    import {Asset} from 'anchor-link'
 
     import Button from '~/components/elements/button.svelte'
 
@@ -29,6 +29,13 @@
         border: 1px solid var(--divider-grey);
         border-radius: 8px;
         padding: 26px;
+        margin-bottom: 21px;
+    }
+    .bottom-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
     }
     .header {
         color: var(--black);
@@ -67,7 +74,7 @@
         gap: 12px;
     }
     .label {
-        color: var(--main-black);
+        color: var(--dark-grey);
         font-weight: 600;
         font-size: 10px;
         line-height: 12px;
@@ -88,14 +95,17 @@
         margin-bottom: 2px;
     }
     .matured {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black;
+        color: var(--dark-grey);
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 29px;
+        text-align: center;
+        letter-spacing: -0.47px;
         margin-bottom: 26px;
     }
-
-    .matured .maturedtooltip {
-        visibility: hidden;
+    .faq {
         color: var(--main-blue);
         font-family: Inter;
         font-style: normal;
@@ -104,16 +114,8 @@
         line-height: 29px;
         text-align: center;
         letter-spacing: -0.47px;
-        background-color: var(--cultured);
-        padding: 0px 0;
-        border-radius: 6px;
-
-        position: absolute;
-        z-index: 1;
-    }
-
-    .matured:hover .maturedtooltip {
-        visibility: visible;
+        margin-bottom: 26px;
+        text-decoration: none;
     }
 </style>
 
@@ -129,8 +131,7 @@
                 {rexBalance}
             </div>
             <div class="matured">
-                {maturedBalance}
-                <div class="maturedtooltip">matured</div>
+                {maturedBalance} matured
             </div>
 
             <div class="buttons">
@@ -157,5 +158,7 @@
             </div>
         </div>
     </div>
-    <div class="bottom-section" />
+    <div class="bottom-section">
+        <a href="/staking/faq" class="faq">How staking works?</a>
+    </div>
 </div>

@@ -40,7 +40,7 @@
     .middle-section {
         margin: 0 auto;
         max-width: 28rem;
-        margin-bottom: 84px;
+        margin-bottom: 62px;
     }
     .bottom-section {
         margin: 0 auto;
@@ -99,12 +99,16 @@
         <LabelValue header="Action">
             <span>{action}</span>
         </LabelValue>
+        <LabelValue header="Time to fully matured">
+            <span>72 hours</span>
+        </LabelValue>
+
         <LabelValue header="Token Amount" changeStep={handleBack}>
             <div class="amount">
                 <span class="logo-container">
                     <TokenImage width="18" height="18" {tokenKey} />
                 </span>
-                <span>{amount.value}</span>
+                <span>{amount}</span>
             </div>
             {#if usd}
                 <div class="value">≈ $ {usd} USD</div>

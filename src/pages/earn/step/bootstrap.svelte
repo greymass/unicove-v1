@@ -16,18 +16,26 @@
     let amountValid = false
 
     function onAmountChanged(event: CustomEvent<InputResponse>) {
-        let newAmount = Asset.from(Number(event.detail.value), availableTokens.symbol).value
-        amount = String(newAmount)
-        percent = Math.floor((newAmount / availableTokens.value) * 100)
+        try {
+            let newAmount = Asset.from(Number(event.detail.value), availableTokens.symbol).value
+            amount = String(newAmount)
+            percent = Math.floor((newAmount / availableTokens.value) * 100)
+        } catch (error) {
+            console.log('failed to apply amount change', error)
+        }
     }
     function onPercentChanged(event: any) {
-        let newPercent = Number(event.detail.value)
-        percent = newPercent
-        let newAmount = Asset.from(
-            (newPercent / 100) * availableTokens.value,
-            availableTokens.symbol
-        ).value
-        amount = String(newAmount)
+        try {
+            let newPercent = Number(event.detail.value)
+            percent = newPercent
+            let newAmount = Asset.from(
+                (newPercent / 100) * availableTokens.value,
+                availableTokens.symbol
+            ).value
+            amount = String(newAmount)
+        } catch (error) {
+            console.log('failed to apply percent change', error)
+        }
     }
     function onConfirm() {
         nextStep()

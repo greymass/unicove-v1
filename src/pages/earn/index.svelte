@@ -274,6 +274,7 @@
         {:else if $step === Step.Stake}
             <REXStake
                 bind:amount={selectedAmount}
+                rexBalance={$rexBalance}
                 token={$systemToken}
                 availableTokens={$availableSystemTokens}
                 nextStep={() => toStakeConfirm(Step.Stake)}
@@ -281,6 +282,7 @@
         {:else if $step === Step.Unstake}
             <REXUnstake
                 bind:amount={selectedAmount}
+                rexBalance={$rexBalance}
                 token={$rexToken}
                 availableTokens={$maturedBalance}
                 nextStep={() => toStakeConfirm(Step.Unstake)}
