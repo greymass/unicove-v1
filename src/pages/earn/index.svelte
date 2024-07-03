@@ -91,7 +91,7 @@
                     value = $stateREX.value * Number($currentAccount.rex_info.matured_rex)
                 }
             }
-            return Asset.fromUnits(value, $systemToken!.symbol)
+            return Asset.from(value, $systemToken!.symbol)
         }
     )
 
