@@ -13,16 +13,16 @@
     },
     "browserslist": ">0.75%, not ie 11, not UCAndroid >0, not OperaMini all",
     "resolutions": {
-        "@greymass/eosio": "^0.6.0",
-        "acorn": "8.0.1"
+        "@greymass/eosio": "npm:@wharfkit/antelope",
+        "@wharfkit/antelope": "^1.0.8"
     },
     "dependencies": {
         "@greymass/antelope-tokens": "^0.0.1",
         "@greymass/create-account": "^0.0.9",
-        "@greymass/eosio": "^0.6.0",
         "@greymass/eosio-resources": "0.7.0",
         "@lottiefiles/svelte-lottie-player": "^0.2.0",
         "@types/feather-icons": "^4.7.0",
+        "@wharfkit/antelope": "^1.0.8",
         "anchor-link": "^3.3.0",
         "anchor-link-browser-transport": "^3.2.0",
         "bn.js": "^5.2.1",
