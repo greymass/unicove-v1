@@ -1,13 +1,15 @@
 <script lang="ts">
-    import {Asset} from 'anchor-link'
+    import type {Asset} from 'anchor-link'
 
     import Button from '~/components/elements/button.svelte'
 
+    import type {REXInfo} from '~/pages/earn/types'
+
     export let availableTokens: Asset
-    export let maturedBalance: Asset
-    export let rexBalance: Asset
+    export let rexInfo: REXInfo
     export let toStake: () => void
     export let toUnstake: () => void
+    export let toClaim: () => void
 </script>
 
 <style type="scss">
@@ -94,7 +96,18 @@
         letter-spacing: -0.47px;
         margin-bottom: 2px;
     }
-    .matured {
+    .unstakable {
+        color: var(--dark-grey);
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 29px;
+        text-align: center;
+        letter-spacing: -0.47px;
+        margin-bottom: 2px;
+    }
+    .claimable {
         color: var(--dark-grey);
         font-family: Inter;
         font-style: normal;
@@ -105,6 +118,7 @@
         letter-spacing: -0.47px;
         margin-bottom: 26px;
     }
+
     .faq {
         color: var(--main-blue);
         font-family: Inter;
@@ -128,10 +142,13 @@
         <div class="rex">
             <div class="label">currently staked balance</div>
             <div class="staked">
-                {rexBalance}
+                {rexInfo.total}
             </div>
-            <div class="matured">
-                {maturedBalance} matured
+            <div class="unstakable">
+                {rexInfo.savings} unstakable
+            </div>
+            <div class="claimable">
+                {rexInfo.matured} claimable
             </div>
 
             <div class="buttons">
@@ -149,11 +166,21 @@
                     fluid
                     style="primary"
                     size="regular"
-                    disabled={maturedBalance.value <= 0}
+                    disabled={rexInfo.savings.value <= 0}
                     formValidation
                     on:action={toUnstake}
                 >
                     Unstake
+                </Button>
+                <Button
+                    fluid
+                    style="primary"
+                    size="regular"
+                    disabled={rexInfo.matured.value <= 0}
+                    formValidation
+                    on:action={toClaim}
+                >
+                    Claim
                 </Button>
             </div>
         </div>

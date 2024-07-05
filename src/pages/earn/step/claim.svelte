@@ -2,7 +2,7 @@
     import {Asset} from 'anchor-link'
 
     import type {Token} from '~/stores/tokens'
-    import type {InputResponse} from 'src/ui-types'
+    import type {InputResponse} from '~/ui-types'
     import Form from '~/components/elements/form.svelte'
 
     import ProgressBar from '~/pages/earn/components/progress.svelte'
@@ -13,15 +13,22 @@
 
     import type {REXInfo} from '~/pages/earn/types'
 
-    export let availableTokens: Asset
-    export let nextStep: () => void
     export let amount: string
     export let token: Token | undefined
     export let rexInfo: REXInfo
+    export let availableTokens: Asset
+    export let nextStep: () => void
     export let handleBack: () => void
 
+    let selectedToken: Token
+
+    let tokenOptions: Token[] = []
+    if (token) {
+        let newToken = {...token, balance: availableTokens}
+        selectedToken = newToken
+        tokenOptions = [newToken]
+    }
     let amountValid = false
-    let tokenOptions = token ? [token] : []
 
     function maxBalance() {
         if (availableTokens) {
@@ -129,18 +136,23 @@
 
 <div class="container">
     <div class="top-section">
-        <div class="header">Stake</div>
-        <div class="subheader">Add to your staked balance</div>
+        <div class="header">Claim</div>
+        <div class="subheader">Remove from your staked balance</div>
         <ProgressBar step={1} />
     </div>
     <div class="middle-section">
         <Form on:submit={onConfirm}>
-            <InputLabel>amount to stake</InputLabel>
+            <InputLabel>amount to claim</InputLabel>
             <div class="token-selector">
-                <TokenSelector defaultToken={token} {tokenOptions} onTokenSelect={() => {}} />
+                <TokenSelector
+                    defaultToken={selectedToken}
+                    {tokenOptions}
+                    {selectedToken}
+                    onTokenSelect={() => {}}
+                />
             </div>
             <div class="label">
-                currently staked {rexInfo.total}
+                total staked {rexInfo.total}
             </div>
 
             <InputAsset
@@ -168,7 +180,7 @@
             formValidation
             on:action={onConfirm}
         >
-            Stake tokens
+            Unstake tokens
         </Button>
 
         <div class="controls">

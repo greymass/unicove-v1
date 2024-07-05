@@ -16,12 +16,13 @@
     import TransactionForm from '~/components/elements/form/transaction.svelte'
 
     import {stateREX} from '~/pages/resources/resources'
-    import {Step} from '~/pages/earn/types'
+    import {Step, REXInfo} from '~/pages/earn/types'
     import REXBootstrap from '~/pages/earn/step/bootstrap.svelte'
     import REXError from '~/pages/earn/step/error.svelte'
     import REXOverview from '~/pages/earn/step/overview.svelte'
     import REXStake from '~/pages/earn/step/stake.svelte'
     import REXUnstake from '~/pages/earn/step/unstake.svelte'
+    import REXClaim from '~/pages/earn/step/claim.svelte'
     import REXConfirm from '~/pages/earn/step/confirm.svelte'
 
     let selectedAmount: string
@@ -61,53 +62,52 @@
         }
     )
 
-    const rexBalance: Readable<Asset> = derived(
+    const rexInfo: Readable<REXInfo> = derived(
         [currentAccount, stateREX, systemToken],
         ([$currentAccount, $stateREX, $systemToken]) => {
-            let value = 0
+            let defaultZero = Asset.from(0, $systemToken!.symbol)
+            let total = defaultZero
+            let savings = defaultZero
+            let matured = defaultZero
+            let rexPrice = 0
             if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
+                console.log(`currentAccount: ${JSON.stringify($currentAccount.rex_info)}`)
                 if ($stateREX.value === 0.0001) {
-                    value =
-                        ($stateREX.total_lendable.value / $stateREX.total_rex.value) *
-                        $currentAccount.rex_info.rex_balance.value
+                    rexPrice = $stateREX.total_lendable.value / $stateREX.total_rex.value
                 } else {
-                    value = $stateREX.value * $currentAccount.rex_info.rex_balance.value
+                    rexPrice = $stateREX.value
                 }
-            }
-            return Asset.from(value, $systemToken!.symbol)
-        }
-    )
 
-    const maturedBalance: Readable<Asset> = derived(
-        [currentAccount, stateREX, systemToken],
-        ([$currentAccount, $stateREX, $systemToken]) => {
-            let value = 0
-            if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
-                if ($stateREX.value === 0.0001) {
-                    value =
-                        ($stateREX.total_lendable.value / $stateREX.total_rex.value) *
-                        Number($currentAccount.rex_info.matured_rex)
-                } else {
-                    value = $stateREX.value * Number($currentAccount.rex_info.matured_rex)
-                }
+                total = Asset.from(
+                    $currentAccount.rex_info.rex_balance.value * rexPrice,
+                    $systemToken!.symbol
+                )
+                savings = $currentAccount.rex_info.vote_stake
+                matured = Asset.from(
+                    Asset.fromUnits(
+                        $currentAccount.rex_info.matured_rex,
+                        $currentAccount.rex_info.rex_balance.symbol
+                    ).value * rexPrice,
+                    $systemToken!.symbol
+                )
             }
-            return Asset.from(value, $systemToken!.symbol)
+            return {total, savings, matured, price: rexPrice}
         }
     )
 
     const rexToken: Readable<Token> = derived(
-        [systemToken, rexBalance],
-        ([$systemToken, $rexBalance]) => {
+        [systemToken, rexInfo],
+        ([$systemToken, $rexInfo]) => {
             let tokenValue = $systemToken!
             let newToken = {...tokenValue}
-            newToken.balance = $rexBalance
+            newToken.balance = $rexInfo.total
             return newToken
         }
     )
 
-    const defaultStep: Readable<Step> = derived(rexBalance, ($rexBalance) => {
+    const defaultStep: Readable<Step> = derived(rexInfo, ($rexInfo) => {
         let result: Step = Step.Bootstrap
-        if ($rexBalance && $rexBalance.value != 0) {
+        if ($rexInfo && $rexInfo.total.value != 0) {
             result = Step.Overview
         }
         return result
@@ -135,6 +135,8 @@
     function toStakeConfirm(fromStep: Step) {
         if (fromStep === Step.Stake || fromStep === Step.Bootstrap) {
             selectedAction = 'Stake'
+        } else if (fromStep === Step.Claim) {
+            selectedAction = 'Claim'
         } else {
             selectedAction = 'Unstake'
         }
@@ -149,6 +151,8 @@
             return getStakeAction()
         } else if (selectedAction === 'Unstake') {
             return getUnstakeAction()
+        } else if (selectedAction === 'Claim') {
+            return getClaimAction()
         } else {
             throw new Error('Unknown action')
         }
@@ -178,13 +182,26 @@
     }
 
     function getUnstakeAction() {
-        let rexNumber =
-            Number(selectedAmount) / ($stateREX!.total_lendable.value / $stateREX!.total_rex.value)
+        let rexNumber = Number(selectedAmount) / $rexInfo.price
         let rexAsset = Asset.from(rexNumber, $currentAccount!.rex_info!.rex_balance.symbol)
-        let finalAmount = Asset.from(
-            rexAsset.value * ($stateREX!.total_lendable.value / $stateREX!.total_rex.value),
-            $systemToken!.symbol
-        )
+        console.log(`rexAsset: ${JSON.stringify(rexAsset)}`)
+        return [
+            {
+                authorization: [$activeSession!.auth],
+                account: 'eosio',
+                name: 'mvfrsavings',
+                data: REXWithdraw.from({
+                    owner: $activeSession!.auth.actor,
+                    amount: rexAsset,
+                }),
+            },
+        ]
+    }
+
+    function getClaimAction() {
+        let rexNumber = Number(selectedAmount) / $rexInfo.price
+        let rexAsset = Asset.from(rexNumber, $currentAccount!.rex_info!.rex_balance.symbol)
+        let finalAmount = Asset.from(rexAsset.value * $rexInfo.price, $systemToken!.symbol)
         return [
             {
                 authorization: [$activeSession!.auth],
@@ -266,26 +283,37 @@
         {:else if $step === Step.Overview}
             <REXOverview
                 availableTokens={$availableSystemTokens}
-                maturedBalance={$maturedBalance}
-                rexBalance={$rexBalance}
+                rexInfo={$rexInfo}
                 toStake={() => switchStep(Step.Stake)}
                 toUnstake={() => switchStep(Step.Unstake)}
+                toClaim={() => switchStep(Step.Claim)}
             />
         {:else if $step === Step.Stake}
             <REXStake
                 bind:amount={selectedAmount}
-                rexBalance={$rexBalance}
+                rexInfo={$rexInfo}
                 token={$systemToken}
                 availableTokens={$availableSystemTokens}
                 nextStep={() => toStakeConfirm(Step.Stake)}
+                handleBack={() => switchStep($defaultStep)}
             />
         {:else if $step === Step.Unstake}
             <REXUnstake
                 bind:amount={selectedAmount}
-                rexBalance={$rexBalance}
+                rexInfo={$rexInfo}
                 token={$rexToken}
-                availableTokens={$maturedBalance}
+                availableTokens={$rexInfo.savings}
                 nextStep={() => toStakeConfirm(Step.Unstake)}
+                handleBack={() => switchStep($defaultStep)}
+            />
+        {:else if $step === Step.Claim}
+            <REXClaim
+                bind:amount={selectedAmount}
+                rexInfo={$rexInfo}
+                token={$rexToken}
+                availableTokens={$rexInfo.matured}
+                nextStep={() => toStakeConfirm(Step.Claim)}
+                handleBack={() => switchStep($defaultStep)}
             />
         {:else if $step === Step.Confirm}
             <REXConfirm

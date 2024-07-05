@@ -11,11 +11,14 @@
     import InputLabel from '~/components/elements/input/label.svelte'
     import TokenSelector from '~/components/elements/input/token/selector.svelte'
 
+    import type {REXInfo} from '~/pages/earn/types'
+
     export let amount: string
     export let token: Token | undefined
-    export let rexBalance: Asset
+    export let rexInfo: REXInfo
     export let availableTokens: Asset
     export let nextStep: () => void
+    export let handleBack: () => void
 
     let selectedToken: Token
 
@@ -134,7 +137,7 @@
 <div class="container">
     <div class="top-section">
         <div class="header">Unstake</div>
-        <div class="subheader">Remove from your staked balance</div>
+        <div class="subheader">Unstake to be claimable</div>
         <ProgressBar step={1} />
     </div>
     <div class="middle-section">
@@ -149,7 +152,7 @@
                 />
             </div>
             <div class="label">
-                total staked {rexBalance}
+                total staked {rexInfo.total}
             </div>
 
             <InputAsset
@@ -181,7 +184,7 @@
         </Button>
 
         <div class="controls">
-            <Button href="/" style="no-frame">Cancel</Button>
+            <Button style="no-frame" on:action={handleBack}>Cancel</Button>
         </div>
     </div>
 </div>
