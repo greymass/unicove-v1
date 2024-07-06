@@ -70,8 +70,9 @@
             let savings = defaultZero
             let matured = defaultZero
             let rexPrice = 0
+            const fiveYearsFromNow = new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 5
+
             if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
-                console.log(`currentAccount: ${JSON.stringify($currentAccount.rex_info)}`)
                 if ($stateREX.value === 0.0001) {
                     rexPrice = $stateREX.total_lendable.value / $stateREX.total_rex.value
                 } else {
@@ -82,7 +83,6 @@
                     $currentAccount.rex_info.rex_balance.value * rexPrice,
                     $systemToken!.symbol
                 )
-                savings = $currentAccount.rex_info.vote_stake
                 matured = Asset.from(
                     Asset.fromUnits(
                         $currentAccount.rex_info.matured_rex,
@@ -90,6 +90,19 @@
                     ).value * rexPrice,
                     $systemToken!.symbol
                 )
+
+                let savingsBucket = $currentAccount.rex_info.rex_maturities.find(
+                    (maturity) => +new Date(maturity.first!.toString()) > +fiveYearsFromNow
+                )
+                if (savingsBucket) {
+                    savings = Asset.from(
+                        Asset.fromUnits(
+                            savingsBucket.second!,
+                            $currentAccount.rex_info.rex_balance.symbol
+                        ).value * rexPrice,
+                        $systemToken!.symbol
+                    )
+                }
             }
             return {total, savings, matured, price: rexPrice}
         }
@@ -184,7 +197,6 @@
     function getUnstakeAction() {
         let rexNumber = Number(selectedAmount) / $rexInfo.price
         let rexAsset = Asset.from(rexNumber, $currentAccount!.rex_info!.rex_balance.symbol)
-        console.log(`rexAsset: ${JSON.stringify(rexAsset)}`)
         return [
             {
                 authorization: [$activeSession!.auth],
