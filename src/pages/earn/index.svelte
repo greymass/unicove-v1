@@ -62,6 +62,24 @@
         }
     )
 
+    const convertEosToRex = (eos: number) => {
+        const pool = $stateREX
+        const S0 = pool!.total_lendable.value
+        const R0 = pool!.total_rex.value
+        const S1 = S0 + eos
+        const R1 = (S1 * R0) / S0
+        return Asset.from(R1 - R0, $currentAccount!.rex_info!.rex_balance.symbol)
+    }
+
+    const convertRexToEos = (rex: number) => {
+        const pool = $stateREX
+        const S0 = pool!.total_lendable.value
+        const R0 = pool!.total_rex.value
+        const R1 = R0 + rex
+        const S1 = (S0 * R1) / R0
+        return Asset.from(S1 - S0, $systemToken!.symbol)
+    }
+
     const rexInfo: Readable<REXInfo> = derived(
         [currentAccount, stateREX, systemToken],
         ([$currentAccount, $stateREX, $systemToken]) => {
@@ -69,42 +87,30 @@
             let total = defaultZero
             let savings = defaultZero
             let matured = defaultZero
-            let rexPrice = 0
             const fiveYearsFromNow = new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 5
 
             if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
-                if ($stateREX.value === 0.0001) {
-                    rexPrice = $stateREX.total_lendable.value / $stateREX.total_rex.value
-                } else {
-                    rexPrice = $stateREX.value
-                }
-
-                total = Asset.from(
-                    $currentAccount.rex_info.rex_balance.value * rexPrice,
-                    $systemToken!.symbol
-                )
-                matured = Asset.from(
+                total = convertRexToEos($currentAccount.rex_info.rex_balance.value)
+                matured = convertRexToEos(
                     Asset.fromUnits(
                         $currentAccount.rex_info.matured_rex,
                         $currentAccount.rex_info.rex_balance.symbol
-                    ).value * rexPrice,
-                    $systemToken!.symbol
+                    ).value
                 )
 
                 let savingsBucket = $currentAccount.rex_info.rex_maturities.find(
                     (maturity) => +new Date(maturity.first!.toString()) > +fiveYearsFromNow
                 )
                 if (savingsBucket) {
-                    savings = Asset.from(
+                    savings = convertRexToEos(
                         Asset.fromUnits(
                             savingsBucket.second!,
                             $currentAccount.rex_info.rex_balance.symbol
-                        ).value * rexPrice,
-                        $systemToken!.symbol
+                        ).value
                     )
                 }
             }
-            return {total, savings, matured, price: rexPrice}
+            return {total, savings, matured}
         }
     )
 
@@ -195,8 +201,7 @@
     }
 
     function getUnstakeAction() {
-        let rexNumber = Number(selectedAmount) / $rexInfo.price
-        let rexAsset = Asset.from(rexNumber, $currentAccount!.rex_info!.rex_balance.symbol)
+        let rexAmount = convertEosToRex(Number(selectedAmount))
         return [
             {
                 authorization: [$activeSession!.auth],
@@ -204,16 +209,15 @@
                 name: 'mvfrsavings',
                 data: REXWithdraw.from({
                     owner: $activeSession!.auth.actor,
-                    amount: rexAsset,
+                    amount: rexAmount,
                 }),
             },
         ]
     }
 
     function getClaimAction() {
-        let rexNumber = Number(selectedAmount) / $rexInfo.price
-        let rexAsset = Asset.from(rexNumber, $currentAccount!.rex_info!.rex_balance.symbol)
-        let finalAmount = Asset.from(rexAsset.value * $rexInfo.price, $systemToken!.symbol)
+        let rexAmount = convertEosToRex(Number(selectedAmount))
+        let eosAmount = convertRexToEos(rexAmount.value)
         return [
             {
                 authorization: [$activeSession!.auth],
@@ -221,7 +225,7 @@
                 name: 'sellrex',
                 data: REXSELLREX.from({
                     from: $activeSession!.auth.actor,
-                    rex: rexAsset,
+                    rex: rexAmount,
                 }),
             },
             {
@@ -230,7 +234,7 @@
                 name: 'withdraw',
                 data: REXWithdraw.from({
                     owner: $activeSession!.auth.actor,
-                    amount: finalAmount,
+                    amount: eosAmount,
                 }),
             },
         ]
