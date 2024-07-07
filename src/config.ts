@@ -78,6 +78,8 @@ export interface ChainConfig {
     banxaEnabled?: boolean
     /** Banxa coin_code */
     banxa_coin_code?: string
+    /** Is REX available for this chain */
+    rexEnabled?: boolean
 }
 
 /** Supported chains. */
@@ -105,6 +107,7 @@ export const chains: ChainConfig[] = [
         bloksUrl: 'https://bloks.io',
         balanceProviders: new Set([BalanceProviders.LightAPI]),
         banxaEnabled: true,
+        rexEnabled: true,
     },
     {
         id: 'fio',
@@ -172,6 +175,7 @@ export const chains: ChainConfig[] = [
         nodeUrl: 'https://jungle4.greymass.com',
         testnet: true,
         bloksUrl: 'https://eosauthority.com/?network=jungle',
+        rexEnabled: true,
     },
     {
         id: 'proton',

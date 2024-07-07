@@ -6,6 +6,7 @@
     import {activeBlockchain, preferences} from '~/store'
     import type {NavigationItem} from '~/ui-types'
     import {banxaIsAvailable} from '~/lib/banxa'
+    import {rexIsAvailable} from '~/lib/rex'
 
     import MediaQuery from '~/components/utils/media-query.svelte'
     import NavigationContent from '~/components/layout/navigation/content.svelte'
@@ -30,6 +31,16 @@
             name: 'Transfer',
             path: '/transfer',
         },
+        ...(rexIsAvailable($activeBlockchain)
+            ? [
+                  {
+                      icon: 'dollar-sign',
+                      name: 'Earn',
+                      path: '/earn',
+                  },
+              ]
+            : []),
+
         ...(banxaIsAvailable($activeBlockchain)
             ? [
                   {

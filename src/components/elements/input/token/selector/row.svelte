@@ -14,7 +14,12 @@
     let balance
 
     $: {
-        balance = $balances && $balances.find((balance) => balance.tokenKey === token.key)?.quantity
+        if (token.balance) {
+            balance = token.balance
+        } else {
+            balance =
+                $balances && $balances.find((balance) => balance.tokenKey === token.key)?.quantity
+        }
 
         if (typeof balance === 'string') {
             formattedTokenBalance = balance
