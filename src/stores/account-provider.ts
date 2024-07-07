@@ -109,6 +109,16 @@ export async function loadAccount(
     if (row) {
         const age = Date.now() - row.updated.getTime()
         stale = age > maxAge
+        // TODO: Remove this once Wharf is implemented
+        // This was needed to fix a bug where the last_vote_weight and proxied_vote_weight fields were missing
+        if (row.account && row.account.voter_info) {
+            if (!row.account.voter_info.last_vote_weight) {
+                row.account.voter_info.last_vote_weight = '0'
+            }
+            if (!row.account.voter_info.proxied_vote_weight) {
+                row.account.voter_info.proxied_vote_weight = '0'
+            }
+        }
         set({account: API.v1.AccountObject.from(row.account), stale})
     }
     if (stale || refresh) {
