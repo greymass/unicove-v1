@@ -121,6 +121,24 @@ export class REXDeposit extends Struct {
     @Struct.field('asset') amount!: Asset
 }
 
+@Struct.type('rexwithdraw')
+export class REXWithdraw extends Struct {
+    @Struct.field('name') owner!: Name
+    @Struct.field('asset') amount!: Asset
+}
+
+@Struct.type('rexbuyrex')
+export class REXBUYREX extends Struct {
+    @Struct.field('name') from!: Name
+    @Struct.field('asset') amount!: Asset
+}
+
+@Struct.type('rexsellrex')
+export class REXSELLREX extends Struct {
+    @Struct.field('name') from!: Name
+    @Struct.field('asset') rex!: Asset
+}
+
 @Struct.type('rexrentcpu')
 export class REXRentCPU extends Struct {
     @Struct.field('name') from!: Name
