@@ -38,6 +38,7 @@
         flex-direction: column;
         justify-content: start;
         align-items: center;
+        text-align: center;
     }
     .header {
         color: var(--black);
@@ -135,8 +136,8 @@
 
 <div class="container">
     <div class="top-section">
-        <div class="header">How to Earn</div>
-        <div class="subheader">Earn by staking</div>
+        <div class="header">EOS Staking</div>
+        <div class="subheader">Earn ~{rexInfo.apy}% APY*</div>
     </div>
     <div class="middle-section">
         <div class="rex">
@@ -144,12 +145,16 @@
             <div class="staked">
                 {rexInfo.total}
             </div>
-            <div class="unstakable">
-                {rexInfo.savings} unstakable
-            </div>
-            <div class="claimable">
-                {rexInfo.matured} claimable
-            </div>
+            {#if Number(rexInfo.savings.value) > 0}
+                <div class="unstakable">
+                    {rexInfo.savings} unstakable
+                </div>
+            {/if}
+            {#if Number(rexInfo.matured.value) > 0}
+                <div class="claimable">
+                    {rexInfo.matured} claimable
+                </div>
+            {/if}
 
             <div class="buttons">
                 <Button
@@ -186,6 +191,8 @@
         </div>
     </div>
     <div class="bottom-section">
-        <a href="/staking/faq" class="faq">How staking works?</a>
+        <p>The unstaking process takes 21 days before the tokens become available for claim.</p>
+        <br />
+        <p>* The APY changes based on the total number of EOS tokens staked at any given moment.</p>
     </div>
 </div>

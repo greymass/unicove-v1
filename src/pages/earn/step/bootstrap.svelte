@@ -7,9 +7,11 @@
     import Form from '~/components/elements/form.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import InputLabel from '~/components/elements/input/label.svelte'
+    import {REXInfo} from '../types'
 
     export let amount: string
     export let availableTokens: Asset
+    export let rexInfo: REXInfo
     export let nextStep: () => void
 
     let percent = 0
@@ -61,6 +63,14 @@
         border: 1px solid var(--divider-grey);
         border-radius: 8px;
         padding: 26px;
+        margin-bottom: 21px;
+    }
+    .bottom-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        text-align: center;
     }
     .header {
         color: var(--black);
@@ -94,11 +104,15 @@
 
 <div class="container">
     <div class="top-section">
-        <div class="header">How to Earn</div>
-        <div class="subheader">Earn by staking</div>
+        <div class="header">EOS Staking</div>
+        <div class="subheader">Earn ~{rexInfo.apy}% APY*</div>
     </div>
     <div class="middle-section">
         <div class="input">
+            <div class="top-section">
+                <div class="header">{availableTokens}</div>
+                <div class="subheader">Available Tokens</div>
+            </div>
             <Form>
                 <InputLabel>selected amount to stake</InputLabel>
                 <InputAsset
@@ -124,9 +138,13 @@
                 formValidation
                 on:action={onConfirm}
             >
-                Deposit
+                Stake
             </Button>
         </div>
     </div>
-    <div class="bottom-section" />
+    <div class="bottom-section">
+        <p>The unstaking process takes 21 days before the tokens become available for claim.</p>
+        <br />
+        <p>* The APY changes based on the total number of EOS tokens staked at any given moment.</p>
+    </div>
 </div>

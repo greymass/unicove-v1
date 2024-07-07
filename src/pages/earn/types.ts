@@ -15,4 +15,5 @@ export interface REXInfo {
     total: Asset
     savings: Asset
     matured: Asset
+    apy: string
 }

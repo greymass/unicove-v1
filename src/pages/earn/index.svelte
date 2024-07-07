@@ -87,30 +87,37 @@
             let total = defaultZero
             let savings = defaultZero
             let matured = defaultZero
+            let apy = ''
             const fiveYearsFromNow = new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 5
 
-            if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
-                total = convertRexToEos($currentAccount.rex_info.rex_balance.value)
-                matured = convertRexToEos(
-                    Asset.fromUnits(
-                        $currentAccount.rex_info.matured_rex,
-                        $currentAccount.rex_info.rex_balance.symbol
-                    ).value
-                )
-
-                let savingsBucket = $currentAccount.rex_info.rex_maturities.find(
-                    (maturity) => +new Date(maturity.first!.toString()) > +fiveYearsFromNow
-                )
-                if (savingsBucket) {
-                    savings = convertRexToEos(
+            if ($stateREX && $stateREX.value) {
+                const annualReward = 31250000
+                const totalStaked = Number($stateREX.total_lendable.value)
+                apy = ((annualReward / totalStaked) * 100).toFixed(2)
+                if ($currentAccount && $currentAccount.rex_info) {
+                    total = convertRexToEos($currentAccount.rex_info.rex_balance.value)
+                    matured = convertRexToEos(
                         Asset.fromUnits(
-                            savingsBucket.second!,
+                            $currentAccount.rex_info.matured_rex,
                             $currentAccount.rex_info.rex_balance.symbol
                         ).value
                     )
+
+                    let savingsBucket = $currentAccount.rex_info.rex_maturities.find(
+                        (maturity) => +new Date(maturity.first!.toString()) > +fiveYearsFromNow
+                    )
+                    if (savingsBucket) {
+                        savings = convertRexToEos(
+                            Asset.fromUnits(
+                                savingsBucket.second!,
+                                $currentAccount.rex_info.rex_balance.symbol
+                            ).value
+                        )
+                    }
                 }
             }
-            return {total, savings, matured}
+
+            return {apy, total, savings, matured}
         }
     )
 
@@ -293,6 +300,7 @@
         {:else if $step === Step.Bootstrap}
             <REXBootstrap
                 bind:amount={selectedAmount}
+                rexInfo={$rexInfo}
                 availableTokens={$availableSystemTokens}
                 nextStep={() => toStakeConfirm(Step.Bootstrap)}
             />
