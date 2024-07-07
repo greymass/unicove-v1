@@ -34,7 +34,7 @@
         ...(rexIsAvailable($activeBlockchain)
             ? [
                   {
-                      icon: 'battery-charging',
+                      icon: 'dollar-sign',
                       name: 'Earn',
                       path: '/earn',
                   },
