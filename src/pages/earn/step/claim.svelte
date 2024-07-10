@@ -136,13 +136,13 @@
 
 <div class="container">
     <div class="top-section">
-        <div class="header">Claim</div>
-        <div class="subheader">Remove from your staked balance</div>
+        <div class="header">Withdraw</div>
+        <div class="subheader">Withdraw tokens from the staking contract</div>
         <ProgressBar step={1} />
     </div>
     <div class="middle-section">
         <Form on:submit={onConfirm}>
-            <InputLabel>amount to claim</InputLabel>
+            <InputLabel>amount to withdraw</InputLabel>
             <div class="token-selector">
                 <TokenSelector
                     defaultToken={selectedToken}
@@ -150,9 +150,6 @@
                     {selectedToken}
                     onTokenSelect={() => {}}
                 />
-            </div>
-            <div class="label">
-                total staked {rexInfo.total}
             </div>
 
             <InputAsset
@@ -180,7 +177,7 @@
             formValidation
             on:action={onConfirm}
         >
-            Unstake tokens
+            Withdraw Tokens
         </Button>
 
         <div class="controls">

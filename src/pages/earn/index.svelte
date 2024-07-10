@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {Readable, Writable} from 'svelte/store'
     import {derived, writable, get} from 'svelte/store'
-    import {Asset} from 'anchor-link'
+    import {AnyAction, Asset} from 'anchor-link'
 
     import {currentAccount} from '~/store'
     import {activeBlockchain, activeSession} from '~/store'
@@ -24,6 +24,8 @@
     import REXUnstake from '~/pages/earn/step/unstake.svelte'
     import REXClaim from '~/pages/earn/step/claim.svelte'
     import REXConfirm from '~/pages/earn/step/confirm.svelte'
+    import {onMount} from 'svelte'
+    import {getClient} from '~/api-client'
 
     let selectedAmount: string
     let selectedAction: string
@@ -139,6 +141,27 @@
         return result
     })
 
+    const rexEOSBalance: Writable<Asset> = writable(Asset.from(0, $systemToken!.symbol))
+    onMount(async () => {
+        const client = getClient($activeBlockchain.chainId)
+        const unsubscribe = currentAccount.subscribe(async (account) => {
+            const result = await client.v1.chain.get_table_rows({
+                code: 'eosio',
+                scope: 'eosio',
+                table: 'rexfund',
+                json: true,
+                lower_bound: $currentAccount?.account_name,
+                upper_bound: $currentAccount?.account_name,
+            })
+            if (result.rows.length > 0) {
+                rexEOSBalance.set(Asset.from(result.rows[0].balance, $systemToken!.symbol))
+            }
+        })
+        return () => {
+            unsubscribe()
+        }
+    })
+
     const initialStep: Step = Step.Bootstrap
     const step: Writable<Step> = writable(initialStep, () => {
         const unsubscribeStep = defaultStep.subscribe((s) => {
@@ -223,10 +246,22 @@
     }
 
     function getClaimAction() {
-        let rexAmount = convertEosToRex(Number(selectedAmount))
-        let eosAmount = convertRexToEos(rexAmount.value)
-        return [
+        const actions: AnyAction[] = [
             {
+                authorization: [$activeSession!.auth],
+                account: 'eosio',
+                name: 'withdraw',
+                data: REXWithdraw.from({
+                    owner: $activeSession!.auth.actor,
+                    amount: Asset.from(Number(selectedAmount), $systemToken!.symbol),
+                }),
+            },
+        ]
+
+        if (Number($rexEOSBalance.value) < Number(selectedAmount)) {
+            const difference = Number(selectedAmount) - Number($rexEOSBalance.value)
+            const rexAmount = convertEosToRex(difference)
+            actions.unshift({
                 authorization: [$activeSession!.auth],
                 account: 'eosio',
                 name: 'sellrex',
@@ -234,17 +269,10 @@
                     from: $activeSession!.auth.actor,
                     rex: rexAmount,
                 }),
-            },
-            {
-                authorization: [$activeSession!.auth],
-                account: 'eosio',
-                name: 'withdraw',
-                data: REXWithdraw.from({
-                    owner: $activeSession!.auth.actor,
-                    amount: eosAmount,
-                }),
-            },
-        ]
+            })
+        }
+
+        return actions
     }
 
     // Create a derived store of the rex field we expect to be modified
@@ -253,6 +281,13 @@
             return $currentAccount.rex_info.rex_balance
         }
         return Asset.from(0, $systemToken!.symbol)
+    })
+
+    const claimableTokens = derived([rexInfo, rexEOSBalance], ([$rexInfo, $rexEOSBalance]) => {
+        return Asset.fromUnits(
+            $rexInfo.matured.units.adding($rexEOSBalance.units),
+            $rexEOSBalance.symbol
+        )
     })
 
     async function handleConfirm(context: FormTransaction) {
@@ -308,6 +343,7 @@
             <REXOverview
                 availableTokens={$availableSystemTokens}
                 rexInfo={$rexInfo}
+                rexEOSBalance={$rexEOSBalance}
                 toStake={() => switchStep(Step.Stake)}
                 toUnstake={() => switchStep(Step.Unstake)}
                 toClaim={() => switchStep(Step.Claim)}
@@ -335,7 +371,7 @@
                 bind:amount={selectedAmount}
                 rexInfo={$rexInfo}
                 token={$rexToken}
-                availableTokens={$rexInfo.matured}
+                availableTokens={$claimableTokens}
                 nextStep={() => toStakeConfirm(Step.Claim)}
                 handleBack={() => switchStep($defaultStep)}
             />
