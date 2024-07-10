@@ -143,7 +143,7 @@
         </div>
     </div>
     <div class="bottom-section">
-        <p>The unstaking process takes 21 days before the tokens become available for claim.</p>
+        <p>The unstaking process takes 21 days before the tokens become available to withdraw.</p>
         <br />
         <p>* The APY changes based on the total number of EOS tokens staked at any given moment.</p>
     </div>

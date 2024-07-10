@@ -1,11 +1,12 @@
 <script lang="ts">
-    import type {Asset} from 'anchor-link'
+    import {Asset} from 'anchor-link'
 
     import Button from '~/components/elements/button.svelte'
 
     import type {REXInfo} from '~/pages/earn/types'
 
     export let availableTokens: Asset
+    export let rexEOSBalance: Asset
     export let rexInfo: REXInfo
     export let toStake: () => void
     export let toUnstake: () => void
@@ -147,12 +148,15 @@
             </div>
             {#if Number(rexInfo.savings.value) > 0}
                 <div class="unstakable">
-                    {rexInfo.savings} unstakable
+                    Unstakable: {rexInfo.savings}
                 </div>
             {/if}
-            {#if Number(rexInfo.matured.value) > 0}
+            {#if Number(rexInfo.matured.value) > 0 || Number(rexEOSBalance.value) > 0}
                 <div class="claimable">
-                    {rexInfo.matured} claimable
+                    Withdrawable: {Asset.fromUnits(
+                        rexInfo.matured.units.adding(rexEOSBalance.units),
+                        rexEOSBalance.symbol
+                    )}
                 </div>
             {/if}
 
@@ -181,17 +185,17 @@
                     fluid
                     style="primary"
                     size="regular"
-                    disabled={rexInfo.matured.value <= 0}
+                    disabled={rexInfo.matured.value <= 0 && rexEOSBalance.value <= 0}
                     formValidation
                     on:action={toClaim}
                 >
-                    Claim
+                    Withdraw
                 </Button>
             </div>
         </div>
     </div>
     <div class="bottom-section">
-        <p>The unstaking process takes 21 days before the tokens become available for claim.</p>
+        <p>The unstaking process takes 21 days before the tokens become available to withdraw.</p>
         <br />
         <p>* The APY changes based on the total number of EOS tokens staked at any given moment.</p>
     </div>
