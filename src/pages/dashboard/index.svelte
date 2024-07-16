@@ -1,5 +1,5 @@
 <script>
-    import {Asset} from 'anchor-link'
+    import {Asset, Int128} from 'anchor-link'
     import {derived} from 'svelte/store'
     import type {Readable} from 'svelte/store'
 
@@ -11,7 +11,7 @@
     import {activeSession, activeBlockchain, currentAccount, activePriceTicker} from '~/store'
     import {balances, fetchBalances} from '~/stores/balances'
     import {isLoading} from '~/stores/balances-provider'
-    import {getToken, systemTokenKey, tokens} from '~/stores/tokens'
+    import {getToken, systemToken, systemTokenKey, tokens} from '~/stores/tokens'
     import {stateREX} from '~/pages/resources/resources'
 
     import Page from '~/components/layout/page.svelte'
@@ -70,14 +70,21 @@
     )
 
     const rexTokens: Readable<number> = derived(
-        [currentAccount, stateREX],
-        ([$currentAccount, $stateREX]) => {
+        [currentAccount, stateREX, systemToken],
+        ([$currentAccount, $stateREX, $systemToken]) => {
             if ($currentAccount && $currentAccount.rex_info && $stateREX && $stateREX.value) {
                 if ($stateREX.value === 0.0001) {
-                    return (
-                        ($stateREX.total_lendable.value / $stateREX.total_rex.value) *
-                        $currentAccount.rex_info.rex_balance.value
-                    )
+                    const pool = $stateREX
+                    if (!$systemToken || !pool) {
+                        return 0
+                    }
+                    const {total_lendable, total_rex} = pool
+                    const R1 = total_rex.units.adding($currentAccount.rex_info.rex_balance.units)
+                    const S1 = Int128.from(R1)
+                        .multiplying(total_lendable.units)
+                        .dividing(total_rex.units)
+                    const result = S1.subtracting(total_lendable.units)
+                    return Asset.fromUnits(result, $systemToken!.symbol).value
                 } else {
                     return $stateREX.value * $currentAccount.rex_info.rex_balance.value
                 }
