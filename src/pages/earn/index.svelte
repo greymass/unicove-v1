@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {Readable, Writable} from 'svelte/store'
     import {derived, writable, get} from 'svelte/store'
-    import {AnyAction, Asset} from 'anchor-link'
+    import {AnyAction, Asset, Int128} from 'anchor-link'
 
     import {currentAccount} from '~/store'
     import {activeBlockchain, activeSession} from '~/store'
@@ -66,20 +66,59 @@
 
     const convertEosToRex = (eos: number) => {
         const pool = $stateREX
-        const S0 = pool!.total_lendable.value
-        const R0 = pool!.total_rex.value
-        const S1 = S0 + eos
-        const R1 = (S1 * R0) / S0
-        return Asset.from(R1 - R0, $currentAccount!.rex_info!.rex_balance.symbol)
+        if (!$systemToken || !pool) {
+            return Asset.from(0, $systemToken!.symbol)
+        }
+
+        const {total_lendable, total_rex} = pool
+        const asset = Asset.from(eos, $systemToken!.symbol)
+        const S1 = total_lendable.units.adding(asset.units)
+        const R1 = Int128.from(S1).multiplying(total_rex.units).dividing(total_lendable.units)
+        const result = R1.subtracting(total_rex.units)
+
+        // Debugging using floats
+        // const oS0 = parseFloat(String(pool.total_lendable).split(' ')[0])
+        // const oS1 = oS0 + eos
+        // const oR0 = parseFloat(String(pool.total_rex).split(' ')[0])
+        // const oR1 = (oS1 * oR0) / oS0
+
+        // console.table({
+        //     S0: [String(S0), String(oS0)],
+        //     R0: [String(R0), String(oR0)],
+        //     R1: [String(R1), String(oR1)],
+        //     S1: [String(S1), String((oS0 * oR1) / oR0)],
+        //     result: [String(result), String(oR1 - oR0)],
+        // })
+
+        return Asset.fromUnits(result, $currentAccount!.rex_info!.rex_balance.symbol)
     }
 
     const convertRexToEos = (rex: number) => {
         const pool = $stateREX
-        const S0 = pool!.total_lendable.value
-        const R0 = pool!.total_rex.value
-        const R1 = R0 + rex
-        const S1 = (S0 * R1) / R0
-        return Asset.from(S1 - S0, $systemToken!.symbol)
+        if (!$systemToken || !pool) {
+            return Asset.from(0, $systemToken!.symbol)
+        }
+
+        const {total_lendable, total_rex} = pool
+        const asset = Asset.from(rex, '4,REX')
+        const R1 = total_rex.units.adding(asset.units)
+        const S1 = Int128.from(R1).multiplying(total_lendable.units).dividing(total_rex.units)
+        const result = S1.subtracting(total_lendable.units)
+
+        // Debugging using floats
+        // const oS0 = parseFloat(String(pool.total_lendable).split(' ')[0])
+        // const oR0 = parseFloat(String(pool.total_rex).split(' ')[0])
+        // const oR1 = oR0 + rex
+        // const oS1 = (oS0 * oR1) / oR0
+        // console.table({
+        //     S0: [String(S0), String(oS0)],
+        //     R0: [String(R0), String(oR0)],
+        //     R1: [String(R1), String(oR1)],
+        //     S1: [String(S1), String((oS0 * oR1) / oR0)],
+        //     result: [String(result), String(oS1 - oS0)],
+        // })
+
+        return Asset.fromUnits(result, $systemToken!.symbol)
     }
 
     const rexInfo: Readable<REXInfo> = derived(
