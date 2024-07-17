@@ -164,7 +164,7 @@
     }
 </script>
 
-<style>
+<style lang="scss">
     .slider {
         position: relative;
         flex: 1;
@@ -184,7 +184,7 @@
 
     .slider__track {
         height: 6px;
-        background-color: var(--cultured);
+        background-color: var(--slider-grey);
         border-radius: 999px;
     }
 
@@ -203,7 +203,7 @@
         position: absolute;
         width: 20px;
         height: 20px;
-        background-color: var(--thumb-bgcolor, white);
+        background-color: var(--main-blue);
         cursor: pointer;
         border-radius: 999px;
         margin-top: -8px;
@@ -216,16 +216,25 @@
         );
     }
 
+    .slider__thumb::after {
+        content: '';
+        width: 15px;
+        height: 15px;
+        background-color: var(--main-blue);
+        border: 2px solid var(--white, white);
+        border-radius: 50%;
+    }
+
     .slider__thumb--holding {
         box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 2px 1px rgba(0, 0, 0, 0.2),
-            0 0 0 6px var(--thumb-holding-outline, rgba(113, 119, 250, 0.3));
+            0 0 0 6px var(--slider-blue-light);
     }
 
     .slider__tooltip {
         pointer-events: none;
         position: absolute;
         top: -33px;
-        color: var(--tooltip-text, white);
+        color: var(--white);
         width: 38px;
         padding: 4px 0;
         border-radius: 4px;
