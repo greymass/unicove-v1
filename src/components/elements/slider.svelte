@@ -1,27 +1,27 @@
-<script>
+<script lang="ts">
     import {createEventDispatcher} from 'svelte'
     import {fly, fade} from 'svelte/transition'
 
     // Props
-    export let min = 0
-    export let max = 100
-    export let initialValue = 0
+    export let min: number = 0
+    export let max: number = 100
+    export let initialValue: number = 0
     export let id: any = null
-    export let value = typeof initialValue === 'string' ? parseInt(initialValue) : initialValue
+    export let value: number = initialValue
 
     // Node Bindings
-    let container = null
-    let thumb = null
-    let progressBar = null
-    let element = null
+    let container: HTMLElement | null = null
+    let thumb: HTMLElement | null = null
+    let progressBar: HTMLElement | null = null
+    let element: HTMLElement | null = null
 
     // Internal State
-    let elementX = null
-    let currentThumb = null
-    let holding = false
-    let thumbHover = false
+    let elementX: number = 0
+    let currentThumb: HTMLElement | null = null
+    let holding: boolean = false
+    let thumbHover: boolean = false
     let keydownAcceleration = 0
-    let accelerationTimer = null
+    let accelerationTimer: NodeJS.Timeout | null = null
 
     // Dispatch 'change' events
     const dispatch = createEventDispatcher()
@@ -36,44 +36,44 @@
     })
 
     function resizeWindow() {
-        elementX = element.getBoundingClientRect().left
+        if (element) elementX = element.getBoundingClientRect().left
     }
 
     // Allows both bind:value and on:change for parent value retrieval
-    function setValue(val) {
+    function setValue(val: number) {
         value = val
         dispatch('change', {value})
     }
 
-    function onTrackEvent(e) {
+    function onTrackEvent(e: MouseEvent | TouchEvent) {
         // Update value immediately before beginning drag
         updateValueOnEvent(e)
         onDragStart(e)
     }
 
-    function onHover(e) {
-        thumbHover = thumbHover ? false : true
-    }
+    // function onHover(e) {
+    //     thumbHover = thumbHover ? false : true
+    // }
 
-    function onDragStart(e) {
+    function onDragStart(e: MouseEvent | TouchEvent) {
         // If mouse event add a pointer events shield
         if (e.type === 'mousedown') document.body.append(mouseEventShield)
         currentThumb = thumb
     }
 
-    function onDragEnd(e) {
+    function onDragEnd(e: MouseEvent | TouchEvent) {
         // If using mouse - remove pointer event shield
         if (e.type === 'mouseup') {
             if (document.body.contains(mouseEventShield))
                 document.body.removeChild(mouseEventShield)
             // Needed to check whether thumb and mouse overlap after shield removed
-            if (isMouseInElement(e, thumb)) thumbHover = true
+            if (e instanceof MouseEvent && isMouseInElement(e, thumb)) thumbHover = true
         }
         currentThumb = null
     }
 
     // Check if mouse event cords overlay with an element's area
-    function isMouseInElement(event, element) {
+    function isMouseInElement(event: MouseEvent, element: HTMLElement | null) {
         if (element === null) {
             return false
         }
@@ -85,7 +85,7 @@
     }
 
     // Accessible keypress handling
-    function onKeyPress(e) {
+    function onKeyPress(e: KeyboardEvent) {
         // Max out at +/- 10 to value per event (50 events / 5)
         // 100 below is to increase the amount of events required to reach max velocity
         if (keydownAcceleration < 50) keydownAcceleration++
@@ -105,28 +105,27 @@
                 setValue(value - throttled)
             }
         }
-
         // Reset acceleration after 100ms of no events
-        clearTimeout(accelerationTimer)
+        if (accelerationTimer) clearTimeout(accelerationTimer)
         accelerationTimer = setTimeout(() => (keydownAcceleration = 1), 100)
     }
 
-    function calculateNewValue(clientX) {
+    function calculateNewValue(clientX: number) {
         // Find distance between cursor and element's left cord (20px / 2 = 10px) - Center of thumb
         let delta = clientX - (elementX + 10)
 
         // Use width of the container minus (5px * 2 sides) offset for percent calc
-        let percent = (delta * 100) / (container.clientWidth - 10)
+        let percent = (delta * 100) / (container!.clientWidth - 10)
 
         // Limit percent 0 -> 100
         percent = percent < 0 ? 0 : percent > 100 ? 100 : percent
 
         // Limit value min -> max
-        setValue(parseInt((percent * (max - min)) / 100) + min)
+        setValue(Math.floor((percent * (max - min)) / 100) + min)
     }
 
     // Handles both dragging of touch/mouse as well as simple one-off click/touches
-    function updateValueOnEvent(e) {
+    function updateValueOnEvent(e: MouseEvent | TouchEvent) {
         // touchstart && mousedown are one-off updates, otherwise expect a currentPointer node
         if (!currentThumb && e.type !== 'touchstart' && e.type !== 'mousedown') return false
 
@@ -135,7 +134,11 @@
 
         // Get client's x cord either touch or mouse
         const clientX =
-            e.type === 'touchmove' || e.type === 'touchstart' ? e.touches[0].clientX : e.clientX
+            e.type === 'touchmove' || (e.type === 'touchstart' && e instanceof TouchEvent)
+                ? (e as TouchEvent).touches[0].clientX
+                : e instanceof MouseEvent
+                ? (e as MouseEvent).clientX
+                : 0
 
         calculateNewValue(clientX)
     }
@@ -153,7 +156,7 @@
         value = value < max ? value : max
 
         let percent = ((value - min) * 100) / (max - min)
-        let offsetLeft = (container.clientWidth - 10) * (percent / 100) + 5
+        let offsetLeft = (container!.clientWidth - 10) * (percent / 100) + 5
 
         // Update thumb position + active slider track width
         thumb.style.left = `${offsetLeft}px`
