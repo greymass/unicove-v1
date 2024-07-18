@@ -116,8 +116,8 @@
         --main-blue: var(--lapis-lazuli);
         --main-black: #585d6e;
 
-        --slider-grey: var(--cultured);
-        --slider-blue-light: rgba(113, 119, 250, 0.3);
+        --ivory: var(--cultured);
+        --sky-blue: rgba(0, 93, 172, 0.3);
     }
 
     body.darkmode {
@@ -152,8 +152,8 @@
         --main-blue: var(--middle-green-eagle);
         --main-black: #c4c4c4;
 
-        --slider-grey: rgba(249, 197, 184, 0.3);
-        --slider-blue-light: var(--slider-grey);
+        --ivory: #5d504d;
+        --sky-blue: rgba(249, 197, 184, 0.3);
     }
 
     body {

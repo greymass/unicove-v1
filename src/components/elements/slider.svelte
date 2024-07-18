@@ -51,10 +51,6 @@
         onDragStart(e)
     }
 
-    // function onHover(e) {
-    //     thumbHover = thumbHover ? false : true
-    // }
-
     function onDragStart(e: MouseEvent | TouchEvent) {
         // If mouse event add a pointer events shield
         if (e.type === 'mousedown') document.body.append(mouseEventShield)
@@ -184,7 +180,7 @@
 
     .slider__track {
         height: 6px;
-        background-color: var(--slider-grey);
+        background-color: var(--ivory);
         border-radius: 999px;
     }
 
@@ -227,7 +223,7 @@
 
     .slider__thumb--holding {
         box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 2px 1px rgba(0, 0, 0, 0.2),
-            0 0 0 6px var(--slider-blue-light);
+            0 0 0 6px var(--sky-blue);
     }
 
     .slider__tooltip {
