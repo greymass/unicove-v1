@@ -181,6 +181,12 @@
                     color: var(--main-black);
                 }
             }
+            .send {
+                padding: 9px;
+                :global(.button) {
+                    margin: 0;
+                }
+            }
         }
     }
 
@@ -283,10 +289,12 @@
                 {/if}
             </div>
             {#if transferable}
-                <Button fluid href={$url} style="secondary">
-                    <Icon name="arrow-up" />
-                    <Text>Send</Text>
-                </Button>
+                <div class="send">
+                    <Button fluid href={$url} style="secondary">
+                        <Icon name="arrow-up" />
+                        <Text>Send2</Text>
+                    </Button>
+                </div>
             {/if}
         </div>
     </div>
