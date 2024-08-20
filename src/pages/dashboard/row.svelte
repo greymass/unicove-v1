@@ -181,12 +181,6 @@
                     color: var(--main-black);
                 }
             }
-            .send {
-                padding: 9px;
-                :global(.button) {
-                    margin: 0;
-                }
-            }
         }
     }
 
@@ -216,8 +210,8 @@
                 }
             }
             .extra {
-                :global(.button) {
-                    margin: 9px;
+                .send {
+                    padding: 9px;
                 }
             }
             &.expanded .extra {
@@ -292,7 +286,7 @@
                 <div class="send">
                     <Button fluid href={$url} style="secondary">
                         <Icon name="arrow-up" />
-                        <Text>Send2</Text>
+                        <Text>Send</Text>
                     </Button>
                 </div>
             {/if}
