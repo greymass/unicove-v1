@@ -194,6 +194,8 @@
             })
             if (result.rows.length > 0) {
                 rexEOSBalance.set(Asset.from(result.rows[0].balance, $systemToken!.symbol))
+            } else {
+                rexEOSBalance.set(Asset.from(0, $systemToken!.symbol))
             }
         })
         return () => {
