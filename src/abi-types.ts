@@ -121,6 +121,12 @@ export class REXDeposit extends Struct {
     @Struct.field('asset') amount!: Asset
 }
 
+@Struct.type('mvfrsavings')
+export class MVFRSAVINGS extends Struct {
+    @Struct.field('name') owner!: Name
+    @Struct.field('asset') rex!: Asset
+}
+
 @Struct.type('rexwithdraw')
 export class REXWithdraw extends Struct {
     @Struct.field('name') owner!: Name

@@ -1741,10 +1741,10 @@ ajv@^8.0.1:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-anchor-link-browser-transport@^3.2.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.3.0.tgz#ffb4f0e41cc2b900a714be3969e322491110b4f9"
-  integrity sha512-0pHuBtxtzdT4hkbtMVfjT0ksAfWvmTwyzldxI32I2oo4j3jsao7IfqCf/Oew5DqMOr9ZSDYQiwbPxt8QhU1zOQ==
+anchor-link-browser-transport@^3.2.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/anchor-link-browser-transport/-/anchor-link-browser-transport-3.6.1.tgz#8e112f00f2322f466bb69a93008976df1021b9c8"
+  integrity sha512-lrV+qpXVN28VyAK3nKTXKvBQNLdKcwqTM92iBBnZVqulPFhhNAVAqDeLgq78zd9Pl4m9Cdq27hlSC1wcMyr63w==
   dependencies:
     tslib "^2.0.3"
 
