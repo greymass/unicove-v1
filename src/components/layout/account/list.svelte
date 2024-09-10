@@ -69,6 +69,9 @@
 
     .list {
         margin: 10px;
+        .add-account {
+            padding: 0 16px;
+        }
         .network {
             .header {
                 color: var(--dark-grey);
@@ -138,7 +141,6 @@
         }
         :global(.button) {
             line-height: 1em;
-            margin: 0 16px;
         }
     }
 
@@ -191,10 +193,12 @@
 
 {#if $activeSession}
     <div class="list">
-        <Button fluid style="primary" on:action={handleAdd}>
-            <Icon name="user-plus" />
-            <Text>Add another account</Text>
-        </Button>
+        <div class="add-account">
+            <Button fluid style="primary" on:action={handleAdd}>
+                <Icon name="user-plus" />
+                <Text>Add another account</Text>
+            </Button>
+        </div>
         {#each $groupings as group}
             <div class="network">
                 <div class="header" on:click={() => toggle(group.chainId)}>

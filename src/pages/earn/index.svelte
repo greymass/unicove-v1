@@ -1,14 +1,14 @@
 <script lang="ts">
     import type {Readable, Writable} from 'svelte/store'
     import {derived, writable, get} from 'svelte/store'
-    import {AnyAction, Asset, Int128} from 'anchor-link'
+    import {AnyAction, Asset, Int128, Int64} from 'anchor-link'
 
     import {currentAccount} from '~/store'
     import {activeBlockchain, activeSession} from '~/store'
     import type {Token} from '~/stores/tokens'
     import {systemTokenKey, tokens} from '~/stores/tokens'
     import {balances} from '~/stores/balances'
-    import {REXDeposit, REXWithdraw, REXBUYREX, REXSELLREX} from '~/abi-types'
+    import {REXDeposit, MVFRSAVINGS, REXWithdraw, REXBUYREX, REXSELLREX} from '~/abi-types'
     import type {FormTransaction} from '~/ui-types'
     import {rexIsAvailable} from '~/lib/rex'
 
@@ -130,6 +130,7 @@
             let matured = defaultZero
             let apy = ''
             const fiveYearsFromNow = new Date().getTime() + 1000 * 60 * 60 * 24 * 365 * 5
+            const now = new Date()
 
             if ($stateREX && $stateREX.value) {
                 const annualReward = 31250000
@@ -137,9 +138,18 @@
                 apy = ((annualReward / totalStaked) * 100).toFixed(2)
                 if ($currentAccount && $currentAccount.rex_info) {
                     total = convertRexToEos($currentAccount.rex_info.rex_balance.value)
+
+                    const claimableBuckets = $currentAccount.rex_info.rex_maturities.filter(
+                        (maturity) => +new Date(maturity.first!.toString()) < +now
+                    )
+                    let claimable = claimableBuckets.reduce(
+                        (acc, r) => acc.adding(r.second!),
+                        Int64.from(0)
+                    )
+
                     matured = convertRexToEos(
                         Asset.fromUnits(
-                            $currentAccount.rex_info.matured_rex,
+                            $currentAccount.rex_info.matured_rex.adding(claimable),
                             $currentAccount.rex_info.rex_balance.symbol
                         ).value
                     )
@@ -194,6 +204,8 @@
             })
             if (result.rows.length > 0) {
                 rexEOSBalance.set(Asset.from(result.rows[0].balance, $systemToken!.symbol))
+            } else {
+                rexEOSBalance.set(Asset.from(0, $systemToken!.symbol))
             }
         })
         return () => {
@@ -276,7 +288,7 @@
                 authorization: [$activeSession!.auth],
                 account: 'eosio',
                 name: 'mvfrsavings',
-                data: REXWithdraw.from({
+                data: MVFRSAVINGS.from({
                     owner: $activeSession!.auth.actor,
                     amount: rexAmount,
                 }),

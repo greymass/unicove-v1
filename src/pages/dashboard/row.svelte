@@ -210,8 +210,8 @@
                 }
             }
             .extra {
-                :global(.button) {
-                    margin: 9px;
+                .send {
+                    padding: 9px;
                 }
             }
             &.expanded .extra {
@@ -283,10 +283,12 @@
                 {/if}
             </div>
             {#if transferable}
-                <Button fluid href={$url} style="secondary">
-                    <Icon name="arrow-up" />
-                    <Text>Send</Text>
-                </Button>
+                <div class="send">
+                    <Button fluid href={$url} style="secondary">
+                        <Icon name="arrow-up" />
+                        <Text>Send</Text>
+                    </Button>
+                </div>
             {/if}
         </div>
     </div>
