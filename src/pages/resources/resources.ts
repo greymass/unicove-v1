@@ -96,7 +96,8 @@ export const msToRent: Readable<number> = derived(activeBlockchain, ($activeBloc
     return 1
 })
 
-export const powerupPrice = derived(
+//price per ms
+export const cpuPowerupPrice = derived(
     [msToRent, sampleUsage, statePowerUp, info],
     ([$msToRent, $sampleUsage, $statePowerUp, $info]) => {
         if ($msToRent && $sampleUsage && $statePowerUp) {
@@ -109,7 +110,20 @@ export const powerupPrice = derived(
     }
 )
 
-export const stakingPrice = derived(
+// price per kb
+export const netPowerupPrice = derived(
+    [msToRent, sampleUsage, statePowerUp, info],
+    ([$msToRent, $sampleUsage, $statePowerUp, $info]) => {
+        if ($msToRent && $sampleUsage && $statePowerUp) {
+            const price = $statePowerUp.net.price_per_kb($sampleUsage, $msToRent, $info)
+            return Asset.from(price, '4,EOS')
+        }
+        return Asset.from(0, '4,EOS')
+    }
+)
+
+//price per ms
+export const cpuStakingPrice = derived(
     [activeBlockchain, msToRent, sampleUsage],
     ([$activeBlockchain, $msToRent, $sampleUsage]) => {
         if ($msToRent && $sampleUsage) {
@@ -120,7 +134,22 @@ export const stakingPrice = derived(
             if ($activeBlockchain.resourceSampleMilliseconds) {
                 price *= $activeBlockchain.resourceSampleMilliseconds
             }
-            return Asset.fromUnits(price, $activeBlockchain.coreTokenSymbol)
+            return Asset.fromUnits(price * 1000, $activeBlockchain.coreTokenSymbol)
+        }
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
+    }
+)
+
+// price per kb
+export const netStakingPrice = derived(
+    [activeBlockchain, msToRent, sampleUsage],
+    ([$activeBlockchain, $msToRent, $sampleUsage]) => {
+        if ($msToRent && $sampleUsage) {
+            const {account} = $sampleUsage
+            const net_weight = Number(account.total_resources.net_weight.units)
+            const net_limit = Number(account.net_limit.max.value)
+            let price = net_weight / net_limit
+            return Asset.fromUnits(price * 1000, $activeBlockchain.coreTokenSymbol)
         }
         return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
