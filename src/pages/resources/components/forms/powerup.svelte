@@ -9,7 +9,12 @@
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {systemToken} from '~/stores/tokens'
     import {systemTokenBalance} from '~/stores/balances'
-    import {powerupPrice, sampleUsage, statePowerUp} from '~/pages/resources/resources'
+    import {
+        cpuPowerupPrice,
+        netPowerupPrice,
+        sampleUsage,
+        statePowerUp,
+    } from '~/pages/resources/resources'
 
     import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
@@ -23,6 +28,7 @@
 
     export let resource: string = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
+    const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
 
     let amount: Writable<string> = writable('')
     let error: string | undefined
