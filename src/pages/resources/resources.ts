@@ -2,6 +2,7 @@ import { derived, Readable } from 'svelte/store'
 import { Int64, API, Asset } from '@greymass/eosio'
 import { Resources, SampleUsage, PowerUpState, RAMState, REXState } from '@greymass/eosio-resources'
 import { activeBlockchain } from '~/store'
+import { BNPrecision } from '@greymass/eosio-resources'
 
 import { getClient } from '../../api-client'
 import { ChainConfig, ChainFeatures, resourceFeatures } from '~/config'
@@ -112,12 +113,11 @@ export const cpuPowerupPrice = derived(
 
 // price per kb
 export const netPowerupPrice = derived(
-    [msToRent, sampleUsage, statePowerUp, info],
-    ([$msToRent, $sampleUsage, $statePowerUp, $info]) => {
-        if ($msToRent && $sampleUsage && $statePowerUp) {
-            const price = $statePowerUp.net.price_per_kb($sampleUsage, $msToRent, $info)
+    [sampleUsage, statePowerUp, info],
+    ([$sampleUsage, $statePowerUp, $info]) => {
+        if ($sampleUsage && $statePowerUp) {
             return Asset.from(
-                $statePowerUp.net.price_per_kb($sampleUsage, $msToRent, $info),
+                $statePowerUp.net.price_per_kb($sampleUsage, 1, $info),
                 '4,EOS'
             )
         }
@@ -133,21 +133,18 @@ export const cpuStakingPrice = derived(
             const { account } = $sampleUsage
             const cpu_weight = Number(account.total_resources.cpu_weight.units)
             const cpu_limit = Number(account.cpu_limit.max.value)
-            let price = cpu_weight / cpu_limit
-            if ($activeBlockchain.resourceSampleMilliseconds) {
-                price *= $activeBlockchain.resourceSampleMilliseconds
-            }
+            let price = (cpu_weight / cpu_limit) * $msToRent
             return Asset.fromUnits(price * 1000, $activeBlockchain.coreTokenSymbol)
         }
         return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
 )
 
-// price per kb
+// price per kb for staking
 export const netStakingPrice = derived(
-    [activeBlockchain, msToRent, sampleUsage],
-    ([$activeBlockchain, $msToRent, $sampleUsage]) => {
-        if ($msToRent && $sampleUsage) {
+    [activeBlockchain, sampleUsage],
+    ([$activeBlockchain, $sampleUsage]) => {
+        if ($sampleUsage) {
             const { account } = $sampleUsage
             const net_weight = Number(account.total_resources.net_weight.units)
             const net_limit = Number(account.net_limit.max.value)
@@ -184,7 +181,7 @@ export const stateREX: Readable<REXState | undefined> = derived(
 )
 
 // The price of CPU in the REX system
-export const rexPrice = derived(
+export const cpuRexPrice = derived(
     [msToRent, sampleUsage, stateREX],
     ([$msToRent, $sampleUsage, $stateREX]) => {
         if ($msToRent && $sampleUsage && $stateREX) {
@@ -193,6 +190,38 @@ export const rexPrice = derived(
         return Asset.from(0, '4,EOS')
     }
 )
+
+// The price of Net in the REX system
+export const netRexPrice = derived(
+    [sampleUsage, stateREX],
+    ([$sampleUsage, $stateREX]) => {
+        if ($sampleUsage && $stateREX) {
+            const price = calculateNetRexPrice($stateREX, $sampleUsage, 30000);
+            let precision = 4;
+            if (price > 0 && price < 0.0001) {
+                precision = Number(price.toExponential().split('-')[1])
+            }
+            return Asset.from(price, `${precision},EOS`)
+        }
+        return Asset.from(0, '4,EOS')
+    }
+)
+
+function calculateNetRexPrice(stateRex: REXState, sample: SampleUsage, unit = 1000): number {
+    // Sample token units
+    const tokens = Asset.fromUnits(10000, stateRex.symbol)
+
+    // Spending 1 EOS (10000 units) on REX gives this many tokens
+    const bancor = Number(tokens.units) / (stateRex.total_rent.value / stateRex.total_unlent.value)
+    // The ratio of the number of tokens received vs the sampled values
+    const unitPrice = bancor * (Number(sample.net) / BNPrecision)
+    // The token units spent per unit
+    const perunit = Number(tokens.units) / unitPrice
+    // Multiply the per unit cost by the units requested
+    const cost = perunit * unit
+    // Converting to an Asset
+    return cost / Math.pow(10, stateRex.precision)
+}
 
 // The state of the REX system
 export const stateRAM: Readable<RAMState | undefined> = derived(

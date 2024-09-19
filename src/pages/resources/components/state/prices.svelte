@@ -8,7 +8,8 @@
     import {
         cpuPowerupPrice,
         netPowerupPrice,
-        rexPrice,
+        cpuRexPrice,
+        netRexPrice,
         cpuStakingPrice,
         netStakingPrice,
     } from '~/pages/resources/resources'
@@ -21,6 +22,7 @@
     const unit = resource === 'cpu' ? 'ms' : 'kb'
     const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
     const stakingPrice = resource === 'cpu' ? cpuStakingPrice : netStakingPrice
+    const rexPrice = resource === 'cpu' ? cpuRexPrice : netRexPrice
 
     const {PowerUp, REX, Staking} = ChainFeatures
 
