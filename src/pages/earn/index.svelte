@@ -121,9 +121,32 @@
         return Asset.fromUnits(result, $systemToken!.symbol)
     }
 
+    const rexEOSBalance: Writable<Asset> = writable(Asset.from(0, $systemToken!.symbol))
+    onMount(async () => {
+        const client = getClient($activeBlockchain.chainId)
+        const unsubscribe = currentAccount.subscribe(async (account) => {
+            const result = await client.v1.chain.get_table_rows({
+                code: 'eosio',
+                scope: 'eosio',
+                table: 'rexfund',
+                json: true,
+                lower_bound: $currentAccount?.account_name,
+                upper_bound: $currentAccount?.account_name,
+            })
+            if (result.rows.length > 0) {
+                rexEOSBalance.set(Asset.from(result.rows[0].balance, $systemToken!.symbol))
+            } else {
+                rexEOSBalance.set(Asset.from(0, $systemToken!.symbol))
+            }
+        })
+        return () => {
+            unsubscribe()
+        }
+    })
+
     const rexInfo: Readable<REXInfo> = derived(
-        [currentAccount, stateREX, systemToken],
-        ([$currentAccount, $stateREX, $systemToken]) => {
+        [currentAccount, stateREX, systemToken, rexEOSBalance],
+        ([$currentAccount, $stateREX, $systemToken, $rexEOSBalance]) => {
             let defaultZero = Asset.from(0, $systemToken!.symbol)
             let total = defaultZero
             let savings = defaultZero
@@ -138,6 +161,12 @@
                 apy = ((annualReward / totalStaked) * 100).toFixed(2)
                 if ($currentAccount && $currentAccount.rex_info) {
                     total = convertRexToEos($currentAccount.rex_info.rex_balance.value)
+                    if ($rexEOSBalance.value > 0) {
+                        total = Asset.fromUnits(
+                            total.units.adding($rexEOSBalance.units),
+                            $systemToken!.symbol
+                        )
+                    }
 
                     const claimableBuckets = $currentAccount.rex_info.rex_maturities.filter(
                         (maturity) => +new Date(maturity.first!.toString()) < +now
@@ -188,29 +217,6 @@
             result = Step.Overview
         }
         return result
-    })
-
-    const rexEOSBalance: Writable<Asset> = writable(Asset.from(0, $systemToken!.symbol))
-    onMount(async () => {
-        const client = getClient($activeBlockchain.chainId)
-        const unsubscribe = currentAccount.subscribe(async (account) => {
-            const result = await client.v1.chain.get_table_rows({
-                code: 'eosio',
-                scope: 'eosio',
-                table: 'rexfund',
-                json: true,
-                lower_bound: $currentAccount?.account_name,
-                upper_bound: $currentAccount?.account_name,
-            })
-            if (result.rows.length > 0) {
-                rexEOSBalance.set(Asset.from(result.rows[0].balance, $systemToken!.symbol))
-            } else {
-                rexEOSBalance.set(Asset.from(0, $systemToken!.symbol))
-            }
-        })
-        return () => {
-            unsubscribe()
-        }
     })
 
     const initialStep: Step = Step.Bootstrap
