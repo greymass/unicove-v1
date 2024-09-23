@@ -99,29 +99,29 @@ export const msToRent: Readable<number> = derived(activeBlockchain, ($activeBloc
 
 //price per ms
 export const cpuPowerupPrice = derived(
-    [msToRent, sampleUsage, statePowerUp, info],
-    ([$msToRent, $sampleUsage, $statePowerUp, $info]) => {
+    [activeBlockchain, msToRent, sampleUsage, statePowerUp, info],
+    ([$activeBlockchain, $msToRent, $sampleUsage, $statePowerUp, $info]) => {
         if ($msToRent && $sampleUsage && $statePowerUp) {
             return Asset.from(
                 $statePowerUp.cpu.price_per_ms($sampleUsage, $msToRent, $info),
-                '4,EOS'
+                $activeBlockchain.coreTokenSymbol
             )
         }
-        return Asset.from(0, '4,EOS')
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
 )
 
 // price per kb
 export const netPowerupPrice = derived(
-    [sampleUsage, statePowerUp, info],
-    ([$sampleUsage, $statePowerUp, $info]) => {
+    [activeBlockchain,sampleUsage, statePowerUp, info],
+    ([$activeBlockchain, $sampleUsage, $statePowerUp, $info]) => {
         if ($sampleUsage && $statePowerUp) {
             return Asset.from(
                 $statePowerUp.net.price_per_kb($sampleUsage, 1, $info),
-                '4,EOS'
+                $activeBlockchain.coreTokenSymbol
             )
         }
-        return Asset.from(0, '4,EOS')
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
 )
 
@@ -182,30 +182,37 @@ export const stateREX: Readable<REXState | undefined> = derived(
 
 // The price of CPU in the REX system
 export const cpuRexPrice = derived(
-    [msToRent, sampleUsage, stateREX],
-    ([$msToRent, $sampleUsage, $stateREX]) => {
+    [activeBlockchain, msToRent, sampleUsage, stateREX],
+    ([$activeBlockchain, $msToRent, $sampleUsage, $stateREX]) => {
         if ($msToRent && $sampleUsage && $stateREX) {
-            return Asset.from($stateREX.price_per($sampleUsage, $msToRent * 30000), '4,EOS')
+            const price = $stateREX.price_per($sampleUsage, $msToRent * 30000);
+            const coreTokenSymbol = $activeBlockchain.coreTokenSymbol
+            return compatPriceWithPrecision(price, coreTokenSymbol)
         }
-        return Asset.from(0, '4,EOS')
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
 )
 
 // The price of Net in the REX system
 export const netRexPrice = derived(
-    [sampleUsage, stateREX],
-    ([$sampleUsage, $stateREX]) => {
+    [activeBlockchain, sampleUsage, stateREX],
+    ([$activeBlockchain, $sampleUsage, $stateREX]) => {
         if ($sampleUsage && $stateREX) {
-            const price = calculateNetRexPrice($stateREX, $sampleUsage, 30000);
-            let precision = 4;
-            if (price > 0 && price < 0.0001) {
-                precision = Number(price.toExponential().split('-')[1])
-            }
-            return Asset.from(price, `${precision},EOS`)
+            const price = calculateNetRexPrice($stateREX, $sampleUsage, 30000)
+            const coreTokenSymbol = $activeBlockchain.coreTokenSymbol
+            return compatPriceWithPrecision(price, coreTokenSymbol)
         }
-        return Asset.from(0, '4,EOS')
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
 )
+
+function compatPriceWithPrecision(price : number, coreTokenSymbol : Asset.Symbol){
+    let precision = coreTokenSymbol.precision;
+    if (price > 0 && price < 1/Math.pow(10, precision)) {
+        precision = Number(price.toExponential().split('-')[1])
+    }
+    return Asset.from(price, `${precision},${coreTokenSymbol.name}`)
+}
 
 function calculateNetRexPrice(stateRex: REXState, sample: SampleUsage, unit = 1000): number {
     // Sample token units
