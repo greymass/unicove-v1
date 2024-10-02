@@ -165,7 +165,7 @@
                     if ($rexEOSBalance.value > 0) {
                         total = Asset.fromUnits(
                             total.units.adding($rexEOSBalance.units),
-                            $systemToken!.symbol
+                            $systemToken.symbol
                         )
                     }
 
