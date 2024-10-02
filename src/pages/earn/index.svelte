@@ -125,7 +125,7 @@
     onMount(async () => {
         const client = getClient($activeBlockchain.chainId)
         const unsubscribe = currentAccount.subscribe(async (account) => {
-            if !$systemToken return
+            if (!$systemToken) return
             const result = await client.v1.chain.get_table_rows({
                 code: 'eosio',
                 scope: 'eosio',
@@ -160,7 +160,7 @@
                 const annualReward = 31250000
                 const totalStaked = Number($stateREX.total_lendable.value)
                 apy = ((annualReward / totalStaked) * 100).toFixed(2)
-                if ($currentAccount &&  $systemToken && $currentAccount.rex_info) {
+                if ($currentAccount && $systemToken && $currentAccount.rex_info) {
                     total = convertRexToEos($currentAccount.rex_info.rex_balance.value)
                     if ($rexEOSBalance.value > 0) {
                         total = Asset.fromUnits(
