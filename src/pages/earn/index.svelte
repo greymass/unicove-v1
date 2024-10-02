@@ -160,7 +160,7 @@
                 const annualReward = 31250000
                 const totalStaked = Number($stateREX.total_lendable.value)
                 apy = ((annualReward / totalStaked) * 100).toFixed(2)
-                if ($currentAccount && $currentAccount.rex_info) {
+                if ($currentAccount &&  $systemToken && $currentAccount.rex_info) {
                     total = convertRexToEos($currentAccount.rex_info.rex_balance.value)
                     if ($rexEOSBalance.value > 0) {
                         total = Asset.fromUnits(
