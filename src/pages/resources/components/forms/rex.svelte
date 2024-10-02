@@ -10,7 +10,7 @@
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {systemToken} from '~/stores/tokens'
     import {systemTokenBalance} from '~/stores/balances'
-    import {rexPrice} from '~/pages/resources/resources'
+    import {cpuRexPrice, netRexPrice} from '~/pages/resources/resources'
 
     import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
@@ -24,6 +24,7 @@
 
     export let resource = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
+    const rexPrice = resource === 'cpu' ? cpuRexPrice : netRexPrice
 
     let amount: Writable<string> = writable('')
     let error: string | undefined
@@ -41,6 +42,10 @@
             }
         }
     )
+
+    const disabled: Readable<boolean> = derived(cost, ($cost) => {
+        return $cost ? $cost.value <= 0 : true
+    })
 
     // Create a derived store of the field we expect to be modified
     export const field = derived([currentAccount], ([$currentAccount]) => {
@@ -142,7 +147,7 @@
                 <FormBalance token={$systemToken} balance={systemTokenBalance} />
             {/if}
             <InputErrorMessage errorMessage={error} />
-            <Button fluid size="large" formValidation on:action={rex}
+            <Button fluid disabled={$disabled} size="large" formValidation on:action={rex}
                 >Rent {Number($amount)} {unit} for {$cost}</Button
             >
         </Form>

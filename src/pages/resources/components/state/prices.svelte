@@ -5,7 +5,14 @@
     import {ChainFeatures} from '~/config'
     import {activeBlockchain} from '~/store'
 
-    import {powerupPrice, rexPrice, stakingPrice} from '~/pages/resources/resources'
+    import {
+        cpuPowerupPrice,
+        netPowerupPrice,
+        cpuRexPrice,
+        netRexPrice,
+        cpuStakingPrice,
+        netStakingPrice,
+    } from '~/pages/resources/resources'
 
     import Button from '~/components/elements/button.svelte'
     import Segment from '~/components/elements/segment.svelte'
@@ -13,6 +20,9 @@
 
     export let resource = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
+    const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
+    const stakingPrice = resource === 'cpu' ? cpuStakingPrice : netStakingPrice
+    const rexPrice = resource === 'cpu' ? cpuRexPrice : netRexPrice
 
     const {PowerUp, REX, Staking} = ChainFeatures
 
@@ -156,9 +166,7 @@
                 <div class="offer">
                     <div class="service">Staking</div>
                     <div class="price">
-                        {(Number($stakingPrice.value) * 1000).toFixed(
-                            $stakingPrice.symbol.precision
-                        )}
+                        {$stakingPrice.value.toFixed($stakingPrice.symbol.precision)}
                     </div>
                     <div class="pair">
                         {$token} per
