@@ -9,7 +9,11 @@
     import {activeBlockchain, activeSession, currentAccount} from '~/store'
     import {systemToken} from '~/stores/tokens'
     import {systemTokenBalance} from '~/stores/balances'
-    import {cpuPowerupPrice as powerupPrice, sampleUsage, statePowerUp} from '~/pages/resources/resources'
+    import {
+        cpuPowerupPrice as powerupPrice,
+        sampleUsage,
+        statePowerUp,
+    } from '~/pages/resources/resources'
 
     import type {FormTransaction} from '~/ui-types'
     import Button from '~/components/elements/button.svelte'
