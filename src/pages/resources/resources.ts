@@ -12,6 +12,7 @@ const getResourceClient = (chain: ChainConfig) => {
     if (chain.resourceSampleAccount) {
         options.sampleAccount = chain.resourceSampleAccount
     }
+    
     return new Resources(options)
 }
 
