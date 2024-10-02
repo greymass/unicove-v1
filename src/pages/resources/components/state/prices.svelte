@@ -5,7 +5,11 @@
     import {ChainFeatures} from '~/config'
     import {activeBlockchain} from '~/store'
 
-    import {cpuPowerupPrice as powerupPrice, rexPrice, cpuStakingPrice as stakingPrice} from '~/pages/resources/resources'
+    import {
+        cpuPowerupPrice as powerupPrice,
+        rexPrice,
+        cpuStakingPrice as stakingPrice,
+    } from '~/pages/resources/resources'
 
     import Button from '~/components/elements/button.svelte'
     import Segment from '~/components/elements/segment.svelte'
