@@ -10,6 +10,7 @@ const getResourceClient = (chain: ChainConfig) => {
     const api = getClient(chain)
     const options: any = {api}
     if (chain.resourceSampleAccount) {
+        
         options.sampleAccount = chain.resourceSampleAccount
     }
     return new Resources(options)
