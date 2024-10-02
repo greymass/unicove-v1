@@ -7,7 +7,7 @@
     import Form from '~/components/elements/form.svelte'
     import InputAsset from '~/components/elements/input/asset.svelte'
     import InputLabel from '~/components/elements/input/label.svelte'
-    import {REXInfo} from '../types'
+    import type {REXInfo} from '../types'
 
     export let amount: string
     export let availableTokens: Asset
