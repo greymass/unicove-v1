@@ -1,6 +1,14 @@
 import {derived, Readable} from 'svelte/store'
 import {API, Asset} from '@greymass/eosio'
-import {Resources, SampleUsage, PowerUpState, RAMState, REXState} from '@greymass/eosio-resources'
+import {
+    Resources,
+    SampleUsage,
+    PowerUpState,
+    RAMState,
+    REXState,
+    BNPrecision,
+} from '@greymass/eosio-resources'
+
 import {activeBlockchain} from '~/store'
 
 import {getClient} from '../../api-client'
@@ -96,31 +104,59 @@ export const msToRent: Readable<number> = derived(activeBlockchain, ($activeBloc
     return 1
 })
 
-export const powerupPrice = derived(
-    [msToRent, sampleUsage, statePowerUp, info],
-    ([$msToRent, $sampleUsage, $statePowerUp, $info]) => {
+//price per ms
+export const cpuPowerupPrice = derived(
+    [activeBlockchain, msToRent, sampleUsage, statePowerUp, info],
+    ([$activeBlockchain, $msToRent, $sampleUsage, $statePowerUp, $info]) => {
         if ($msToRent && $sampleUsage && $statePowerUp) {
             return Asset.from(
                 $statePowerUp.cpu.price_per_ms($sampleUsage, $msToRent, $info),
-                '4,EOS'
+                $activeBlockchain.coreTokenSymbol
             )
         }
-        return Asset.from(0, '4,EOS')
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
 )
 
-export const stakingPrice = derived(
+// price per kb
+export const netPowerupPrice = derived(
+    [activeBlockchain, sampleUsage, statePowerUp, info],
+    ([$activeBlockchain, $sampleUsage, $statePowerUp, $info]) => {
+        if ($sampleUsage && $statePowerUp) {
+            return Asset.from(
+                $statePowerUp.net.price_per_kb($sampleUsage, 1, $info),
+                $activeBlockchain.coreTokenSymbol
+            )
+        }
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
+    }
+)
+
+//price per ms
+export const cpuStakingPrice = derived(
     [activeBlockchain, msToRent, sampleUsage],
     ([$activeBlockchain, $msToRent, $sampleUsage]) => {
         if ($msToRent && $sampleUsage) {
             const {account} = $sampleUsage
             const cpu_weight = Number(account.total_resources.cpu_weight.units)
             const cpu_limit = Number(account.cpu_limit.max.value)
-            let price = cpu_weight / cpu_limit
-            if ($activeBlockchain.resourceSampleMilliseconds) {
-                price *= $activeBlockchain.resourceSampleMilliseconds
-            }
-            return Asset.fromUnits(price, $activeBlockchain.coreTokenSymbol)
+            let price = (cpu_weight / cpu_limit) * $msToRent
+            return Asset.fromUnits(price * 1000, $activeBlockchain.coreTokenSymbol)
+        }
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
+    }
+)
+
+// price per kb for staking
+export const netStakingPrice = derived(
+    [activeBlockchain, sampleUsage],
+    ([$activeBlockchain, $sampleUsage]) => {
+        if ($sampleUsage) {
+            const {account} = $sampleUsage
+            const net_weight = Number(account.total_resources.net_weight.units)
+            const net_limit = Number(account.net_limit.max.value)
+            let price = net_weight / net_limit
+            return Asset.fromUnits(price * 1000, $activeBlockchain.coreTokenSymbol)
         }
         return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
@@ -152,15 +188,54 @@ export const stateREX: Readable<REXState | undefined> = derived(
 )
 
 // The price of CPU in the REX system
-export const rexPrice = derived(
-    [msToRent, sampleUsage, stateREX],
-    ([$msToRent, $sampleUsage, $stateREX]) => {
+export const cpuRexPrice = derived(
+    [activeBlockchain, msToRent, sampleUsage, stateREX],
+    ([$activeBlockchain, $msToRent, $sampleUsage, $stateREX]) => {
         if ($msToRent && $sampleUsage && $stateREX) {
-            return Asset.from($stateREX.price_per($sampleUsage, $msToRent * 30000), '4,EOS')
+            const price = $stateREX.price_per($sampleUsage, $msToRent * 30000)
+            const coreTokenSymbol = $activeBlockchain.coreTokenSymbol
+            return compatPriceWithPrecision(price, coreTokenSymbol)
         }
-        return Asset.from(0, '4,EOS')
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
     }
 )
+
+// The price of Net in the REX system
+export const netRexPrice = derived(
+    [activeBlockchain, sampleUsage, stateREX],
+    ([$activeBlockchain, $sampleUsage, $stateREX]) => {
+        if ($sampleUsage && $stateREX) {
+            const price = calculateNetRexPrice($stateREX, $sampleUsage, 30000)
+            const coreTokenSymbol = $activeBlockchain.coreTokenSymbol
+            return compatPriceWithPrecision(price, coreTokenSymbol)
+        }
+        return Asset.from(0, $activeBlockchain.coreTokenSymbol)
+    }
+)
+
+function compatPriceWithPrecision(price: number, coreTokenSymbol: Asset.Symbol) {
+    let precision = coreTokenSymbol.precision
+    if (price > 0 && price < 1 / Math.pow(10, precision)) {
+        precision = Number(price.toExponential().split('-')[1])
+    }
+    return Asset.from(price, `${precision},${coreTokenSymbol.name}`)
+}
+
+function calculateNetRexPrice(stateRex: REXState, sample: SampleUsage, unit = 1000): number {
+    // Sample token units
+    const tokens = Asset.fromUnits(10000, stateRex.symbol)
+
+    // Spending 1 EOS (10000 units) on REX gives this many tokens
+    const bancor = Number(tokens.units) / (stateRex.total_rent.value / stateRex.total_unlent.value)
+    // The ratio of the number of tokens received vs the sampled values
+    const unitPrice = bancor * (Number(sample.net) / BNPrecision)
+    // The token units spent per unit
+    const perunit = Number(tokens.units) / unitPrice
+    // Multiply the per unit cost by the units requested
+    const cost = perunit * unit
+    // Converting to an Asset
+    return cost / Math.pow(10, stateRex.precision)
+}
 
 // The state of the REX system
 export const stateRAM: Readable<RAMState | undefined> = derived(
