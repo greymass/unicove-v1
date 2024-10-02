@@ -5,7 +5,7 @@
     import {ChainFeatures} from '~/config'
     import {activeBlockchain} from '~/store'
 
-    import {cpuPowerupPrice, netPowerupPrice, rexPrice, cpuStakingPrice, netStakingPrice} from '~/pages/resources/resources'
+    import {cpuPowerupPrice as powerupPrice, rexPrice, cpuStakingPrice as stakingPrice} from '~/pages/resources/resources'
 
     import Button from '~/components/elements/button.svelte'
     import Segment from '~/components/elements/segment.svelte'
@@ -13,8 +13,8 @@
 
     export let resource = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
-    const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
-    const stakingPrice = resource === 'cpu' ? cpuStakingPrice : netStakingPrice
+    // const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
+    // const stakingPrice = resource === 'cpu' ? cpuStakingPrice : netStakingPrice
 
     const {PowerUp, REX, Staking} = ChainFeatures
 
