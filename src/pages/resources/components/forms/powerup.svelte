@@ -33,6 +33,7 @@
         [activeBlockchain, amount, powerupPrice],
         ([$activeBlockchain, $amount, $powerupPrice]) => {
             if ($activeBlockchain && $powerupPrice) {
+                
                 return Asset.from(
                     Number($powerupPrice.value) * Number($amount),
                     $activeBlockchain.coreTokenSymbol
