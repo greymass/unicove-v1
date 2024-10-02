@@ -10,7 +10,8 @@
     import {systemToken} from '~/stores/tokens'
     import {systemTokenBalance} from '~/stores/balances'
     import {
-        cpuPowerupPrice as powerupPrice,
+        cpuPowerupPrice,
+        netPowerupPrice,
         sampleUsage,
         statePowerUp,
     } from '~/pages/resources/resources'
@@ -27,7 +28,7 @@
 
     export let resource: string = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
-    // const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
+    const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
 
     let amount: Writable<string> = writable('')
     let error: string | undefined

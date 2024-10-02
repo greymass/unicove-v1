@@ -6,9 +6,11 @@
     import {activeBlockchain} from '~/store'
 
     import {
-        cpuPowerupPrice as powerupPrice,
+        cpuPowerupPrice,
+        netPowerupPrice,
         rexPrice,
-        cpuStakingPrice as stakingPrice,
+        cpuStakingPrice,
+        netStakingPrice,
     } from '~/pages/resources/resources'
 
     import Button from '~/components/elements/button.svelte'
@@ -17,8 +19,8 @@
 
     export let resource = 'cpu'
     const unit = resource === 'cpu' ? 'ms' : 'kb'
-    // const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
-    // const stakingPrice = resource === 'cpu' ? cpuStakingPrice : netStakingPrice
+    const powerupPrice = resource === 'cpu' ? cpuPowerupPrice : netPowerupPrice
+    const stakingPrice = resource === 'cpu' ? cpuStakingPrice : netStakingPrice
 
     const {PowerUp, REX, Staking} = ChainFeatures
 
