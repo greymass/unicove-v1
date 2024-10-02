@@ -1,15 +1,22 @@
-import { derived, Readable } from 'svelte/store'
-import { Int64, API, Asset } from '@greymass/eosio'
-import { Resources, SampleUsage, PowerUpState, RAMState, REXState } from '@greymass/eosio-resources'
-import { activeBlockchain } from '~/store'
-import { BNPrecision } from '@greymass/eosio-resources'
+import {derived, Readable} from 'svelte/store'
+import {API, Asset} from '@greymass/eosio'
+import {
+    Resources,
+    SampleUsage,
+    PowerUpState,
+    RAMState,
+    REXState,
+    BNPrecision,
+} from '@greymass/eosio-resources'
 
-import { getClient } from '../../api-client'
-import { ChainConfig, ChainFeatures, resourceFeatures } from '~/config'
+import {activeBlockchain} from '~/store'
+
+import {getClient} from '../../api-client'
+import {ChainConfig, ChainFeatures, resourceFeatures} from '~/config'
 
 const getResourceClient = (chain: ChainConfig) => {
     const api = getClient(chain)
-    const options: any = { api }
+    const options: any = {api}
     if (chain.resourceSampleAccount) {
         options.sampleAccount = chain.resourceSampleAccount
     }
@@ -113,7 +120,7 @@ export const cpuPowerupPrice = derived(
 
 // price per kb
 export const netPowerupPrice = derived(
-    [activeBlockchain,sampleUsage, statePowerUp, info],
+    [activeBlockchain, sampleUsage, statePowerUp, info],
     ([$activeBlockchain, $sampleUsage, $statePowerUp, $info]) => {
         if ($sampleUsage && $statePowerUp) {
             return Asset.from(
@@ -130,7 +137,7 @@ export const cpuStakingPrice = derived(
     [activeBlockchain, msToRent, sampleUsage],
     ([$activeBlockchain, $msToRent, $sampleUsage]) => {
         if ($msToRent && $sampleUsage) {
-            const { account } = $sampleUsage
+            const {account} = $sampleUsage
             const cpu_weight = Number(account.total_resources.cpu_weight.units)
             const cpu_limit = Number(account.cpu_limit.max.value)
             let price = (cpu_weight / cpu_limit) * $msToRent
@@ -145,7 +152,7 @@ export const netStakingPrice = derived(
     [activeBlockchain, sampleUsage],
     ([$activeBlockchain, $sampleUsage]) => {
         if ($sampleUsage) {
-            const { account } = $sampleUsage
+            const {account} = $sampleUsage
             const net_weight = Number(account.total_resources.net_weight.units)
             const net_limit = Number(account.net_limit.max.value)
             let price = net_weight / net_limit
@@ -185,7 +192,7 @@ export const cpuRexPrice = derived(
     [activeBlockchain, msToRent, sampleUsage, stateREX],
     ([$activeBlockchain, $msToRent, $sampleUsage, $stateREX]) => {
         if ($msToRent && $sampleUsage && $stateREX) {
-            const price = $stateREX.price_per($sampleUsage, $msToRent * 30000);
+            const price = $stateREX.price_per($sampleUsage, $msToRent * 30000)
             const coreTokenSymbol = $activeBlockchain.coreTokenSymbol
             return compatPriceWithPrecision(price, coreTokenSymbol)
         }
@@ -206,9 +213,9 @@ export const netRexPrice = derived(
     }
 )
 
-function compatPriceWithPrecision(price : number, coreTokenSymbol : Asset.Symbol){
-    let precision = coreTokenSymbol.precision;
-    if (price > 0 && price < 1/Math.pow(10, precision)) {
+function compatPriceWithPrecision(price: number, coreTokenSymbol: Asset.Symbol) {
+    let precision = coreTokenSymbol.precision
+    if (price > 0 && price < 1 / Math.pow(10, precision)) {
         precision = Number(price.toExponential().split('-')[1])
     }
     return Asset.from(price, `${precision},${coreTokenSymbol.name}`)
