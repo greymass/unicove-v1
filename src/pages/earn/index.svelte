@@ -125,6 +125,7 @@
     onMount(async () => {
         const client = getClient($activeBlockchain.chainId)
         const unsubscribe = currentAccount.subscribe(async (account) => {
+            if !$systemToken return
             const result = await client.v1.chain.get_table_rows({
                 code: 'eosio',
                 scope: 'eosio',
