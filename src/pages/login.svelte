@@ -646,7 +646,7 @@
             </ul>
         </div>
         <div class="support">
-            <h4>Vote and support our endavours</h4>
+            <h4>Vote and support our endeavors</h4>
             <p>
                 Like our commitment to making the boring blockchain stuff less tedious? Vote for us
                 so we can make fun stuff that simplifies and enhances your blockchain experience!
